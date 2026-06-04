@@ -1,0 +1,7 @@
+{
+  "theme": "lux",
+  "status": "stub",
+  "notes": "Placeholder. The full widget/section variant export for this theme has not been produced yet. Committed now per BUILD_BRIEF so v2 LLM-assisted custom section generation has a home. Not used by the deterministic v1 injection pipeline.",
+  "widgets": [],
+  "sectionVariants": []
+}

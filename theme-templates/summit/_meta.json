@@ -1,0 +1,11 @@
+{
+  "theme": "summit",
+  "label": "Summit",
+  "themeVersion": "1.0",
+  "defaultElementorVersion": "3.21.0",
+  "templatePlaceholderNames": ["Pinewood Dental"],
+  "widgetLibrary": "_widget-library.json",
+  "status": "pending-port",
+  "notes": "Templates are in place. Slot map will be ported from summit-theme-website-builder SKILL.md node maps once Elevate is confirmed. Summit specifics: elementskit-heading uses {{accent}} syntax, jkit_button (button_text), image-box cards, icon-list (5 items), nested accordion FAQs, and the homepage hero exists twice (desktop + mobile) and must be injected into both.",
+  "pages": []
+}

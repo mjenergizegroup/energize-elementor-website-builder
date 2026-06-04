@@ -1,0 +1,58 @@
+{
+  "content": [
+    {
+      "id": "f0f0f0f0",
+      "elType": "section",
+      "settings": {
+        "content_width": "boxed",
+        "padding": { "unit": "px", "top": "120", "bottom": "120", "left": "0", "right": "0", "isLinked": false }
+      },
+      "elements": [
+        {
+          "id": "e1e1e1e1",
+          "elType": "column",
+          "settings": { "_column_size": 100, "_inline_size": null },
+          "elements": [
+            {
+              "id": "a1b2c3d4",
+              "elType": "widget",
+              "settings": {
+                "title": "Thank You",
+                "header_size": "h1",
+                "align": "center"
+              },
+              "elements": [],
+              "widgetType": "heading"
+            },
+            {
+              "id": "b2c3d4e5",
+              "elType": "widget",
+              "settings": {
+                "editor": "<p>We received your request and will be in touch shortly.</p>",
+                "align": "center"
+              },
+              "elements": [],
+              "widgetType": "text-editor"
+            },
+            {
+              "id": "c3d4e5f6",
+              "elType": "widget",
+              "settings": {
+                "text": "Back to Home",
+                "align": "center"
+              },
+              "elements": [],
+              "widgetType": "button"
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "page_settings": [],
+  "version": "0.4",
+  "title": "Elevate-Dental-Thank-You",
+  "type": "page"
+}

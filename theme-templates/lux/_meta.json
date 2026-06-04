@@ -1,0 +1,11 @@
+{
+  "theme": "lux",
+  "label": "Lux",
+  "themeVersion": "1.0",
+  "defaultElementorVersion": "3.21.0",
+  "templatePlaceholderNames": ["Smile on Westbury", "Smile On Westbury"],
+  "widgetLibrary": "_widget-library.json",
+  "status": "pending-port",
+  "notes": "Templates are in place. Slot map will be ported from lux-theme-website-builder SKILL.md node maps once Elevate is confirmed. Lux specifics: three heading widget types (jkit_heading -> sg_title_text with {{accent}}, elementskit-heading -> ekit_heading_title with {{accent}}, gum_heading -> main_heading plain), eyebrow labels stored in text-editor as <p>, and many text-editor nodes carry legacy Coraza/Oxygen HTML that must be fully replaced.",
+  "pages": []
+}

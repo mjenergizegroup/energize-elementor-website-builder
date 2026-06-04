@@ -1,0 +1,61 @@
+// Prisma schema for the Energize Build Tool.
+// Theme and status are stored as plain strings (not enums) so that adding a
+// v2 theme stays purely additive and never requires a schema migration.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Client {
+  id                     String   @id @default(cuid())
+  name                   String
+  slug                   String   @unique
+  wpSiteUrl              String
+  wpUsername             String
+  wpAppPasswordEncrypted String
+  theme                  String
+  brandKit               Json
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  createdBy              String
+
+  builds Build[]
+
+  @@index([createdBy])
+}
+
+model Build {
+  id            String    @id @default(cuid())
+  clientId      String
+  client        Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  // Array of deployed page records: { page, wpPageId, editUrl, status }.
+  pagesDeployed Json?
+  // pending | in_progress | success | partial | failed
+  status        String    @default("pending")
+  deployedAt    DateTime?
+  deployedBy    String
+  errorLog      String?
+  createdAt     DateTime  @default(now())
+
+  @@index([clientId])
+  @@index([deployedBy])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  clientId  String?
+  metadata  Json?
+  timestamp DateTime @default(now())
+
+  @@index([userId])
+  @@index([clientId])
+  @@index([timestamp])
+}
