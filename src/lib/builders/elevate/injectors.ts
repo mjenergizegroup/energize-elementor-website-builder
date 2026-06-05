@@ -92,19 +92,17 @@ export function injectButton(
   // URL resolution. If urlSource is provided, use it from site config.
   // 'auto' means: infer from the label.
   if (urlSource && urlSource !== "auto") {
-    const url = site[urlSource];
-    if (url) {
-      const link = (settings.link as Record<string, unknown>) || {};
-      link.url = url;
-      link.is_external = "";
-      link.nofollow = "";
-      settings.link = link;
-    }
+    const url = usableUrl(site[urlSource]) ? site[urlSource] : "/contact-us";
+    const link = (settings.link as Record<string, unknown>) || {};
+    link.url = url;
+    link.is_external = isExternalUrl(url) ? "on" : "";
+    link.nofollow = "";
+    settings.link = link;
   } else if (urlSource === "auto") {
     // Heuristic: phone labels (digits/dashes/parens) to tel:phone
     // Otherwise leave existing link as-is
     const isPhone = /^[\d\s().+-]+$/.test(label.trim());
-    if (isPhone && site.phone_tel) {
+    if (isPhone && usableUrl(site.phone_tel)) {
       const link = (settings.link as Record<string, unknown>) || {};
       link.url = site.phone_tel;
       settings.link = link;
@@ -193,4 +191,15 @@ export function injectElementskitHeading(
 ): void {
   const settings = getSettings(node);
   settings.ekit_heading_title = title;
+}
+
+function usableUrl(value: string | undefined): value is string {
+  if (!value) return false;
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+  return !/^\[MISSING:/i.test(trimmed);
+}
+
+function isExternalUrl(url: string): boolean {
+  return /^https?:\/\//i.test(url);
 }

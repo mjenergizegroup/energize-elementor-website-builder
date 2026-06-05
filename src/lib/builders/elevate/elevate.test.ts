@@ -39,6 +39,30 @@ function getWidgetValue(json: ElementorJSON, id: string, field: string): unknown
   return settings?.[field];
 }
 
+function getWidgetGlobals(json: ElementorJSON, id: string): Record<string, unknown> {
+  const node = findNode(json.content, id);
+  const settings = node?.settings as Record<string, unknown> | undefined;
+  return (settings?.__globals__ as Record<string, unknown> | undefined) || {};
+}
+
+function collectButtonLinkUrls(value: unknown, urls: string[] = []): string[] {
+  if (Array.isArray(value)) {
+    value.forEach((item) => collectButtonLinkUrls(item, urls));
+    return urls;
+  }
+  if (!value || typeof value !== "object") return urls;
+
+  const node = value as Record<string, unknown>;
+  if (node.widgetType === "button") {
+    const settings = node.settings as Record<string, unknown> | undefined;
+    const link = settings?.link as Record<string, unknown> | undefined;
+    if (typeof link?.url === "string") urls.push(link.url);
+  }
+
+  collectButtonLinkUrls(node.elements, urls);
+  return urls;
+}
+
 // -----------------------------------------------------------------------------
 // Fixture: a complete content file
 // -----------------------------------------------------------------------------
@@ -341,6 +365,35 @@ test("service-page build derives service_name from slug", () => {
   assert.equal(getWidgetValue(json, "1352ddf1", "title"), "Cosmetic Dentistry in Brooklyn, NY");
 });
 
+test("service-page template has no hardcoded FAQ items", () => {
+  const template = loadTemplate("service-page");
+  const leftFaq = getWidgetValue(template, "184f8df8", "ekit_accordion_items") as unknown[];
+  const rightFaq = getWidgetValue(template, "11b6995e", "ekit_accordion_items") as unknown[];
+
+  assert.equal(leftFaq.length, 0);
+  assert.equal(rightFaq.length, 0);
+  assert.doesNotMatch(
+    JSON.stringify(template),
+    /How long do cosmetic treatment results last|Is Invisalign right for me|Will my veneers look natural|How long does teeth whitening take/i
+  );
+});
+
+test("service-page dark sections use white text globals", () => {
+  const parsed = parse(sampleContent);
+  const template = loadTemplate("service-page");
+  const { json } = buildElevatePage({
+    pageType: "service-page",
+    slug: "cosmetic-dentistry",
+    site: parsed.site,
+    pageData: parsed.service_pages["cosmetic-dentistry"],
+    template,
+  });
+
+  assert.equal(getWidgetGlobals(json, "1352ddf1").title_color, "globals/colors?id=white");
+  assert.equal(getWidgetGlobals(json, "57857188").title_color, "globals/colors?id=white");
+  assert.equal(getWidgetGlobals(json, "7908fcda").text_color, "globals/colors?id=white");
+});
+
 test("service-page build requires slug", () => {
   const parsed = parse(sampleContent);
   const template = loadTemplate("service-page");
@@ -456,6 +509,51 @@ address_zip: x
 
   assert.equal(getWidgetValue(json, "efa68b", "title"), "[MISSING: client to confirm headline]");
   assert.match(String(getWidgetValue(json, "cd7eaeb", "editor")), /\[MISSING:/);
+});
+
+test("missing booking URL falls back to contact page links", () => {
+  const contentWithMissingBookingUrl = `# SITE
+city: Test
+phone: 555
+phone_tel: tel:555
+booking_url: [MISSING: legacy site has no external booking URL]
+practice_name: x
+doctor_primary: x
+state: x
+address_line1: x
+address_city: x
+address_state: x
+address_zip: x
+
+# PAGE: homepage
+
+## hero
+
+### heading
+Welcome
+
+### body
+Intro copy.
+
+### cta_label
+Schedule Now
+`;
+  const parsed = parse(contentWithMissingBookingUrl);
+  const template = loadTemplate("homepage");
+  const { json } = buildElevatePage({
+    pageType: "homepage",
+    site: parsed.site,
+    pageData: parsed.pages.homepage,
+    template,
+  });
+
+  const heroBtn = findNode(json.content, "1e12af9a");
+  const link = (heroBtn?.settings as Record<string, unknown>)?.link as Record<string, unknown>;
+  assert.equal(link.url, "/contact-us");
+
+  const buttonUrls = collectButtonLinkUrls(json.content);
+  assert.ok(buttonUrls.length > 0);
+  assert.equal(buttonUrls.some((url) => url.includes("[MISSING:")), false);
 });
 
 console.log("\nAll builder tests passed.");

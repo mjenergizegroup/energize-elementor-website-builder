@@ -82,6 +82,7 @@ export function buildElevatePage(opts: BuildOptions): BuildResult {
 
   // Apply site-level auto-injections (phone button, practice name on Contact, etc.)
   applySiteAutoInjections(json, pageType, site);
+  normalizeDarkSectionText(json);
 
   return { json, warnings, buildNotes };
 }
@@ -362,6 +363,153 @@ function applySiteAutoInjections(
       if (node) injectIconBoxDesc(node, site.phone);
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+// Color normalization
+// -----------------------------------------------------------------------------
+
+const DARK_GLOBAL_COLOR_IDS = new Set(["primary", "text", "black"]);
+const LIGHT_GLOBAL_COLOR_IDS = new Set(["secondary", "background", "white"]);
+const WHITE_GLOBAL = "globals/colors?id=white";
+const BLACK_GLOBAL = "globals/colors?id=black";
+
+function normalizeDarkSectionText(json: ElementorJSON): void {
+  for (const node of json.content) {
+    normalizeNodeColors(node, false);
+  }
+}
+
+function normalizeNodeColors(node: unknown, inheritedDark: boolean): void {
+  if (!isDict(node)) return;
+
+  const settings = isDict(node.settings) ? node.settings : {};
+  const sectionTone = getSectionTone(settings);
+  const inDarkSection =
+    sectionTone === "dark" ? true : sectionTone === "light" ? false : inheritedDark;
+
+  if (inDarkSection) {
+    applyInverseTextColor(node);
+  }
+
+  if (Array.isArray(node.elements)) {
+    for (const child of node.elements) {
+      normalizeNodeColors(child, inDarkSection);
+    }
+  }
+}
+
+function getSectionTone(settings: Record<string, unknown>): "dark" | "light" | null {
+  const globals = isDict(settings.__globals__) ? settings.__globals__ : {};
+  const colorRefs = [
+    globals.background_color,
+    globals.background_overlay_color,
+    globals.background_overlay_color_b,
+  ];
+
+  const globalIds = colorRefs.map(globalColorId).filter((id): id is string => Boolean(id));
+  if (globalIds.some((id) => DARK_GLOBAL_COLOR_IDS.has(id))) return "dark";
+  if (globalIds.some((id) => LIGHT_GLOBAL_COLOR_IDS.has(id))) return "light";
+
+  let sawLightLiteral = false;
+  for (const ref of colorRefs) {
+    if (typeof ref !== "string") continue;
+    if (isDarkHexColor(ref)) return "dark";
+    if (isLightHexColor(ref)) sawLightLiteral = true;
+  }
+
+  const literalColors = [
+    settings.background_color,
+    settings.background_overlay_color,
+    settings.background_overlay_color_b,
+  ];
+  for (const color of literalColors) {
+    if (typeof color !== "string") continue;
+    if (isDarkHexColor(color)) return "dark";
+    if (isLightHexColor(color)) sawLightLiteral = true;
+  }
+
+  return sawLightLiteral ? "light" : null;
+}
+
+function applyInverseTextColor(node: Record<string, unknown>): void {
+  const settings = isDict(node.settings) ? node.settings : {};
+  if (!isDict(settings)) return;
+
+  const widgetType = typeof node.widgetType === "string" ? node.widgetType : "";
+
+  if (widgetType === "heading") {
+    setGlobal(settings, "title_color", "white");
+    settings.title_color = "#FFFFFF";
+    return;
+  }
+
+  if (widgetType === "text-editor") {
+    setGlobal(settings, "text_color", "white");
+    settings.text_color = "#FFFFFF";
+    return;
+  }
+
+  if (widgetType === "button") {
+    const globals = isDict(settings.__globals__) ? settings.__globals__ : {};
+    const bgId = globalColorId(globals.background_color);
+    if (!bgId || DARK_GLOBAL_COLOR_IDS.has(bgId)) {
+      setGlobal(settings, "button_text_color", "white");
+    } else if (LIGHT_GLOBAL_COLOR_IDS.has(bgId)) {
+      setGlobal(settings, "button_text_color", "black");
+    }
+    return;
+  }
+
+  if (widgetType === "icon-box") {
+    setGlobal(settings, "title_color", "white");
+    setGlobal(settings, "description_color", "white");
+  }
+}
+
+function setGlobal(
+  settings: Record<string, unknown>,
+  key: string,
+  colorId: "white" | "black"
+): void {
+  const globals = isDict(settings.__globals__)
+    ? settings.__globals__
+    : (settings.__globals__ = {});
+  globals[key] = colorId === "white" ? WHITE_GLOBAL : BLACK_GLOBAL;
+}
+
+function globalColorId(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const match = value.match(/globals\/colors\?id=([^/&]+)/);
+  return match?.[1] || null;
+}
+
+function isDarkHexColor(value: string): boolean {
+  const rgb = parseHexColor(value);
+  if (!rgb) return false;
+  return relativeLuminance(rgb) < 0.45;
+}
+
+function isLightHexColor(value: string): boolean {
+  const rgb = parseHexColor(value);
+  if (!rgb) return false;
+  return relativeLuminance(rgb) >= 0.45;
+}
+
+function parseHexColor(value: string): { r: number; g: number; b: number } | null {
+  const match = value.trim().match(/^#([0-9a-fA-F]{6})(?:[0-9a-fA-F]{2})?$/);
+  if (!match) return null;
+  const hex = match[1];
+  const parsed = Number.parseInt(hex, 16);
+  return {
+    r: (parsed >> 16) & 255,
+    g: (parsed >> 8) & 255,
+    b: parsed & 255,
+  };
+}
+
+function relativeLuminance(rgb: { r: number; g: number; b: number }): number {
+  return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255;
 }
 
 // -----------------------------------------------------------------------------

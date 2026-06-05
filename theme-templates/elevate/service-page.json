@@ -1717,24 +1717,7 @@
               "id": "184f8df8",
               "settings": {
                 "content_width": "full",
-                "ekit_accordion_items": [
-                  {
-                    "acc_title": "How long do cosmetic treatment results last?",
-                    "_id": "1a88614",
-                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> Most cosmetic treatments last 5-15 years or longer with proper care. We provide detailed maintenance instructions and regular follow-up care to help extend their longevity.</span></p>",
-                    "ekit_acc_is_active": "yes"
-                  },
-                  {
-                    "acc_title": "Will my veneers look natural?",
-                    "_id": "6968ba2",
-                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> Absolutely! Modern porcelain veneers are custom-crafted to match your natural teeth in color, translucency, and shape for seamless results that complement your facial features.</span></p>"
-                  },
-                  {
-                    "acc_title": "How long does teeth whitening take?",
-                    "_id": "90c953c",
-                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> Professional whitening can brighten your smile several shades lighter in just one visit, with results lasting 6-12 months with good oral care. Take-home options provide gradual whitening over 2-3 weeks.</span></p>"
-                  }
-                ],
+                "ekit_accordion_items": [],
                 "ekit_accordion_right_icons": {
                   "value": "icons icon-arrow-down",
                   "library": "skb_cife-simple_line-icon"
@@ -1871,24 +1854,7 @@
               "id": "11b6995e",
               "settings": {
                 "content_width": "full",
-                "ekit_accordion_items": [
-                  {
-                    "acc_title": "Is Invisalign right for me?",
-                    "_id": "1a88614",
-                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> We'll evaluate your specific needs during a consultation. Invisalign works well for most mild to moderate alignment issues, offering a discreet solution for adults and teens.</span></p>",
-                    "ekit_acc_is_active": "yes"
-                  },
-                  {
-                    "acc_title": "Does cosmetic dentistry hurt?",
-                    "_id": "6968ba2",
-                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> We prioritize your comfort with modern techniques and our comfort menu options. Most patients report minimal to no discomfort during and after procedures.</span></p>"
-                  },
-                  {
-                    "acc_title": "How much does cosmetic dentistry cost?",
-                    "_id": "90c953c",
-                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> Costs vary based on treatment plans. We offer flexible financing options and will help you understand all costs before beginning treatment, ensuring no surprises.</span></p>"
-                  }
-                ],
+                "ekit_accordion_items": [],
                 "ekit_accordion_right_icons": {
                   "value": "icons icon-arrow-down",
                   "library": "skb_cife-simple_line-icon"
