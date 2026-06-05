@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -91,7 +91,17 @@ interface DeployedLink {
   viewUrl: string;
 }
 
+interface CrawlPageEntry {
+  url: string;
+  title: string;
+  markdown: string;
+  metadata: Record<string, unknown>;
+  recommended: boolean;
+  skipReason?: string;
+}
+
 const STEPS = [
+  "Crawl",
   "Theme",
   "Practice Info",
   "Brand Kit",
@@ -106,6 +116,12 @@ const STEP_DETAILS: {
   description: string;
   icon: LucideIcon;
 }[] = [
+  {
+    title: "Crawl",
+    rail: "Source pages",
+    description: "Collect source pages for cleanup when this is an existing website.",
+    icon: Globe2,
+  },
   {
     title: "Theme",
     rail: "Choose template",
@@ -214,6 +230,19 @@ export function BuildWizard({
   const router = useRouter();
   const [step, setStep] = useState(0);
 
+  const [siteKind, setSiteKind] = useState<"existing" | "new">("existing");
+  const [crawlUrl, setCrawlUrl] = useState(initialClient?.wpSiteUrl ?? "");
+  const [crawlJobId, setCrawlJobId] = useState("");
+  const [crawlStatus, setCrawlStatus] = useState<
+    "idle" | "scraping" | "completed" | "failed"
+  >("idle");
+  const [crawlProgress, setCrawlProgress] = useState({ completed: 0, total: 0 });
+  const [crawlKeep, setCrawlKeep] = useState<CrawlPageEntry[]>([]);
+  const [crawlSkip, setCrawlSkip] = useState<CrawlPageEntry[]>([]);
+  const [selectedCrawlUrls, setSelectedCrawlUrls] = useState<string[]>([]);
+  const [crawlError, setCrawlError] = useState("");
+  const [exportingCrawl, setExportingCrawl] = useState(false);
+
   const [theme, setTheme] = useState<string>(
     initialClient?.theme ??
       themes.find((t) => t.ready)?.key ??
@@ -284,6 +313,138 @@ export function BuildWizard({
     setDetectedPages((prev) =>
       prev.map((p, i) => (i === index ? { ...p, ...patch } : p)),
     );
+  }
+
+  useEffect(() => {
+    if (!crawlJobId || crawlStatus !== "scraping") return;
+    void pollCrawl(crawlJobId);
+    const timer = window.setInterval(() => {
+      void pollCrawl(crawlJobId);
+    }, 3000);
+    return () => window.clearInterval(timer);
+  }, [crawlJobId, crawlStatus]);
+
+  async function startCrawl() {
+    let normalizedUrl: string;
+    try {
+      const withProtocol = /^https?:\/\//i.test(crawlUrl)
+        ? crawlUrl
+        : `https://${crawlUrl}`;
+      normalizedUrl = new URL(withProtocol).toString();
+    } catch {
+      toast.error("Enter a valid site URL.");
+      return;
+    }
+
+    setCrawlUrl(normalizedUrl);
+    setCrawlStatus("scraping");
+    setCrawlJobId("");
+    setCrawlProgress({ completed: 0, total: 0 });
+    setCrawlKeep([]);
+    setCrawlSkip([]);
+    setSelectedCrawlUrls([]);
+    setCrawlError("");
+
+    try {
+      const res = await fetch("/api/crawl", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: normalizedUrl }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        toast.error(json.error ?? "Could not start crawl.");
+        setCrawlStatus("idle");
+        return;
+      }
+      setCrawlJobId(json.jobId);
+      toast.success("Crawl started.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not start crawl.");
+      setCrawlStatus("idle");
+    }
+  }
+
+  async function pollCrawl(jobId: string) {
+    try {
+      const res = await fetch(`/api/crawl/${jobId}`);
+      const json = await res.json();
+      if (!res.ok) {
+        if (res.status === 429) toast.error("Rate limited, try again in a minute");
+        else toast.error(json.error ?? "Could not check crawl status.");
+        if (res.status !== 429) setCrawlStatus("failed");
+        return;
+      }
+
+      setCrawlStatus(json.status);
+      setCrawlProgress(json.progress ?? { completed: 0, total: 0 });
+      setCrawlError(json.error ?? "");
+      if (json.keep) {
+        setCrawlKeep(json.keep);
+        setSelectedCrawlUrls((prev) =>
+          prev.length > 0 ? prev : json.keep.map((page: CrawlPageEntry) => page.url),
+        );
+      }
+      if (json.skip) setCrawlSkip(json.skip);
+      if (json.status === "failed") {
+        toast.error(json.error ?? "Crawl failed.");
+      }
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not check crawl status.");
+      setCrawlStatus("failed");
+    }
+  }
+
+  function toggleCrawlUrl(url: string, checked: boolean) {
+    setSelectedCrawlUrls((prev) =>
+      checked ? Array.from(new Set([...prev, url])) : prev.filter((item) => item !== url),
+    );
+  }
+
+  function moveSkippedPageToKeep(url: string) {
+    const page = crawlSkip.find((item) => item.url === url);
+    if (!page) return;
+    setCrawlSkip((prev) => prev.filter((item) => item.url !== url));
+    setCrawlKeep((prev) => [...prev, { ...page, recommended: true, skipReason: undefined }]);
+    toggleCrawlUrl(url, true);
+  }
+
+  async function exportCrawlMarkdown() {
+    if (!crawlJobId) {
+      toast.error("Start a crawl before exporting.");
+      return;
+    }
+    if (selectedCrawlUrls.length === 0) {
+      toast.error("Select at least one page to export.");
+      return;
+    }
+    setExportingCrawl(true);
+    try {
+      const res = await fetch(`/api/crawl/${crawlJobId}/export`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ selectedUrls: selectedCrawlUrls }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        toast.error(json.error ?? "Could not export crawl markdown.");
+        return;
+      }
+      const blob = new Blob([json.content], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = json.filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      toast.success(`${json.filename} exported.`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not export crawl markdown.");
+    } finally {
+      setExportingCrawl(false);
+    }
   }
 
   async function handleLogo(file: File) {
@@ -402,25 +563,29 @@ export function BuildWizard({
   function validateStep(current: number): string | null {
     switch (current) {
       case 0:
+        if (siteKind === "existing" && crawlStatus === "scraping")
+          return "Wait for the crawl to finish or switch to a new website.";
+        return null;
+      case 1:
         if (!theme) return "Choose a theme.";
         if (selectedTheme && !selectedTheme.ready)
           return `The ${selectedTheme.label} theme is not ready yet (${selectedTheme.status}).`;
         return null;
-      case 1:
+      case 2:
         if (!name.trim()) return "Practice name is required.";
         if (!slug.trim()) return "Slug is required.";
         return null;
-      case 2:
+      case 3:
         if (!logo?.dataBase64) return "Site logo is required.";
         if (!favicon?.dataBase64) return "Site favicon is required.";
         return null;
-      case 3:
+      case 4:
         if (!siteUrl.trim()) return "WordPress site URL is required.";
         if (!username.trim()) return "WordPress username is required.";
         if (!initialClient && !appPassword.trim())
           return "Application password is required for a new client.";
         return null;
-      case 4:
+      case 5:
         if (!markdownName) return "Upload the approved markdown content.";
         if (detectedPages.length === 0)
           return "No pages were detected. Check that the markdown matches the selected theme.";
@@ -471,7 +636,7 @@ export function BuildWizard({
   }
 
   async function deploy() {
-    const error = [0, 1, 2, 3, 4].map(validateStep).find(Boolean);
+    const error = [1, 2, 3, 4, 5].map(validateStep).find(Boolean);
     if (error) {
       toast.error(error);
       return;
@@ -758,6 +923,164 @@ export function BuildWizard({
           />
           <div className="space-y-7 bg-[var(--card)] p-6 sm:p-8">
           {step === 0 && (
+            <div className="space-y-6">
+              <SectionLabel>Crawl source</SectionLabel>
+              <div className="grid gap-3 md:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => setSiteKind("existing")}
+                  className={`rounded-[12px] border p-4 text-left transition ${
+                    siteKind === "existing"
+                      ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                      : "border-[var(--line)] bg-[var(--paper-2)]"
+                  }`}
+                >
+                  <span className="block text-sm font-semibold text-[var(--ink)]">
+                    Existing website
+                  </span>
+                  <span className="mt-1 block text-xs font-medium leading-5 text-[var(--muted)]">
+                    Crawl source pages and export raw markdown for cleanup.
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSiteKind("new")}
+                  className={`rounded-[12px] border p-4 text-left transition ${
+                    siteKind === "new"
+                      ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                      : "border-[var(--line)] bg-[var(--paper-2)]"
+                  }`}
+                >
+                  <span className="block text-sm font-semibold text-[var(--ink)]">
+                    New website
+                  </span>
+                  <span className="mt-1 block text-xs font-medium leading-5 text-[var(--muted)]">
+                    Skip crawl and continue to the builder setup.
+                  </span>
+                </button>
+              </div>
+
+              {siteKind === "existing" && (
+                <div className="space-y-5">
+                  <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+                    <Field label="Website URL">
+                      <Input
+                        placeholder="https://example.com"
+                        value={crawlUrl}
+                        onChange={(e) => setCrawlUrl(e.target.value)}
+                      />
+                    </Field>
+                    <div className="flex items-end">
+                      <Button
+                        type="button"
+                        onClick={startCrawl}
+                        disabled={crawlStatus === "scraping"}
+                      >
+                        {crawlStatus === "scraping" ? "Crawling" : "Start Crawl"}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {crawlStatus !== "idle" && (
+                    <div className="rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] p-4 text-sm">
+                      <p className="font-semibold text-[var(--ink)]">
+                        {crawlStatus === "scraping"
+                          ? `Crawled ${crawlProgress.completed} / ${crawlProgress.total || "..."} pages`
+                          : crawlStatus === "completed"
+                            ? `Crawl complete: ${crawlKeep.length} kept, ${crawlSkip.length} skipped`
+                            : "Crawl failed"}
+                      </p>
+                      {crawlError && (
+                        <p className="mt-2 text-destructive">{crawlError}</p>
+                      )}
+                    </div>
+                  )}
+
+                  {(crawlKeep.length > 0 || crawlSkip.length > 0) && (
+                    <div className="grid gap-5 xl:grid-cols-2">
+                      <div className="space-y-3">
+                        <SectionLabel>Keep</SectionLabel>
+                        <div className="max-h-[420px] space-y-2 overflow-auto rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] p-3">
+                          {crawlKeep.map((page) => (
+                            <label
+                              key={page.url}
+                              className="flex gap-3 rounded-[9px] bg-[var(--card)] p-3 text-sm"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedCrawlUrls.includes(page.url)}
+                                onChange={(e) => toggleCrawlUrl(page.url, e.target.checked)}
+                              />
+                              <span className="min-w-0">
+                                <span className="block truncate font-semibold text-[var(--ink)]">
+                                  {page.title}
+                                </span>
+                                <span className="block truncate text-xs text-[var(--muted)]">
+                                  {page.url}
+                                </span>
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <SectionLabel>Skipped</SectionLabel>
+                        <div className="max-h-[420px] space-y-2 overflow-auto rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] p-3">
+                          {crawlSkip.map((page) => (
+                            <div
+                              key={page.url}
+                              className="rounded-[9px] bg-[var(--card)] p-3 text-sm opacity-70"
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <span className="min-w-0">
+                                  <span className="block truncate font-semibold text-[var(--ink)]">
+                                    {page.title}
+                                  </span>
+                                  <span className="block truncate text-xs text-[var(--muted)]">
+                                    {page.url}
+                                  </span>
+                                  {page.skipReason && (
+                                    <span className="mt-1 block text-xs text-[var(--muted)]">
+                                      {page.skipReason}
+                                    </span>
+                                  )}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => moveSkippedPageToKeep(page.url)}
+                                  className="shrink-0 text-xs font-semibold text-[var(--primary-deep)]"
+                                >
+                                  Move to keep
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {crawlKeep.length > 0 && (
+                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] p-4">
+                      <p className="text-sm font-medium text-[var(--muted)]">
+                        Upload this file to the Claude.ai cleanup Project, then bring the cleaned output back here for the Content step.
+                      </p>
+                      <Button
+                        type="button"
+                        onClick={exportCrawlMarkdown}
+                        disabled={exportingCrawl}
+                      >
+                        {exportingCrawl ? "Exporting" : "Export Combined File"}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {step === 1 && (
             <div className="space-y-5">
               <SectionLabel>Theme setup</SectionLabel>
               <div className="space-y-2">
@@ -797,7 +1120,7 @@ export function BuildWizard({
             </div>
           )}
 
-          {step === 1 && (
+          {step === 2 && (
             <div className="space-y-7">
               <SectionLabel>Practice details</SectionLabel>
               <Field label="Practice name">
@@ -881,7 +1204,7 @@ export function BuildWizard({
             </div>
           )}
 
-          {step === 2 && (
+          {step === 3 && (
             <div className="space-y-6">
               <SectionLabel>Color palette</SectionLabel>
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -921,7 +1244,7 @@ export function BuildWizard({
             </div>
           )}
 
-          {step === 3 && (
+          {step === 4 && (
             <div className="space-y-5">
               <SectionLabel>WordPress destination</SectionLabel>
               <Field label="WordPress site URL">
@@ -952,7 +1275,7 @@ export function BuildWizard({
             </div>
           )}
 
-          {step === 4 && (
+          {step === 5 && (
             <div className="space-y-5">
               <SectionLabel>Markdown source</SectionLabel>
               <FileField
@@ -1054,16 +1377,21 @@ export function BuildWizard({
             </div>
           )}
 
-          {step === 5 && (
+          {step === 6 && (
             <div className="space-y-4 text-sm">
               <SectionLabel>Build summary</SectionLabel>
-              <Review label="Theme" value={selectedTheme?.label ?? theme} onEdit={() => setStep(0)} />
-              <Review label="Site name" value={name} onEdit={() => setStep(1)} />
-              <Review label="Practice slug" value={slug} onEdit={() => setStep(1)} />
-              <Review label="WP site" value={siteUrl} onEdit={() => setStep(3)} />
+              <Review
+                label="Source"
+                value={siteKind === "existing" ? "Existing website" : "New website"}
+                onEdit={() => setStep(0)}
+              />
+              <Review label="Theme" value={selectedTheme?.label ?? theme} onEdit={() => setStep(1)} />
+              <Review label="Site name" value={name} onEdit={() => setStep(2)} />
+              <Review label="Practice slug" value={slug} onEdit={() => setStep(2)} />
+              <Review label="WP site" value={siteUrl} onEdit={() => setStep(4)} />
               <Review
                 label="Brand colors"
-                onEdit={() => setStep(2)}
+                onEdit={() => setStep(3)}
                 value={
                   <span className="flex gap-1">
                     {Object.values(colors).map((c, i) => (
@@ -1077,27 +1405,27 @@ export function BuildWizard({
                   </span>
                 }
               />
-              <Review label="Fonts" value={`${fontHeading} / ${fontBody}`} onEdit={() => setStep(2)} />
-              <Review label="Site logo" value={logo ? logo.filename : "none"} onEdit={() => setStep(2)} />
-              <Review label="Site favicon" value={favicon ? favicon.filename : "none"} onEdit={() => setStep(2)} />
-              <Review label="Content" value={markdownName || "none"} onEdit={() => setStep(4)} />
+              <Review label="Fonts" value={`${fontHeading} / ${fontBody}`} onEdit={() => setStep(3)} />
+              <Review label="Site logo" value={logo ? logo.filename : "none"} onEdit={() => setStep(3)} />
+              <Review label="Site favicon" value={favicon ? favicon.filename : "none"} onEdit={() => setStep(3)} />
+              <Review label="Content" value={markdownName || "none"} onEdit={() => setStep(5)} />
               {structuredResult && (
                 <>
                   <Review
                     label="Parser result"
                     value={`${Object.keys(structuredResult.pages).length} pages, ${Object.keys(structuredResult.service_pages).length} service pages`}
-                    onEdit={() => setStep(4)}
+                    onEdit={() => setStep(5)}
                   />
                   <Review
                     label="Builder"
-                    value="Website-builder integration pending"
-                    onEdit={() => setStep(4)}
+                    value="Elevate builder connected"
+                    onEdit={() => setStep(5)}
                   />
                 </>
               )}
               <Review
                 label="Pages"
-                onEdit={() => setStep(4)}
+                onEdit={() => setStep(5)}
                 value={
                   <span className="flex flex-wrap gap-1">
                     {detectedPages

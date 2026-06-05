@@ -24,4 +24,7 @@ export const serverEnv = {
   get pluginSecret() {
     return required("ENERGIZE_PLUGIN_SECRET");
   },
+  get firecrawlApiKey() {
+    return required("FIRECRAWL_API_KEY");
+  },
 };
