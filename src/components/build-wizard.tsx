@@ -1455,7 +1455,7 @@ export function BuildWizard({
             </Button>
             <div className="flex items-center gap-2 text-xs font-semibold text-[var(--muted)]">
               <CheckCircle2 className="size-4 text-[var(--good)]" />
-              <span>{name ? `Draft held for ${name}` : "Draft held in this session"}</span>
+              <span>{name ? `Draft saved for ${name}` : "Draft saved in this session"}</span>
             </div>
             {step < STEPS.length - 1 ? (
               <Button onClick={next}>
