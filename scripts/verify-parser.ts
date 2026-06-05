@@ -2,7 +2,7 @@
 // Run with: npx tsx scripts/verify-parser.ts
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { parseContent } from "../src/lib/parser";
+import { parseContent } from "../src/lib/parser/index";
 import { getInjector } from "../src/lib/injection/registry";
 
 const sample = readFileSync(

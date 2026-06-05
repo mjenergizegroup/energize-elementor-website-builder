@@ -54,6 +54,19 @@ export interface InitialClient {
 }
 
 type Asset = UploadedAsset & { previewUrl: string };
+type StructuredFieldValue =
+  | string
+  | string[]
+  | Record<string, string>
+  | Array<Record<string, string>>;
+type StructuredPageData = Record<string, Record<string, StructuredFieldValue>>;
+
+interface StructuredParseResult {
+  site: Record<string, string>;
+  pages: Record<string, StructuredPageData>;
+  service_pages: Record<string, StructuredPageData>;
+  warnings: string[];
+}
 
 // A page detected by the parser, with selection + editable title/slug.
 interface DetectedPage extends PageContent {
@@ -227,6 +240,9 @@ export function BuildWizard({
 
   const [markdownName, setMarkdownName] = useState("");
   const [parsing, setParsing] = useState(false);
+  const [structuredResult, setStructuredResult] =
+    useState<StructuredParseResult | null>(null);
+  const [parserWarnings, setParserWarnings] = useState<string[]>([]);
   const [practiceMeta, setPracticeMeta] = useState<{
     practiceName: string;
     city?: string;
@@ -241,6 +257,7 @@ export function BuildWizard({
   const [deployedLinks, setDeployedLinks] = useState<DeployedLink[]>([]);
   const [buildNotes, setBuildNotes] = useState<string[]>([]);
   const [warnings, setWarnings] = useState<string[]>([]);
+  const [stubbedBuild, setStubbedBuild] = useState(false);
   const [finished, setFinished] = useState<null | "success" | "partial" | "failed">(
     null,
   );
@@ -297,6 +314,8 @@ export function BuildWizard({
     setParsing(true);
     setDetectedPages([]);
     setPracticeMeta(null);
+    setStructuredResult(null);
+    setParserWarnings([]);
     try {
       const res = await fetch("/api/parse", {
         method: "POST",
@@ -308,19 +327,48 @@ export function BuildWizard({
         toast.error(json.error ?? "Could not parse the markdown.");
         return;
       }
-      const content = json.content as {
-        practiceName: string;
-        city?: string;
-        doctorName?: string;
-        pages: PageContent[];
-      };
-      setPracticeMeta({
-        practiceName: content.practiceName,
-        city: content.city,
-        doctorName: content.doctorName,
+      const result = json.result as StructuredParseResult;
+      const normalPages = Object.entries(result.pages).map(([pageKey, pageData]) => {
+        const title =
+          (pageData.meta?.title as string | undefined) ??
+          (pageData.hero?.heading as string | undefined) ??
+          pageKey;
+        return {
+          page: pageKey,
+          wpTitle: title,
+          slug: slugify(pageKey),
+          wpPageTemplate: "elementor_header_footer",
+          slots: {},
+          buildNotes: [],
+          selected: true,
+        } satisfies DetectedPage;
       });
-      setDetectedPages(content.pages.map((p) => ({ ...p, selected: true })));
-      toast.success(`Detected ${content.pages.length} pages.`);
+      const servicePages = Object.entries(result.service_pages).map(([slugKey, pageData]) => {
+        const title =
+          (pageData.meta?.title as string | undefined) ??
+          (pageData.hero?.heading as string | undefined) ??
+          slugKey;
+        return {
+          page: `service-page-${slugKey}`,
+          wpTitle: title,
+          slug: slugify(slugKey),
+          wpPageTemplate: "elementor_header_footer",
+          slots: {},
+          buildNotes: [],
+          selected: true,
+        } satisfies DetectedPage;
+      });
+      setPracticeMeta({
+        practiceName: result.site.practice_name ?? result.site.site_name ?? name,
+        city: result.site.city,
+        doctorName: result.site.doctor_primary,
+      });
+      setStructuredResult(result);
+      setParserWarnings(result.warnings ?? []);
+      setDetectedPages([...normalPages, ...servicePages]);
+      toast.success(
+        `Parsed ${normalPages.length} pages and ${servicePages.length} service pages.`,
+      );
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Could not parse the markdown.");
     } finally {
@@ -410,6 +458,7 @@ export function BuildWizard({
     setDeployedLinks([]);
     setBuildNotes([]);
     setWarnings([]);
+    setStubbedBuild(false);
     setFinished(null);
     if (logo && !logo.dataBase64) {
       toast.error("Logo file data is missing. Upload the logo again.");
@@ -418,6 +467,21 @@ export function BuildWizard({
     }
     if (favicon && !favicon.dataBase64) {
       toast.error("Favicon file data is missing. Upload the favicon again.");
+      setDeploying(false);
+      return;
+    }
+    if (structuredResult) {
+      const pageCount = Object.keys(structuredResult.pages).length;
+      const serviceCount = Object.keys(structuredResult.service_pages).length;
+      upsertEvent("Parsed structured content", "ok");
+      upsertEvent("Website-builder integration pending", "ok");
+      setBuildNotes([
+        `Parsed ${pageCount} pages and ${serviceCount} service pages.`,
+        "Website-builder integration is not connected yet. No WordPress pages were created.",
+      ]);
+      setWarnings(parserWarnings);
+      setStubbedBuild(true);
+      setFinished("success");
       setDeploying(false);
       return;
     }
@@ -519,7 +583,9 @@ export function BuildWizard({
   // Deploy and result view.
   if (deploying || finished) {
     const title =
-      finished === "success"
+      stubbedBuild
+        ? "Build step stubbed"
+        : finished === "success"
         ? "Deploy complete"
         : finished === "partial"
           ? "Deploy finished with issues"
@@ -531,7 +597,11 @@ export function BuildWizard({
       <div className="space-y-8">
         <PageHead
           title={title}
-          subline="The deploy stream reports every WordPress and brand-kit step."
+          subline={
+            stubbedBuild
+              ? "Structured content is parsed and ready for the website-builder pass."
+              : "The deploy stream reports every WordPress and brand-kit step."
+          }
           clientName={name || practiceMeta?.practiceName || "Untitled client"}
           themeLabel={selectedTheme?.label ?? theme}
         />
@@ -889,9 +959,47 @@ export function BuildWizard({
                   {practiceMeta.city ? ` · ${practiceMeta.city}` : ""}
                 </p>
               )}
+              {parserWarnings.length > 0 && (
+                <div className="space-y-2 rounded-[11px] border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                  <p className="font-semibold">Parser warnings</p>
+                  <ul className="list-inside list-disc space-y-1">
+                    {parserWarnings.map((warning, i) => (
+                      <li key={`parser-warning-${i}`}>{warning}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {structuredResult && (
+                <div className="space-y-4 rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] p-4">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary">
+                      {Object.keys(structuredResult.pages).length} pages
+                    </Badge>
+                    <Badge variant="secondary">
+                      {Object.keys(structuredResult.service_pages).length} service pages
+                    </Badge>
+                    <Badge variant="outline">
+                      {parserWarnings.length} warnings
+                    </Badge>
+                  </div>
+                  <pre className="max-h-72 overflow-auto rounded-[10px] border border-[var(--line)] bg-[var(--card)] p-4 text-xs leading-5 text-[var(--ink)]">
+                    {JSON.stringify(
+                      {
+                        site: structuredResult.site,
+                        pages: structuredResult.pages,
+                        service_pages: structuredResult.service_pages,
+                      },
+                      null,
+                      2,
+                    )}
+                  </pre>
+                </div>
+              )}
               {detectedPages.length > 0 && (
                 <>
-                  <SectionLabel>Detected pages to build</SectionLabel>
+                  <SectionLabel>
+                    {structuredResult ? "Parsed pages" : "Detected pages to build"}
+                  </SectionLabel>
                   <div className="space-y-3">
                     {detectedPages.map((p, i) => {
                       const slotCount = Object.keys(p.slots).length;
@@ -905,8 +1013,8 @@ export function BuildWizard({
                             />
                             {p.page}
                             <span className="text-xs font-normal text-muted-foreground">
-                              {slotCount} fields
-                              {p.buildNotes && p.buildNotes.length > 0
+                              {structuredResult ? "ready for builder" : `${slotCount} fields`}
+                              {!structuredResult && p.buildNotes && p.buildNotes.length > 0
                                 ? ` · ${p.buildNotes.length} flags`
                                 : ""}
                             </span>
@@ -961,6 +1069,20 @@ export function BuildWizard({
               <Review label="Site logo" value={logo ? logo.filename : "none"} onEdit={() => setStep(2)} />
               <Review label="Site favicon" value={favicon ? favicon.filename : "none"} onEdit={() => setStep(2)} />
               <Review label="Content" value={markdownName || "none"} onEdit={() => setStep(4)} />
+              {structuredResult && (
+                <>
+                  <Review
+                    label="Parser result"
+                    value={`${Object.keys(structuredResult.pages).length} pages, ${Object.keys(structuredResult.service_pages).length} service pages`}
+                    onEdit={() => setStep(4)}
+                  />
+                  <Review
+                    label="Builder"
+                    value="Website-builder integration pending"
+                    onEdit={() => setStep(4)}
+                  />
+                </>
+              )}
               <Review
                 label="Pages"
                 onEdit={() => setStep(4)}
