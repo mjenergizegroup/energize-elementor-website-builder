@@ -78,7 +78,14 @@ check("element count preserved", countElements(result.elementorData) === ids.len
 const serialized = JSON.stringify(result.elementorData);
 check("hero headline text injected", serialized.includes("Headline for Maple Street Dental"));
 check("no template placeholder names remain", !/SolSmile|Atlas Dental/.test(serialized));
+check("default page template keeps theme header and footer", result.wpPageTemplate === "elementor_header_footer", result.wpPageTemplate);
 check("membership typo fix not applicable here (homepage has no fixedValue)", true);
+
+const canvasResult = elevate.injectPage("homepage", {
+  ...content,
+  wpPageTemplate: "elementor_canvas",
+});
+check("page payload can explicitly request canvas", canvasResult.wpPageTemplate === "elementor_canvas", canvasResult.wpPageTemplate);
 
 // Optional slots: build a homepage with NOTHING and confirm required slots warn
 console.log("\nInjecting empty Elevate services page (expect MISSING for required, none for optional):");

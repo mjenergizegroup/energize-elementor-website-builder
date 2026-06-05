@@ -1,4 +1,4 @@
-# Energize Build Tool
+# Energize Website Builder
 
 Internal web app for the Energize Group website team. It injects approved
 content and a brand kit into theme Elementor JSON templates and pushes finished
@@ -59,8 +59,13 @@ wordpress-plugin/         energize-build-tool.php (mu-plugin)
 1. Parser turns approved markdown into `ParsedContent` (slot key -> value).
 2. The theme injector loads the page template, writes each slot into its
    `nodeId` per `_meta.json`, then regenerates every element ID (8-char hex).
-3. The deploy layer pushes each page to WP via the mu-plugin `/page` endpoint,
-   sets brand colors/fonts/logo/favicon, and flushes the Elementor CSS cache.
+3. The deploy layer pushes each page to WP via the `/page` endpoint, updates
+   the WP site name, sets brand colors/fonts/logo/favicon, generates 80/60/40/20
+   custom color tints for primary, secondary, and accent, and flushes the
+   Elementor CSS cache.
+4. Pages default to the `elementor_header_footer` WordPress page template so the
+   active theme header and footer render. Use `elementor_canvas` only when a
+   page explicitly requests a standalone canvas layout.
 
 ### Verify the injection engine
 

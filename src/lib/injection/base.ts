@@ -11,6 +11,8 @@ import type {
   ThemeMeta,
 } from "./types";
 
+export const DEFAULT_WP_PAGE_TEMPLATE = "elementor_header_footer";
+
 // A fully data-driven injector. Every widget write is described by the slot
 // entries in _meta.json (nodeId + field(s) + widget), so the same engine drives
 // all themes. Theme-specific quirks are handled by subclassing and overriding
@@ -73,7 +75,8 @@ export class BaseThemeInjector implements ThemeInjector {
       page: page.key,
       title: content.wpTitle ?? page.label,
       slug: content.slug ?? page.key,
-      wpPageTemplate: page.wpPageTemplate,
+      wpPageTemplate:
+        content.wpPageTemplate ?? page.wpPageTemplate ?? DEFAULT_WP_PAGE_TEMPLATE,
       elementorVersion:
         ctx?.elementorVersion ?? this.meta.defaultElementorVersion,
       elementorData: data,

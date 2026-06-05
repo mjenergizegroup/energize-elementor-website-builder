@@ -1,4 +1,4 @@
-// Prisma schema for the Energize Build Tool.
+// Prisma schema for the Energize Website Builder.
 // Theme and status are stored as plain strings (not enums) so that adding a
 // v2 theme stays purely additive and never requires a schema migration.
 

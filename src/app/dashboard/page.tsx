@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Plus, RotateCw } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -41,44 +42,52 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="space-y-2">
+          <h1 className="text-[42px] font-bold leading-none tracking-[-0.025em] text-[var(--ink)]">
+            Dashboard
+          </h1>
+          <p className="max-w-2xl text-sm font-medium text-[var(--muted)]">
+            Track recent WordPress builds and restart saved client workflows.
+          </p>
+        </div>
         <Link href="/dashboard/new" className={buttonVariants()}>
+          <Plus data-icon="inline-start" />
           New Build
         </Link>
       </div>
 
-      <Card>
-        <CardHeader>
+      <Card className="shadow-[var(--shadow-lg)]">
+        <CardHeader className="border-b border-[var(--line)] bg-[var(--paper-2)] py-5">
           <CardTitle>Recent builds</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           {builds.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
+            <p className="px-5 py-8 text-sm font-medium text-[var(--muted)]">
               No builds yet. Start one with New Build.
             </p>
           ) : (
-            <ul className="divide-y">
+            <ul className="divide-y divide-[var(--line)]">
               {builds.map((build) => {
                 const pages = (build.pagesDeployed ?? []) as DeployedPage[];
                 return (
                   <li
                     key={build.id}
-                    className="flex flex-wrap items-center justify-between gap-2 py-3"
+                    className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-[var(--paper-2)]"
                   >
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">
+                        <span className="font-semibold text-[var(--ink)]">
                           {build.client?.name ?? "Unknown client"}
                         </span>
                         <Badge variant={STATUS_VARIANT[build.status] ?? "outline"}>
                           {build.status}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
                           {build.client?.theme}
                         </span>
                       </div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="font-mono text-[11px] font-medium text-[var(--muted)]">
                         {build.deployedAt
                           ? new Date(build.deployedAt).toLocaleString()
                           : new Date(build.createdAt).toLocaleString()}
@@ -93,7 +102,7 @@ export default async function DashboardPage() {
                             href={p.editUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-xs underline underline-offset-2"
+                            className="rounded-[9px] border border-[var(--line)] bg-[var(--card)] px-2.5 py-1 text-xs font-semibold text-[var(--ink-soft)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--primary-deep)]"
                           >
                             {p.page}
                           </a>
@@ -108,26 +117,26 @@ export default async function DashboardPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
+      <Card className="shadow-[var(--shadow-lg)]">
+        <CardHeader className="border-b border-[var(--line)] bg-[var(--paper-2)] py-5">
           <CardTitle>Saved clients</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           {clients.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
+            <p className="px-5 py-8 text-sm font-medium text-[var(--muted)]">
               No saved clients yet. Clients are saved automatically on first
               deploy so credentials are reusable on rebuild.
             </p>
           ) : (
-            <ul className="divide-y">
+            <ul className="divide-y divide-[var(--line)]">
               {clients.map((client) => (
                 <li
                   key={client.id}
-                  className="flex items-center justify-between py-3"
+                  className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-[var(--paper-2)]"
                 >
                   <div>
-                    <div className="font-medium">{client.name}</div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="font-semibold text-[var(--ink)]">{client.name}</div>
+                    <div className="font-mono text-[11px] font-medium text-[var(--muted)]">
                       {client.theme} · {client.wpSiteUrl}
                     </div>
                   </div>
@@ -135,6 +144,7 @@ export default async function DashboardPage() {
                     href={`/dashboard/new?clientId=${client.id}`}
                     className={buttonVariants({ variant: "outline", size: "sm" })}
                   >
+                    <RotateCw data-icon="inline-start" />
                     Rebuild
                   </Link>
                 </li>

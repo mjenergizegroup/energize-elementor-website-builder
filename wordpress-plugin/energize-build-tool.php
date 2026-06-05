@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Energize Build Tool
- * Description: REST endpoints used by the Energize Build Tool to create Elementor pages and set brand styling on client sites. Must-use plugin, copied with full site duplication.
+ * Plugin Name: Energize Website Builder
+ * Description: REST endpoints used by the Energize Website Builder to create Elementor pages and set brand styling on client sites. Must-use plugin, copied with full site duplication.
  * Version: 1.0.0
  * Author: Energize Group
  *
@@ -396,13 +396,56 @@ function energize_build_store_media($base64, $filename, array $allowed_ext) {
 }
 
 /**
+ * Read media input from JSON aliases or multipart upload data.
+ */
+function energize_build_media_payload(WP_REST_Request $request, $default_filename) {
+    $filename = sanitize_file_name((string) $request->get_param('filename'));
+    if ($filename === '') {
+        $filename = $default_filename;
+    }
+
+    $files = $request->get_file_params();
+    if (isset($files['file']) && is_array($files['file']) && !empty($files['file']['tmp_name'])) {
+        $uploaded = $files['file'];
+        if (!empty($uploaded['name'])) {
+            $filename = sanitize_file_name((string) $uploaded['name']);
+        }
+        $contents = file_get_contents((string) $uploaded['tmp_name']);
+        if ($contents === false || $contents === '') {
+            return new WP_Error('energize_bad_input', 'Missing file data.', array('status' => 400));
+        }
+        return array(
+            'filename' => $filename,
+            'file'     => base64_encode($contents),
+        );
+    }
+
+    $aliases = array('file', 'fileData', 'file_data', 'data', 'dataBase64', 'data_base64', 'base64', 'content');
+    foreach ($aliases as $alias) {
+        $value = $request->get_param($alias);
+        if (is_string($value) && $value !== '') {
+            return array(
+                'filename' => $filename,
+                'file'     => $value,
+            );
+        }
+    }
+
+    return new WP_Error('energize_bad_input', 'Missing file data.', array('status' => 400));
+}
+
+/**
  * POST /logo
- * Body: { file (base64), filename }
+ * Body: { file (base64), filename } or multipart file field.
  */
 function energize_build_set_logo(WP_REST_Request $request) {
+    $payload = energize_build_media_payload($request, 'logo.png');
+    if (is_wp_error($payload)) {
+        return $payload;
+    }
     $attach_id = energize_build_store_media(
-        (string) $request->get_param('file'),
-        (string) $request->get_param('filename') ?: 'logo.png',
+        $payload['file'],
+        $payload['filename'],
         array('png', 'jpg', 'jpeg', 'svg')
     );
     if (is_wp_error($attach_id)) {
@@ -418,12 +461,16 @@ function energize_build_set_logo(WP_REST_Request $request) {
 
 /**
  * POST /favicon
- * Body: { file (base64), filename }
+ * Body: { file (base64), filename } or multipart file field.
  */
 function energize_build_set_favicon(WP_REST_Request $request) {
+    $payload = energize_build_media_payload($request, 'favicon.png');
+    if (is_wp_error($payload)) {
+        return $payload;
+    }
     $attach_id = energize_build_store_media(
-        (string) $request->get_param('file'),
-        (string) $request->get_param('filename') ?: 'favicon.png',
+        $payload['file'],
+        $payload['filename'],
         array('png', 'ico')
     );
     if (is_wp_error($attach_id)) {

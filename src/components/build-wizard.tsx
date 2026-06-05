@@ -1,15 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  CheckCircle2,
+  ClipboardList,
+  FileText,
+  Globe2,
+  ListChecks,
+  Palette,
+  Rocket,
+  UploadCloud,
+  UserRound,
+  type LucideIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -17,7 +31,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { GOOGLE_FONTS } from "@/lib/google-fonts";
 import type { BrandKit, UploadedAsset } from "@/lib/types";
 import type { PageContent } from "@/lib/injection/types";
@@ -70,6 +83,50 @@ const STEPS = [
   "Review",
 ] as const;
 
+const STEP_DETAILS: {
+  title: (typeof STEPS)[number];
+  rail: string;
+  description: string;
+  icon: LucideIcon;
+}[] = [
+  {
+    title: "Theme",
+    rail: "Choose template",
+    description: "Choose the Elementor theme and confirm page coverage.",
+    icon: ClipboardList,
+  },
+  {
+    title: "Practice Info",
+    rail: "Client identity",
+    description: "Set the client identity and production notes.",
+    icon: UserRound,
+  },
+  {
+    title: "Brand Kit",
+    rail: "Colors and assets",
+    description: "Capture colors, fonts, logo, and favicon for injection.",
+    icon: Palette,
+  },
+  {
+    title: "WP Target",
+    rail: "Destination",
+    description: "Add the WordPress destination and credentials.",
+    icon: Globe2,
+  },
+  {
+    title: "Content",
+    rail: "Markdown source",
+    description: "Upload approved markdown and select generated pages.",
+    icon: FileText,
+  },
+  {
+    title: "Review",
+    rail: "Final check",
+    description: "Confirm the build payload before deployment.",
+    icon: ListChecks,
+  },
+];
+
 const DEFAULT_COLORS = {
   primary: "#1e6091",
   secondary: "#168aad",
@@ -87,13 +144,32 @@ function slugify(value: string): string {
 }
 
 async function fileToBase64(file: File): Promise<string> {
-  const buffer = await file.arrayBuffer();
-  let binary = "";
-  const bytes = new Uint8Array(buffer);
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error(`Could not read ${file.name}.`));
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result !== "string") {
+        reject(new Error(`Could not read ${file.name}.`));
+        return;
+      }
+      resolve(result.includes(",") ? result.split(",")[1] : result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function mimeFromFilename(filename: string): string {
+  const ext = filename.split(".").pop()?.toLowerCase();
+  if (ext === "svg") return "image/svg+xml";
+  if (ext === "jpg" || ext === "jpeg") return "image/jpeg";
+  if (ext === "ico") return "image/x-icon";
+  return "image/png";
+}
+
+function previewUrlFromAsset(asset?: UploadedAsset): string | undefined {
+  if (!asset?.dataBase64) return undefined;
+  return `data:${mimeFromFilename(asset.filename)};base64,${asset.dataBase64}`;
 }
 
 export function BuildWizard({
@@ -134,8 +210,16 @@ export function BuildWizard({
   const [fontBody, setFontBody] = useState(
     initialClient?.brandKit.fonts.body ?? "Inter",
   );
-  const [logo, setLogo] = useState<Asset | null>(null);
-  const [favicon, setFavicon] = useState<Asset | null>(null);
+  const [logo, setLogo] = useState<Asset | null>(() => {
+    const asset = initialClient?.brandKit.logo;
+    const previewUrl = previewUrlFromAsset(asset);
+    return asset && previewUrl ? { ...asset, previewUrl } : null;
+  });
+  const [favicon, setFavicon] = useState<Asset | null>(() => {
+    const asset = initialClient?.brandKit.favicon;
+    const previewUrl = previewUrlFromAsset(asset);
+    return asset && previewUrl ? { ...asset, previewUrl } : null;
+  });
 
   const [siteUrl, setSiteUrl] = useState(initialClient?.wpSiteUrl ?? "");
   const [username, setUsername] = useState(initialClient?.wpUsername ?? "");
@@ -182,6 +266,7 @@ export function BuildWizard({
       dataBase64,
       previewUrl: URL.createObjectURL(file),
     });
+    toast.success(`${file.name} loaded for logo.`);
   }
 
   async function handleFavicon(file: File) {
@@ -199,6 +284,7 @@ export function BuildWizard({
       dataBase64,
       previewUrl: URL.createObjectURL(file),
     });
+    toast.success(`${file.name} loaded for favicon.`);
   }
 
   async function handleMarkdown(file: File) {
@@ -253,6 +339,10 @@ export function BuildWizard({
         if (!name.trim()) return "Practice name is required.";
         if (!slug.trim()) return "Slug is required.";
         return null;
+      case 2:
+        if (!logo?.dataBase64) return "Site logo is required.";
+        if (!favicon?.dataBase64) return "Site favicon is required.";
+        return null;
       case 3:
         if (!siteUrl.trim()) return "WordPress site URL is required.";
         if (!username.trim()) return "WordPress username is required.";
@@ -289,8 +379,9 @@ export function BuildWizard({
       colors,
       fonts: { heading: fontHeading, body: fontBody },
     };
-    if (logo) kit.logo = { filename: logo.filename, dataBase64: logo.dataBase64 };
-    if (favicon)
+    if (logo?.dataBase64)
+      kit.logo = { filename: logo.filename, dataBase64: logo.dataBase64 };
+    if (favicon?.dataBase64)
       kit.favicon = { filename: favicon.filename, dataBase64: favicon.dataBase64 };
     return kit;
   }
@@ -309,7 +400,7 @@ export function BuildWizard({
   }
 
   async function deploy() {
-    const error = validateStep(4);
+    const error = [0, 1, 2, 3, 4].map(validateStep).find(Boolean);
     if (error) {
       toast.error(error);
       return;
@@ -320,6 +411,16 @@ export function BuildWizard({
     setBuildNotes([]);
     setWarnings([]);
     setFinished(null);
+    if (logo && !logo.dataBase64) {
+      toast.error("Logo file data is missing. Upload the logo again.");
+      setDeploying(false);
+      return;
+    }
+    if (favicon && !favicon.dataBase64) {
+      toast.error("Favicon file data is missing. Upload the favicon again.");
+      setDeploying(false);
+      return;
+    }
 
     // Build the content payload from the selected detected pages.
     const pages = detectedPages
@@ -328,6 +429,7 @@ export function BuildWizard({
         page: p.page,
         wpTitle: p.wpTitle,
         slug: p.slug,
+        wpPageTemplate: p.wpPageTemplate,
         slots: p.slots,
         buildNotes: p.buildNotes,
       }));
@@ -414,35 +516,55 @@ export function BuildWizard({
     }
   }
 
-  // ---- Deploy / success view ----
+  // Deploy and result view.
   if (deploying || finished) {
-    return (
-      <div className="space-y-6">
-        <h1 className="text-2xl font-semibold">
-          {finished === "success"
-            ? "Deploy complete"
-            : finished === "partial"
-              ? "Deploy finished with issues"
-              : finished === "failed"
-                ? "Deploy failed"
-                : "Deploying"}
-        </h1>
+    const title =
+      finished === "success"
+        ? "Deploy complete"
+        : finished === "partial"
+          ? "Deploy finished with issues"
+          : finished === "failed"
+            ? "Deploy failed"
+            : "Deploying";
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Progress</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-1 text-sm">
+    return (
+      <div className="space-y-8">
+        <PageHead
+          title={title}
+          subline="The deploy stream reports every WordPress and brand-kit step."
+          clientName={name || practiceMeta?.practiceName || "Untitled client"}
+          themeLabel={selectedTheme?.label ?? theme}
+        />
+
+        <section className="overflow-hidden rounded-[var(--radius)] border border-[var(--line)] bg-[var(--card)] shadow-[var(--shadow-lg)]">
+          <PanelHead
+            icon={Rocket}
+            title="Deployment progress"
+            description="Routes, page drafts, assets, and Elementor cache status."
+          />
+          <div className="space-y-6 bg-[var(--card)] p-6 sm:p-8">
+            <ul className="space-y-2 text-sm">
               {events.map((e) => (
-                <li key={e.key} className="flex items-center gap-2">
-                  <span aria-hidden>
-                    {e.status === "ok" ? "✓" : e.status === "fail" ? "✗" : "…"}
+                <li
+                  key={e.key}
+                  className="flex items-start gap-3 rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] px-3 py-2.5"
+                >
+                  <span
+                    aria-hidden
+                    className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-[7px] text-xs font-bold ${
+                      e.status === "ok"
+                        ? "bg-[var(--good)] text-primary-foreground"
+                        : e.status === "fail"
+                          ? "bg-destructive/10 text-destructive"
+                          : "bg-[var(--card)] text-[var(--muted)]"
+                    }`}
+                  >
+                    {e.status === "ok" ? <Check className="size-3.5" /> : e.status === "fail" ? "x" : "..."}
                   </span>
                   <span
-                    className={
-                      e.status === "fail" ? "text-destructive" : undefined
-                    }
+                    className={`leading-6 ${
+                      e.status === "fail" ? "text-destructive" : "text-[var(--ink)]"
+                    }`}
                   >
                     {e.label}
                     {e.message ? ` - ${e.message}` : ""}
@@ -450,27 +572,24 @@ export function BuildWizard({
                 </li>
               ))}
               {events.length === 0 && (
-                <li className="text-muted-foreground">Starting…</li>
+                <li className="rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] px-3 py-2.5 text-[var(--muted)]">
+                  Starting...
+                </li>
               )}
             </ul>
-          </CardContent>
-        </Card>
 
-        {deployedLinks.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Draft pages</CardTitle>
-            </CardHeader>
-            <CardContent>
+            {deployedLinks.length > 0 && (
+              <div className="space-y-3">
+                <SectionLabel>Draft pages</SectionLabel>
               <ul className="space-y-1 text-sm">
                 {deployedLinks.map((l) => (
-                  <li key={l.wpPageId} className="flex items-center gap-3">
+                  <li key={l.wpPageId} className="flex flex-wrap items-center gap-3">
                     <span className="font-medium">{l.title}</span>
                     <a
                       href={l.editUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="underline underline-offset-2"
+                      className="rounded-[9px] border border-[var(--line)] px-2.5 py-1 text-xs font-semibold text-[var(--primary-deep)]"
                     >
                       Edit in WP
                     </a>
@@ -478,94 +597,87 @@ export function BuildWizard({
                       href={l.viewUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="underline underline-offset-2"
+                      className="rounded-[9px] border border-[var(--line)] px-2.5 py-1 text-xs font-semibold text-[var(--primary-deep)]"
                     >
                       Preview
                     </a>
                   </li>
                 ))}
               </ul>
-            </CardContent>
-          </Card>
-        )}
+              </div>
+            )}
 
-        {(buildNotes.length > 0 || warnings.length > 0) && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Build notes for David&apos;s team</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm">
+            {(buildNotes.length > 0 || warnings.length > 0) && (
+              <div className="space-y-3">
+                <SectionLabel>Build notes for David&apos;s team</SectionLabel>
+                <div className="space-y-2 rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] p-4 text-sm leading-6">
               {buildNotes.map((n, i) => (
                 <p key={`note-${i}`}>{n}</p>
               ))}
               {warnings.map((w, i) => (
-                <p key={`warn-${i}`} className="text-muted-foreground">
+                <p key={`warn-${i}`} className="text-[var(--muted)]">
                   {w}
                 </p>
               ))}
-            </CardContent>
-          </Card>
-        )}
-
-        {finished && (
-          <div className="flex gap-3">
-            <Button onClick={() => router.push("/dashboard")}>
-              Back to dashboard
-            </Button>
-            {finished !== "success" && (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setFinished(null);
-                  setStep(5);
-                }}
-              >
-                Back to review
-              </Button>
+                </div>
+              </div>
             )}
+
           </div>
-        )}
+          {finished && (
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line)] bg-[var(--paper-2)] p-5">
+              <Button variant="ghost" onClick={() => router.push("/dashboard")}>
+                <ArrowLeft data-icon="inline-start" />
+                Back to dashboard
+              </Button>
+              {finished !== "success" && (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setFinished(null);
+                    setStep(5);
+                  }}
+                >
+                  Back to review
+                </Button>
+              )}
+            </div>
+          )}
+        </section>
       </div>
     );
   }
 
-  // ---- Wizard steps ----
+  // Wizard steps.
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">New Build</h1>
+    <div className="space-y-8">
+      <PageHead
+        title="New Build"
+        subline="Run one client through theme, brand, WordPress, content, and review."
+        clientName={name || practiceMeta?.practiceName || "Untitled client"}
+        themeLabel={selectedTheme?.label ?? theme}
+      >
         <Link
           href="/dashboard"
           className={buttonVariants({ variant: "ghost", size: "sm" })}
         >
           Cancel
         </Link>
-      </div>
+      </PageHead>
 
-      <ol className="flex flex-wrap gap-2 text-sm">
-        {STEPS.map((label, i) => (
-          <li key={label}>
-            <button
-              type="button"
-              onClick={() => i < step && setStep(i)}
-              className={`rounded px-2 py-1 ${
-                i === step
-                  ? "bg-primary text-primary-foreground"
-                  : i < step
-                    ? "bg-muted"
-                    : "text-muted-foreground"
-              }`}
-            >
-              {i + 1}. {label}
-            </button>
-          </li>
-        ))}
-      </ol>
+      <div className="grid gap-7 lg:grid-cols-[264px_minmax(0,1fr)]">
+        <StepperRail step={step} setStep={setStep} />
 
-      <Card>
-        <CardContent className="space-y-4 pt-6">
+        <section className="overflow-hidden rounded-[var(--radius)] border border-[var(--line)] bg-[var(--card)] shadow-[var(--shadow-lg)]">
+          <PanelHead
+            icon={STEP_DETAILS[step].icon}
+            title={STEP_DETAILS[step].title}
+            description={STEP_DETAILS[step].description}
+          />
+          <div className="space-y-7 bg-[var(--card)] p-6 sm:p-8">
           {step === 0 && (
-            <div className="space-y-4">
+            <div className="space-y-5">
+              <SectionLabel>Theme setup</SectionLabel>
               <div className="space-y-2">
                 <Label>Theme</Label>
                 <Select value={theme} onValueChange={(v) => v && setTheme(v)}>
@@ -583,15 +695,29 @@ export function BuildWizard({
                 </Select>
               </div>
               {selectedTheme && (
-                <p className="text-sm text-muted-foreground">
-                  Pages: {selectedTheme.pages.map((p) => p.label).join(", ") || "none"}
-                </p>
+                <div className="space-y-3 rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[var(--muted)]">
+                    Pages produced
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedTheme.pages.length > 0 ? (
+                      selectedTheme.pages.map((p) => (
+                        <Badge key={p.key} variant="secondary">
+                          {p.label}
+                        </Badge>
+                      ))
+                    ) : (
+                      <span className="text-sm text-[var(--muted)]">none</span>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           )}
 
           {step === 1 && (
-            <div className="space-y-4">
+            <div className="space-y-7">
+              <SectionLabel>Practice details</SectionLabel>
               <Field label="Practice name">
                 <Input
                   value={name}
@@ -618,10 +744,10 @@ export function BuildWizard({
               <Field label="Hours">
                 <Textarea value={hours} onChange={(e) => setHours(e.target.value)} rows={2} />
               </Field>
-              <div className="space-y-2">
-                <Label>Doctors</Label>
+              <SectionLabel>Doctors</SectionLabel>
+              <div className="space-y-3">
                 {doctors.map((doc, i) => (
-                  <div key={i} className="space-y-2 rounded border p-3">
+                  <div key={i} className="space-y-3 rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] p-4">
                     <Input
                       placeholder="Name"
                       value={doc.name}
@@ -648,6 +774,7 @@ export function BuildWizard({
                         size="sm"
                         onClick={() => setDoctors(doctors.filter((_, j) => j !== i))}
                       >
+                        <ArrowLeft data-icon="inline-start" />
                         Remove
                       </Button>
                     )}
@@ -662,6 +789,7 @@ export function BuildWizard({
                   Add doctor
                 </Button>
               </div>
+              <SectionLabel>Production notes</SectionLabel>
               <Field label="Services" hint="One per line.">
                 <Textarea value={services} onChange={(e) => setServices(e.target.value)} rows={4} />
               </Field>
@@ -673,7 +801,8 @@ export function BuildWizard({
 
           {step === 2 && (
             <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+              <SectionLabel>Color palette</SectionLabel>
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {(
                   ["primary", "secondary", "accent", "text", "background"] as const
                 ).map((key) => (
@@ -685,23 +814,23 @@ export function BuildWizard({
                   />
                 ))}
               </div>
-              <Separator />
-              <div className="grid grid-cols-2 gap-4">
+              <SectionLabel>Typography</SectionLabel>
+              <div className="grid gap-4 md:grid-cols-2">
                 <FontSelect label="Heading font" value={fontHeading} onChange={setFontHeading} />
                 <FontSelect label="Body font" value={fontBody} onChange={setFontBody} />
               </div>
-              <Separator />
-              <div className="grid grid-cols-2 gap-4">
+              <SectionLabel>Assets</SectionLabel>
+              <div className="grid gap-4 md:grid-cols-2">
                 <FileField
                   label="Logo"
-                  hint="PNG, JPG, or SVG. Max 2MB."
+                  hint="Required. PNG, JPG, or SVG. Max 2MB."
                   accept=".png,.jpg,.jpeg,.svg"
                   preview={logo?.previewUrl}
                   onFile={handleLogo}
                 />
                 <FileField
                   label="Favicon"
-                  hint="PNG or ICO. Max 500KB."
+                  hint="Required. PNG or ICO. Max 500KB."
                   accept=".png,.ico"
                   preview={favicon?.previewUrl}
                   onFile={handleFavicon}
@@ -711,7 +840,8 @@ export function BuildWizard({
           )}
 
           {step === 3 && (
-            <div className="space-y-4">
+            <div className="space-y-5">
+              <SectionLabel>WordPress destination</SectionLabel>
               <Field label="WordPress site URL">
                 <Input
                   placeholder="https://client.example.com"
@@ -741,7 +871,8 @@ export function BuildWizard({
           )}
 
           {step === 4 && (
-            <div className="space-y-4">
+            <div className="space-y-5">
+              <SectionLabel>Markdown source</SectionLabel>
               <FileField
                 label="Approved content markdown"
                 hint="Output from the dental-content-writer skill. Max 1MB."
@@ -749,10 +880,10 @@ export function BuildWizard({
                 onFile={handleMarkdown}
               />
               {parsing && (
-                <p className="text-sm text-muted-foreground">Parsing {markdownName}...</p>
+                <p className="text-sm font-medium text-[var(--muted)]">Parsing {markdownName}...</p>
               )}
               {!parsing && practiceMeta && (
-                <p className="text-sm text-muted-foreground">
+                <p className="font-mono text-xs font-medium text-[var(--muted)]">
                   Parsed {markdownName}: {practiceMeta.practiceName}
                   {practiceMeta.doctorName ? ` · ${practiceMeta.doctorName}` : ""}
                   {practiceMeta.city ? ` · ${practiceMeta.city}` : ""}
@@ -760,13 +891,12 @@ export function BuildWizard({
               )}
               {detectedPages.length > 0 && (
                 <>
-                  <Separator />
-                  <div className="space-y-2">
-                    <Label>Detected pages to build</Label>
+                  <SectionLabel>Detected pages to build</SectionLabel>
+                  <div className="space-y-3">
                     {detectedPages.map((p, i) => {
                       const slotCount = Object.keys(p.slots).length;
                       return (
-                        <div key={`${p.page}-${i}`} className="space-y-2 rounded border p-3">
+                        <div key={`${p.page}-${i}`} className="space-y-3 rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] p-4">
                           <label className="flex items-center gap-2 font-medium">
                             <input
                               type="checkbox"
@@ -782,7 +912,7 @@ export function BuildWizard({
                             </span>
                           </label>
                           {p.selected && (
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid gap-3 md:grid-cols-2">
                               <Input
                                 value={p.wpTitle ?? ""}
                                 onChange={(e) => updatePage(i, { wpTitle: e.target.value })}
@@ -806,11 +936,14 @@ export function BuildWizard({
 
           {step === 5 && (
             <div className="space-y-4 text-sm">
-              <Review label="Theme" value={selectedTheme?.label ?? theme} />
-              <Review label="Practice" value={`${name} (${slug})`} />
-              <Review label="WP site" value={siteUrl} />
+              <SectionLabel>Build summary</SectionLabel>
+              <Review label="Theme" value={selectedTheme?.label ?? theme} onEdit={() => setStep(0)} />
+              <Review label="Site name" value={name} onEdit={() => setStep(1)} />
+              <Review label="Practice slug" value={slug} onEdit={() => setStep(1)} />
+              <Review label="WP site" value={siteUrl} onEdit={() => setStep(3)} />
               <Review
                 label="Brand colors"
+                onEdit={() => setStep(2)}
                 value={
                   <span className="flex gap-1">
                     {Object.values(colors).map((c, i) => (
@@ -824,12 +957,13 @@ export function BuildWizard({
                   </span>
                 }
               />
-              <Review label="Fonts" value={`${fontHeading} / ${fontBody}`} />
-              <Review label="Logo" value={logo ? logo.filename : "none"} />
-              <Review label="Favicon" value={favicon ? favicon.filename : "none"} />
-              <Review label="Content" value={markdownName || "none"} />
+              <Review label="Fonts" value={`${fontHeading} / ${fontBody}`} onEdit={() => setStep(2)} />
+              <Review label="Site logo" value={logo ? logo.filename : "none"} onEdit={() => setStep(2)} />
+              <Review label="Site favicon" value={favicon ? favicon.filename : "none"} onEdit={() => setStep(2)} />
+              <Review label="Content" value={markdownName || "none"} onEdit={() => setStep(4)} />
               <Review
                 label="Pages"
+                onEdit={() => setStep(4)}
                 value={
                   <span className="flex flex-wrap gap-1">
                     {detectedPages
@@ -844,18 +978,30 @@ export function BuildWizard({
               />
             </div>
           )}
-        </CardContent>
-      </Card>
+          </div>
 
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={back} disabled={step === 0}>
-          Back
-        </Button>
-        {step < STEPS.length - 1 ? (
-          <Button onClick={next}>Next</Button>
-        ) : (
-          <Button onClick={deploy}>Deploy</Button>
-        )}
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--line)] bg-[var(--paper-2)] p-5">
+            <Button variant="ghost" onClick={back} disabled={step === 0}>
+              <ArrowLeft data-icon="inline-start" />
+              Back
+            </Button>
+            <div className="flex items-center gap-2 text-xs font-semibold text-[var(--muted)]">
+              <CheckCircle2 className="size-4 text-[var(--good)]" />
+              <span>{name ? `Draft held for ${name}` : "Draft held in this session"}</span>
+            </div>
+            {step < STEPS.length - 1 ? (
+              <Button onClick={next}>
+                Next
+                <ArrowRight data-icon="inline-end" />
+              </Button>
+            ) : (
+              <Button onClick={deploy}>
+                Deploy
+                <Rocket data-icon="inline-end" />
+              </Button>
+            )}
+          </div>
+        </section>
       </div>
     </div>
   );
@@ -871,10 +1017,10 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       <Label>{label}</Label>
       {children}
-      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {hint && <p className="text-[12px] font-medium text-[var(--muted)]">{hint}</p>}
     </div>
   );
 }
@@ -889,17 +1035,27 @@ function ColorField({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="space-y-2">
-      <Label className="capitalize">{label}</Label>
-      <div className="flex items-center gap-2">
+    <div className="flex items-center gap-3 rounded-[12px] border border-[var(--line)] bg-[var(--paper-2)] p-3 transition-all duration-200 hover:-translate-y-px hover:border-[var(--line-strong)]">
+      <label
+        className="relative flex size-10 shrink-0 cursor-pointer overflow-hidden rounded-[12px] border border-[var(--line-strong)]"
+        style={{ backgroundColor: value }}
+      >
+        <span className="sr-only">{label} color picker</span>
         <input
           type="color"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-9 w-10 cursor-pointer rounded border"
+          className="absolute inset-0 size-full cursor-pointer opacity-0"
           aria-label={`${label} color picker`}
         />
-        <Input value={value} onChange={(e) => onChange(e.target.value)} />
+      </label>
+      <div className="min-w-0 flex-1 space-y-1">
+        <Label className="text-[10px] uppercase tracking-[0.15em]">{label}</Label>
+        <Input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-8 font-mono text-[12px]"
+        />
       </div>
     </div>
   );
@@ -915,7 +1071,7 @@ function FontSelect({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       <Label>{label}</Label>
       <Select value={value} onValueChange={(v) => v && onChange(v)}>
         <SelectTrigger>
@@ -944,33 +1100,272 @@ function FileField({
   hint?: string;
   accept: string;
   preview?: string;
-  onFile: (file: File) => void;
+  onFile: (file: File) => void | Promise<void>;
 }) {
+  const inputId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
+
+  function loadFile(file: File | undefined) {
+    if (!file) return;
+    void Promise.resolve(onFile(file)).catch((error) => {
+      toast.error(error instanceof Error ? error.message : "Could not read file.");
+    });
+  }
+
   return (
-    <div className="space-y-2">
-      <Label>{label}</Label>
-      <Input
+    <div className="space-y-2.5">
+      <Label htmlFor={inputId}>{label}</Label>
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => inputRef.current?.click()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            inputRef.current?.click();
+          }
+        }}
+        onDragEnter={(e) => {
+          e.preventDefault();
+          setDragging(true);
+        }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "copy";
+          setDragging(true);
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          if (e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget)) {
+            return;
+          }
+          setDragging(false);
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragging(false);
+          loadFile(e.dataTransfer.files?.[0]);
+        }}
+        className={`flex min-h-36 cursor-pointer flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed p-5 text-center transition-all duration-200 hover:-translate-y-px hover:border-[var(--secondary)] hover:bg-[var(--card)] ${
+          dragging
+            ? "border-[var(--secondary)] bg-[rgba(22,138,173,.08)]"
+            : "border-[var(--line-strong)] bg-[var(--paper-2)]"
+        }`}
+      >
+        <UploadCloud className="size-6 text-[var(--primary)]" />
+        <span className="text-sm font-semibold text-[var(--ink)]">
+          {preview ? "Replace file" : `Upload ${label.toLowerCase()}`}
+        </span>
+        {hint && <span className="text-xs font-medium text-[var(--muted)]">{hint}</span>}
+        <span className="text-xs font-medium text-[var(--muted)]">
+          Click or drop a file here.
+        </span>
+      </div>
+      <input
+        id={inputId}
+        ref={inputRef}
         type="file"
         accept={accept}
+        className="sr-only"
         onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) onFile(file);
+          loadFile(file);
+          e.currentTarget.value = "";
         }}
       />
-      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
       {preview && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={preview} alt={`${label} preview`} className="mt-2 h-16 w-auto rounded border" />
+        <img
+          src={preview}
+          alt={`${label} preview`}
+          className="mt-2 h-16 w-auto rounded-[11px] border border-[var(--line)] bg-[var(--card)] p-1"
+        />
       )}
     </div>
   );
 }
 
-function Review({ label, value }: { label: string; value: React.ReactNode }) {
+function Review({
+  label,
+  value,
+  onEdit,
+}: {
+  label: string;
+  value: React.ReactNode;
+  onEdit?: () => void;
+}) {
   return (
-    <div className="flex items-start gap-3">
-      <span className="w-28 shrink-0 text-muted-foreground">{label}</span>
-      <span>{value}</span>
+    <div className="flex flex-wrap items-start justify-between gap-3 rounded-[11px] border border-[var(--line)] bg-[var(--paper-2)] p-4">
+      <div className="flex min-w-0 gap-4">
+        <span className="w-28 shrink-0 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+          {label}
+        </span>
+        <span className="min-w-0 font-medium text-[var(--ink)]">{value}</span>
+      </div>
+      {onEdit && (
+        <button
+          type="button"
+          onClick={onEdit}
+          className="text-xs font-semibold text-[var(--primary-deep)] transition-colors hover:text-[var(--primary)]"
+        >
+          Edit
+        </button>
+      )}
+    </div>
+  );
+}
+
+function PageHead({
+  title,
+  subline,
+  clientName,
+  themeLabel,
+  children,
+}: {
+  title: string;
+  subline: string;
+  clientName: string;
+  themeLabel: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-5">
+      <div className="space-y-2">
+        <h1 className="text-[42px] font-bold leading-none tracking-[-0.025em] text-[var(--ink)]">
+          {title}
+        </h1>
+        <p className="max-w-2xl text-sm font-medium text-[var(--muted)]">{subline}</p>
+      </div>
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-3 rounded-[999px] border border-[var(--line)] bg-[var(--card)] px-4 py-2.5 shadow-[var(--shadow)]">
+          <span className="size-2.5 rounded-full bg-[var(--accent)]" />
+          <span className="text-sm font-semibold text-[var(--ink)]">{clientName}</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+            {themeLabel || "Theme pending"}
+          </span>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function StepperRail({
+  step,
+  setStep,
+}: {
+  step: number;
+  setStep: (step: number) => void;
+}) {
+  const percent = Math.round(((step + 1) / STEPS.length) * 100);
+  const estimate = Math.max(1, (STEPS.length - step) * 2);
+
+  return (
+    <aside className="rounded-[var(--radius)] border border-[var(--line)] bg-[var(--card)] p-4 shadow-[var(--shadow)] lg:sticky lg:top-[96px] lg:self-start">
+      <div className="mb-4 px-1 text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--muted)]">
+        Build Steps
+      </div>
+      <ol className="space-y-1">
+        {STEP_DETAILS.map((item, i) => {
+          const done = i < step;
+          const active = i === step;
+          return (
+            <li key={item.title} className="relative">
+              {i < STEP_DETAILS.length - 1 && (
+                <span
+                  className={`absolute left-[17px] top-9 h-6 w-px ${
+                    done ? "bg-[rgba(47,122,85,.4)]" : "bg-[var(--line)]"
+                  }`}
+                />
+              )}
+              <button
+                type="button"
+                disabled={i > step}
+                onClick={() => i <= step && setStep(i)}
+                className={`relative flex w-full items-center gap-3 rounded-[12px] p-2.5 text-left transition-all duration-200 ${
+                  active
+                    ? "bg-linear-to-r from-[rgba(30,96,145,.12)] to-transparent"
+                    : done
+                      ? "hover:bg-[var(--paper-2)]"
+                      : "cursor-default opacity-75"
+                }`}
+              >
+                <span
+                  className={`flex size-[26px] shrink-0 items-center justify-center rounded-[8px] text-xs font-bold ${
+                    done
+                      ? "bg-[var(--good)] text-primary-foreground"
+                      : active
+                        ? "bg-[var(--primary)] text-primary-foreground shadow-[0_12px_20px_-14px_rgba(30,96,145,.9)]"
+                        : "bg-[var(--paper)] text-[var(--muted)]"
+                  }`}
+                >
+                  {done ? <Check className="size-3.5" /> : i + 1}
+                </span>
+                <span className="min-w-0">
+                  <span
+                    className={`block text-sm font-semibold ${
+                      active ? "text-[var(--primary-deep)]" : "text-[var(--ink-soft)]"
+                    }`}
+                  >
+                    {item.title}
+                  </span>
+                  <span className="block text-[11.5px] font-medium text-[var(--muted)]">
+                    {item.rail}
+                  </span>
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+      <div className="mt-5 space-y-2 border-t border-[var(--line)] pt-4">
+        <div className="h-2 overflow-hidden rounded-full bg-[var(--paper)]">
+          <div
+            className="h-full rounded-full bg-linear-to-r from-[var(--primary)] to-[var(--secondary)] transition-all duration-200"
+            style={{ width: `${percent}%` }}
+          />
+        </div>
+        <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+          <span>{percent}% complete</span>
+          <span>{estimate} min</span>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function PanelHead({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="flex items-center gap-4 border-b border-[var(--line)] bg-[var(--paper-2)] p-5 sm:p-6">
+      <div className="flex size-[42px] shrink-0 items-center justify-center rounded-[13px] bg-[rgba(30,96,145,.1)] text-[var(--primary)]">
+        <Icon className="size-5" />
+      </div>
+      <div>
+        <h2 className="text-2xl font-bold leading-tight tracking-[-0.02em] text-[var(--ink)]">
+          {title}
+        </h2>
+        <p className="mt-1 text-sm font-medium text-[var(--muted)]">{description}</p>
+      </div>
+    </div>
+  );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--muted)]">
+        {children}
+      </span>
+      <span className="h-px flex-1 bg-[var(--line)]" />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-# Energize Build Tool — Internal Web App
+# Energize Website Builder - Internal Web App
 
 ## What we're building
 
@@ -34,7 +34,9 @@ We have 50 legacy dental sites to migrate from Netlify/Sanity/Astro to WordPress
 5. Backend orchestrates:
    - Injects content into theme JSON templates, regenerates element IDs
    - Pushes each page to WP as draft via REST API
-   - Calls mu-plugin endpoints to set brand colors, fonts, logo, favicon on the Elementor global kit
+   - Defaults each page to the `elementor_header_footer` template unless the page explicitly requests canvas
+   - Updates the WP site name via core settings
+   - Calls Energize endpoints to set brand colors, fonts, primary/secondary/accent tints, logo, favicon on the Elementor global kit and site identity
    - Flushes Elementor CSS cache
 6. Success screen shows links to each draft page in WP admin + audit log entry
 
@@ -110,11 +112,11 @@ Templates live in the repo at `/theme-templates/{theme}/`. Only Elevate, Summit,
 - `_elementor_edit_mode` = `builder`
 - `_elementor_template_type` = `wp-page`
 - `_elementor_version` (match target site, default `3.21.0`)
-- `_wp_page_template` (varies by template, often `elementor_canvas`)
+- `_wp_page_template` (defaults to `elementor_header_footer`; canvas only for explicit standalone pages)
 
 **WP REST endpoint:** `POST /wp-json/wp/v2/pages` with `status: draft`. Auth via Application Passwords (Basic Auth: `username:app_password` base64-encoded). Elementor meta must be writable via REST -- the mu-plugin handles this reliably.
 
-## Energize Build Tool mu-plugin
+## Energize Website Builder mu-plugin
 
 A custom WordPress must-use plugin baked into the team's blank WP template install. Once installed there, every duplicated client site inherits it automatically. Must-use plugins live in `/wp-content/mu-plugins/` and are copied with full site duplication on WP Engine.
 
@@ -202,7 +204,7 @@ AuditLog {
 
 - Logged-in team member can complete the form for any of the 3 v1 themes (Elevate, Summit, Lux), upload markdown, and click deploy
 - All pages for the selected theme appear as drafts on the target WP site within 60 seconds
-- Brand colors, fonts, logo, and favicon are set on the WP site via mu-plugin
+- Site name, brand colors, fonts, logo, and favicon are set on the WP site
 - Elementor CSS cache is flushed so pages render styled when opened in WP admin
 - Element IDs are unique per page with no widget conflicts in the Elementor editor
 - WP credentials and plugin secret are encrypted and never exposed to the browser

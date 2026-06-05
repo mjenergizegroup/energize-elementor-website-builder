@@ -1,6 +1,6 @@
 # Agent notes
 
-This is the Energize Build Tool (Next.js 15 App Router, TypeScript, Tailwind v4,
+This is the Energize Website Builder (Next.js 15 App Router, TypeScript, Tailwind v4,
 shadcn/ui, Clerk, Prisma + Neon). Read [README.md](README.md) and
 [BUILD_BRIEF.md](BUILD_BRIEF.md) first.
 

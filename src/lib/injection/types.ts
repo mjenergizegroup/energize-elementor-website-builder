@@ -1,6 +1,10 @@
 // Shared types for the theme injection layer.
 
 export type ThemeKey = string;
+export type WpPageTemplate =
+  | "default"
+  | "elementor_header_footer"
+  | "elementor_canvas";
 
 // The value a parser supplies for a single slot.
 // - string: heading, text-editor, button, blockquote, single icon-box field
@@ -16,6 +20,7 @@ export interface PageContent {
   page: string; // page key, e.g. "homepage"
   wpTitle?: string; // WP page title (interior pages)
   slug?: string;
+  wpPageTemplate?: WpPageTemplate;
   slots: Record<string, SlotValue>;
   // Notes the parser wants surfaced to David's team for this page.
   buildNotes?: string[];
@@ -50,7 +55,7 @@ export interface PageMeta {
   key: string;
   label: string;
   templateFile: string;
-  wpPageTemplate: string;
+  wpPageTemplate?: WpPageTemplate;
   h1: "widget" | "wpTitle";
   doNotInject?: string[];
   generated?: boolean;

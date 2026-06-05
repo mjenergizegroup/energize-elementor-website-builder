@@ -18,7 +18,6 @@ export interface KitTypography {
 }
 
 // Elementor's four system color slots are primary / secondary / text / accent.
-// Background has no system slot, so it goes to custom_colors.
 export function toSystemColors(colors: BrandColors): KitColor[] {
   return [
     { _id: "primary", title: "Primary", color: colors.primary },
@@ -28,14 +27,54 @@ export function toSystemColors(colors: BrandColors): KitColor[] {
   ];
 }
 
+const TINT_LEVELS = [80, 60, 40, 20] as const;
+const TINT_COLOR_KEYS = ["primary", "secondary", "accent"] as const;
+
 export function toCustomColors(colors: BrandColors): KitColor[] {
-  return [
-    {
-      _id: "background",
-      title: "Background",
-      color: colors.background,
-    },
-  ];
+  return TINT_COLOR_KEYS.flatMap((key) =>
+    TINT_LEVELS.map((level) => ({
+      _id: `${key}_${level}`,
+      title: `${titleCase(key)} ${level}`,
+      color: tintTowardWhite(colors[key], level),
+    })),
+  );
+}
+
+function tintTowardWhite(hex: string, level: number): string {
+  const { r, g, b } = parseHexColor(hex);
+  const mix = (channel: number) =>
+    Math.round(channel * (level / 100) + 255 * (1 - level / 100));
+
+  return `#${[mix(r), mix(g), mix(b)]
+    .map((channel) => channel.toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase()}`;
+}
+
+function parseHexColor(hex: string): { r: number; g: number; b: number } {
+  const normalized = hex.trim().replace(/^#/, "");
+  const expanded =
+    normalized.length === 3
+      ? normalized
+          .split("")
+          .map((char) => `${char}${char}`)
+          .join("")
+      : normalized;
+
+  if (!/^[0-9a-fA-F]{6}$/.test(expanded)) {
+    throw new Error(`Invalid brand color: ${hex}`);
+  }
+
+  const value = Number.parseInt(expanded, 16);
+  return {
+    r: (value >> 16) & 255,
+    g: (value >> 8) & 255,
+    b: value & 255,
+  };
+}
+
+function titleCase(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 // Heading font drives the primary + secondary typography slots; body font

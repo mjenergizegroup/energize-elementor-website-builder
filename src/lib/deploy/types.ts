@@ -4,6 +4,9 @@ import type { BrandKit } from "@/lib/types";
 export interface DeployRequest {
   theme: string;
   siteUrl: string;
+  siteName: string;
+  wpUsername: string;
+  wpAppPassword: string;
   // content.pages is the source of truth for what gets built (already filtered
   // to the pages the user selected). It can contain several "services" pages.
   content: ParsedContent;
@@ -13,6 +16,7 @@ export interface DeployRequest {
 
 export type DeployStep =
   | "page"
+  | "site-identity"
   | "brand-colors"
   | "brand-fonts"
   | "logo"

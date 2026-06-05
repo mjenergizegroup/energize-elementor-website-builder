@@ -80,7 +80,12 @@ export async function* runDeploy(
     }
   }
 
-  // 2. Brand colors
+  // 2. Site identity
+  yield* step("site-identity", "Setting site name", async () => {
+    await wp.setSiteName(req.wpUsername, req.wpAppPassword, req.siteName);
+  });
+
+  // 3. Brand colors
   yield* step("brand-colors", "Setting brand colors", async () => {
     await wp.setBrandColors(
       toSystemColors(req.brandKit.colors),
@@ -88,28 +93,28 @@ export async function* runDeploy(
     );
   });
 
-  // 3. Brand fonts
+  // 4. Brand fonts
   yield* step("brand-fonts", "Setting brand fonts", async () => {
     await wp.setBrandFonts(toSystemTypography(req.brandKit.fonts));
   });
 
-  // 4. Logo (optional)
+  // 5. Site logo
   if (req.brandKit.logo) {
     const logo = req.brandKit.logo;
-    yield* step("logo", "Uploading logo", async () => {
+    yield* step("logo", "Setting site logo", async () => {
       await wp.setLogo(logo.filename, logo.dataBase64);
     });
   }
 
-  // 5. Favicon (optional)
+  // 6. Site favicon
   if (req.brandKit.favicon) {
     const favicon = req.brandKit.favicon;
-    yield* step("favicon", "Uploading favicon", async () => {
+    yield* step("favicon", "Setting site favicon", async () => {
       await wp.setFavicon(favicon.filename, favicon.dataBase64);
     });
   }
 
-  // 6. Flush Elementor CSS
+  // 7. Flush Elementor CSS
   yield* step("flush-css", "Flushing Elementor CSS cache", async () => {
     await wp.flushCss();
   });

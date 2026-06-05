@@ -1,6 +1,6 @@
 # Setup
 
-How to get the Energize Build Tool running locally and deployed to Vercel.
+How to get the Energize Website Builder running locally and deployed to Vercel.
 You never paste secrets into chat or commit them to git. They live in two places
 you control: `.env.local` (local, gitignored) and the Vercel dashboard
 (production).

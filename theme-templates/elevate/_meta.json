@@ -11,7 +11,7 @@
       "key": "homepage",
       "label": "Homepage",
       "templateFile": "homepage.json",
-      "wpPageTemplate": "elementor_canvas",
+      "wpPageTemplate": "elementor_header_footer",
       "h1": "widget",
       "doNotInject": ["5b17b67d"],
       "slots": [
@@ -53,7 +53,7 @@
       "key": "about",
       "label": "About",
       "templateFile": "about.json",
-      "wpPageTemplate": "elementor_canvas",
+      "wpPageTemplate": "elementor_header_footer",
       "h1": "widget",
       "slots": [
         { "key": "h1", "section": "Page Banner", "label": "H1 page title", "nodeId": "34dfcbf5", "widget": "heading", "field": "title" },
@@ -69,7 +69,7 @@
       "key": "services",
       "label": "Service Page",
       "templateFile": "services.json",
-      "wpPageTemplate": "elementor_canvas",
+      "wpPageTemplate": "elementor_header_footer",
       "h1": "widget",
       "slots": [
         { "key": "h1", "section": "Page Banner", "label": "H1 page title", "nodeId": "2fa67875", "widget": "heading", "field": "title" },
@@ -99,7 +99,7 @@
       "key": "first-visit",
       "label": "First Visit",
       "templateFile": "first-visit.json",
-      "wpPageTemplate": "elementor_canvas",
+      "wpPageTemplate": "elementor_header_footer",
       "h1": "widget",
       "slots": [
         { "key": "h1", "section": "Page Banner", "label": "H1 page title", "nodeId": "72420383", "widget": "heading", "field": "title" },
@@ -123,7 +123,7 @@
       "key": "amenities",
       "label": "Amenities",
       "templateFile": "amenities.json",
-      "wpPageTemplate": "elementor_canvas",
+      "wpPageTemplate": "elementor_header_footer",
       "h1": "widget",
       "slots": [
         { "key": "h1", "section": "Page Banner", "label": "H1 page title", "nodeId": "1d452249", "widget": "heading", "field": "title" },
@@ -142,7 +142,7 @@
       "key": "insurance",
       "label": "Insurance & Financing",
       "templateFile": "insurance.json",
-      "wpPageTemplate": "elementor_canvas",
+      "wpPageTemplate": "elementor_header_footer",
       "h1": "widget",
       "doNotInject": ["64267674"],
       "slots": [
@@ -161,7 +161,7 @@
       "key": "contact",
       "label": "Contact",
       "templateFile": "contact.json",
-      "wpPageTemplate": "elementor_canvas",
+      "wpPageTemplate": "elementor_header_footer",
       "h1": "widget",
       "doNotInject": ["57c0e846"],
       "slots": [
@@ -187,7 +187,7 @@
       "key": "thank-you",
       "label": "Thank You",
       "templateFile": "thank-you.json",
-      "wpPageTemplate": "elementor_canvas",
+      "wpPageTemplate": "elementor_header_footer",
       "h1": "widget",
       "generated": true,
       "notes": "The Elevate skill did not ship a thank-you template. This is a minimal generated confirmation page. Replace with a real export when available.",

@@ -13,9 +13,15 @@ export const runtime = "nodejs";
 export const maxDuration = 120;
 
 const assetSchema = z.object({
-  filename: z.string(),
-  dataBase64: z.string(),
+  filename: z.string().min(1),
+  dataBase64: z.string().min(1),
 });
+
+const wpPageTemplateSchema = z.enum([
+  "default",
+  "elementor_header_footer",
+  "elementor_canvas",
+]);
 
 const bodySchema = z.object({
   clientId: z.string().optional(),
@@ -39,8 +45,8 @@ const bodySchema = z.object({
       background: z.string(),
     }),
     fonts: z.object({ heading: z.string(), body: z.string() }),
-    logo: assetSchema.optional(),
-    favicon: assetSchema.optional(),
+    logo: assetSchema,
+    favicon: assetSchema,
   }),
   // Structured parser output, already filtered to the pages the user selected.
   content: z.object({
@@ -53,6 +59,7 @@ const bodySchema = z.object({
           page: z.string(),
           wpTitle: z.string().optional(),
           slug: z.string().optional(),
+          wpPageTemplate: wpPageTemplateSchema.optional(),
           slots: z.record(z.string(), z.any()),
           buildNotes: z.array(z.string()).optional(),
         }),
@@ -164,6 +171,9 @@ export async function POST(req: NextRequest) {
         for await (const event of runDeploy({
           theme: client.theme,
           siteUrl: client.wpSiteUrl,
+          siteName: client.name,
+          wpUsername: client.wpUsername,
+          wpAppPassword: client.appPassword,
           content: body.content,
           brandKit: body.brandKit,
           elementorVersion: body.elementorVersion,
