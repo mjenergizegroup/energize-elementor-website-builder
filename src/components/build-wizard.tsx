@@ -445,7 +445,7 @@ export function BuildWizard({
                     }
                   >
                     {e.label}
-                    {e.message ? ` — ${e.message}` : ""}
+                    {e.message ? ` - ${e.message}` : ""}
                   </span>
                 </li>
               ))}

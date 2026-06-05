@@ -331,7 +331,7 @@ export function parseElevate(markdown: string): ParsedContent {
   // Front matter from the title block.
   const titlePage = docPages.find((p) => /website content/i.test(p.heading));
   const practiceName = titlePage
-    ? titlePage.heading.replace(/\s*[—-]\s*website content.*/i, "").trim()
+    ? titlePage.heading.replace(/\s*[\u2014-]\s*website content.*/i, "").trim()
     : "";
   const frontMatter = titlePage
     ? extractLabeledSlots(titlePage.lines)
