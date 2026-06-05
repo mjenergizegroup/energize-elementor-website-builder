@@ -370,8 +370,12 @@ export function BuildWizard({
       const res = await fetch(`/api/crawl/${jobId}`);
       const json = await res.json();
       if (!res.ok) {
-        if (res.status === 429) toast.error("Rate limited, try again in a minute");
-        else toast.error(json.error ?? "Could not check crawl status.");
+        const message =
+          res.status === 429
+            ? "Rate limited, try again in a minute"
+            : json.error ?? "Could not check crawl status.";
+        toast.error(message);
+        setCrawlError(message);
         if (res.status !== 429) setCrawlStatus("failed");
         return;
       }
@@ -390,7 +394,9 @@ export function BuildWizard({
         toast.error(json.error ?? "Crawl failed.");
       }
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Could not check crawl status.");
+      const message = e instanceof Error ? e.message : "Could not check crawl status.";
+      toast.error(message);
+      setCrawlError(message);
       setCrawlStatus("failed");
     }
   }

@@ -1,5 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { getCrawlStatus, FirecrawlError } from "@/lib/firecrawl/client";
+import { filterPages } from "@/lib/firecrawl/filter";
+import type { CrawlRecord } from "@/lib/firecrawl/store";
 import {
   crawlTimedOut,
   getCrawlRecord,
@@ -20,33 +22,30 @@ export async function GET(
 
   const { jobId } = await context.params;
   const record = getCrawlRecord(jobId);
-  if (!record) {
-    return Response.json({ error: "Crawl job not found." }, { status: 404 });
-  }
 
   try {
     const status = await getCrawlStatus(jobId);
-    const next = updateCrawlRecord(jobId, {
-      status: status.status,
-      completed: status.completed,
-      total: status.total,
-      pages: status.data,
-      error: status.error,
-    });
+    const next =
+      record &&
+      updateCrawlRecord(jobId, {
+        status: status.status,
+        completed: status.completed,
+        total: status.total,
+        pages: status.data,
+        error: status.error,
+      });
+    const fallback = makeFallbackRecord(jobId, status);
+    const current = next || fallback;
 
-    if (!next) {
-      return Response.json({ error: "Crawl job not found." }, { status: 404 });
-    }
-
-    if (crawlTimedOut(next) && next.status === "scraping") {
+    if (record && crawlTimedOut(current) && current.status === "scraping") {
       const timedOut = updateCrawlRecord(jobId, {
         status: "failed",
         error: "Crawl timed out after 10 minutes.",
       });
-      return crawlResponse(timedOut ?? next);
+      return crawlResponse(timedOut ?? current);
     }
 
-    return crawlResponse(next);
+    return crawlResponse(current);
   } catch (e) {
     if (e instanceof FirecrawlError) {
       if (e.status === 429) {
@@ -61,25 +60,79 @@ export async function GET(
           { status: 403 },
         );
       }
-      const failed = updateCrawlRecord(jobId, {
-        status: "failed",
-        error: e.message,
-      });
-      return Response.json(crawlPayload(failed ?? record), { status: e.status || 502 });
+      const failed =
+        record &&
+        updateCrawlRecord(jobId, {
+          status: "failed",
+          error: e.message,
+        });
+      return Response.json(
+        crawlPayload(
+          failed ??
+            record ?? {
+              jobId,
+              sourceUrl: "",
+              startedAt: Date.now(),
+              status: "failed",
+              completed: 0,
+              total: 0,
+              pages: [],
+              filtered: { keep: [], skip: [] },
+              error: e.message,
+            },
+        ),
+        { status: e.status || 502 },
+      );
     }
-    const failed = updateCrawlRecord(jobId, {
-      status: "failed",
-      error: e instanceof Error ? e.message : "Crawl failed.",
-    });
-    return Response.json(crawlPayload(failed ?? record), { status: 500 });
+    const message = e instanceof Error ? e.message : "Crawl failed.";
+    const failed =
+      record &&
+      updateCrawlRecord(jobId, {
+        status: "failed",
+        error: message,
+      });
+    return Response.json(
+      crawlPayload(
+        failed ??
+          record ?? {
+            jobId,
+            sourceUrl: "",
+            startedAt: Date.now(),
+            status: "failed",
+            completed: 0,
+            total: 0,
+            pages: [],
+            filtered: { keep: [], skip: [] },
+            error: message,
+          },
+      ),
+      { status: 500 },
+    );
   }
 }
 
-function crawlResponse(record: NonNullable<ReturnType<typeof getCrawlRecord>>) {
+function makeFallbackRecord(
+  jobId: string,
+  status: Awaited<ReturnType<typeof getCrawlStatus>>,
+): CrawlRecord {
+  return {
+    jobId,
+    sourceUrl: status.data[0]?.url ?? "",
+    startedAt: Date.now(),
+    status: status.status,
+    completed: status.completed,
+    total: status.total,
+    pages: status.data,
+    filtered: filterPages(status.data),
+    error: status.error,
+  };
+}
+
+function crawlResponse(record: CrawlRecord) {
   return Response.json(crawlPayload(record));
 }
 
-function crawlPayload(record: NonNullable<ReturnType<typeof getCrawlRecord>>) {
+function crawlPayload(record: CrawlRecord) {
   const progress = {
     completed: record.completed,
     total: record.total,

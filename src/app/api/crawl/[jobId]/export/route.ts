@@ -1,7 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
+import { getCrawlStatus } from "@/lib/firecrawl/client";
 import { buildCombinedMarkdown, rawContentFilename } from "@/lib/firecrawl/export";
-import { normalizePageUrl } from "@/lib/firecrawl/filter";
+import { filterPages, normalizePageUrl } from "@/lib/firecrawl/filter";
 import { getCrawlRecord } from "@/lib/firecrawl/store";
 
 export const runtime = "nodejs";
@@ -21,9 +22,6 @@ export async function POST(
 
   const { jobId } = await context.params;
   const record = getCrawlRecord(jobId);
-  if (!record) {
-    return Response.json({ error: "Crawl job not found." }, { status: 404 });
-  }
 
   let body: z.infer<typeof bodySchema>;
   try {
@@ -36,7 +34,8 @@ export async function POST(
   }
 
   const selected = new Set(body.selectedUrls.map(normalizePageUrl));
-  const pages = [...record.filtered.keep, ...record.filtered.skip].filter((page) =>
+  const filtered = record?.filtered ?? filterPages((await getCrawlStatus(jobId)).data);
+  const pages = [...filtered.keep, ...filtered.skip].filter((page) =>
     selected.has(normalizePageUrl(page.url)),
   );
 
@@ -45,7 +44,7 @@ export async function POST(
   }
 
   return Response.json({
-    filename: rawContentFilename(record.sourceUrl),
+    filename: rawContentFilename(record?.sourceUrl || pages[0].url),
     content: buildCombinedMarkdown(pages),
   });
 }
