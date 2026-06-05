@@ -10,7 +10,7 @@
     "test:parser": "tsx src/lib/parser.test.ts",
     "typecheck": "tsc --noEmit",
     "verify:injection": "tsx scripts/verify-injection.ts",
-    "verify:parser": "tsx scripts/verify-parser.ts",
+    "verify:parser": "tsx src/lib/parser.test.ts",
     "db:generate": "prisma generate",
     "db:push": "dotenv -e .env.local -- prisma db push",
     "db:studio": "dotenv -e .env.local -- prisma studio",

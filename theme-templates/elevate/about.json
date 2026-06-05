@@ -1,1 +1,1926 @@
-{"content":[{"id":"696b8c99","settings":{"flex_direction":"column","min_height":{"unit":"vh","size":55,"sizes":[]},"min_height_tablet":{"unit":"custom","size":"","sizes":[]},"min_height_mobile":{"unit":"custom","size":"","sizes":[]},"flex_justify_content":"center","flex_align_items":"flex-start","background_background":"classic","background_image":{"id":1074,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/02\/6L9A9900.jpg","alt":"","source":"library","size":""},"background_position":"initial","background_size":"cover","background_overlay_background":"gradient","background_overlay_color_stop":{"unit":"%","size":29,"sizes":[]},"background_overlay_color_b_stop":{"unit":"%","size":51,"sizes":[]},"background_overlay_gradient_angle":{"unit":"deg","size":90,"sizes":[]},"background_overlay_opacity":{"unit":"px","size":0.9,"sizes":[]},"_title":"Slider","__globals__":{"background_overlay_color":"globals\/colors?id=secondary","background_overlay_color_b":""},"flex_align_items_tablet":"center","background_repeat":"no-repeat","background_overlay_color":"#6D6D52","background_overlay_color_b":"#6D6D523B","background_position_mobile":"center center","background_ypos":{"unit":"px","size":-472,"sizes":[]}},"elements":[{"id":"34dfcbf5","settings":{"content_width":"full","title":"About SolSmile Lounge","_element_width":"initial","_element_custom_width":{"unit":"%","size":52,"sizes":[]},"_animation":"slideInUp","align_tablet":"center","_element_custom_width_tablet":{"unit":"%","size":100,"sizes":[]},"_element_custom_width_mobile":{"unit":"%","size":100,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=accent","typography_typography":"globals\/typography?id=b4e43e9"},"header_size":"h1","__dynamic__":[]},"elements":[],"isInner":false,"widgetType":"heading","elType":"widget"}],"isInner":false,"elType":"container"},{"id":"6a6fd90e","settings":{"flex_direction":"column","flex_gap":{"unit":"px","size":20,"column":"20","row":"20","isLinked":true},"padding":{"unit":"em","top":"4","right":"0","bottom":"4","left":"0","isLinked":false},"padding_tablet":{"unit":"em","top":"2","right":"0","bottom":"2","left":"0","isLinked":false},"padding_mobile":{"unit":"em","top":"","right":"","bottom":"","left":"","isLinked":true},"flex_justify_content":"space-between","_title":"About Us","flex_direction_tablet":"column","flex_wrap_tablet":"wrap","background_background":"classic","__globals__":{"background_color":"globals\/colors?id=507ad22"}},"elements":[{"id":"4781297f","settings":{"content_width":"full","flex_direction":"column"},"elements":[{"id":"4fe47604","settings":{"flex_direction":"column","content_width":"full","width":{"unit":"%","size":100},"padding":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"animation":"slideInLeft","width_tablet":{"unit":"%","size":100,"sizes":[]},"width_mobile":{"unit":"%","size":"","sizes":[]},"flex_justify_content_mobile":"center","flex_align_items_mobile":"center","flex_justify_content":"center"},"elements":[{"id":"7b69fc20","settings":{"content_width":"full","title":"A Little More About Us","_element_width":"initial","_element_custom_width":{"unit":"%","size":95,"sizes":[]},"align_mobile":"center","_element_custom_width_mobile":{"unit":"%","size":100,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=primary","typography_typography":"globals\/typography?id=53b4653"},"align":"center"},"elements":[],"isInner":false,"widgetType":"heading","elType":"widget"},{"id":"5a80b68a","settings":{"content_width":"full","editor":"Have you ever found yourself looking for a judgment-free dental office? If so, you\u2019ve come to the right place. At SolSmile Lounge, we do everything we can to help our guests feel comfortable and respected. By inviting you to play a role in co-planning your care\u2014and offering extra amenities like sedation and blankets\u2014we\u2019re helping to reshape the way you experience dentistry. ","_element_width":"initial","_element_custom_width":{"unit":"%","size":95,"sizes":[]},"align_mobile":"center","_element_custom_width_mobile":{"unit":"%","size":100,"sizes":[]},"__globals__":{"typography_typography":"globals\/typography?id=text"},"align":"center"},"elements":[],"isInner":false,"widgetType":"text-editor","elType":"widget"}],"isInner":true,"elType":"container"}],"isInner":true,"elType":"container"},{"id":"46a7893d","settings":{"content_width":"full","flex_direction":"row"},"elements":[{"id":"516fca0d","settings":{"flex_direction":"column","content_width":"full","width":{"unit":"%","size":"50"},"padding":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"animation":"slideInLeft","width_tablet":{"unit":"%","size":100,"sizes":[]},"width_mobile":{"unit":"%","size":"","sizes":[]},"flex_justify_content_mobile":"center","flex_align_items_mobile":"center","flex_justify_content":"center"},"elements":[{"id":"565309d0","settings":{"content_width":"full","title":"Meet Dr. Megha Patel","_element_width":"initial","_element_custom_width":{"unit":"%","size":95,"sizes":[]},"align_mobile":"center","_element_custom_width_mobile":{"unit":"%","size":100,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=primary","typography_typography":"globals\/typography?id=53b4653"}},"elements":[],"isInner":false,"widgetType":"heading","elType":"widget"},{"id":"247b9f68","settings":{"content_width":"full","editor":"<p class=\"m-size-16 size-18\"><span class=\"font-size-18 m-font-size-16\">Dr. Megha Patel is a dedicated dentist with a mission to brighten smiles and improve oral health one patient at a time. With over a decade of experience in the field of dentistry, Dr. Patel has become a trusted name in her community and is a member of the Temple Terrace Chamber of Commerce.\u00a0<\/span><\/p><h5 class=\"m-size-16 size-18\"><span class=\"font-size-18 m-font-size-16\">Education<\/span><\/h5><ul class=\"defaultList bullet\"><li class=\"m-size-16 size-18\"><span class=\"font-size-18 m-font-size-16\">Doctor of Dental Medicine (D.M.D) from<\/span><span class=\"font-size-18 m-font-size-16\">\u00a0<\/span><a class=\"font-size-18 m-font-size-16\" contenteditable=\"false\" href=\"https:\/\/dental.tufts.edu\/\" target=\"_blank\" rel=\"noopener\" type=\"url\" aria-describedby=\"audioeye_new_window_message\">Tufts University School of Dental Medicine<\/a><span class=\"font-size-18 m-font-size-16\">.<\/span><\/li><li class=\"m-size-16 size-18\"><span class=\"font-size-18 m-font-size-16\">Completed a 2-year general practice residency (GPR), where in the second year she was the chief resident at<\/span><span class=\"font-size-18 m-font-size-16\">\u00a0<\/span><a class=\"font-size-18 m-font-size-16\" contenteditable=\"false\" href=\"https:\/\/nyulangone.org\/\" target=\"_blank\" rel=\"noopener\" type=\"url\" aria-describedby=\"audioeye_new_window_message\">NYU Langone Hospital<\/a><span class=\"font-size-18 m-font-size-16\">\u00a0<\/span><span class=\"font-size-18 m-font-size-16\">in Brooklyn, New York.<\/span><\/li><\/ul><p class=\"m-size-16 size-18\"><span class=\"font-size-18 m-font-size-16\">Professional Experience:<\/span><span class=\"font-size-18 m-font-size-16\">\u00a0<\/span><span class=\"font-size-18 m-font-size-16\">Dr. Patel has successfully treated a diverse range of dental cases, from routine cleanings to complex restorative\/surgical procedures. Her commitment to continuing education ensures that she stays at the forefront of the dental field.<\/span><\/p><p class=\"m-size-16 size-18\"><span class=\"font-size-18 m-font-size-16\">Patient-Centered Care:<\/span><span class=\"font-size-18 m-font-size-16\">\u00a0<\/span><span class=\"font-size-18 m-font-size-16\">Dr. Patel is known for her gentle approach and ability to put even the most anxious patients at ease. She takes the time to listen to her patients' concerns and provides personalized treatment plans tailored to their dental needs.<\/span><\/p><p class=\"m-size-16 size-18\"><span class=\"font-size-18 m-font-size-16\">Hobbies:<\/span><span class=\"font-size-18 m-font-size-16\">\u00a0<\/span><span class=\"font-size-18 m-font-size-16\">In her free time, Dr. Patel enjoys working out and finding tranquility in the great outdoors. She loves to try new restaurants and spend time with her family, friends and kids. She tries to travel any opportunity she gets.<\/span><\/p><p class=\"m-size-16 size-18\"><span class=\"font-size-18 m-font-size-16\">With her expertise, compassion, and dedication, Dr. Megha Patel is your partner in achieving a healthy and radiant smile. Book an appointment today and experience the difference in dental care she brings to the table!<\/span><\/p>","_element_width":"initial","_element_custom_width":{"unit":"%","size":95,"sizes":[]},"align_mobile":"center","_element_custom_width_mobile":{"unit":"%","size":100,"sizes":[]},"__globals__":{"typography_typography":"globals\/typography?id=text"}},"elements":[],"isInner":false,"widgetType":"text-editor","elType":"widget"}],"isInner":true,"elType":"container"},{"id":"29bfcc54","settings":{"flex_direction":"row","content_width":"full","width":{"unit":"%","size":49},"flex_justify_content":"space-between","flex_wrap":"wrap","background_background":"classic","background_image":{"url":"","id":"","size":"","alt":"","source":"library"},"background_position":"center center","background_size":"cover","padding":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"width_tablet":{"unit":"%","size":100,"sizes":[]},"width_mobile":{"unit":"%","size":100},"_flex_size":"none","_element_width_mobile":"initial","margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":true}},"elements":[{"id":"c75a18c","settings":{"flex_direction":"column","content_width":"full","width":{"unit":"%","size":100},"padding":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"background_background":"slideshow","background_image":{"url":"","id":"","size":"","alt":"","source":"library"},"background_position":"center center","background_size":"cover","width_tablet":{"unit":"%","size":100,"sizes":[]},"width_mobile":{"unit":"%","size":"","sizes":[]},"min_height_tablet":{"unit":"px","size":655,"sizes":[]},"animation":"fadeIn","min_height_mobile":{"unit":"px","size":336,"sizes":[]},"border_radius":{"unit":"px","top":"15","right":"15","bottom":"15","left":"15","isLinked":true},"background_slideshow_gallery":[{"id":798,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/01\/Dr.MeghaPatel1-1.jpg"},{"id":333,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/01\/Dr.Patel-1920w.webp"}],"min_height":{"unit":"px","size":625,"sizes":[]}},"elements":[],"isInner":true,"elType":"container"}],"isInner":true,"elType":"container"}],"isInner":true,"elType":"container"}],"isInner":false,"elType":"container"},{"id":"2118c9e3","settings":{"flex_direction":"column","flex_gap":{"unit":"px","size":20,"column":"20","row":"20","isLinked":true},"background_background":"classic","background_image":{"id":"","url":""},"background_position":"bottom center","background_xpos":{"unit":"px","size":-80,"sizes":[]},"background_ypos":{"unit":"px","size":470,"sizes":[]},"background_size":"cover","background_bg_width":{"unit":"%","size":62,"sizes":[]},"padding":{"unit":"em","top":"4","right":"0","bottom":"4","left":"0","isLinked":false},"padding_tablet":{"unit":"em","top":"","right":"","bottom":"","left":"","isLinked":true},"padding_mobile":{"unit":"em","top":"2","right":"0","bottom":"0","left":"0","isLinked":false},"_title":"Appointment Process","flex_direction_tablet":"column-reverse","flex_wrap_tablet":"wrap","flex_align_items":"center","margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"__globals__":{"background_color":"globals\/colors?id=primary"}},"elements":[{"id":"501e080c","settings":{"flex_direction":"column","content_width":"full","width":{"unit":"%","size":100},"padding":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"animation":"slideInLeft","width_tablet":{"unit":"%","size":100,"sizes":[]},"width_mobile":{"unit":"%","size":"","sizes":[]},"margin_tablet":{"unit":"em","top":"3","right":"0","bottom":"0","left":"0","isLinked":false},"margin_mobile":{"unit":"em","top":"4","right":"0","bottom":"0","left":"0","isLinked":false},"flex_justify_content_mobile":"center","flex_align_items_mobile":"center","flex_justify_content":"center"},"elements":[{"id":"3a181982","settings":{"content_width":"full","title":"Our Offices","header_size":"h3","_element_width":"inherit","_element_custom_width":{"unit":"%","size":95,"sizes":[]},"align_mobile":"center","__globals__":{"title_color":"globals\/colors?id=accent","typography_typography":"globals\/typography?id=53b4653"},"align":"center"},"elements":[],"isInner":false,"widgetType":"heading","elType":"widget"},{"id":"edc1b71","settings":{"content_width":"full","editor":"<p>We\u2019ve carefully designed our dental offices in Temple Terrace and New Tampa to incorporate numerous comfort amenities and technology for a one-of-a-kind experience. From same-day dental crown fabrication to sedation dentistry procedures, Dr. Patel works to facilitate an efficient and gentle plan of care for everyone. She also believes in the power of early intervention, focusing on diagnostic techniques that allow her to stay ahead of major dental concerns as they\u2019re just beginning to develop. By performing thorough oral cancer screenings and implementing digital imaging in each checkup, we help empower you and your family with the chance to limit the need for major dental treatments in the future.<\/p><p>Experience dental care as it should be. Call SolSmile Lounge today to reserve your first appointment.<\/p>","_element_width":"initial","_element_custom_width":{"unit":"%","size":100,"sizes":[]},"_element_custom_width_tablet":{"unit":"%","size":100,"sizes":[]},"_element_custom_width_mobile":{"unit":"%","size":"","sizes":[]},"align_mobile":"center","__globals__":{"typography_typography":"globals\/typography?id=text","text_color":"globals\/colors?id=accent"},"align":"center"},"elements":[],"isInner":false,"widgetType":"text-editor","elType":"widget"},{"id":"4cd83316","settings":{"gallery":[{"id":1078,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/02\/IMG_6071.jpg"},{"id":979,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/01\/dr_patel_solsmile_12-1920w-1.webp"},{"id":1066,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/02\/6L9A0152.jpg"},{"id":841,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/01\/DSC_0054.jpg"},{"id":1064,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/02\/6L9A0117.jpg"},{"id":840,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/01\/DSC_0068.jpg"},{"id":839,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/01\/DSC_0075.jpg"},{"id":1063,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/02\/6L9A0113.jpg"},{"id":810,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/01\/lobby-pic-1.jpg"},{"id":809,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/01\/lobby-pic-2-1.jpg"},{"id":806,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/01\/entrance-1.jpg"},{"id":782,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2025\/03\/SolSmileNewampa-Rmo5QH.jpg"},{"id":780,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2025\/03\/solsmilenew-Cc6sM6.jpg"},{"id":1081,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/02\/IMG_6076.jpg"},{"id":1062,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/02\/6L9A0028.jpg"}],"galleries":[{"gallery_title":"New Gallery","_id":"155f9a9"}],"gallery_layout":"justified","ideal_row_height":{"unit":"px","size":460,"sizes":[]},"gap":{"unit":"px","size":15,"sizes":[]},"thumbnail_image_size":"full","show_all_galleries_label":"All"},"elements":[],"isInner":false,"widgetType":"gallery","elType":"widget"}],"isInner":true,"elType":"container"}],"isInner":false,"elType":"container"}],"page_settings":[],"version":"0.4","title":"Elevate-Dental-About","type":"page"}
+{
+  "content": [
+    {
+      "id": "2f257b8e",
+      "settings": {
+        "flex_direction": "column",
+        "min_height": {
+          "unit": "px",
+          "size": 350,
+          "sizes": []
+        },
+        "flex_justify_content": "center",
+        "background_background": "classic",
+        "background_image": {
+          "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/bg-pattern-sumit-cosmetic-scaled.jpeg",
+          "id": 1383,
+          "size": "",
+          "alt": "",
+          "source": "library"
+        },
+        "background_overlay_background": "classic",
+        "background_overlay_opacity": {
+          "unit": "px",
+          "size": 0.45,
+          "sizes": []
+        },
+        "__globals__": {
+          "background_overlay_color": "globals/colors?id=primary"
+        }
+      },
+      "elements": [
+        {
+          "id": "460554ae",
+          "settings": {
+            "title": "About Us",
+            "header_size": "h1",
+            "align": "center",
+            "__globals__": {
+              "title_color": "globals/colors?id=text"
+            }
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "heading",
+          "elType": "widget"
+        },
+        {
+          "id": "600af01a",
+          "settings": {
+            "editor": "<p class=\"mt-8 mb-4\">Learn more about Summit Family Cosmetic Dentistry</p>",
+            "align": "center",
+            "__globals__": {
+              "text_color": "globals/colors?id=secondary"
+            }
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "text-editor",
+          "elType": "widget"
+        },
+        {
+          "id": "2b2bdc3f",
+          "settings": {
+            "content_width": "full",
+            "flex_direction": "row",
+            "flex_justify_content": "center"
+          },
+          "elements": [
+            {
+              "id": "4ca72f8e",
+              "settings": {
+                "content_width": "full",
+                "text": "Schedule Your Visit",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_animation": "slideInUp",
+                "_element_custom_width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_element_custom_width_mobile": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "align_mobile": "justify",
+                "selected_icon": {
+                  "value": "far fa-calendar-alt",
+                  "library": "fa-regular"
+                },
+                "icon_indent": {
+                  "unit": "px",
+                  "size": 7,
+                  "sizes": []
+                },
+                "text_padding": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "20",
+                  "bottom": "10",
+                  "left": "20",
+                  "isLinked": false
+                },
+                "__globals__": {
+                  "button_text_color": "globals/colors?id=accent",
+                  "background_color": "globals/colors?id=secondary"
+                },
+                "link": {
+                  "url": "https://book.modento.io/summit-family-cosmetic-dentistry-nj/reason-for-visit",
+                  "is_external": "on",
+                  "nofollow": "",
+                  "custom_attributes": ""
+                }
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "button",
+              "elType": "widget"
+            },
+            {
+              "id": "44132cac",
+              "settings": {
+                "content_width": "full",
+                "text": "908-522-0077",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_animation": "slideInUp",
+                "_element_custom_width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_element_custom_width_mobile": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "align_mobile": "justify",
+                "selected_icon": {
+                  "value": "fas fa-phone-alt",
+                  "library": "fa-solid"
+                },
+                "icon_indent": {
+                  "unit": "px",
+                  "size": 7,
+                  "sizes": []
+                },
+                "text_padding": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "20",
+                  "bottom": "10",
+                  "left": "20",
+                  "isLinked": false
+                },
+                "__globals__": {
+                  "button_text_color": "globals/colors?id=accent",
+                  "background_color": "globals/colors?id=secondary"
+                },
+                "link": {
+                  "url": "tel:908-522-0077",
+                  "is_external": "",
+                  "nofollow": "",
+                  "custom_attributes": ""
+                }
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "button",
+              "elType": "widget"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "523262fa",
+      "settings": {
+        "flex_direction": "column",
+        "flex_gap": {
+          "unit": "px",
+          "size": 20,
+          "column": "20",
+          "row": "20",
+          "isLinked": true
+        },
+        "padding": {
+          "unit": "em",
+          "top": "4",
+          "right": "0",
+          "bottom": "4",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding_tablet": {
+          "unit": "em",
+          "top": "2",
+          "right": "0",
+          "bottom": "2",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding_mobile": {
+          "unit": "em",
+          "top": "",
+          "right": "",
+          "bottom": "",
+          "left": "",
+          "isLinked": true
+        },
+        "flex_justify_content": "space-between",
+        "_title": "About Us",
+        "flex_direction_tablet": "column",
+        "flex_wrap_tablet": "wrap",
+        "background_background": "classic",
+        "__globals__": {
+          "background_color": "globals/colors?id=secondary"
+        }
+      },
+      "elements": [
+        {
+          "id": "7b6f46ee",
+          "settings": {
+            "content_width": "full",
+            "flex_direction": "column"
+          },
+          "elements": [
+            {
+              "id": "4e867f11",
+              "settings": {
+                "flex_direction": "column",
+                "content_width": "full",
+                "width": {
+                  "unit": "%",
+                  "size": 100
+                },
+                "padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "animation": "slideInLeft",
+                "width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "width_mobile": {
+                  "unit": "%",
+                  "size": "",
+                  "sizes": []
+                },
+                "flex_justify_content_mobile": "center",
+                "flex_align_items_mobile": "center",
+                "flex_justify_content": "center"
+              },
+              "elements": [
+                {
+                  "id": "5cffd039",
+                  "settings": {
+                    "content_width": "full",
+                    "title": "A Trusted Dental Home in Summit, NJ",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 95,
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "__globals__": {
+                      "title_color": "globals/colors?id=primary"
+                    },
+                    "align": "center"
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "heading",
+                  "elType": "widget"
+                },
+                {
+                  "id": "55ca4e92",
+                  "settings": {
+                    "content_width": "full",
+                    "editor": "<p>Summit Family &amp; Cosmetic Dentistry is a full-service dental practice located in the heart of Summit, New Jersey, dedicated to providing comprehensive care for patients of all ages. The practice has built lasting relationships in the community through a commitment to advanced technology, patient comfort, and personalized treatment. From routine preventive care to complex implant cases, every patient receives attentive, expert care from a team that genuinely cares about their outcomes. The office features the latest digital tools, including CBCT 3D imaging, the iTero scanner, and chairside digital displays, so you can see and understand every step of your treatment.</p>",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 95,
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "align": "center"
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "text-editor",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        },
+        {
+          "id": "b4d65d",
+          "settings": {
+            "content_width": "full",
+            "container_type": "grid",
+            "grid_columns_grid": {
+              "unit": "fr",
+              "size": 2,
+              "sizes": []
+            },
+            "grid_rows_grid": {
+              "unit": "fr",
+              "size": 1,
+              "sizes": []
+            },
+            "padding": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": false
+            },
+            "padding_tablet": {
+              "unit": "px",
+              "top": "0",
+              "right": "20",
+              "bottom": "0",
+              "left": "20",
+              "isLinked": false
+            },
+            "presetTitle": "Grid",
+            "presetIcon": "eicon-container-grid"
+          },
+          "elements": [
+            {
+              "id": "6ce41070",
+              "settings": {
+                "content_width": "full",
+                "flex_justify_content": "center",
+                "padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                }
+              },
+              "elements": [
+                {
+                  "id": "78d9b38b",
+                  "settings": {
+                    "content_width": "full",
+                    "title": "Meet Dr. Blake Bandeff, DMD",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 95,
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "__globals__": {
+                      "title_color": "globals/colors?id=primary"
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "heading",
+                  "elType": "widget"
+                },
+                {
+                  "id": "68a80915",
+                  "settings": {
+                    "content_width": "full",
+                    "editor": "<p>Dr. Blake Bandeff earned his DMD from the University of Connecticut School of Dental Medicine in Farmington, CT and completed his General Practice Residency at Morristown Medical Center in Morristown, NJ, where he developed a genuine focus on implants, wisdom teeth extractions, and cosmetic cases. He completes 50+ hours of continuing education annually, staying current with the latest techniques and technology. His approach centers on attentive, personalized care, taking the time to understand each patient's concerns before recommending treatment. Dr. Bandeff is a member of the American Dental Association, the New Jersey Dental Association, and the Academy of General Dentistry. Outside the office, he enjoys traveling with his family, golfing in the summer, and snowboarding in the winter.</p>",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 95,
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "text-editor",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            },
+            {
+              "id": "657d88cb",
+              "settings": {
+                "content_width": "full",
+                "padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                },
+                "_flex_order_mobile": "start"
+              },
+              "elements": [
+                {
+                  "id": "b8a392c",
+                  "settings": {
+                    "flex_direction": "column",
+                    "content_width": "full",
+                    "width": {
+                      "unit": "%",
+                      "size": 100
+                    },
+                    "padding": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "background_background": "slideshow",
+                    "background_image": {
+                      "url": "",
+                      "id": "",
+                      "size": "",
+                      "alt": "",
+                      "source": "library"
+                    },
+                    "background_position": "center center",
+                    "background_size": "cover",
+                    "width_tablet": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "width_mobile": {
+                      "unit": "%",
+                      "size": "",
+                      "sizes": []
+                    },
+                    "min_height_tablet": {
+                      "unit": "px",
+                      "size": 655,
+                      "sizes": []
+                    },
+                    "animation": "fadeIn",
+                    "min_height_mobile": {
+                      "unit": "px",
+                      "size": 336,
+                      "sizes": []
+                    },
+                    "border_radius": {
+                      "unit": "px",
+                      "top": "15",
+                      "right": "15",
+                      "bottom": "15",
+                      "left": "15",
+                      "isLinked": true
+                    },
+                    "background_slideshow_gallery": [
+                      {
+                        "id": 1454,
+                        "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/Dr.-Bandeff-hospital-picture-outside.jpeg"
+                      },
+                      {
+                        "id": 1455,
+                        "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/Dr.-Bandeff.jpeg"
+                      }
+                    ],
+                    "min_height": {
+                      "unit": "px",
+                      "size": 625,
+                      "sizes": []
+                    },
+                    "_flex_order_mobile": "start"
+                  },
+                  "elements": [],
+                  "isInner": true,
+                  "elType": "container"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        },
+        {
+          "id": "1b015cd",
+          "settings": {
+            "content_width": "full",
+            "container_type": "grid",
+            "grid_columns_grid": {
+              "unit": "fr",
+              "size": 2,
+              "sizes": []
+            },
+            "grid_rows_grid": {
+              "unit": "fr",
+              "size": 1,
+              "sizes": []
+            },
+            "padding": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": false
+            },
+            "padding_tablet": {
+              "unit": "px",
+              "top": "0",
+              "right": "20",
+              "bottom": "0",
+              "left": "20",
+              "isLinked": false
+            },
+            "presetTitle": "Grid",
+            "presetIcon": "eicon-container-grid"
+          },
+          "elements": [
+            {
+              "id": "1341d035",
+              "settings": {
+                "content_width": "full",
+                "padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                },
+                "_flex_order_mobile": "start"
+              },
+              "elements": [
+                {
+                  "id": "2c9826a7",
+                  "settings": {
+                    "flex_direction": "column",
+                    "content_width": "full",
+                    "width": {
+                      "unit": "%",
+                      "size": 100
+                    },
+                    "padding": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "background_background": "classic",
+                    "background_image": {
+                      "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/drhannaSummit-1.png",
+                      "id": 1484,
+                      "size": "",
+                      "alt": "",
+                      "source": "library"
+                    },
+                    "background_position": "top center",
+                    "background_size": "cover",
+                    "width_tablet": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "width_mobile": {
+                      "unit": "%",
+                      "size": "",
+                      "sizes": []
+                    },
+                    "min_height_tablet": {
+                      "unit": "px",
+                      "size": 655,
+                      "sizes": []
+                    },
+                    "animation": "fadeIn",
+                    "min_height_mobile": {
+                      "unit": "px",
+                      "size": 336,
+                      "sizes": []
+                    },
+                    "border_radius": {
+                      "unit": "px",
+                      "top": "15",
+                      "right": "15",
+                      "bottom": "15",
+                      "left": "15",
+                      "isLinked": true
+                    },
+                    "min_height": {
+                      "unit": "px",
+                      "size": 625,
+                      "sizes": []
+                    },
+                    "_flex_order_mobile": "start"
+                  },
+                  "elements": [],
+                  "isInner": true,
+                  "elType": "container"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            },
+            {
+              "id": "1f3aa657",
+              "settings": {
+                "content_width": "full",
+                "flex_justify_content": "center",
+                "padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                }
+              },
+              "elements": [
+                {
+                  "id": "76aa398a",
+                  "settings": {
+                    "content_width": "full",
+                    "title": "Meet Dr. Drew Hanna",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 95,
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "__globals__": {
+                      "title_color": "globals/colors?id=primary"
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "heading",
+                  "elType": "widget"
+                },
+                {
+                  "id": "25a5a688",
+                  "settings": {
+                    "content_width": "full",
+                    "editor": "<p>Dentistry is a profession that offers me both fulfillment and a sense of purpose. The ability to transform lives through comprehensive oral healthcare, from restoring smiles to relieving pain and enhancing overall well-being, is what drives my passion for dentistry. I am inspired by the blend of artistry, scientific expertise, and patient care that dentistry demands. The field's constant advancements and innovative techniques keep me motivated to continually expand my knowledge and skills. What keeps me motivated is witnessing the confidence and self-esteem that a healthy smile can bring to my patients.</p>",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 95,
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "text-editor",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        },
+        {
+          "id": "2a2c306b",
+          "settings": {
+            "content_width": "full",
+            "container_type": "grid",
+            "grid_columns_grid": {
+              "unit": "fr",
+              "size": 2,
+              "sizes": []
+            },
+            "grid_rows_grid": {
+              "unit": "fr",
+              "size": 1,
+              "sizes": []
+            },
+            "padding": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": false
+            },
+            "padding_tablet": {
+              "unit": "px",
+              "top": "0",
+              "right": "20",
+              "bottom": "0",
+              "left": "20",
+              "isLinked": false
+            },
+            "presetTitle": "Grid",
+            "presetIcon": "eicon-container-grid"
+          },
+          "elements": [
+            {
+              "id": "437cc03a",
+              "settings": {
+                "content_width": "full",
+                "flex_justify_content": "center",
+                "padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                }
+              },
+              "elements": [
+                {
+                  "id": "15b00e7a",
+                  "settings": {
+                    "content_width": "full",
+                    "title": "Meet Dr. Mina Salib",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 95,
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "__globals__": {
+                      "title_color": "globals/colors?id=primary"
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "heading",
+                  "elType": "widget"
+                },
+                {
+                  "id": "850f592",
+                  "settings": {
+                    "content_width": "full",
+                    "editor": "<p>Dr. Mina Salib is a dedicated and accomplished dentist, a graduate of the Rutgers School of Dental Medicine, with extensive experience in both conventional and digital dentistry. His comprehensive clinical training encompasses multiple disciplines, including restorative dentistry, prosthodontics, periodontics, pediatric dentistry, endodontics, and oral surgery.</p><p>Dr. Salib is dedicated to delivering stress-free dentistry through a patient-centered approach that prioritizes comfort, trust, and clinical excellence. He has significant experience in developing and executing complex, multidisciplinary treatment plans, with a particular focus on comprehensive dental care, esthetic dentistry, and Invisalign treatment to achieve functional, natural, and long-lasting outcomes.</p><p>Dr. Salib\u2019s advanced education includes completion of implant surgery and restoration training with an International Team of Implantology, graduation from the American Academy of Implant Dentistry\u2019s MaxiCourse in implant dentistry.</p><p>Outside of his professional practice, Dr. Mina Salib maintains an active lifestyle and values spending quality time with his family. He enjoys playing tennis and soccer, exploring local dining establishments, following Liverpool Football Club in the Premier League, and relaxing with loved ones.</p>",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 95,
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "text-editor",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            },
+            {
+              "id": "2d9199bb",
+              "settings": {
+                "content_width": "full",
+                "padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                },
+                "_flex_order_mobile": "start"
+              },
+              "elements": [
+                {
+                  "id": "5582aaba",
+                  "settings": {
+                    "flex_direction": "column",
+                    "content_width": "full",
+                    "width": {
+                      "unit": "%",
+                      "size": 100
+                    },
+                    "padding": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "background_background": "classic",
+                    "background_image": {
+                      "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/Dr.MinaSalib.jpg",
+                      "id": 1486,
+                      "size": "",
+                      "alt": "",
+                      "source": "library"
+                    },
+                    "background_position": "initial",
+                    "background_size": "cover",
+                    "width_tablet": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "width_mobile": {
+                      "unit": "%",
+                      "size": "",
+                      "sizes": []
+                    },
+                    "min_height_tablet": {
+                      "unit": "px",
+                      "size": 655,
+                      "sizes": []
+                    },
+                    "animation": "fadeIn",
+                    "min_height_mobile": {
+                      "unit": "px",
+                      "size": 336,
+                      "sizes": []
+                    },
+                    "border_radius": {
+                      "unit": "px",
+                      "top": "15",
+                      "right": "15",
+                      "bottom": "15",
+                      "left": "15",
+                      "isLinked": true
+                    },
+                    "min_height": {
+                      "unit": "px",
+                      "size": 625,
+                      "sizes": []
+                    },
+                    "background_ypos": {
+                      "unit": "px",
+                      "size": -149,
+                      "sizes": []
+                    },
+                    "_flex_order_mobile": "start"
+                  },
+                  "elements": [],
+                  "isInner": true,
+                  "elType": "container"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "596fb29d",
+      "settings": {
+        "padding": {
+          "unit": "px",
+          "top": "40",
+          "right": "24",
+          "bottom": "40",
+          "left": "24",
+          "isLinked": false
+        },
+        "_title": "About Us",
+        "padding_mobile": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "__globals__": {
+          "background_color": "globals/colors?id=secondary"
+        },
+        "boxed_width": {
+          "unit": "px",
+          "size": 1600,
+          "sizes": []
+        },
+        "margin": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "38cc0b5d",
+          "settings": {
+            "ekit_heading_title": "Our Amazing Staff",
+            "ekit_heading_sub_title": "",
+            "ekit_heading_extra_title": "<p></p>",
+            "shadow_text_content": "bussiness",
+            "ekit_heading_show_seperator": "",
+            "ekit_heading_title_margin": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": false
+            },
+            "ekit_heading_focused_title_color_hover": "",
+            "ekit_heading_focused_title_secondary_spacing": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": false
+            },
+            "__globals__": {
+              "ekit_heading_title_color": "globals/colors?id=primary",
+              "ekit_heading_focused_title_color": "globals/colors?id=primary"
+            },
+            "ekit_heading_sub_title_show": "",
+            "ekit_heading_title_align_tablet": "text_center",
+            "ekit_heading_title_align": "text_center",
+            "_animation": "fadeInUp",
+            "_padding_mobile": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "40",
+              "left": "0",
+              "isLinked": false
+            },
+            "ekit_heading_focused_title": "Services"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "elementskit-heading",
+          "elType": "widget"
+        },
+        {
+          "id": "43facbe",
+          "settings": {
+            "content_width": "full",
+            "container_type": "grid",
+            "presetTitle": "Grid",
+            "presetIcon": "eicon-container-grid"
+          },
+          "elements": [
+            {
+              "id": "29e8b272",
+              "settings": {
+                "content_width": "full",
+                "min_height": {
+                  "unit": "px",
+                  "size": 220,
+                  "sizes": []
+                },
+                "flex_justify_content": "flex-start",
+                "background_background": "classic",
+                "border_radius": {
+                  "unit": "px",
+                  "top": "20",
+                  "right": "20",
+                  "bottom": "20",
+                  "left": "20",
+                  "isLinked": true
+                },
+                "__globals__": {
+                  "background_color": "globals/colors?id=primary"
+                }
+              },
+              "elements": [
+                {
+                  "id": "77172038",
+                  "settings": {
+                    "image": {
+                      "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/8e42f5f7f541f7523149d50be35e483f998fea1b-1603x1069-1.avif",
+                      "id": 1476,
+                      "size": "",
+                      "alt": "",
+                      "source": "library"
+                    },
+                    "title_text": "Teresa",
+                    "description_text": "Patient Coordinator",
+                    "__globals__": {
+                      "title_color": "globals/colors?id=text",
+                      "description_color": "globals/colors?id=text"
+                    },
+                    "image_size": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "image_border_radius": {
+                      "unit": "px",
+                      "size": 20,
+                      "sizes": []
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "image-box",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            },
+            {
+              "id": "5b83b3c",
+              "settings": {
+                "content_width": "full",
+                "min_height": {
+                  "unit": "px",
+                  "size": 220,
+                  "sizes": []
+                },
+                "flex_justify_content": "flex-start",
+                "background_background": "classic",
+                "border_radius": {
+                  "unit": "px",
+                  "top": "20",
+                  "right": "20",
+                  "bottom": "20",
+                  "left": "20",
+                  "isLinked": true
+                },
+                "__globals__": {
+                  "background_color": "globals/colors?id=primary"
+                }
+              },
+              "elements": [
+                {
+                  "id": "7364f400",
+                  "settings": {
+                    "image": {
+                      "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/aaacfd4889c47aa37bd94db1b4a08aff2d63cf41-1460x973-1.avif",
+                      "id": 1478,
+                      "size": "",
+                      "alt": "",
+                      "source": "library"
+                    },
+                    "title_text": "Emmily",
+                    "description_text": "Billing Coordinator\n\n",
+                    "__globals__": {
+                      "title_color": "globals/colors?id=text",
+                      "description_color": "globals/colors?id=text"
+                    },
+                    "image_size": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "image_border_radius": {
+                      "unit": "px",
+                      "size": 20,
+                      "sizes": []
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "image-box",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            },
+            {
+              "id": "82cec37",
+              "settings": {
+                "content_width": "full",
+                "min_height": {
+                  "unit": "px",
+                  "size": 220,
+                  "sizes": []
+                },
+                "flex_justify_content": "flex-start",
+                "background_background": "classic",
+                "border_radius": {
+                  "unit": "px",
+                  "top": "20",
+                  "right": "20",
+                  "bottom": "20",
+                  "left": "20",
+                  "isLinked": true
+                },
+                "__globals__": {
+                  "background_color": "globals/colors?id=primary"
+                }
+              },
+              "elements": [
+                {
+                  "id": "754f6f51",
+                  "settings": {
+                    "image": {
+                      "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/45b230732e794adac4e3af5d222829e738b96bd1-1857x1238-1.avif",
+                      "id": 1479,
+                      "size": "",
+                      "alt": "",
+                      "source": "library"
+                    },
+                    "title_text": "Debbie",
+                    "description_text": "Dental Hygienist",
+                    "__globals__": {
+                      "title_color": "globals/colors?id=text",
+                      "description_color": "globals/colors?id=text"
+                    },
+                    "image_size": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "image_border_radius": {
+                      "unit": "px",
+                      "size": 20,
+                      "sizes": []
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "image-box",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            },
+            {
+              "id": "6f79011b",
+              "settings": {
+                "content_width": "full",
+                "min_height": {
+                  "unit": "px",
+                  "size": 220,
+                  "sizes": []
+                },
+                "flex_justify_content": "flex-start",
+                "background_background": "classic",
+                "border_radius": {
+                  "unit": "px",
+                  "top": "20",
+                  "right": "20",
+                  "bottom": "20",
+                  "left": "20",
+                  "isLinked": true
+                },
+                "__globals__": {
+                  "background_color": "globals/colors?id=primary"
+                }
+              },
+              "elements": [
+                {
+                  "id": "e3c063",
+                  "settings": {
+                    "image": {
+                      "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/038866b9a6477489a8bda1cd453a113e6522f150-1920x1280-1.avif",
+                      "id": 1480,
+                      "size": "",
+                      "alt": "",
+                      "source": "library"
+                    },
+                    "title_text": "Anna",
+                    "description_text": "Dental Hygienist",
+                    "__globals__": {
+                      "title_color": "globals/colors?id=text",
+                      "description_color": "globals/colors?id=text"
+                    },
+                    "image_size": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "image_border_radius": {
+                      "unit": "px",
+                      "size": 20,
+                      "sizes": []
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "image-box",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            },
+            {
+              "id": "501853ea",
+              "settings": {
+                "content_width": "full",
+                "min_height": {
+                  "unit": "px",
+                  "size": 220,
+                  "sizes": []
+                },
+                "flex_justify_content": "flex-start",
+                "background_background": "classic",
+                "border_radius": {
+                  "unit": "px",
+                  "top": "20",
+                  "right": "20",
+                  "bottom": "20",
+                  "left": "20",
+                  "isLinked": true
+                },
+                "__globals__": {
+                  "background_color": "globals/colors?id=primary"
+                }
+              },
+              "elements": [
+                {
+                  "id": "707fdf91",
+                  "settings": {
+                    "image": {
+                      "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/55b91acafdd9b4a70f0e1499eb1b53cac2a6d350-1735x1157-1.avif",
+                      "id": 1482,
+                      "size": "",
+                      "alt": "",
+                      "source": "library"
+                    },
+                    "title_text": "Daisy",
+                    "description_text": "Dental Assistant",
+                    "__globals__": {
+                      "title_color": "globals/colors?id=text",
+                      "description_color": "globals/colors?id=text"
+                    },
+                    "image_size": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "image_border_radius": {
+                      "unit": "px",
+                      "size": 20,
+                      "sizes": []
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "image-box",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": true,
+      "elType": "container"
+    },
+    {
+      "id": "52ec28af",
+      "settings": {
+        "flex_direction": "column",
+        "flex_gap": {
+          "unit": "px",
+          "size": 20,
+          "column": "20",
+          "row": "20",
+          "isLinked": true
+        },
+        "background_background": "classic",
+        "background_position": "bottom center",
+        "background_xpos": {
+          "unit": "px",
+          "size": -80,
+          "sizes": []
+        },
+        "background_ypos": {
+          "unit": "px",
+          "size": 470,
+          "sizes": []
+        },
+        "background_size": "cover",
+        "background_bg_width": {
+          "unit": "%",
+          "size": 62,
+          "sizes": []
+        },
+        "padding": {
+          "unit": "em",
+          "top": "4",
+          "right": "0",
+          "bottom": "4",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding_tablet": {
+          "unit": "em",
+          "top": "",
+          "right": "",
+          "bottom": "",
+          "left": "",
+          "isLinked": true
+        },
+        "padding_mobile": {
+          "unit": "em",
+          "top": "2",
+          "right": "1",
+          "bottom": "2",
+          "left": "1",
+          "isLinked": false
+        },
+        "_title": "Appointment Process",
+        "flex_direction_tablet": "column-reverse",
+        "flex_wrap_tablet": "wrap",
+        "flex_align_items": "center",
+        "margin": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "__globals__": {
+          "background_color": "globals/colors?id=primary"
+        }
+      },
+      "elements": [
+        {
+          "id": "3fc2fcc7",
+          "settings": {
+            "flex_direction": "column",
+            "content_width": "full",
+            "width": {
+              "unit": "%",
+              "size": 100
+            },
+            "padding": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            },
+            "animation": "slideInLeft",
+            "width_tablet": {
+              "unit": "%",
+              "size": 100,
+              "sizes": []
+            },
+            "width_mobile": {
+              "unit": "%",
+              "size": "",
+              "sizes": []
+            },
+            "margin_tablet": {
+              "unit": "em",
+              "top": "3",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": false
+            },
+            "margin_mobile": {
+              "unit": "em",
+              "top": "4",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": false
+            },
+            "flex_justify_content_mobile": "center",
+            "flex_align_items_mobile": "center",
+            "flex_justify_content": "center"
+          },
+          "elements": [
+            {
+              "id": "13b620b5",
+              "settings": {
+                "content_width": "full",
+                "title": "Conveniently Located in Summit, NJ",
+                "header_size": "h3",
+                "_element_width": "inherit",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 95,
+                  "sizes": []
+                },
+                "align_mobile": "center",
+                "__globals__": {
+                  "title_color": "globals/colors?id=text"
+                },
+                "align": "center"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "heading",
+              "elType": "widget"
+            },
+            {
+              "id": "68caacf0",
+              "settings": {
+                "content_width": "full",
+                "editor": "<p>Our office is located at 33 Overlook Rd, Suite 402, in the heart of Summit, NJ, offering a modern, comfortable environment with stunning views. We are committed to providing quality healthcare to families in the Summit area and treat patients of all ages. The practice serves patients throughout Union County and surrounding communities.</p>",
+                "_element_width": "initial",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_element_custom_width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_element_custom_width_mobile": {
+                  "unit": "%",
+                  "size": "",
+                  "sizes": []
+                },
+                "align_mobile": "center",
+                "__globals__": {
+                  "text_color": "globals/colors?id=text"
+                },
+                "align": "center"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "text-editor",
+              "elType": "widget"
+            },
+            {
+              "id": "628318f7",
+              "settings": {
+                "gallery": [
+                  {
+                    "id": 1456,
+                    "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/Dr.-Bandeff-and-Christian-working-1-1.jpeg"
+                  },
+                  {
+                    "id": 1457,
+                    "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/Dr.Bandeff-working-1.jpeg"
+                  },
+                  {
+                    "id": 1458,
+                    "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/Summit-1.jpg"
+                  },
+                  {
+                    "id": 1459,
+                    "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/Summit-2.jpg"
+                  },
+                  {
+                    "id": 1460,
+                    "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/Summit-3.jpg"
+                  },
+                  {
+                    "id": 1461,
+                    "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/Summit-4.jpg"
+                  },
+                  {
+                    "id": 1462,
+                    "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/summit1-1.jpg"
+                  }
+                ],
+                "galleries": [
+                  {
+                    "gallery_title": "New Gallery",
+                    "_id": "155f9a9"
+                  }
+                ],
+                "gallery_layout": "justified",
+                "ideal_row_height": {
+                  "unit": "px",
+                  "size": 460,
+                  "sizes": []
+                },
+                "gap": {
+                  "unit": "px",
+                  "size": 15,
+                  "sizes": []
+                },
+                "thumbnail_image_size": "full",
+                "show_all_galleries_label": "All"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "gallery",
+              "elType": "widget"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "1726469b",
+      "settings": {
+        "flex_direction": "column",
+        "padding": {
+          "unit": "em",
+          "top": "4",
+          "right": "0",
+          "bottom": "4",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding_tablet": {
+          "unit": "em",
+          "top": "",
+          "right": "",
+          "bottom": "",
+          "left": "",
+          "isLinked": true
+        },
+        "padding_mobile": {
+          "unit": "em",
+          "top": "",
+          "right": "",
+          "bottom": "",
+          "left": "",
+          "isLinked": true
+        }
+      },
+      "elements": [
+        {
+          "id": "1b3d7300",
+          "settings": {
+            "html": "<script type='text/javascript' src='https://reputationhub.site/reputation/assets/review-widget.js'></script><iframe class='lc_reviews_widget' src='https://reputationhub.site/reputation/widgets/review_widget/fpKl9tjQDAmmIMIQjbv0' frameborder='0' scrolling='no' style='min-width: 100%; width: 100%;'></iframe>",
+            "custom_css": ".elementor-widget-html {\n  overflow: hidden;\n}\n\n.lc_reviews_widget {\n  width: calc(100% + 80px) !important;\n  margin-left: -40px !important;\n  margin-right: -40px !important;\n  min-width: calc(100% + 80px) !important;\n}"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "html",
+          "elType": "widget"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "5f130ee9",
+      "settings": {
+        "flex_direction": "column",
+        "margin": {
+          "unit": "em",
+          "top": "0",
+          "right": "0",
+          "bottom": "4",
+          "left": "0",
+          "isLinked": false
+        },
+        "margin_tablet": {
+          "unit": "em",
+          "top": "0",
+          "right": "0",
+          "bottom": "2",
+          "left": "0",
+          "isLinked": false
+        },
+        "margin_mobile": {
+          "unit": "em",
+          "top": "0",
+          "right": "0",
+          "bottom": "3",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "animation": "slideInUp",
+        "_title": "Online Appointment",
+        "custom_css": ".rkit-team__social {\n    display: none;\n}",
+        "background_overlay_background": "classic",
+        "background_overlay_color_stop": {
+          "unit": "%",
+          "size": 38,
+          "sizes": []
+        },
+        "background_overlay_color_b": "#EAE7E580",
+        "background_overlay_color_b_stop": {
+          "unit": "%",
+          "size": 74,
+          "sizes": []
+        },
+        "background_overlay_opacity": {
+          "unit": "px",
+          "size": 1,
+          "sizes": []
+        }
+      },
+      "elements": [
+        {
+          "id": "4c6d6b09",
+          "settings": {
+            "content_width": "full",
+            "flex_direction": "row",
+            "flex_justify_content": "flex-start",
+            "flex_align_items": "center",
+            "background_background": "classic",
+            "border_radius": {
+              "unit": "px",
+              "top": "15",
+              "right": "15",
+              "bottom": "15",
+              "left": "15",
+              "isLinked": true
+            },
+            "padding": {
+              "unit": "em",
+              "top": "4",
+              "right": "4",
+              "bottom": "4",
+              "left": "4",
+              "isLinked": true
+            },
+            "padding_tablet": {
+              "unit": "em",
+              "top": "2",
+              "right": "2",
+              "bottom": "2",
+              "left": "2",
+              "isLinked": true
+            },
+            "padding_mobile": {
+              "unit": "em",
+              "top": "1",
+              "right": "1",
+              "bottom": "1",
+              "left": "1",
+              "isLinked": true
+            },
+            "__globals__": {
+              "background_color": "globals/colors?id=text",
+              "background_overlay_color": "globals/colors?id=primary"
+            },
+            "background_image": {
+              "id": "1370",
+              "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/AdobeStock_471814455-1.jpg"
+            },
+            "background_position": "center right",
+            "background_size": "contain",
+            "min_height": {
+              "unit": "px",
+              "size": 450,
+              "sizes": []
+            },
+            "width_tablet": {
+              "unit": "%",
+              "size": 100,
+              "sizes": []
+            },
+            "width_mobile": {
+              "unit": "%",
+              "size": "",
+              "sizes": []
+            },
+            "flex_wrap_tablet": "wrap",
+            "background_overlay_background": "gradient",
+            "background_overlay_color_b": "#EAE7E52E",
+            "background_overlay_gradient_angle": {
+              "unit": "deg",
+              "size": 90,
+              "sizes": []
+            },
+            "background_overlay_opacity": {
+              "unit": "px",
+              "size": 1,
+              "sizes": []
+            },
+            "background_overlay_color_stop": {
+              "unit": "%",
+              "size": 51,
+              "sizes": []
+            },
+            "background_overlay_color_b_stop": {
+              "unit": "%",
+              "size": 63,
+              "sizes": []
+            },
+            "background_repeat": "no-repeat",
+            "background_position_mobile": "top right",
+            "background_position_tablet": "center right"
+          },
+          "elements": [
+            {
+              "id": "4338497d",
+              "settings": {
+                "flex_direction": "column",
+                "content_width": "full",
+                "width": {
+                  "unit": "%",
+                  "size": 49
+                },
+                "padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "animation": "slideInUp",
+                "width_tablet": {
+                  "unit": "%",
+                  "size": 57,
+                  "sizes": []
+                },
+                "width_mobile": {
+                  "unit": "%",
+                  "size": "",
+                  "sizes": []
+                },
+                "flex_justify_content_mobile": "center",
+                "flex_align_items_mobile": "center"
+              },
+              "elements": [
+                {
+                  "id": "17362999",
+                  "settings": {
+                    "content_width": "full",
+                    "title": "Dental Care Built Around You",
+                    "header_size": "h3",
+                    "_element_width": "inherit",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 95,
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "__globals__": {
+                      "title_color": "globals/colors?id=text"
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "heading",
+                  "elType": "widget"
+                },
+                {
+                  "id": "19474dea",
+                  "settings": {
+                    "content_width": "full",
+                    "editor": "<p>At Summit Family &amp; Cosmetic Dentistry, every patient receives a customized treatment plan based on their goals, concerns, and health history. Dr. Bandeff and his team believe that informed patients are confident patients, taking the time to walk through every option before any procedure begins. From routine checkups to full-mouth restorations, you receive the same attentive, personal care every visit.</p>",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "_element_custom_width_tablet": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": "",
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "__globals__": {
+                      "text_color": "globals/colors?id=text"
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "text-editor",
+                  "elType": "widget"
+                },
+                {
+                  "id": "79e190d4",
+                  "settings": {
+                    "content_width": "full",
+                    "text": "Book Your Appointment",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "_animation": "slideInUp",
+                    "_element_custom_width_tablet": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "align_mobile": "justify",
+                    "selected_icon": {
+                      "value": "far fa-calendar-alt",
+                      "library": "fa-regular"
+                    },
+                    "icon_indent": {
+                      "unit": "px",
+                      "size": 7,
+                      "sizes": []
+                    },
+                    "text_padding": {
+                      "unit": "px",
+                      "top": "10",
+                      "right": "20",
+                      "bottom": "10",
+                      "left": "20",
+                      "isLinked": false
+                    },
+                    "__globals__": {
+                      "button_text_color": "globals/colors?id=primary",
+                      "background_color": "globals/colors?id=text"
+                    },
+                    "link": {
+                      "url": "https://book.modento.io/summit-family-cosmetic-dentistry-nj/reason-for-visit",
+                      "is_external": "on",
+                      "nofollow": "on",
+                      "custom_attributes": ""
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "button",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    }
+  ],
+  "page_settings": [],
+  "version": "0.4",
+  "title": "New-Elevate-About-Page",
+  "type": "page"
+}

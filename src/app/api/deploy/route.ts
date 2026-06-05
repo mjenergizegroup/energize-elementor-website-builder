@@ -60,11 +60,25 @@ const bodySchema = z.object({
           wpTitle: z.string().optional(),
           slug: z.string().optional(),
           wpPageTemplate: wpPageTemplateSchema.optional(),
-          slots: z.record(z.string(), z.any()),
+          slots: z.record(z.string(), z.any()).optional(),
+          builderPageType: z
+            .enum([
+              "homepage",
+              "about",
+              "service-page",
+              "contact",
+              "amenities",
+              "first-visit",
+              "insurance-and-financing",
+            ])
+            .optional(),
+          serviceSlug: z.string().optional(),
+          pageData: z.record(z.string(), z.record(z.string(), z.any())).optional(),
           buildNotes: z.array(z.string()).optional(),
         }),
       )
       .min(1),
+    site: z.record(z.string(), z.string()).optional(),
   }),
   elementorVersion: z.string().optional(),
 });

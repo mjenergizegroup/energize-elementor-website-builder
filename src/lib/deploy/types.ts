@@ -1,5 +1,26 @@
 import type { ParsedContent } from "@/lib/injection/types";
+import type { ElevatePageType, PageData } from "@/lib/builders/elevate/types";
 import type { BrandKit } from "@/lib/types";
+
+export interface BuilderPageContent {
+  page: string;
+  wpTitle?: string;
+  slug?: string;
+  wpPageTemplate?: "default" | "elementor_header_footer" | "elementor_canvas";
+  slots?: ParsedContent["pages"][number]["slots"];
+  buildNotes?: string[];
+  builderPageType?: ElevatePageType;
+  serviceSlug?: string;
+  pageData?: PageData;
+}
+
+export interface DeployContent {
+  practiceName: string;
+  city?: string;
+  doctorName?: string;
+  site?: Record<string, string>;
+  pages: BuilderPageContent[];
+}
 
 export interface DeployRequest {
   theme: string;
@@ -7,9 +28,9 @@ export interface DeployRequest {
   siteName: string;
   wpUsername: string;
   wpAppPassword: string;
-  // content.pages is the source of truth for what gets built (already filtered
-  // to the pages the user selected). It can contain several "services" pages.
-  content: ParsedContent;
+  // content.pages is the source of truth for what gets built. It is already
+  // filtered to the pages the user selected.
+  content: DeployContent;
   brandKit: BrandKit;
   elementorVersion?: string;
 }

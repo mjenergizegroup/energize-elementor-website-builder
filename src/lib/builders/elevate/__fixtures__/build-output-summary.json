@@ -1,0 +1,23 @@
+{
+  "homepage": {
+    "warnings": [],
+    "buildNotes": [
+      "[DAVID: hide promo_bar section - not in content]",
+      "[DAVID: hide services section - not in content]",
+      "[DAVID: hide doctor_feature section - not in content]"
+    ]
+  },
+  "service-page-cosmetic-dentistry": {
+    "warnings": [],
+    "buildNotes": [
+      "[DAVID: hide featured_sub_services section - not in content]",
+      "[DAVID: hide benefits section - not in content]",
+      "[DAVID: hide treatment_journey section - not in content]",
+      "[DAVID: hide faq section - not in content]"
+    ]
+  },
+  "contact": {
+    "warnings": [],
+    "buildNotes": []
+  }
+}

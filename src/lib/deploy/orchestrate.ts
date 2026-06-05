@@ -1,5 +1,10 @@
 import "server-only";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { buildElevatePage } from "@/lib/builders/elevate";
+import type { ElementorJSON } from "@/lib/builders/elevate/types";
 import { getInjector } from "@/lib/injection/registry";
+import { DEFAULT_WP_PAGE_TEMPLATE } from "@/lib/injection/base";
 import { WpClient } from "@/lib/wp/client";
 import {
   toCustomColors,
@@ -18,7 +23,6 @@ import type {
 export async function* runDeploy(
   req: DeployRequest,
 ): AsyncGenerator<DeployEvent, void, void> {
-  const injector = getInjector(req.theme);
   const wp = new WpClient(req.siteUrl);
 
   const allBuildNotes: string[] = [];
@@ -31,10 +35,7 @@ export async function* runDeploy(
     yield { type: "step", step: "page", status: "start", label };
 
     try {
-      const injected = injector.injectPage(pageContent.page, pageContent, {
-        practiceName: req.content.practiceName,
-        elementorVersion: req.elementorVersion,
-      });
+      const injected = buildPage(req, pageContent);
       allBuildNotes.push(...injected.buildNotes);
       allWarnings.push(...injected.warnings);
 
@@ -127,6 +128,84 @@ export async function* runDeploy(
     warnings: dedupe(allWarnings),
     data: undefined,
   };
+}
+
+function buildPage(
+  req: DeployRequest,
+  pageContent: DeployRequest["content"]["pages"][number],
+): {
+  page: string;
+  title: string;
+  slug: string;
+  wpPageTemplate: string;
+  elementorVersion?: string;
+  elementorData: unknown[];
+  buildNotes: string[];
+  warnings: string[];
+} {
+  if (
+    req.theme === "elevate" &&
+    req.content.site &&
+    pageContent.pageData &&
+    pageContent.builderPageType
+  ) {
+    const built = buildElevatePage({
+      pageType: pageContent.builderPageType,
+      slug: pageContent.serviceSlug,
+      site: req.content.site,
+      pageData: pageContent.pageData,
+      template: loadElevateTemplate(templateNameFor(pageContent.builderPageType)),
+    });
+    const templateVersion =
+      typeof built.json.version === "string" ? built.json.version : undefined;
+    return {
+      page: pageContent.page,
+      title: pageContent.wpTitle ?? titleFromPage(pageContent.page),
+      slug: pageContent.slug ?? pageContent.serviceSlug ?? pageContent.page,
+      wpPageTemplate: pageContent.wpPageTemplate ?? DEFAULT_WP_PAGE_TEMPLATE,
+      elementorVersion: req.elementorVersion ?? templateVersion,
+      elementorData: built.json.content,
+      buildNotes: [...(pageContent.buildNotes ?? []), ...built.buildNotes],
+      warnings: built.warnings,
+    };
+  }
+
+  const injector = getInjector(req.theme);
+  const injected = injector.injectPage(
+    pageContent.page,
+    {
+      page: pageContent.page,
+      wpTitle: pageContent.wpTitle,
+      slug: pageContent.slug,
+      wpPageTemplate: pageContent.wpPageTemplate,
+      slots: pageContent.slots ?? {},
+      buildNotes: pageContent.buildNotes,
+    },
+    {
+      practiceName: req.content.practiceName,
+      elementorVersion: req.elementorVersion,
+    },
+  );
+  return injected;
+}
+
+function loadElevateTemplate(name: string): ElementorJSON {
+  const file = path.join(process.cwd(), "theme-templates", "elevate", `${name}.json`);
+  return JSON.parse(readFileSync(file, "utf-8")) as ElementorJSON;
+}
+
+function templateNameFor(pageType: string): string {
+  if (pageType === "insurance-and-financing") return "insurance";
+  return pageType;
+}
+
+function titleFromPage(page: string): string {
+  return page
+    .replace(/^service-page-/, "")
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 // Helper that emits start/ok or start/fail around an action.

@@ -1,1 +1,851 @@
-{"content":[{"id":"4fc588d0","settings":{"flex_direction":"column","min_height":{"unit":"vh","size":55,"sizes":[]},"min_height_tablet":{"unit":"custom","size":"","sizes":[]},"min_height_mobile":{"unit":"custom","size":"","sizes":[]},"flex_justify_content":"center","flex_align_items":"flex-start","background_background":"classic","background_image":{"id":1074,"url":"https:\/\/solsmilelounge.com\/wp-content\/uploads\/2026\/02\/6L9A9900.jpg","alt":"","source":"library","size":""},"background_position":"center center","background_size":"cover","background_overlay_background":"gradient","background_overlay_color_stop":{"unit":"%","size":29,"sizes":[]},"background_overlay_color_b_stop":{"unit":"%","size":51,"sizes":[]},"background_overlay_gradient_angle":{"unit":"deg","size":90,"sizes":[]},"background_overlay_opacity":{"unit":"px","size":0.9,"sizes":[]},"_title":"Slider","__globals__":{"background_overlay_color":"globals\/colors?id=secondary","background_overlay_color_b":""},"flex_align_items_tablet":"center","background_attachment":"fixed","background_repeat":"no-repeat","background_overlay_color":"#6D6D52","background_overlay_color_b":"#6D6D523B"},"elements":[{"id":"6690c1d7","settings":{"content_width":"full","title":"Contact Us","_element_width":"initial","_element_custom_width":{"unit":"%","size":45,"sizes":[]},"_animation":"slideInUp","align_tablet":"center","_element_custom_width_tablet":{"unit":"%","size":100,"sizes":[]},"_element_custom_width_mobile":{"unit":"%","size":100,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=accent","typography_typography":"globals\/typography?id=b4e43e9"},"header_size":"h1"},"elements":[],"isInner":false,"widgetType":"heading","elType":"widget"}],"isInner":false,"elType":"container"},{"id":"2b6c15f4","settings":{"flex_direction":"row","flex_gap":{"unit":"px","size":20,"column":"20","row":"20","isLinked":true},"padding":{"unit":"em","top":"4","right":"0","bottom":"4","left":"0","isLinked":false},"padding_tablet":{"unit":"em","top":"","right":"","bottom":"","left":"","isLinked":true},"padding_mobile":{"unit":"em","top":"2","right":"0","bottom":"2","left":"0","isLinked":false},"_title":"Contact Us","flex_wrap_tablet":"wrap"},"elements":[{"id":"42a98f45","settings":{"flex_direction":"column","content_width":"full","width":{"unit":"%","size":55},"padding":{"unit":"px","top":"0","right":"0","bottom":"30","left":"0","isLinked":false},"animation":"slideInLeft","flex_wrap":"wrap","width_tablet":{"unit":"%","size":100,"sizes":[]},"width_mobile":{"unit":"%","size":"","sizes":[]},"flex_justify_content_mobile":"center","flex_align_items_mobile":"center"},"elements":[{"id":"5d04e33a","settings":{"content_width":"full","title":"Get In Touch","header_size":"h3","_element_width":"inherit","_element_custom_width":{"unit":"%","size":95,"sizes":[]},"align_mobile":"center"},"elements":[],"isInner":false,"widgetType":"heading","elType":"widget"},{"id":"673a7e65","settings":{"content_width":"full","editor":"<p><strong>We Now Offer 4 Convenient Locations!\u00a0Call Us to Schedule Today!<\/strong><\/p>","_element_width":"initial","_element_custom_width":{"unit":"%","size":95,"sizes":[]},"align_mobile":"center","_element_custom_width_tablet":{"unit":"%","size":100,"sizes":[]},"_element_custom_width_mobile":{"unit":"%","size":100,"sizes":[]},"typography_typography":"custom","typography_font_size":{"unit":"px","size":16,"sizes":[]},"_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false},"_padding":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false},"typography_font_family":"Nunito Sans","typography_font_size_tablet":{"unit":"px","size":16,"sizes":[]},"typography_font_size_mobile":{"unit":"px","size":16,"sizes":[]},"typography_font_weight":"300","typography_line_height":{"unit":"em","size":"","sizes":[]},"__globals__":{"typography_typography":""}},"elements":[],"isInner":false,"widgetType":"text-editor","elType":"widget"},{"id":"166ca648","settings":{"text":"Divider"},"elements":[],"isInner":false,"widgetType":"divider","elType":"widget"},{"id":"46f72193","settings":{"content_width":"full","flex_direction":"row"},"elements":[{"id":"74d6d219","settings":{"content_width":"full"},"elements":[{"id":"1aa89214","settings":{"content_width":"full","title":"New Tampa\/Wesley Chapel","header_size":"h6","align_mobile":"center","_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false},"_margin_tablet":{"unit":"em","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_element_width_mobile":"initial","_element_custom_width_mobile":{"unit":"%","size":100,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","typography_typography":"globals\/typography?id=6102889"},"align":"start"},"elements":[],"isInner":false,"widgetType":"heading","elType":"widget"},{"id":"1ceb6056","settings":{"content_width":"full","selected_icon":{"value":"rtmicon rtmicon-pin-map-location","library":"rtmicons"},"view":"stacked","title_text":"","description_text":"8905 Regents Park Drive ste 250,<br>Tampa, Florida 33647\n\n","position":"left","content_vertical_alignment":"middle","primary_color":"#07C2B9","secondary_color":"#FFFFFF","icon_size":{"unit":"px","size":20,"sizes":[]},"title_typography_font_family":"Plus Jakarta Sans","title_typography_font_size":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_tablet":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_mobile":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_weight":"600","title_typography_text_transform":"capitalize","title_typography_line_height":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_tablet":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_mobile":{"unit":"em","size":1.4,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","title_typography_typography":"globals\/typography?id=6102889","primary_color":"globals\/colors?id=primary","secondary_color":"globals\/colors?id=accent","hover_primary_color":"","hover_secondary_color":"","description_color":"globals\/colors?id=text","description_typography_typography":"globals\/typography?id=text"},"title_size":"h6","icon_space":{"unit":"px","size":9,"sizes":[]},"title_bottom_space":{"unit":"px","size":4,"sizes":[]},"icon_padding":{"unit":"px","size":5,"sizes":[]},"title_color":"#122426","title_typography_typography":"custom","description_color":"#545454","description_typography_typography":"custom","description_typography_font_family":"Roboto","description_typography_font_size":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_tablet":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_mobile":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_weight":"400","description_typography_line_height":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_tablet":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_mobile":{"unit":"em","size":1.5,"sizes":[]},"_element_width":"initial","_element_custom_width":{"unit":"%","size":100,"sizes":[]},"_background_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"_background_hover_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_hover_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"text_align_mobile":"center","_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false}},"elements":[],"isInner":false,"widgetType":"icon-box","elType":"widget"},{"id":"4fa6dc6d","settings":{"content_width":"full","selected_icon":{"value":"lnr lnr-phone","library":"skb_cife-linearicons-icon"},"view":"stacked","title_text":"","description_text":"813-333-9192 ","position":"left","content_vertical_alignment":"middle","primary_color":"#07C2B9","secondary_color":"#FFFFFF","icon_size":{"unit":"px","size":20,"sizes":[]},"title_typography_font_family":"Plus Jakarta Sans","title_typography_font_size":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_tablet":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_mobile":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_weight":"600","title_typography_text_transform":"capitalize","title_typography_line_height":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_tablet":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_mobile":{"unit":"em","size":1.4,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","title_typography_typography":"globals\/typography?id=6102889","primary_color":"globals\/colors?id=primary","secondary_color":"globals\/colors?id=accent","hover_primary_color":"","hover_secondary_color":"","description_color":"globals\/colors?id=text","description_typography_typography":"globals\/typography?id=text"},"title_size":"h6","icon_space":{"unit":"px","size":9,"sizes":[]},"title_bottom_space":{"unit":"px","size":4,"sizes":[]},"icon_padding":{"unit":"px","size":5,"sizes":[]},"title_color":"#122426","title_typography_typography":"custom","description_color":"#545454","description_typography_typography":"custom","description_typography_font_family":"Roboto","description_typography_font_size":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_tablet":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_mobile":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_weight":"400","description_typography_line_height":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_tablet":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_mobile":{"unit":"em","size":1.5,"sizes":[]},"_element_custom_width":{"unit":"%","size":100,"sizes":[]},"_background_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"_background_hover_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_hover_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"text_align_mobile":"center","link":{"url":"tel:813-333-9192 ","is_external":"","nofollow":"","custom_attributes":""},"_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false}},"elements":[],"isInner":false,"widgetType":"icon-box","elType":"widget"}],"isInner":true,"elType":"container"},{"id":"1e590ffc","settings":{"content_width":"full"},"elements":[{"id":"3982cadc","settings":{"content_width":"full","title":"Temple Terrace","header_size":"h6","align_mobile":"center","_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false},"_margin_tablet":{"unit":"em","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_element_width_mobile":"initial","_element_custom_width_mobile":{"unit":"%","size":100,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","typography_typography":"globals\/typography?id=6102889"},"align":"start"},"elements":[],"isInner":false,"widgetType":"heading","elType":"widget"},{"id":"199ffa53","settings":{"content_width":"full","selected_icon":{"value":"rtmicon rtmicon-pin-map-location","library":"rtmicons"},"view":"stacked","title_text":"","description_text":"9800 North 56th Street,<br>Temple Terrace, Florida 33617","position":"left","content_vertical_alignment":"middle","primary_color":"#07C2B9","secondary_color":"#FFFFFF","icon_size":{"unit":"px","size":20,"sizes":[]},"title_typography_font_family":"Plus Jakarta Sans","title_typography_font_size":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_tablet":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_mobile":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_weight":"600","title_typography_text_transform":"capitalize","title_typography_line_height":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_tablet":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_mobile":{"unit":"em","size":1.4,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","title_typography_typography":"globals\/typography?id=6102889","primary_color":"globals\/colors?id=primary","secondary_color":"globals\/colors?id=accent","hover_primary_color":"","hover_secondary_color":"","description_color":"globals\/colors?id=text","description_typography_typography":"globals\/typography?id=text"},"title_size":"h6","icon_space":{"unit":"px","size":9,"sizes":[]},"title_bottom_space":{"unit":"px","size":4,"sizes":[]},"icon_padding":{"unit":"px","size":5,"sizes":[]},"title_color":"#122426","title_typography_typography":"custom","description_color":"#545454","description_typography_typography":"custom","description_typography_font_family":"Roboto","description_typography_font_size":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_tablet":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_mobile":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_weight":"400","description_typography_line_height":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_tablet":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_mobile":{"unit":"em","size":1.5,"sizes":[]},"_element_width":"initial","_element_custom_width":{"unit":"%","size":100,"sizes":[]},"_background_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"_background_hover_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_hover_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"text_align_mobile":"center","_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false}},"elements":[],"isInner":false,"widgetType":"icon-box","elType":"widget"},{"id":"407650ea","settings":{"content_width":"full","selected_icon":{"value":"lnr lnr-phone","library":"skb_cife-linearicons-icon"},"view":"stacked","title_text":"","description_text":"813-333-9192 ","position":"left","content_vertical_alignment":"middle","primary_color":"#07C2B9","secondary_color":"#FFFFFF","icon_size":{"unit":"px","size":20,"sizes":[]},"title_typography_font_family":"Plus Jakarta Sans","title_typography_font_size":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_tablet":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_mobile":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_weight":"600","title_typography_text_transform":"capitalize","title_typography_line_height":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_tablet":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_mobile":{"unit":"em","size":1.4,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","title_typography_typography":"globals\/typography?id=6102889","primary_color":"globals\/colors?id=primary","secondary_color":"globals\/colors?id=accent","hover_primary_color":"","hover_secondary_color":"","description_color":"globals\/colors?id=text","description_typography_typography":"globals\/typography?id=text"},"title_size":"h6","icon_space":{"unit":"px","size":9,"sizes":[]},"title_bottom_space":{"unit":"px","size":4,"sizes":[]},"icon_padding":{"unit":"px","size":5,"sizes":[]},"title_color":"#122426","title_typography_typography":"custom","description_color":"#545454","description_typography_typography":"custom","description_typography_font_family":"Roboto","description_typography_font_size":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_tablet":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_mobile":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_weight":"400","description_typography_line_height":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_tablet":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_mobile":{"unit":"em","size":1.5,"sizes":[]},"_element_custom_width":{"unit":"%","size":100,"sizes":[]},"_background_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"_background_hover_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_hover_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"text_align_mobile":"center","link":{"url":"tel:813-333-9192 ","is_external":"","nofollow":"","custom_attributes":""},"_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false}},"elements":[],"isInner":false,"widgetType":"icon-box","elType":"widget"}],"isInner":true,"elType":"container"}],"isInner":true,"elType":"container"},{"id":"6953528c","settings":{"text":"Divider"},"elements":[],"isInner":false,"widgetType":"divider","elType":"widget"},{"id":"650327c5","settings":{"content_width":"full","flex_direction":"row"},"elements":[{"id":"37ceb668","settings":{"content_width":"full"},"elements":[{"id":"5102ba4f","settings":{"content_width":"full","title":"Zephyrhills","header_size":"h6","align_mobile":"center","_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false},"_margin_tablet":{"unit":"em","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_element_width_mobile":"initial","_element_custom_width_mobile":{"unit":"%","size":100,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","typography_typography":"globals\/typography?id=6102889"},"align":"start"},"elements":[],"isInner":false,"widgetType":"heading","elType":"widget"},{"id":"3a97b2b9","settings":{"content_width":"full","selected_icon":{"value":"rtmicon rtmicon-pin-map-location","library":"rtmicons"},"view":"stacked","title_text":"","description_text":"37914 Daughtery Rd,<br>Zephyrhills, FL 33541","position":"left","content_vertical_alignment":"middle","primary_color":"#07C2B9","secondary_color":"#FFFFFF","icon_size":{"unit":"px","size":20,"sizes":[]},"title_typography_font_family":"Plus Jakarta Sans","title_typography_font_size":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_tablet":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_mobile":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_weight":"600","title_typography_text_transform":"capitalize","title_typography_line_height":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_tablet":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_mobile":{"unit":"em","size":1.4,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","title_typography_typography":"globals\/typography?id=6102889","primary_color":"globals\/colors?id=primary","secondary_color":"globals\/colors?id=accent","hover_primary_color":"","hover_secondary_color":"","description_color":"globals\/colors?id=text","description_typography_typography":"globals\/typography?id=text"},"title_size":"h6","icon_space":{"unit":"px","size":9,"sizes":[]},"title_bottom_space":{"unit":"px","size":4,"sizes":[]},"icon_padding":{"unit":"px","size":5,"sizes":[]},"title_color":"#122426","title_typography_typography":"custom","description_color":"#545454","description_typography_typography":"custom","description_typography_font_family":"Roboto","description_typography_font_size":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_tablet":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_mobile":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_weight":"400","description_typography_line_height":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_tablet":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_mobile":{"unit":"em","size":1.5,"sizes":[]},"_element_width":"initial","_element_custom_width":{"unit":"%","size":100,"sizes":[]},"_background_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"_background_hover_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_hover_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"text_align_mobile":"center","_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false}},"elements":[],"isInner":false,"widgetType":"icon-box","elType":"widget"},{"id":"5c7cc6a5","settings":{"content_width":"full","selected_icon":{"value":"lnr lnr-phone","library":"skb_cife-linearicons-icon"},"view":"stacked","title_text":"","description_text":"813-333-9192 ","position":"left","content_vertical_alignment":"middle","primary_color":"#07C2B9","secondary_color":"#FFFFFF","icon_size":{"unit":"px","size":20,"sizes":[]},"title_typography_font_family":"Plus Jakarta Sans","title_typography_font_size":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_tablet":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_mobile":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_weight":"600","title_typography_text_transform":"capitalize","title_typography_line_height":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_tablet":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_mobile":{"unit":"em","size":1.4,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","title_typography_typography":"globals\/typography?id=6102889","primary_color":"globals\/colors?id=primary","secondary_color":"globals\/colors?id=accent","hover_primary_color":"","hover_secondary_color":"","description_color":"globals\/colors?id=text","description_typography_typography":"globals\/typography?id=text"},"title_size":"h6","icon_space":{"unit":"px","size":9,"sizes":[]},"title_bottom_space":{"unit":"px","size":4,"sizes":[]},"icon_padding":{"unit":"px","size":5,"sizes":[]},"title_color":"#122426","title_typography_typography":"custom","description_color":"#545454","description_typography_typography":"custom","description_typography_font_family":"Roboto","description_typography_font_size":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_tablet":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_mobile":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_weight":"400","description_typography_line_height":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_tablet":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_mobile":{"unit":"em","size":1.5,"sizes":[]},"_element_custom_width":{"unit":"%","size":100,"sizes":[]},"_background_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"_background_hover_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_hover_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"text_align_mobile":"center","link":{"url":"tel:813-333-9192 ","is_external":"","nofollow":"","custom_attributes":""},"_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false}},"elements":[],"isInner":false,"widgetType":"icon-box","elType":"widget"}],"isInner":true,"elType":"container"},{"id":"3b22fb3","settings":{"content_width":"full"},"elements":[{"id":"22c45232","settings":{"content_width":"full","title":"Citrus Park","header_size":"h6","align_mobile":"center","_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false},"_margin_tablet":{"unit":"em","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_element_width_mobile":"initial","_element_custom_width_mobile":{"unit":"%","size":100,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","typography_typography":"globals\/typography?id=6102889"},"align":"start"},"elements":[],"isInner":false,"widgetType":"heading","elType":"widget"},{"id":"73b894e6","settings":{"content_width":"full","selected_icon":{"value":"rtmicon rtmicon-pin-map-location","library":"rtmicons"},"view":"stacked","title_text":"","description_text":"7620 Gunn Hwy Suite 180,<br>Tampa FL 33625","position":"left","content_vertical_alignment":"middle","primary_color":"#07C2B9","secondary_color":"#FFFFFF","icon_size":{"unit":"px","size":20,"sizes":[]},"title_typography_font_family":"Plus Jakarta Sans","title_typography_font_size":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_tablet":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_mobile":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_weight":"600","title_typography_text_transform":"capitalize","title_typography_line_height":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_tablet":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_mobile":{"unit":"em","size":1.4,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","title_typography_typography":"globals\/typography?id=6102889","primary_color":"globals\/colors?id=primary","secondary_color":"globals\/colors?id=accent","hover_primary_color":"","hover_secondary_color":"","description_color":"globals\/colors?id=text","description_typography_typography":"globals\/typography?id=text"},"title_size":"h6","icon_space":{"unit":"px","size":9,"sizes":[]},"title_bottom_space":{"unit":"px","size":4,"sizes":[]},"icon_padding":{"unit":"px","size":5,"sizes":[]},"title_color":"#122426","title_typography_typography":"custom","description_color":"#545454","description_typography_typography":"custom","description_typography_font_family":"Roboto","description_typography_font_size":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_tablet":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_mobile":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_weight":"400","description_typography_line_height":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_tablet":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_mobile":{"unit":"em","size":1.5,"sizes":[]},"_element_width":"initial","_element_custom_width":{"unit":"%","size":100,"sizes":[]},"_background_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"_background_hover_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_hover_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"text_align_mobile":"center","_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false}},"elements":[],"isInner":false,"widgetType":"icon-box","elType":"widget"},{"id":"16776b63","settings":{"content_width":"full","selected_icon":{"value":"lnr lnr-phone","library":"skb_cife-linearicons-icon"},"view":"stacked","title_text":"","description_text":"813-333-9192 ","position":"left","content_vertical_alignment":"middle","primary_color":"#07C2B9","secondary_color":"#FFFFFF","icon_size":{"unit":"px","size":20,"sizes":[]},"title_typography_font_family":"Plus Jakarta Sans","title_typography_font_size":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_tablet":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_size_mobile":{"unit":"rem","size":1.2,"sizes":[]},"title_typography_font_weight":"600","title_typography_text_transform":"capitalize","title_typography_line_height":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_tablet":{"unit":"em","size":1.4,"sizes":[]},"title_typography_line_height_mobile":{"unit":"em","size":1.4,"sizes":[]},"__globals__":{"title_color":"globals\/colors?id=text","title_typography_typography":"globals\/typography?id=6102889","primary_color":"globals\/colors?id=primary","secondary_color":"globals\/colors?id=accent","hover_primary_color":"","hover_secondary_color":"","description_color":"globals\/colors?id=text","description_typography_typography":"globals\/typography?id=text"},"title_size":"h6","icon_space":{"unit":"px","size":9,"sizes":[]},"title_bottom_space":{"unit":"px","size":4,"sizes":[]},"icon_padding":{"unit":"px","size":5,"sizes":[]},"title_color":"#122426","title_typography_typography":"custom","description_color":"#545454","description_typography_typography":"custom","description_typography_font_family":"Roboto","description_typography_font_size":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_tablet":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_size_mobile":{"unit":"rem","size":1,"sizes":[]},"description_typography_font_weight":"400","description_typography_line_height":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_tablet":{"unit":"em","size":1.5,"sizes":[]},"description_typography_line_height_mobile":{"unit":"em","size":1.5,"sizes":[]},"_element_custom_width":{"unit":"%","size":100,"sizes":[]},"_background_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"_background_hover_color_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_tablet":{"unit":"%","size":"","sizes":[]},"_background_hover_color_b_stop_mobile":{"unit":"%","size":"","sizes":[]},"_background_hover_gradient_angle_tablet":{"unit":"deg","size":"","sizes":[]},"_background_hover_gradient_angle_mobile":{"unit":"deg","size":"","sizes":[]},"text_align_mobile":"center","link":{"url":"tel:813-333-9192 ","is_external":"","nofollow":"","custom_attributes":""},"_margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"1","left":"0","isLinked":false},"_margin":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":false}},"elements":[],"isInner":false,"widgetType":"icon-box","elType":"widget"},{"id":"23dfbb75","settings":{"content_width":"full","text":"Book Online - Citrus Park","align":"left","_element_custom_width":{"unit":"%","size":100,"sizes":[]},"align_tablet":"justify","_element_custom_width_tablet":{"unit":"%","size":49,"sizes":[]},"_element_custom_width_mobile":{"unit":"%","size":51,"sizes":[]},"typography_typography":"custom","__globals__":{"background_color":"globals\/colors?id=primary","button_background_hover_color":"globals\/colors?id=f60814f","typography_typography":""},"text_padding_mobile":{"unit":"px","top":"5","right":"5","bottom":"5","left":"5","isLinked":true},"_margin_tablet":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"_padding_tablet":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"selected_icon":{"value":"far fa-calendar-alt","library":"fa-regular"},"icon_indent":{"unit":"px","size":6,"sizes":[]},"typography_font_size":{"unit":"px","size":15,"sizes":[]},"typography_font_size_mobile":{"unit":"px","size":16,"sizes":[]},"text_padding":{"unit":"px","top":"10","right":"20","bottom":"10","left":"20","isLinked":false},"link":{"url":"https:\/\/scheduling.simplifeye.co\/#key=0frfetQCACArHHlGZmftEJZ8LsdEMRJ&gaID=null","is_external":"on","nofollow":"","custom_attributes":""},"typography_font_family":"Open Sans","typography_font_size_tablet":{"unit":"px","size":16,"sizes":[]},"typography_font_weight":"300","typography_line_height":{"unit":"em","size":"","sizes":[]},"background_color":"#6D6D52","button_background_hover_color":"#58595B"},"elements":[],"isInner":false,"widgetType":"button","elType":"widget"}],"isInner":true,"elType":"container"}],"isInner":true,"elType":"container"},{"id":"52b0204b","settings":{"text":"Divider"},"elements":[],"isInner":false,"widgetType":"divider","elType":"widget"}],"isInner":true,"elType":"container"},{"id":"222560bf","settings":{"flex_direction":"column","content_width":"full","width":{"unit":"%","size":55},"padding":{"unit":"px","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"animation":"slideInLeft","flex_wrap":"wrap","width_tablet":{"unit":"%","size":100,"sizes":[]},"width_mobile":{"unit":"%","size":"","sizes":[]},"flex_justify_content_mobile":"center","flex_align_items_mobile":"center"},"elements":[{"id":"49753793","settings":{"flex_direction":"column","content_width":"full","width":{"unit":"%","size":100},"background_background":"classic","background_image":{"id":"","url":""},"background_position":"center center","background_size":"cover","background_overlay_background":"classic","background_overlay_opacity":{"unit":"px","size":0.95,"sizes":[]},"border_radius":{"unit":"px","top":"15","right":"15","bottom":"15","left":"15","isLinked":true},"padding":{"unit":"em","top":"2","right":"3","bottom":"2","left":"3","isLinked":false},"padding_tablet":{"unit":"em","top":"","right":"","bottom":"","left":"","isLinked":true},"padding_mobile":{"unit":"em","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"__globals__":{"background_color":"globals\/colors?id=507ad22","background_overlay_color":"globals\/colors?id=507ad22"},"width_tablet":{"unit":"%","size":100,"sizes":[]},"width_mobile":{"unit":"%","size":"","sizes":[]},"margin_tablet":{"unit":"em","top":"2","right":"0","bottom":"0","left":"0","isLinked":false},"margin_mobile":{"unit":"em","top":"0","right":"0","bottom":"0","left":"0","isLinked":true},"animation":"slideInUp"},"elements":[{"id":"57c0e846","settings":{"iframe_url":{"url":"https:\/\/api.leadconnectorhq.com\/widget\/form\/WbxfoyTCBs6EyUZXP1n0","is_external":"","nofollow":"","custom_attributes":""},"iframe_height":{"unit":"px","size":893,"sizes":[]},"iframe_height_mobile":{"unit":"px","size":1007,"sizes":[]}},"elements":[],"isInner":false,"widgetType":"custif_iframe_widget","elType":"widget"}],"isInner":true,"elType":"container"}],"isInner":true,"elType":"container"}],"isInner":false,"elType":"container"}],"page_settings":[],"version":"0.4","title":"Elevate-Dental-Contact","type":"page"}
+{
+  "content": [
+    {
+      "id": "17ee188f",
+      "settings": {
+        "flex_direction": "column",
+        "min_height": {
+          "unit": "px",
+          "size": 350,
+          "sizes": []
+        },
+        "flex_justify_content": "center",
+        "background_background": "classic",
+        "background_image": {
+          "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/bg-pattern-sumit-cosmetic-scaled.jpeg",
+          "id": 1383,
+          "size": "",
+          "alt": "",
+          "source": "library"
+        },
+        "background_overlay_background": "classic",
+        "background_overlay_opacity": {
+          "unit": "px",
+          "size": 0.45,
+          "sizes": []
+        },
+        "__globals__": {
+          "background_overlay_color": "globals/colors?id=primary"
+        }
+      },
+      "elements": [
+        {
+          "id": "6489253",
+          "settings": {
+            "title": "Contact Us",
+            "header_size": "h1",
+            "align": "center",
+            "__globals__": {
+              "title_color": "globals/colors?id=text"
+            }
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "heading",
+          "elType": "widget"
+        },
+        {
+          "id": "5e5de8cc",
+          "settings": {
+            "editor": "<p class=\"mt-8 mb-4\">Let's Get In Touch!</p>",
+            "align": "center",
+            "__globals__": {
+              "text_color": "globals/colors?id=text"
+            }
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "text-editor",
+          "elType": "widget"
+        },
+        {
+          "id": "51b5475c",
+          "settings": {
+            "content_width": "full",
+            "flex_direction": "row",
+            "flex_justify_content": "center"
+          },
+          "elements": [
+            {
+              "id": "52397f4c",
+              "settings": {
+                "content_width": "full",
+                "text": "Schedule Your Visit",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_animation": "slideInUp",
+                "_element_custom_width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_element_custom_width_mobile": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "align_mobile": "justify",
+                "selected_icon": {
+                  "value": "far fa-calendar-alt",
+                  "library": "fa-regular"
+                },
+                "icon_indent": {
+                  "unit": "px",
+                  "size": 7,
+                  "sizes": []
+                },
+                "text_padding": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "20",
+                  "bottom": "10",
+                  "left": "20",
+                  "isLinked": false
+                },
+                "__globals__": {
+                  "button_text_color": "globals/colors?id=accent",
+                  "background_color": "globals/colors?id=text"
+                },
+                "link": {
+                  "url": "https://book.modento.io/summit-family-cosmetic-dentistry-nj/reason-for-visit",
+                  "is_external": "on",
+                  "nofollow": "",
+                  "custom_attributes": ""
+                }
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "button",
+              "elType": "widget"
+            },
+            {
+              "id": "4b9e626e",
+              "settings": {
+                "content_width": "full",
+                "text": "908-522-0077",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_animation": "slideInUp",
+                "_element_custom_width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_element_custom_width_mobile": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "align_mobile": "justify",
+                "selected_icon": {
+                  "value": "fas fa-phone-alt",
+                  "library": "fa-solid"
+                },
+                "icon_indent": {
+                  "unit": "px",
+                  "size": 7,
+                  "sizes": []
+                },
+                "text_padding": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "20",
+                  "bottom": "10",
+                  "left": "20",
+                  "isLinked": false
+                },
+                "__globals__": {
+                  "button_text_color": "globals/colors?id=accent",
+                  "background_color": "globals/colors?id=text"
+                },
+                "link": {
+                  "url": "tel:908-522-0077",
+                  "is_external": "",
+                  "nofollow": "",
+                  "custom_attributes": ""
+                }
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "button",
+              "elType": "widget"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "192ecdfb",
+      "settings": {
+        "flex_direction": "row",
+        "flex_gap": {
+          "unit": "px",
+          "size": 20,
+          "column": "20",
+          "row": "20",
+          "isLinked": true
+        },
+        "padding": {
+          "unit": "em",
+          "top": "4",
+          "right": "0",
+          "bottom": "4",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding_tablet": {
+          "unit": "em",
+          "top": "",
+          "right": "",
+          "bottom": "",
+          "left": "",
+          "isLinked": true
+        },
+        "padding_mobile": {
+          "unit": "em",
+          "top": "2",
+          "right": "0",
+          "bottom": "2",
+          "left": "0",
+          "isLinked": false
+        },
+        "_title": "Contact Us",
+        "flex_wrap_tablet": "wrap"
+      },
+      "elements": [
+        {
+          "id": "5d5381c3",
+          "settings": {
+            "flex_direction": "column",
+            "content_width": "full",
+            "width": {
+              "unit": "%",
+              "size": 55
+            },
+            "padding": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "30",
+              "left": "0",
+              "isLinked": false
+            },
+            "animation": "slideInLeft",
+            "flex_wrap": "wrap",
+            "width_tablet": {
+              "unit": "%",
+              "size": 100,
+              "sizes": []
+            },
+            "width_mobile": {
+              "unit": "%",
+              "size": "",
+              "sizes": []
+            },
+            "flex_justify_content_mobile": "center",
+            "flex_align_items_mobile": "center"
+          },
+          "elements": [
+            {
+              "id": "6203fb9e",
+              "settings": {
+                "content_width": "full",
+                "title": "We Are Here to Help",
+                "header_size": "h3",
+                "_element_width": "inherit",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 95,
+                  "sizes": []
+                },
+                "align_mobile": "center"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "heading",
+              "elType": "widget"
+            },
+            {
+              "id": "3b139a4f",
+              "settings": {
+                "content_width": "full",
+                "editor": "<p>Reach out by phone, email, or the form below, and a member of our team will follow up promptly to get you scheduled.</p>",
+                "_element_width": "initial",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 95,
+                  "sizes": []
+                },
+                "align_mobile": "center",
+                "_element_custom_width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_element_custom_width_mobile": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                }
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "text-editor",
+              "elType": "widget"
+            },
+            {
+              "id": "2286dfb2",
+              "settings": {
+                "text": "Divider"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "divider",
+              "elType": "widget"
+            },
+            {
+              "id": "4eba8ee5",
+              "settings": {
+                "content_width": "full",
+                "flex_direction": "row",
+                "padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                }
+              },
+              "elements": [
+                {
+                  "id": "3d605ec5",
+                  "settings": {
+                    "content_width": "full",
+                    "padding": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": false
+                    }
+                  },
+                  "elements": [
+                    {
+                      "id": "6fc73827",
+                      "settings": {
+                        "content_width": "full",
+                        "title": "Summit Family & Cosmetic Dentistry",
+                        "header_size": "h6",
+                        "align_mobile": "center",
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": false
+                        },
+                        "_margin_tablet": {
+                          "unit": "em",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_margin_mobile": {
+                          "unit": "em",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "1",
+                          "left": "0",
+                          "isLinked": false
+                        },
+                        "_element_width_mobile": "initial",
+                        "_element_custom_width_mobile": {
+                          "unit": "%",
+                          "size": 100,
+                          "sizes": []
+                        },
+                        "__globals__": {
+                          "title_color": "globals/colors?id=primary"
+                        },
+                        "align": "start"
+                      },
+                      "elements": [],
+                      "isInner": false,
+                      "widgetType": "heading",
+                      "elType": "widget"
+                    },
+                    {
+                      "id": "20ce5125",
+                      "settings": {
+                        "content_width": "full",
+                        "selected_icon": {
+                          "value": " ti-location-pin",
+                          "library": "skb_cife-themify-icon"
+                        },
+                        "view": "stacked",
+                        "title_text": "",
+                        "description_text": "33 Overlook Rd Ste 402 Summit, NJ 07901",
+                        "position": "left",
+                        "content_vertical_alignment": "middle",
+                        "icon_size": {
+                          "unit": "px",
+                          "size": 20,
+                          "sizes": []
+                        },
+                        "__globals__": {
+                          "title_color": "globals/colors?id=secondary",
+                          "primary_color": "globals/colors?id=primary",
+                          "secondary_color": "globals/colors?id=text",
+                          "description_color": "globals/colors?id=primary"
+                        },
+                        "title_size": "h6",
+                        "icon_space": {
+                          "unit": "px",
+                          "size": 9,
+                          "sizes": []
+                        },
+                        "title_bottom_space": {
+                          "unit": "px",
+                          "size": 4,
+                          "sizes": []
+                        },
+                        "icon_padding": {
+                          "unit": "px",
+                          "size": 5,
+                          "sizes": []
+                        },
+                        "_element_width": "initial",
+                        "_element_custom_width": {
+                          "unit": "%",
+                          "size": 100,
+                          "sizes": []
+                        },
+                        "_background_color_stop_tablet": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_color_stop_mobile": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_color_b_stop_tablet": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_color_b_stop_mobile": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_gradient_angle_tablet": {
+                          "unit": "deg",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_gradient_angle_mobile": {
+                          "unit": "deg",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_color_stop_tablet": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_color_stop_mobile": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_color_b_stop_tablet": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_color_b_stop_mobile": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_gradient_angle_tablet": {
+                          "unit": "deg",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_gradient_angle_mobile": {
+                          "unit": "deg",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "text_align_mobile": "center",
+                        "_margin_mobile": {
+                          "unit": "em",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "1",
+                          "left": "0",
+                          "isLinked": false
+                        },
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": false
+                        }
+                      },
+                      "elements": [],
+                      "isInner": false,
+                      "widgetType": "icon-box",
+                      "elType": "widget"
+                    },
+                    {
+                      "id": "7643f4a",
+                      "settings": {
+                        "content_width": "full",
+                        "selected_icon": {
+                          "value": "lnr lnr-phone",
+                          "library": "skb_cife-linearicons-icon"
+                        },
+                        "view": "stacked",
+                        "title_text": "",
+                        "description_text": "908-522-0077",
+                        "position": "left",
+                        "content_vertical_alignment": "middle",
+                        "icon_size": {
+                          "unit": "px",
+                          "size": 20,
+                          "sizes": []
+                        },
+                        "__globals__": {
+                          "title_color": "globals/colors?id=text",
+                          "primary_color": "globals/colors?id=primary",
+                          "secondary_color": "globals/colors?id=text",
+                          "description_color": "globals/colors?id=primary"
+                        },
+                        "title_size": "h6",
+                        "icon_space": {
+                          "unit": "px",
+                          "size": 9,
+                          "sizes": []
+                        },
+                        "title_bottom_space": {
+                          "unit": "px",
+                          "size": 4,
+                          "sizes": []
+                        },
+                        "icon_padding": {
+                          "unit": "px",
+                          "size": 5,
+                          "sizes": []
+                        },
+                        "_element_custom_width": {
+                          "unit": "%",
+                          "size": 100,
+                          "sizes": []
+                        },
+                        "_background_color_stop_tablet": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_color_stop_mobile": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_color_b_stop_tablet": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_color_b_stop_mobile": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_gradient_angle_tablet": {
+                          "unit": "deg",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_gradient_angle_mobile": {
+                          "unit": "deg",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_color_stop_tablet": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_color_stop_mobile": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_color_b_stop_tablet": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_color_b_stop_mobile": {
+                          "unit": "%",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_gradient_angle_tablet": {
+                          "unit": "deg",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "_background_hover_gradient_angle_mobile": {
+                          "unit": "deg",
+                          "size": "",
+                          "sizes": []
+                        },
+                        "text_align_mobile": "center",
+                        "link": {
+                          "url": "tel:908-522-0077",
+                          "is_external": "",
+                          "nofollow": "",
+                          "custom_attributes": ""
+                        },
+                        "_margin_mobile": {
+                          "unit": "em",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "1",
+                          "left": "0",
+                          "isLinked": false
+                        },
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": false
+                        }
+                      },
+                      "elements": [],
+                      "isInner": false,
+                      "widgetType": "icon-box",
+                      "elType": "widget"
+                    }
+                  ],
+                  "isInner": true,
+                  "elType": "container"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            },
+            {
+              "id": "15e30a40",
+              "settings": {
+                "text": "Divider"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "divider",
+              "elType": "widget"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        },
+        {
+          "id": "3ec07de3",
+          "settings": {
+            "flex_direction": "column",
+            "content_width": "full",
+            "width": {
+              "unit": "%",
+              "size": 55
+            },
+            "padding": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            },
+            "animation": "slideInLeft",
+            "flex_wrap": "wrap",
+            "width_tablet": {
+              "unit": "%",
+              "size": 100,
+              "sizes": []
+            },
+            "width_mobile": {
+              "unit": "%",
+              "size": "",
+              "sizes": []
+            },
+            "flex_justify_content_mobile": "center",
+            "flex_align_items_mobile": "center"
+          },
+          "elements": [
+            {
+              "id": "71bd3c4a",
+              "settings": {
+                "flex_direction": "column",
+                "content_width": "full",
+                "width": {
+                  "unit": "%",
+                  "size": 100
+                },
+                "background_background": "classic",
+                "background_position": "center center",
+                "background_size": "cover",
+                "background_overlay_background": "classic",
+                "background_overlay_opacity": {
+                  "unit": "px",
+                  "size": 0.95,
+                  "sizes": []
+                },
+                "border_radius": {
+                  "unit": "px",
+                  "top": "15",
+                  "right": "15",
+                  "bottom": "15",
+                  "left": "15",
+                  "isLinked": true
+                },
+                "padding": {
+                  "unit": "em",
+                  "top": "2",
+                  "right": "3",
+                  "bottom": "2",
+                  "left": "3",
+                  "isLinked": false
+                },
+                "padding_tablet": {
+                  "unit": "em",
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": "",
+                  "isLinked": true
+                },
+                "padding_mobile": {
+                  "unit": "em",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "__globals__": {
+                  "background_color": "globals/colors?id=secondary",
+                  "background_overlay_color": "globals/colors?id=secondary"
+                },
+                "width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "width_mobile": {
+                  "unit": "%",
+                  "size": "",
+                  "sizes": []
+                },
+                "margin_tablet": {
+                  "unit": "em",
+                  "top": "2",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                },
+                "margin_mobile": {
+                  "unit": "em",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "animation": "slideInUp"
+              },
+              "elements": [
+                {
+                  "id": "489d98ba",
+                  "settings": {
+                    "iframe_url": {
+                      "url": "https://api.leadconnectorhq.com/widget/form/Ym6jkT2DC9MAqVLigyQE",
+                      "is_external": "",
+                      "nofollow": "",
+                      "custom_attributes": ""
+                    },
+                    "iframe_height": {
+                      "unit": "px",
+                      "size": 686,
+                      "sizes": []
+                    },
+                    "iframe_height_mobile": {
+                      "unit": "px",
+                      "size": 1007,
+                      "sizes": []
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "custif_iframe_widget",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    }
+  ],
+  "page_settings": [],
+  "version": "0.4",
+  "title": "New-Elevate-Contact-Page",
+  "type": "page"
+}

@@ -34,6 +34,7 @@ import {
 import { GOOGLE_FONTS } from "@/lib/google-fonts";
 import type { BrandKit, UploadedAsset } from "@/lib/types";
 import type { PageContent } from "@/lib/injection/types";
+import type { ElevatePageType } from "@/lib/builders/elevate/types";
 
 export interface ThemeSummary {
   key: string;
@@ -71,6 +72,9 @@ interface StructuredParseResult {
 // A page detected by the parser, with selection + editable title/slug.
 interface DetectedPage extends PageContent {
   selected: boolean;
+  builderPageType?: ElevatePageType;
+  serviceSlug?: string;
+  pageData?: StructuredPageData;
 }
 
 interface StepEvent {
@@ -185,6 +189,21 @@ function previewUrlFromAsset(asset?: UploadedAsset): string | undefined {
   return `data:${mimeFromFilename(asset.filename)};base64,${asset.dataBase64}`;
 }
 
+function builderPageTypeFor(pageKey: string): ElevatePageType | undefined {
+  if (pageKey === "insurance") return "insurance-and-financing";
+  if (
+    pageKey === "homepage" ||
+    pageKey === "about" ||
+    pageKey === "contact" ||
+    pageKey === "amenities" ||
+    pageKey === "first-visit" ||
+    pageKey === "insurance-and-financing"
+  ) {
+    return pageKey;
+  }
+  return undefined;
+}
+
 export function BuildWizard({
   themes,
   initialClient,
@@ -257,7 +276,6 @@ export function BuildWizard({
   const [deployedLinks, setDeployedLinks] = useState<DeployedLink[]>([]);
   const [buildNotes, setBuildNotes] = useState<string[]>([]);
   const [warnings, setWarnings] = useState<string[]>([]);
-  const [stubbedBuild, setStubbedBuild] = useState(false);
   const [finished, setFinished] = useState<null | "success" | "partial" | "failed">(
     null,
   );
@@ -340,6 +358,8 @@ export function BuildWizard({
           wpPageTemplate: "elementor_header_footer",
           slots: {},
           buildNotes: [],
+          builderPageType: builderPageTypeFor(pageKey),
+          pageData,
           selected: true,
         } satisfies DetectedPage;
       });
@@ -355,6 +375,9 @@ export function BuildWizard({
           wpPageTemplate: "elementor_header_footer",
           slots: {},
           buildNotes: [],
+          builderPageType: "service-page",
+          serviceSlug: slugKey,
+          pageData,
           selected: true,
         } satisfies DetectedPage;
       });
@@ -458,7 +481,6 @@ export function BuildWizard({
     setDeployedLinks([]);
     setBuildNotes([]);
     setWarnings([]);
-    setStubbedBuild(false);
     setFinished(null);
     if (logo && !logo.dataBase64) {
       toast.error("Logo file data is missing. Upload the logo again.");
@@ -470,23 +492,7 @@ export function BuildWizard({
       setDeploying(false);
       return;
     }
-    if (structuredResult) {
-      const pageCount = Object.keys(structuredResult.pages).length;
-      const serviceCount = Object.keys(structuredResult.service_pages).length;
-      upsertEvent("Parsed structured content", "ok");
-      upsertEvent("Website-builder integration pending", "ok");
-      setBuildNotes([
-        `Parsed ${pageCount} pages and ${serviceCount} service pages.`,
-        "Website-builder integration is not connected yet. No WordPress pages were created.",
-      ]);
-      setWarnings(parserWarnings);
-      setStubbedBuild(true);
-      setFinished("success");
-      setDeploying(false);
-      return;
-    }
 
-    // Build the content payload from the selected detected pages.
     const pages = detectedPages
       .filter((p) => p.selected)
       .map((p) => ({
@@ -496,11 +502,23 @@ export function BuildWizard({
         wpPageTemplate: p.wpPageTemplate,
         slots: p.slots,
         buildNotes: p.buildNotes,
+        builderPageType: p.builderPageType,
+        serviceSlug: p.serviceSlug,
+        pageData: p.pageData,
       }));
+    if (structuredResult) {
+      const unsupported = pages.find((p) => !p.builderPageType || !p.pageData);
+      if (unsupported) {
+        toast.error(`No Elevate builder is mapped for ${unsupported.page}.`);
+        setDeploying(false);
+        return;
+      }
+    }
     const content = {
       practiceName: practiceMeta?.practiceName ?? name,
       city: practiceMeta?.city,
       doctorName: practiceMeta?.doctorName,
+      site: structuredResult?.site,
       pages,
     };
 
@@ -583,9 +601,7 @@ export function BuildWizard({
   // Deploy and result view.
   if (deploying || finished) {
     const title =
-      stubbedBuild
-        ? "Build step stubbed"
-        : finished === "success"
+      finished === "success"
         ? "Deploy complete"
         : finished === "partial"
           ? "Deploy finished with issues"
@@ -597,11 +613,7 @@ export function BuildWizard({
       <div className="space-y-8">
         <PageHead
           title={title}
-          subline={
-            stubbedBuild
-              ? "Structured content is parsed and ready for the website-builder pass."
-              : "The deploy stream reports every WordPress and brand-kit step."
-          }
+          subline="The deploy stream reports every WordPress and brand-kit step."
           clientName={name || practiceMeta?.practiceName || "Untitled client"}
           themeLabel={selectedTheme?.label ?? theme}
         />

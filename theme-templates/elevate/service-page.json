@@ -1,0 +1,2350 @@
+{
+  "content": [
+    {
+      "id": "504bc432",
+      "settings": {
+        "flex_direction": "column",
+        "min_height": {
+          "unit": "px",
+          "size": 350,
+          "sizes": []
+        },
+        "flex_justify_content": "center",
+        "background_background": "classic",
+        "background_image": {
+          "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/bg-pattern-sumit-cosmetic-scaled.jpeg",
+          "id": 1383,
+          "size": "",
+          "alt": "",
+          "source": "library"
+        },
+        "background_overlay_background": "classic",
+        "background_overlay_opacity": {
+          "unit": "px",
+          "size": 0.45,
+          "sizes": []
+        },
+        "__globals__": {
+          "background_overlay_color": "globals/colors?id=primary"
+        }
+      },
+      "elements": [
+        {
+          "id": "1352ddf1",
+          "settings": {
+            "title": "Cosmetic Dentistry Summit, NJ",
+            "header_size": "h1",
+            "align": "center",
+            "__globals__": {
+              "title_color": "globals/colors?id=text"
+            }
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "heading",
+          "elType": "widget"
+        },
+        {
+          "id": "1e818bbe",
+          "settings": {
+            "editor": "<p class=\"mt-8 mb-4\">Personalized smile makeovers crafted just for you</p>",
+            "align": "center",
+            "__globals__": {
+              "text_color": "globals/colors?id=text"
+            }
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "text-editor",
+          "elType": "widget"
+        },
+        {
+          "id": "7fd345cd",
+          "settings": {
+            "content_width": "full",
+            "flex_direction": "row",
+            "flex_justify_content": "center"
+          },
+          "elements": [
+            {
+              "id": "5b32646a",
+              "settings": {
+                "content_width": "full",
+                "text": "Schedule Your Visit",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_animation": "slideInUp",
+                "_element_custom_width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_element_custom_width_mobile": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "align_mobile": "justify",
+                "selected_icon": {
+                  "value": "far fa-calendar-alt",
+                  "library": "fa-regular"
+                },
+                "icon_indent": {
+                  "unit": "px",
+                  "size": 7,
+                  "sizes": []
+                },
+                "text_padding": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "20",
+                  "bottom": "10",
+                  "left": "20",
+                  "isLinked": false
+                },
+                "__globals__": {
+                  "button_text_color": "globals/colors?id=accent",
+                  "background_color": "globals/colors?id=text"
+                },
+                "link": {
+                  "url": "https://book.modento.io/summit-family-cosmetic-dentistry-nj/reason-for-visit",
+                  "is_external": "on",
+                  "nofollow": "",
+                  "custom_attributes": ""
+                }
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "button",
+              "elType": "widget"
+            },
+            {
+              "id": "155cb69c",
+              "settings": {
+                "content_width": "full",
+                "text": "908-522-0077",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_animation": "slideInUp",
+                "_element_custom_width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_element_custom_width_mobile": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "align_mobile": "justify",
+                "selected_icon": {
+                  "value": "fas fa-phone-alt",
+                  "library": "fa-solid"
+                },
+                "icon_indent": {
+                  "unit": "px",
+                  "size": 7,
+                  "sizes": []
+                },
+                "text_padding": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "20",
+                  "bottom": "10",
+                  "left": "20",
+                  "isLinked": false
+                },
+                "__globals__": {
+                  "button_text_color": "globals/colors?id=accent",
+                  "background_color": "globals/colors?id=text"
+                },
+                "link": {
+                  "url": "tel:908-522-0077",
+                  "is_external": "",
+                  "nofollow": "",
+                  "custom_attributes": ""
+                }
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "button",
+              "elType": "widget"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "122f91c5",
+      "settings": {
+        "flex_direction": "row",
+        "flex_justify_content": "space-between",
+        "flex_gap": {
+          "column": "0",
+          "row": "0",
+          "isLinked": true,
+          "unit": "px",
+          "size": 0
+        },
+        "flex_wrap": "wrap",
+        "padding": {
+          "unit": "em",
+          "top": "4",
+          "right": "0",
+          "bottom": "4",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding_tablet": {
+          "unit": "em",
+          "top": "3",
+          "right": "1",
+          "bottom": "3",
+          "left": "1",
+          "isLinked": false
+        },
+        "padding_mobile": {
+          "unit": "em",
+          "top": "2",
+          "right": "1",
+          "bottom": "2",
+          "left": "1",
+          "isLinked": false
+        },
+        "background_image": {
+          "id": "",
+          "url": ""
+        },
+        "background_overlay_image": {
+          "url": "",
+          "id": "",
+          "size": "",
+          "alt": "",
+          "source": "library"
+        },
+        "background_background": "classic",
+        "background_position": "top left",
+        "background_repeat": "no-repeat",
+        "background_size": "initial",
+        "background_bg_width": {
+          "unit": "px",
+          "size": 250,
+          "sizes": []
+        },
+        "background_overlay_background": "classic",
+        "background_overlay_position": "bottom right",
+        "background_overlay_repeat": "no-repeat",
+        "background_overlay_size": "initial",
+        "background_overlay_bg_width": {
+          "unit": "px",
+          "size": 250,
+          "sizes": []
+        },
+        "background_overlay_opacity": {
+          "unit": "px",
+          "size": 0.8,
+          "sizes": []
+        },
+        "__globals__": {
+          "background_color": "globals/colors?id=secondary",
+          "background_overlay_color": "globals/colors?id=background"
+        }
+      },
+      "elements": [
+        {
+          "id": "75c7e754",
+          "settings": {
+            "content_width": "full",
+            "width": {
+              "unit": "%",
+              "size": 50,
+              "sizes": []
+            },
+            "padding": {
+              "unit": "em",
+              "top": "0",
+              "right": "4",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": false
+            },
+            "padding_tablet": {
+              "unit": "em",
+              "top": "0",
+              "right": "0",
+              "bottom": "2",
+              "left": "0",
+              "isLinked": false
+            },
+            "padding_mobile": {
+              "unit": "em",
+              "top": "",
+              "right": "",
+              "bottom": "",
+              "left": "",
+              "isLinked": true
+            },
+            "flex_justify_content": "center",
+            "width_tablet": {
+              "unit": "%",
+              "size": 100,
+              "sizes": []
+            },
+            "width_mobile": {
+              "unit": "%",
+              "size": "",
+              "sizes": []
+            }
+          },
+          "elements": [
+            {
+              "id": "5ed2158c",
+              "settings": {
+                "content_width": "full",
+                "title": "Creating Your Dream Smile Today"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "heading",
+              "elType": "widget"
+            },
+            {
+              "id": "5e6a22bf",
+              "settings": {
+                "editor": "<section class=\"section p-6 relative bg-secondary-background md:p-12\"><div class=\"relative section-content prose prose-lg text-secondary text-center prose-strong:text-secondary prose-headings:text-secondary prose-p:text-secondary prose-h1:text-3xl prose-h1:tracking-wide prose-h1:font-[800] md:prose-h1:text-3xl lg:prose-h1:text-4xl lg:prose-h1:tracking-wider xl:prose-h1:text-5xl prose-h2:text-2xl prose-h2:font-bold md:prose-h2:text-2xl lg:prose-h2:text-3xl xl:prose-h2:text-4xl prose-h3:text-xl prose-h3:font-bold md:prose-h3:text-xl lg:prose-h3:text-2xl xl:prose-h3:text-3xl prose-h4:text-lg prose-h4:font-bold md:prose-h4:text-lg lg:prose-h4:text-xl xl:prose-h4:text-2xl prose-p:opacity-85\"><div class=\"prose max-w-none prose-strong:text-secondary prose-headings:text-secondary-heading prose-p:text-secondary prose-a:text-secondary prose-li:marker:text-secondary prose-h1:text-3xl prose-h1:tracking-wide prose-h1:font-[800] md:prose-h1:text-3xl lg:prose-h1:text-4xl lg:prose-h1:tracking-wider xl:prose-h1:text-5xl prose-h2:text-2xl prose-h2:font-bold md:prose-h2:text-2xl lg:prose-h2:text-3xl xl:prose-h2:text-4xl prose-h3:text-xl prose-h3:font-bold md:prose-h3:text-xl lg:prose-h3:text-2xl xl:prose-h3:text-3xl prose-h4:text-lg prose-h4:font-bold md:prose-h4:text-lg lg:prose-h4:text-xl xl:prose-h4:text-2xl prose-p:opacity-85\"><p class=\"my-4\">As your trusted cosmetic dentist in Summit, Dr. Bandeff combines artistry with advanced dental expertise to help your smile shine its brightest. Using state-of-the-art technology and an artistic eye, we craft personalized smile transformations that look naturally beautiful. Whether you're seeking subtle enhancements or a complete smile makeover, our comfort-focused approach ensures a relaxing experience with stunning results.</p></div></div></section>"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "text-editor",
+              "elType": "widget"
+            },
+            {
+              "id": "3907317b",
+              "settings": {
+                "content_width": "full",
+                "text": "Schedule Your Cosmetic Consultation",
+                "_element_width": "initial",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_animation": "slideInUp",
+                "_element_custom_width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_element_custom_width_mobile": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "align_mobile": "justify",
+                "selected_icon": {
+                  "value": "far fa-calendar-alt",
+                  "library": "fa-regular"
+                },
+                "icon_indent": {
+                  "unit": "px",
+                  "size": 7,
+                  "sizes": []
+                },
+                "text_padding": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "20",
+                  "bottom": "10",
+                  "left": "20",
+                  "isLinked": false
+                },
+                "__globals__": {
+                  "button_text_color": "globals/colors?id=text",
+                  "background_color": "globals/colors?id=primary"
+                },
+                "link": {
+                  "url": "https://book.modento.io/summit-family-cosmetic-dentistry-nj/reason-for-visit",
+                  "is_external": "on",
+                  "nofollow": "on",
+                  "custom_attributes": ""
+                }
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "button",
+              "elType": "widget"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        },
+        {
+          "id": "7074308f",
+          "settings": {
+            "content_width": "full",
+            "width": {
+              "unit": "%",
+              "size": 50,
+              "sizes": []
+            },
+            "width_tablet": {
+              "unit": "%",
+              "size": 100,
+              "sizes": []
+            },
+            "width_mobile": {
+              "unit": "%",
+              "size": "",
+              "sizes": []
+            },
+            "flex_justify_content": "center",
+            "padding_tablet": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "20d0ab33",
+              "settings": {
+                "content_width": "full",
+                "image_size": "full",
+                "width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "height_mobile": {
+                  "unit": "px",
+                  "size": 385,
+                  "sizes": []
+                },
+                "object-fit": "cover",
+                "image": {
+                  "id": 1398,
+                  "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/Dr.-Bandeff-working-on-Tara-H-scaled.jpeg",
+                  "alt": "",
+                  "source": "library",
+                  "size": ""
+                },
+                "image_border_radius": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "10",
+                  "bottom": "10",
+                  "left": "10",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "em",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "1",
+                  "left": "0",
+                  "isLinked": false
+                },
+                "_padding_tablet": {
+                  "unit": "em",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding_mobile": {
+                  "unit": "em",
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": "",
+                  "isLinked": true
+                },
+                "height": {
+                  "unit": "px",
+                  "size": 500,
+                  "sizes": []
+                },
+                "object-position": "center right"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "image",
+              "elType": "widget"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "75317c8a",
+      "settings": {
+        "flex_direction": "column",
+        "padding": {
+          "unit": "em",
+          "top": "4",
+          "right": "0",
+          "bottom": "4",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding_tablet": {
+          "unit": "em",
+          "top": "",
+          "right": "",
+          "bottom": "",
+          "left": "",
+          "isLinked": true
+        },
+        "padding_mobile": {
+          "unit": "em",
+          "top": "",
+          "right": "",
+          "bottom": "",
+          "left": "",
+          "isLinked": true
+        }
+      },
+      "elements": [
+        {
+          "id": "59fac05f",
+          "settings": {
+            "html": "<script type='text/javascript' src='https://reputationhub.site/reputation/assets/review-widget.js'></script><iframe class='lc_reviews_widget' src='https://reputationhub.site/reputation/widgets/review_widget/fpKl9tjQDAmmIMIQjbv0' frameborder='0' scrolling='no' style='min-width: 100%; width: 100%;'></iframe>",
+            "custom_css": ".elementor-widget-html {\n  overflow: hidden;\n}\n\n.lc_reviews_widget {\n  width: calc(100% + 80px) !important;\n  margin-left: -40px !important;\n  margin-right: -40px !important;\n  min-width: calc(100% + 80px) !important;\n}"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "html",
+          "elType": "widget"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "156b4b77",
+      "settings": {
+        "flex_direction": "row",
+        "flex_justify_content": "center",
+        "flex_gap": {
+          "column": "0",
+          "row": "0",
+          "isLinked": true,
+          "unit": "px",
+          "size": 0
+        },
+        "flex_wrap": "wrap",
+        "padding": {
+          "unit": "px",
+          "top": "40",
+          "right": "20",
+          "bottom": "40",
+          "left": "20",
+          "isLinked": false
+        },
+        "padding_tablet": {
+          "unit": "em",
+          "top": "3",
+          "right": "1",
+          "bottom": "3",
+          "left": "1",
+          "isLinked": false
+        },
+        "padding_mobile": {
+          "unit": "em",
+          "top": "2",
+          "right": "1",
+          "bottom": "2",
+          "left": "1",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_image": {
+          "url": "",
+          "id": "",
+          "size": "",
+          "alt": "",
+          "source": "library"
+        },
+        "background_overlay_background": "classic",
+        "background_overlay_image": {
+          "url": "",
+          "id": "",
+          "size": "",
+          "alt": "",
+          "source": "library"
+        },
+        "background_overlay_position": "bottom right",
+        "background_overlay_repeat": "no-repeat",
+        "background_overlay_size_mobile": "initial",
+        "background_overlay_bg_width_mobile": {
+          "unit": "px",
+          "size": 200,
+          "sizes": []
+        },
+        "background_overlay_opacity": {
+          "unit": "px",
+          "size": 0.1,
+          "sizes": []
+        },
+        "__globals__": {
+          "background_color": "globals/colors?id=text"
+        }
+      },
+      "elements": [
+        {
+          "id": "77faa38d",
+          "settings": {
+            "title": "Your Path to a Perfect Smile",
+            "align": "center"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "heading",
+          "elType": "widget"
+        },
+        {
+          "id": "41ad1ec9",
+          "settings": {
+            "flex_direction": "column",
+            "flex_gap": {
+              "column": "0",
+              "row": "0",
+              "isLinked": true,
+              "unit": "px",
+              "size": 0
+            },
+            "flex_wrap": "wrap",
+            "padding": {
+              "unit": "em",
+              "top": "0",
+              "right": "0",
+              "bottom": "4",
+              "left": "0",
+              "isLinked": false
+            },
+            "padding_tablet": {
+              "unit": "em",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": false
+            },
+            "padding_mobile": {
+              "unit": "em",
+              "top": "0",
+              "right": "0",
+              "bottom": "2",
+              "left": "0",
+              "isLinked": false
+            },
+            "content_width": "full"
+          },
+          "elements": [
+            {
+              "id": "5a2b2ac5",
+              "settings": {
+                "content_width": "full",
+                "container_type": "grid",
+                "grid_columns_grid_tablet": {
+                  "unit": "fr",
+                  "size": 2,
+                  "sizes": []
+                },
+                "animation": "fadeIn",
+                "animation_delay": 200,
+                "presetTitle": "Grid",
+                "presetIcon": "eicon-container-grid",
+                "grid_rows_grid": {
+                  "unit": "fr",
+                  "size": 1,
+                  "sizes": []
+                },
+                "padding": {
+                  "unit": "px",
+                  "top": "20",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                }
+              },
+              "elements": [
+                {
+                  "id": "6e3208c2",
+                  "settings": {
+                    "content_width": "full",
+                    "background_background": "classic",
+                    "border_radius": {
+                      "unit": "px",
+                      "top": "10",
+                      "right": "10",
+                      "bottom": "10",
+                      "left": "10",
+                      "isLinked": true
+                    },
+                    "box_shadow_box_shadow_type": "yes",
+                    "box_shadow_box_shadow": {
+                      "horizontal": 0,
+                      "vertical": 0,
+                      "blur": 60,
+                      "spread": 0,
+                      "color": "rgba(0, 0, 0, 0.1)"
+                    },
+                    "margin": {
+                      "unit": "em",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": false
+                    },
+                    "margin_tablet": {
+                      "unit": "em",
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": "",
+                      "isLinked": true
+                    },
+                    "margin_mobile": {
+                      "unit": "em",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": false
+                    },
+                    "padding": {
+                      "unit": "px",
+                      "top": "20",
+                      "right": "20",
+                      "bottom": "20",
+                      "left": "20",
+                      "isLinked": true
+                    },
+                    "__globals__": {
+                      "background_color": "globals/colors?id=text"
+                    }
+                  },
+                  "elements": [
+                    {
+                      "id": "4506ceeb",
+                      "settings": {
+                        "content_width": "full",
+                        "selected_icon": {
+                          "value": "",
+                          "library": ""
+                        },
+                        "view": "stacked",
+                        "title_text": "Invisalign",
+                        "description_text": "",
+                        "position": "left",
+                        "position_mobile": "left",
+                        "text_align": "left",
+                        "icon_space": {
+                          "unit": "px",
+                          "size": 16,
+                          "sizes": []
+                        },
+                        "icon_space_tablet": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "icon_space_mobile": {
+                          "unit": "px",
+                          "size": 12,
+                          "sizes": []
+                        },
+                        "title_bottom_space_tablet": {
+                          "unit": "px",
+                          "size": 5,
+                          "sizes": []
+                        },
+                        "title_bottom_space_mobile": {
+                          "unit": "px",
+                          "size": 3,
+                          "sizes": []
+                        },
+                        "icon_size": {
+                          "unit": "px",
+                          "size": 35,
+                          "sizes": []
+                        },
+                        "icon_size_tablet": {
+                          "unit": "px",
+                          "size": 28,
+                          "sizes": []
+                        },
+                        "icon_size_mobile": {
+                          "unit": "px",
+                          "size": 25,
+                          "sizes": []
+                        },
+                        "icon_padding": {
+                          "unit": "px",
+                          "size": 21,
+                          "sizes": []
+                        },
+                        "icon_padding_tablet": {
+                          "unit": "px",
+                          "size": 16,
+                          "sizes": []
+                        },
+                        "icon_padding_mobile": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "__globals__": {
+                          "primary_color": "globals/colors?id=accent",
+                          "secondary_color": "globals/colors?id=text",
+                          "title_color": "globals/colors?id=secondary",
+                          "_border_color": "globals/colors?id=background"
+                        },
+                        "content_vertical_alignment": "middle",
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "14",
+                          "left": "0",
+                          "isLinked": false
+                        },
+                        "_border_border": "solid",
+                        "_border_width": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "1",
+                          "left": "0",
+                          "isLinked": false
+                        }
+                      },
+                      "elements": [],
+                      "isInner": false,
+                      "widgetType": "icon-box",
+                      "elType": "widget"
+                    },
+                    {
+                      "id": "1e4ce8ba",
+                      "settings": {
+                        "title": "Straighten your teeth discreetly with comfortable clear aligners customized for your smile goals. Digital planning ensures precise results while maintaining your professional appearance throughout treatment.",
+                        "header_size": "div"
+                      },
+                      "elements": [],
+                      "isInner": false,
+                      "widgetType": "heading",
+                      "elType": "widget"
+                    }
+                  ],
+                  "isInner": true,
+                  "elType": "container"
+                },
+                {
+                  "id": "40045aa5",
+                  "settings": {
+                    "content_width": "full",
+                    "background_background": "classic",
+                    "border_radius": {
+                      "unit": "px",
+                      "top": "10",
+                      "right": "10",
+                      "bottom": "10",
+                      "left": "10",
+                      "isLinked": true
+                    },
+                    "box_shadow_box_shadow_type": "yes",
+                    "box_shadow_box_shadow": {
+                      "horizontal": 0,
+                      "vertical": 0,
+                      "blur": 60,
+                      "spread": 0,
+                      "color": "rgba(0, 0, 0, 0.1)"
+                    },
+                    "margin": {
+                      "unit": "em",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": false
+                    },
+                    "margin_tablet": {
+                      "unit": "em",
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": "",
+                      "isLinked": true
+                    },
+                    "margin_mobile": {
+                      "unit": "em",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": false
+                    },
+                    "padding": {
+                      "unit": "px",
+                      "top": "20",
+                      "right": "20",
+                      "bottom": "20",
+                      "left": "20",
+                      "isLinked": true
+                    },
+                    "__globals__": {
+                      "background_color": "globals/colors?id=text"
+                    }
+                  },
+                  "elements": [
+                    {
+                      "id": "7aaab626",
+                      "settings": {
+                        "content_width": "full",
+                        "selected_icon": {
+                          "value": "",
+                          "library": ""
+                        },
+                        "view": "stacked",
+                        "title_text": "Clear Aligners",
+                        "description_text": "",
+                        "position": "left",
+                        "position_mobile": "left",
+                        "text_align": "left",
+                        "icon_space": {
+                          "unit": "px",
+                          "size": 16,
+                          "sizes": []
+                        },
+                        "icon_space_tablet": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "icon_space_mobile": {
+                          "unit": "px",
+                          "size": 12,
+                          "sizes": []
+                        },
+                        "title_bottom_space_tablet": {
+                          "unit": "px",
+                          "size": 5,
+                          "sizes": []
+                        },
+                        "title_bottom_space_mobile": {
+                          "unit": "px",
+                          "size": 3,
+                          "sizes": []
+                        },
+                        "icon_size": {
+                          "unit": "px",
+                          "size": 35,
+                          "sizes": []
+                        },
+                        "icon_size_tablet": {
+                          "unit": "px",
+                          "size": 28,
+                          "sizes": []
+                        },
+                        "icon_size_mobile": {
+                          "unit": "px",
+                          "size": 25,
+                          "sizes": []
+                        },
+                        "icon_padding": {
+                          "unit": "px",
+                          "size": 21,
+                          "sizes": []
+                        },
+                        "icon_padding_tablet": {
+                          "unit": "px",
+                          "size": 16,
+                          "sizes": []
+                        },
+                        "icon_padding_mobile": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "__globals__": {
+                          "primary_color": "globals/colors?id=accent",
+                          "secondary_color": "globals/colors?id=text",
+                          "title_color": "globals/colors?id=secondary",
+                          "_border_color": "globals/colors?id=background"
+                        },
+                        "content_vertical_alignment": "middle",
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "14",
+                          "left": "0",
+                          "isLinked": false
+                        },
+                        "_border_border": "solid",
+                        "_border_width": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "1",
+                          "left": "0",
+                          "isLinked": false
+                        }
+                      },
+                      "elements": [],
+                      "isInner": false,
+                      "widgetType": "icon-box",
+                      "elType": "widget"
+                    },
+                    {
+                      "id": "5c96930d",
+                      "settings": {
+                        "title": "Alternative clear orthodontic options to help you achieve a straighter smile comfortably and conveniently, with treatment plans tailored to your specific needs.",
+                        "header_size": "div"
+                      },
+                      "elements": [],
+                      "isInner": false,
+                      "widgetType": "heading",
+                      "elType": "widget"
+                    }
+                  ],
+                  "isInner": true,
+                  "elType": "container"
+                },
+                {
+                  "id": "628dcce4",
+                  "settings": {
+                    "content_width": "full",
+                    "background_background": "classic",
+                    "border_radius": {
+                      "unit": "px",
+                      "top": "10",
+                      "right": "10",
+                      "bottom": "10",
+                      "left": "10",
+                      "isLinked": true
+                    },
+                    "box_shadow_box_shadow_type": "yes",
+                    "box_shadow_box_shadow": {
+                      "horizontal": 0,
+                      "vertical": 0,
+                      "blur": 60,
+                      "spread": 0,
+                      "color": "rgba(0, 0, 0, 0.1)"
+                    },
+                    "margin": {
+                      "unit": "em",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": false
+                    },
+                    "margin_tablet": {
+                      "unit": "em",
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": "",
+                      "isLinked": true
+                    },
+                    "margin_mobile": {
+                      "unit": "em",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": false
+                    },
+                    "padding": {
+                      "unit": "px",
+                      "top": "20",
+                      "right": "20",
+                      "bottom": "20",
+                      "left": "20",
+                      "isLinked": true
+                    },
+                    "__globals__": {
+                      "background_color": "globals/colors?id=text"
+                    }
+                  },
+                  "elements": [
+                    {
+                      "id": "164b9df9",
+                      "settings": {
+                        "content_width": "full",
+                        "selected_icon": {
+                          "value": "",
+                          "library": ""
+                        },
+                        "view": "stacked",
+                        "title_text": "Implants",
+                        "description_text": "",
+                        "position": "left",
+                        "position_mobile": "left",
+                        "text_align": "left",
+                        "icon_space": {
+                          "unit": "px",
+                          "size": 16,
+                          "sizes": []
+                        },
+                        "icon_space_tablet": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "icon_space_mobile": {
+                          "unit": "px",
+                          "size": 12,
+                          "sizes": []
+                        },
+                        "title_bottom_space_tablet": {
+                          "unit": "px",
+                          "size": 5,
+                          "sizes": []
+                        },
+                        "title_bottom_space_mobile": {
+                          "unit": "px",
+                          "size": 3,
+                          "sizes": []
+                        },
+                        "icon_size": {
+                          "unit": "px",
+                          "size": 35,
+                          "sizes": []
+                        },
+                        "icon_size_tablet": {
+                          "unit": "px",
+                          "size": 28,
+                          "sizes": []
+                        },
+                        "icon_size_mobile": {
+                          "unit": "px",
+                          "size": 25,
+                          "sizes": []
+                        },
+                        "icon_padding": {
+                          "unit": "px",
+                          "size": 21,
+                          "sizes": []
+                        },
+                        "icon_padding_tablet": {
+                          "unit": "px",
+                          "size": 16,
+                          "sizes": []
+                        },
+                        "icon_padding_mobile": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "__globals__": {
+                          "primary_color": "globals/colors?id=accent",
+                          "secondary_color": "globals/colors?id=text",
+                          "title_color": "globals/colors?id=secondary",
+                          "_border_color": "globals/colors?id=background"
+                        },
+                        "content_vertical_alignment": "middle",
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "14",
+                          "left": "0",
+                          "isLinked": false
+                        },
+                        "_border_border": "solid",
+                        "_border_width": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "1",
+                          "left": "0",
+                          "isLinked": false
+                        }
+                      },
+                      "elements": [],
+                      "isInner": false,
+                      "widgetType": "icon-box",
+                      "elType": "widget"
+                    },
+                    {
+                      "id": "2358024f",
+                      "settings": {
+                        "title": "Replace missing teeth with permanent solutions that look, feel, and function like natural teeth. Our advanced digital planning ensures optimal placement and aesthetics.",
+                        "header_size": "div"
+                      },
+                      "elements": [],
+                      "isInner": false,
+                      "widgetType": "heading",
+                      "elType": "widget"
+                    }
+                  ],
+                  "isInner": true,
+                  "elType": "container"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "64fce2d1",
+      "settings": {
+        "flex_direction": "row",
+        "flex_justify_content": "space-between",
+        "flex_gap": {
+          "column": "0",
+          "row": "0",
+          "isLinked": true,
+          "unit": "px",
+          "size": 0
+        },
+        "flex_wrap": "wrap",
+        "padding": {
+          "unit": "em",
+          "top": "4",
+          "right": "0",
+          "bottom": "4",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding_tablet": {
+          "unit": "em",
+          "top": "3",
+          "right": "1",
+          "bottom": "3",
+          "left": "1",
+          "isLinked": false
+        },
+        "padding_mobile": {
+          "unit": "em",
+          "top": "2",
+          "right": "1",
+          "bottom": "2",
+          "left": "1",
+          "isLinked": false
+        },
+        "background_image": {
+          "id": "",
+          "url": ""
+        },
+        "background_overlay_image": {
+          "url": "",
+          "id": "",
+          "size": "",
+          "alt": "",
+          "source": "library"
+        },
+        "background_background": "classic",
+        "background_position": "top left",
+        "background_repeat": "no-repeat",
+        "background_size": "initial",
+        "background_bg_width": {
+          "unit": "px",
+          "size": 250,
+          "sizes": []
+        },
+        "background_overlay_background": "classic",
+        "background_overlay_position": "bottom right",
+        "background_overlay_repeat": "no-repeat",
+        "background_overlay_size": "initial",
+        "background_overlay_bg_width": {
+          "unit": "px",
+          "size": 250,
+          "sizes": []
+        },
+        "background_overlay_opacity": {
+          "unit": "px",
+          "size": 0.8,
+          "sizes": []
+        },
+        "__globals__": {
+          "background_color": "globals/colors?id=secondary",
+          "background_overlay_color": "globals/colors?id=background"
+        }
+      },
+      "elements": [
+        {
+          "id": "76cda0a2",
+          "settings": {
+            "content_width": "full",
+            "width": {
+              "unit": "%",
+              "size": 50,
+              "sizes": []
+            },
+            "width_tablet": {
+              "unit": "%",
+              "size": 100,
+              "sizes": []
+            },
+            "width_mobile": {
+              "unit": "%",
+              "size": "",
+              "sizes": []
+            },
+            "flex_justify_content": "center",
+            "padding_tablet": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "4b684baa",
+              "settings": {
+                "content_width": "full",
+                "image_size": "full",
+                "width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "height_mobile": {
+                  "unit": "px",
+                  "size": 328,
+                  "sizes": []
+                },
+                "object-fit": "cover",
+                "image": {
+                  "id": 1387,
+                  "url": "https://marltonmodernd.wpenginepowered.com/wp-content/uploads/2026/05/IMG_3298-scaled.jpeg",
+                  "alt": "",
+                  "source": "library",
+                  "size": ""
+                },
+                "image_border_radius": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "10",
+                  "bottom": "10",
+                  "left": "10",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "em",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "1",
+                  "left": "0",
+                  "isLinked": false
+                },
+                "_padding_tablet": {
+                  "unit": "em",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding_mobile": {
+                  "unit": "em",
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": "",
+                  "isLinked": true
+                },
+                "height": {
+                  "unit": "px",
+                  "size": 500,
+                  "sizes": []
+                },
+                "object-position": "center right"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "image",
+              "elType": "widget"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        },
+        {
+          "id": "6220ed07",
+          "settings": {
+            "content_width": "full",
+            "width": {
+              "unit": "%",
+              "size": 50,
+              "sizes": []
+            },
+            "padding": {
+              "unit": "em",
+              "top": "0",
+              "right": "4",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": false
+            },
+            "padding_tablet": {
+              "unit": "em",
+              "top": "0",
+              "right": "0",
+              "bottom": "2",
+              "left": "0",
+              "isLinked": false
+            },
+            "padding_mobile": {
+              "unit": "em",
+              "top": "",
+              "right": "",
+              "bottom": "",
+              "left": "",
+              "isLinked": true
+            },
+            "flex_justify_content": "center",
+            "width_tablet": {
+              "unit": "%",
+              "size": 100,
+              "sizes": []
+            },
+            "width_mobile": {
+              "unit": "%",
+              "size": "",
+              "sizes": []
+            }
+          },
+          "elements": [
+            {
+              "id": "26406d39",
+              "settings": {
+                "content_width": "full",
+                "title": "Cosmetic Dentistry Benefits",
+                "_padding_mobile": {
+                  "unit": "px",
+                  "top": "16",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                }
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "heading",
+              "elType": "widget"
+            },
+            {
+              "id": "3e3b443f",
+              "settings": {
+                "editor": "<p>Transform more than just your smile - boost your confidence and quality of life with cosmetic dentistry. Our treatments enhance both beauty and function, using premium materials and advanced techniques for results that stand the test of time. At Summit Family &amp; Cosmetic Dentistry, we are dedicated to providing personalized care that meets your unique needs.</p><ul><li class=\"flex gap-x-2 items-start text-tertiary\">Boost confidence in personal &amp; professional life</li><li class=\"flex gap-x-2 items-start text-tertiary\">Achieve natural-looking, lasting results</li><li class=\"flex gap-x-2 items-start text-tertiary\">Improve facial aesthetics &amp; appearance</li><li class=\"flex gap-x-2 items-start text-tertiary\">Strengthen the overall dental function</li></ul><p>Investing in your smile creates positive impacts that extend far beyond the dental chair, enhancing every aspect of your daily interactions.</p>"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "text-editor",
+              "elType": "widget"
+            },
+            {
+              "id": "1c3378a7",
+              "settings": {
+                "content_width": "full",
+                "text": "Schedule Your Cosmetic Consultation",
+                "_element_width": "initial",
+                "_element_custom_width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_animation": "slideInUp",
+                "_element_custom_width_tablet": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "_element_custom_width_mobile": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "align_mobile": "justify",
+                "selected_icon": {
+                  "value": "far fa-calendar-alt",
+                  "library": "fa-regular"
+                },
+                "icon_indent": {
+                  "unit": "px",
+                  "size": 7,
+                  "sizes": []
+                },
+                "text_padding": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "20",
+                  "bottom": "10",
+                  "left": "20",
+                  "isLinked": false
+                },
+                "__globals__": {
+                  "button_text_color": "globals/colors?id=text",
+                  "background_color": "globals/colors?id=primary"
+                },
+                "link": {
+                  "url": "https://book.modento.io/summit-family-cosmetic-dentistry-nj/reason-for-visit",
+                  "is_external": "on",
+                  "nofollow": "on",
+                  "custom_attributes": ""
+                }
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "button",
+              "elType": "widget"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "1eef2d95",
+      "settings": {
+        "flex_direction": "column",
+        "flex_justify_content": "center",
+        "background_background": "classic",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "20",
+          "bottom": "80",
+          "left": "20",
+          "isLinked": false
+        },
+        "__globals__": {
+          "background_color": "globals/colors?id=primary"
+        }
+      },
+      "elements": [
+        {
+          "id": "981c04c",
+          "settings": {
+            "title": "Cosmetic Treatment Journey",
+            "align": "center",
+            "__globals__": {
+              "title_color": "globals/colors?id=text"
+            }
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "heading",
+          "elType": "widget"
+        },
+        {
+          "id": "1121b959",
+          "settings": {
+            "editor": "<p class=\"my-4\" style=\"text-align: center;\">Your smile transformation begins with a comprehensive consultation where we discuss your goals and create a personalized treatment plan. Using digital imaging technology, we can show you potential results before treatment begins. Every procedure is tailored to your unique facial features and aesthetic preferences. At Summit Family &amp; Cosmetic Dentistry, we are dedicated to providing you with the highest quality care throughout your journey to a beautiful smile.</p><p class=\"my-4\" style=\"text-align: center;\">We prioritize your comfort throughout treatment, offering our signature comfort menu options to ensure a relaxing experience. Our artistic approach and attention to detail ensure natural-looking results that complement your features while achieving your desired outcome. At Summit Family &amp; Cosmetic Dentistry, we are dedicated to providing personalized care that exceeds your expectations.</p>",
+            "__globals__": {
+              "text_color": "globals/colors?id=text"
+            }
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "text-editor",
+          "elType": "widget"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "57a3698f",
+      "settings": {
+        "flex_direction": "column",
+        "flex_gap": {
+          "column": "0",
+          "row": "0",
+          "isLinked": true,
+          "unit": "px",
+          "size": 0
+        },
+        "flex_wrap": "wrap",
+        "padding": {
+          "unit": "em",
+          "top": "2",
+          "right": "0",
+          "bottom": "4",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding_tablet": {
+          "unit": "em",
+          "top": "1",
+          "right": "0",
+          "bottom": "3",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding_mobile": {
+          "unit": "em",
+          "top": "0",
+          "right": "0",
+          "bottom": "2",
+          "left": "0",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "__globals__": {
+          "background_color": "globals/colors?id=text"
+        }
+      },
+      "elements": [
+        {
+          "id": "4eaf9053",
+          "settings": {
+            "boxed_width": {
+              "unit": "px",
+              "size": 640,
+              "sizes": []
+            },
+            "boxed_width_tablet": {
+              "unit": "px",
+              "size": 540,
+              "sizes": []
+            },
+            "padding": {
+              "unit": "em",
+              "top": "2",
+              "right": "2",
+              "bottom": "2",
+              "left": "2",
+              "isLinked": true
+            },
+            "padding_tablet": {
+              "unit": "em",
+              "top": "",
+              "right": "",
+              "bottom": "",
+              "left": "",
+              "isLinked": true
+            },
+            "padding_mobile": {
+              "unit": "em",
+              "top": "",
+              "right": "",
+              "bottom": "",
+              "left": "",
+              "isLinked": true
+            },
+            "animation": "fadeInUp"
+          },
+          "elements": [
+            {
+              "id": "6a359b3e",
+              "settings": {
+                "content_width": "full",
+                "title": "Common Questions",
+                "header_size": "h6",
+                "align": "center"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "heading",
+              "elType": "widget"
+            },
+            {
+              "id": "4ac02eb0",
+              "settings": {
+                "content_width": "full",
+                "title": "Most Popular Questions",
+                "align": "center"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "heading",
+              "elType": "widget"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        },
+        {
+          "id": "221f2df4",
+          "settings": {
+            "content_width": "full",
+            "container_type": "grid",
+            "grid_columns_grid": {
+              "unit": "fr",
+              "size": 2,
+              "sizes": []
+            },
+            "grid_rows_grid": {
+              "unit": "fr",
+              "size": 1,
+              "sizes": []
+            },
+            "presetTitle": "Grid",
+            "presetIcon": "eicon-container-grid"
+          },
+          "elements": [
+            {
+              "id": "184f8df8",
+              "settings": {
+                "content_width": "full",
+                "ekit_accordion_items": [
+                  {
+                    "acc_title": "How long do cosmetic treatment results last?",
+                    "_id": "1a88614",
+                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> Most cosmetic treatments last 5-15 years or longer with proper care. We provide detailed maintenance instructions and regular follow-up care to help extend their longevity.</span></p>",
+                    "ekit_acc_is_active": "yes"
+                  },
+                  {
+                    "acc_title": "Will my veneers look natural?",
+                    "_id": "6968ba2",
+                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> Absolutely! Modern porcelain veneers are custom-crafted to match your natural teeth in color, translucency, and shape for seamless results that complement your facial features.</span></p>"
+                  },
+                  {
+                    "acc_title": "How long does teeth whitening take?",
+                    "_id": "90c953c",
+                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> Professional whitening can brighten your smile several shades lighter in just one visit, with results lasting 6-12 months with good oral care. Take-home options provide gradual whitening over 2-3 weeks.</span></p>"
+                  }
+                ],
+                "ekit_accordion_right_icons": {
+                  "value": "icons icon-arrow-down",
+                  "library": "skb_cife-simple_line-icon"
+                },
+                "ekit_accordion_right_icon_actives": {
+                  "value": "icons icon-arrow-up",
+                  "library": "skb_cife-simple_line-icon"
+                },
+                "ekit_accordion_background_background": "classic",
+                "ekit_accordion_title_border_open_border": "none",
+                "ekit_accordion_background_close_background": "classic",
+                "ekit_accordion_title_border_close_border": "none",
+                "ekit_accordion_title_padding": {
+                  "unit": "px",
+                  "top": "21",
+                  "right": "42",
+                  "bottom": "21",
+                  "left": "21",
+                  "isLinked": false
+                },
+                "ekit_accordion_content_background_background": "classic",
+                "ekit_accordion_content_padding": {
+                  "unit": "px",
+                  "top": "21",
+                  "right": "21",
+                  "bottom": "21",
+                  "left": "21",
+                  "isLinked": true
+                },
+                "ekit_accordion_icon_typography_close": {
+                  "unit": "px",
+                  "size": 16,
+                  "sizes": []
+                },
+                "ekit_accordion_icon_typography": {
+                  "unit": "px",
+                  "size": 16,
+                  "sizes": []
+                },
+                "ekit_accordion_section_icon_margin": {
+                  "unit": "px",
+                  "top": "21",
+                  "right": "21",
+                  "bottom": "21",
+                  "left": "21",
+                  "isLinked": true
+                },
+                "__globals__": {
+                  "ekit_accordion_title_color": "globals/colors?id=text",
+                  "ekit_accordion_background_color": "globals/colors?id=primary",
+                  "ekit_accordion_title_color_close": "globals/colors?id=secondary",
+                  "ekit_accordion_content_color": "globals/colors?id=primary",
+                  "ekit_accordion_content_background_color": "globals/colors?id=background",
+                  "ekit_accordion_icon_color_close": "globals/colors?id=secondary",
+                  "ekit_accordion_icon_color": "globals/colors?id=text",
+                  "ekit_accordion_background_color_b": "globals/colors?id=accent"
+                },
+                "ekit_accordion_title_padding_tablet": {
+                  "unit": "px",
+                  "top": "16",
+                  "right": "32",
+                  "bottom": "16",
+                  "left": "16",
+                  "isLinked": false
+                },
+                "ekit_accordion_content_padding_tablet": {
+                  "unit": "px",
+                  "top": "16",
+                  "right": "16",
+                  "bottom": "16",
+                  "left": "16",
+                  "isLinked": true
+                },
+                "ekit_accordion_icon_typography_close_tablet": {
+                  "unit": "px",
+                  "size": 14,
+                  "sizes": []
+                },
+                "ekit_accordion_icon_typography_tablet": {
+                  "unit": "px",
+                  "size": 14,
+                  "sizes": []
+                },
+                "ekit_accordion_section_icon_margin_tablet": {
+                  "unit": "px",
+                  "top": "16",
+                  "right": "16",
+                  "bottom": "16",
+                  "left": "16",
+                  "isLinked": true
+                },
+                "ekit_accordion_background_gradient_angle": {
+                  "unit": "deg",
+                  "size": 185,
+                  "sizes": []
+                },
+                "ekit_accordion_border_radious_curve_shape_open": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "10",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                },
+                "ekit_accordion_content_border_radious": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "10",
+                  "left": "10",
+                  "isLinked": false
+                },
+                "ekit_accordion_border_radious_close": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "10",
+                  "bottom": "10",
+                  "left": "10",
+                  "isLinked": true
+                },
+                "_animation": "fadeInLeft",
+                "ekit_accordion_background_color_stop": {
+                  "unit": "%",
+                  "size": 31,
+                  "sizes": []
+                }
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "elementskit-accordion",
+              "elType": "widget"
+            },
+            {
+              "id": "11b6995e",
+              "settings": {
+                "content_width": "full",
+                "ekit_accordion_items": [
+                  {
+                    "acc_title": "Is Invisalign right for me?",
+                    "_id": "1a88614",
+                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> We'll evaluate your specific needs during a consultation. Invisalign works well for most mild to moderate alignment issues, offering a discreet solution for adults and teens.</span></p>",
+                    "ekit_acc_is_active": "yes"
+                  },
+                  {
+                    "acc_title": "Does cosmetic dentistry hurt?",
+                    "_id": "6968ba2",
+                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> We prioritize your comfort with modern techniques and our comfort menu options. Most patients report minimal to no discomfort during and after procedures.</span></p>"
+                  },
+                  {
+                    "acc_title": "How much does cosmetic dentistry cost?",
+                    "_id": "90c953c",
+                    "acc_content": "<p><b>A:</b><span style=\"font-weight: 400;\"> Costs vary based on treatment plans. We offer flexible financing options and will help you understand all costs before beginning treatment, ensuring no surprises.</span></p>"
+                  }
+                ],
+                "ekit_accordion_right_icons": {
+                  "value": "icons icon-arrow-down",
+                  "library": "skb_cife-simple_line-icon"
+                },
+                "ekit_accordion_right_icon_actives": {
+                  "value": "icons icon-arrow-up",
+                  "library": "skb_cife-simple_line-icon"
+                },
+                "ekit_accordion_background_background": "classic",
+                "ekit_accordion_title_border_open_border": "none",
+                "ekit_accordion_background_close_background": "classic",
+                "ekit_accordion_title_border_close_border": "none",
+                "ekit_accordion_title_padding": {
+                  "unit": "px",
+                  "top": "21",
+                  "right": "42",
+                  "bottom": "21",
+                  "left": "21",
+                  "isLinked": false
+                },
+                "ekit_accordion_content_background_background": "classic",
+                "ekit_accordion_content_padding": {
+                  "unit": "px",
+                  "top": "21",
+                  "right": "21",
+                  "bottom": "21",
+                  "left": "21",
+                  "isLinked": true
+                },
+                "ekit_accordion_icon_typography_close": {
+                  "unit": "px",
+                  "size": 16,
+                  "sizes": []
+                },
+                "ekit_accordion_icon_typography": {
+                  "unit": "px",
+                  "size": 16,
+                  "sizes": []
+                },
+                "ekit_accordion_section_icon_margin": {
+                  "unit": "px",
+                  "top": "21",
+                  "right": "21",
+                  "bottom": "21",
+                  "left": "21",
+                  "isLinked": true
+                },
+                "__globals__": {
+                  "ekit_accordion_title_color": "globals/colors?id=text",
+                  "ekit_accordion_background_color": "globals/colors?id=primary",
+                  "ekit_accordion_title_color_close": "globals/colors?id=secondary",
+                  "ekit_accordion_content_color": "globals/colors?id=primary",
+                  "ekit_accordion_content_background_color": "globals/colors?id=background",
+                  "ekit_accordion_icon_color_close": "globals/colors?id=secondary",
+                  "ekit_accordion_icon_color": "globals/colors?id=text"
+                },
+                "ekit_accordion_title_padding_tablet": {
+                  "unit": "px",
+                  "top": "16",
+                  "right": "32",
+                  "bottom": "16",
+                  "left": "16",
+                  "isLinked": false
+                },
+                "ekit_accordion_content_padding_tablet": {
+                  "unit": "px",
+                  "top": "16",
+                  "right": "16",
+                  "bottom": "16",
+                  "left": "16",
+                  "isLinked": true
+                },
+                "ekit_accordion_icon_typography_close_tablet": {
+                  "unit": "px",
+                  "size": 14,
+                  "sizes": []
+                },
+                "ekit_accordion_icon_typography_tablet": {
+                  "unit": "px",
+                  "size": 14,
+                  "sizes": []
+                },
+                "ekit_accordion_section_icon_margin_tablet": {
+                  "unit": "px",
+                  "top": "16",
+                  "right": "16",
+                  "bottom": "16",
+                  "left": "16",
+                  "isLinked": true
+                },
+                "ekit_accordion_background_gradient_angle": {
+                  "unit": "deg",
+                  "size": 135,
+                  "sizes": []
+                },
+                "ekit_accordion_border_radious_curve_shape_open": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "10",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                },
+                "ekit_accordion_content_border_radious": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "10",
+                  "left": "10",
+                  "isLinked": false
+                },
+                "ekit_accordion_border_radious_close": {
+                  "unit": "px",
+                  "top": "10",
+                  "right": "10",
+                  "bottom": "10",
+                  "left": "10",
+                  "isLinked": true
+                },
+                "_animation": "fadeInRight"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "elementskit-accordion",
+              "elType": "widget"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    },
+    {
+      "id": "2af273e6",
+      "settings": {
+        "flex_direction": "column",
+        "margin": {
+          "unit": "em",
+          "top": "4",
+          "right": "0",
+          "bottom": "4",
+          "left": "0",
+          "isLinked": false
+        },
+        "margin_tablet": {
+          "unit": "em",
+          "top": "2",
+          "right": "0",
+          "bottom": "2",
+          "left": "0",
+          "isLinked": false
+        },
+        "margin_mobile": {
+          "unit": "em",
+          "top": "2",
+          "right": "0",
+          "bottom": "2",
+          "left": "0",
+          "isLinked": false
+        },
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "animation": "slideInUp",
+        "_title": "Online Appointment",
+        "custom_css": ".rkit-team__social {\n    display: none;\n}",
+        "background_overlay_background": "classic",
+        "background_overlay_color_stop": {
+          "unit": "%",
+          "size": 38,
+          "sizes": []
+        },
+        "background_overlay_color_b": "#EAE7E580",
+        "background_overlay_color_b_stop": {
+          "unit": "%",
+          "size": 74,
+          "sizes": []
+        },
+        "background_overlay_opacity": {
+          "unit": "px",
+          "size": 1,
+          "sizes": []
+        }
+      },
+      "elements": [
+        {
+          "id": "46ec2125",
+          "settings": {
+            "content_width": "full",
+            "flex_direction": "row",
+            "flex_justify_content": "flex-start",
+            "flex_align_items": "center",
+            "background_background": "classic",
+            "border_radius": {
+              "unit": "px",
+              "top": "15",
+              "right": "15",
+              "bottom": "15",
+              "left": "15",
+              "isLinked": true
+            },
+            "padding": {
+              "unit": "em",
+              "top": "4",
+              "right": "4",
+              "bottom": "4",
+              "left": "4",
+              "isLinked": true
+            },
+            "padding_tablet": {
+              "unit": "em",
+              "top": "2",
+              "right": "2",
+              "bottom": "2",
+              "left": "2",
+              "isLinked": true
+            },
+            "padding_mobile": {
+              "unit": "em",
+              "top": "2",
+              "right": "2",
+              "bottom": "2",
+              "left": "2",
+              "isLinked": true
+            },
+            "__globals__": {
+              "background_color": "globals/colors?id=primary",
+              "background_overlay_color": "globals/colors?id=primary"
+            },
+            "background_image": {
+              "id": 817,
+              "url": "https://solsmilelounge.com/wp-content/uploads/2026/01/AdobeStock_471814455-1.jpg",
+              "alt": "",
+              "source": "library",
+              "size": ""
+            },
+            "background_position": "center right",
+            "background_size": "contain",
+            "min_height": {
+              "unit": "px",
+              "size": 450,
+              "sizes": []
+            },
+            "width_tablet": {
+              "unit": "%",
+              "size": 100,
+              "sizes": []
+            },
+            "width_mobile": {
+              "unit": "%",
+              "size": "",
+              "sizes": []
+            },
+            "flex_wrap_tablet": "wrap",
+            "background_overlay_background": "gradient",
+            "background_overlay_color_b": "#EAE7E52E",
+            "background_overlay_gradient_angle": {
+              "unit": "deg",
+              "size": 90,
+              "sizes": []
+            },
+            "background_overlay_opacity": {
+              "unit": "px",
+              "size": 1,
+              "sizes": []
+            },
+            "background_overlay_color_stop": {
+              "unit": "%",
+              "size": 51,
+              "sizes": []
+            },
+            "background_overlay_color_b_stop": {
+              "unit": "%",
+              "size": 63,
+              "sizes": []
+            },
+            "background_repeat": "no-repeat",
+            "background_position_mobile": "top right",
+            "background_overlay_color_stop_tablet": {
+              "unit": "%",
+              "size": 34
+            },
+            "background_overlay_color_b_stop_tablet": {
+              "unit": "%",
+              "size": 76
+            },
+            "background_overlay_opacity_tablet": {
+              "unit": "px",
+              "size": 0.83,
+              "sizes": []
+            }
+          },
+          "elements": [
+            {
+              "id": "27e0d77b",
+              "settings": {
+                "flex_direction": "column",
+                "content_width": "full",
+                "width": {
+                  "unit": "%",
+                  "size": 49
+                },
+                "padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "animation": "slideInUp",
+                "width_tablet": {
+                  "unit": "%",
+                  "size": 57,
+                  "sizes": []
+                },
+                "width_mobile": {
+                  "unit": "%",
+                  "size": "",
+                  "sizes": []
+                },
+                "flex_justify_content_mobile": "center",
+                "flex_align_items_mobile": "center"
+              },
+              "elements": [
+                {
+                  "id": "57857188",
+                  "settings": {
+                    "content_width": "full",
+                    "title": "Dental Care Built Around You",
+                    "_element_width": "inherit",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 95,
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "__globals__": {
+                      "title_color": "globals/colors?id=text"
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "heading",
+                  "elType": "widget"
+                },
+                {
+                  "id": "7908fcda",
+                  "settings": {
+                    "content_width": "full",
+                    "editor": "<p>At Summit Family &amp; Cosmetic Dentistry, every patient receives a customized treatment plan based on their goals, concerns, and health history. Dr. Bandeff and his team believe that informed patients are confident patients, taking the time to walk through every option before any procedure begins. From routine checkups to full-mouth restorations, you receive the same attentive, personal care every visit.</p>",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "_element_custom_width_tablet": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": "",
+                      "sizes": []
+                    },
+                    "align_mobile": "center",
+                    "__globals__": {
+                      "text_color": "globals/colors?id=text"
+                    }
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "text-editor",
+                  "elType": "widget"
+                },
+                {
+                  "id": "68aae7a5",
+                  "settings": {
+                    "content_width": "full",
+                    "text": "Book Your Appointment",
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "_animation": "slideInUp",
+                    "_element_custom_width_tablet": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "_element_custom_width_mobile": {
+                      "unit": "%",
+                      "size": 100,
+                      "sizes": []
+                    },
+                    "align_mobile": "justify",
+                    "selected_icon": {
+                      "value": "far fa-calendar-alt",
+                      "library": "fa-regular"
+                    },
+                    "icon_indent": {
+                      "unit": "px",
+                      "size": 7,
+                      "sizes": []
+                    },
+                    "text_padding": {
+                      "unit": "px",
+                      "top": "10",
+                      "right": "20",
+                      "bottom": "10",
+                      "left": "20",
+                      "isLinked": false
+                    },
+                    "__globals__": {
+                      "button_text_color": "globals/colors?id=primary",
+                      "background_color": "globals/colors?id=text"
+                    },
+                    "link": {
+                      "url": "https://book.modento.io/summit-family-cosmetic-dentistry-nj/reason-for-visit",
+                      "is_external": "on",
+                      "nofollow": "on",
+                      "custom_attributes": ""
+                    },
+                    "border_border": "none"
+                  },
+                  "elements": [],
+                  "isInner": false,
+                  "widgetType": "button",
+                  "elType": "widget"
+                }
+              ],
+              "isInner": true,
+              "elType": "container"
+            }
+          ],
+          "isInner": true,
+          "elType": "container"
+        }
+      ],
+      "isInner": false,
+      "elType": "container"
+    }
+  ],
+  "page_settings": [],
+  "version": "0.4",
+  "title": "New-Elevate-Service-Page",
+  "type": "page"
+}
