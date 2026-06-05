@@ -29,15 +29,22 @@ export function toSystemColors(colors: BrandColors): KitColor[] {
 
 const TINT_LEVELS = [80, 60, 40, 20] as const;
 const TINT_COLOR_KEYS = ["primary", "secondary", "accent"] as const;
+const BASE_CUSTOM_COLORS: KitColor[] = [
+  { _id: "white", title: "White", color: "#FFFFFF" },
+  { _id: "black", title: "Black", color: "#000000" },
+];
 
 export function toCustomColors(colors: BrandColors): KitColor[] {
-  return TINT_COLOR_KEYS.flatMap((key) =>
-    TINT_LEVELS.map((level) => ({
-      _id: `${key}_${level}`,
-      title: `${titleCase(key)} ${level}`,
-      color: tintTowardWhite(colors[key], level),
-    })),
-  );
+  return [
+    ...TINT_COLOR_KEYS.flatMap((key) =>
+      TINT_LEVELS.map((level) => ({
+        _id: `${key}_${level}`,
+        title: `${titleCase(key)} ${level}`,
+        color: tintTowardWhite(colors[key], level),
+      })),
+    ),
+    ...BASE_CUSTOM_COLORS,
+  ];
 }
 
 function tintTowardWhite(hex: string, level: number): string {
