@@ -19,7 +19,16 @@ import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { InitialClient } from "@/components/build-wizard";
+import { GOOGLE_FONTS } from "@/lib/google-fonts";
+import type { BrandKit, UploadedAsset } from "@/lib/types";
 
 type TemplateName =
   | "std_v1"
@@ -70,7 +79,9 @@ interface DeployedLink {
   viewUrl: string;
 }
 
-const STEPS = ["Content", "Colors", "WP Target", "Review", "Deploy"] as const;
+type Asset = UploadedAsset & { previewUrl: string };
+
+const STEPS = ["Content", "Brand Kit", "WP Target", "Review", "Deploy"] as const;
 
 const STEP_DETAILS: {
   title: (typeof STEPS)[number];
@@ -85,9 +96,9 @@ const STEP_DETAILS: {
     icon: FileJson,
   },
   {
-    title: "Colors",
-    rail: "Palette",
-    description: "Record the landing page colors for WordPress finishing.",
+    title: "Brand Kit",
+    rail: "Colors and assets",
+    description: "Set the WordPress brand colors, fonts, logo, and favicon.",
     icon: Palette,
   },
   {
@@ -134,7 +145,38 @@ const DEFAULT_COLORS = {
   primary: "#1e6091",
   secondary: "#168aad",
   accent: "#d9a566",
+  text: "#191919",
+  background: "#FFFFFF",
 };
+
+function mimeFromFilename(filename: string): string {
+  const ext = filename.split(".").pop()?.toLowerCase();
+  if (ext === "svg") return "image/svg+xml";
+  if (ext === "jpg" || ext === "jpeg") return "image/jpeg";
+  if (ext === "ico") return "image/x-icon";
+  return "image/png";
+}
+
+function previewUrlFromAsset(asset?: UploadedAsset): string | undefined {
+  if (!asset?.dataBase64) return undefined;
+  return `data:${mimeFromFilename(asset.filename)};base64,${asset.dataBase64}`;
+}
+
+async function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error(`Could not read ${file.name}.`));
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result !== "string") {
+        reject(new Error(`Could not read ${file.name}.`));
+        return;
+      }
+      resolve(result.includes(",") ? result.split(",")[1] : result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 function slugify(value: string): string {
   return value
@@ -207,7 +249,25 @@ export function LandingPageWizard({
   const [buildPackage, setBuildPackage] = useState<BuildPackage | null>(null);
   const [packageFilename, setPackageFilename] = useState("");
   const [packageError, setPackageError] = useState("");
-  const [colors, setColors] = useState(DEFAULT_COLORS);
+  const [colors, setColors] = useState(
+    initialClient?.brandKit.colors ?? DEFAULT_COLORS,
+  );
+  const [fontHeading, setFontHeading] = useState(
+    initialClient?.brandKit.fonts.heading ?? "Poppins",
+  );
+  const [fontBody, setFontBody] = useState(
+    initialClient?.brandKit.fonts.body ?? "Inter",
+  );
+  const [logo, setLogo] = useState<Asset | null>(() => {
+    const asset = initialClient?.brandKit.logo;
+    const previewUrl = previewUrlFromAsset(asset);
+    return asset && previewUrl ? { ...asset, previewUrl } : null;
+  });
+  const [favicon, setFavicon] = useState<Asset | null>(() => {
+    const asset = initialClient?.brandKit.favicon;
+    const previewUrl = previewUrlFromAsset(asset);
+    return asset && previewUrl ? { ...asset, previewUrl } : null;
+  });
   const [name, setName] = useState(initialClient?.name ?? "");
   const [slug, setSlug] = useState(initialClient?.slug ?? "");
   const [siteUrl, setSiteUrl] = useState(initialClient?.wpSiteUrl ?? "");
@@ -247,6 +307,57 @@ export function LandingPageWizard({
     }
   }
 
+  async function handleLogo(file: File) {
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Logo must be 2MB or smaller.");
+      return;
+    }
+    if (!/\.(png|jpe?g|svg)$/i.test(file.name)) {
+      toast.error("Logo must be PNG, JPG, or SVG.");
+      return;
+    }
+    const dataBase64 = await fileToBase64(file);
+    setLogo({
+      filename: file.name,
+      dataBase64,
+      previewUrl: URL.createObjectURL(file),
+    });
+    toast.success(`${file.name} loaded for logo.`);
+  }
+
+  async function handleFavicon(file: File) {
+    if (file.size > 500 * 1024) {
+      toast.error("Favicon must be 500KB or smaller.");
+      return;
+    }
+    if (!/\.(png|ico)$/i.test(file.name)) {
+      toast.error("Favicon must be PNG or ICO.");
+      return;
+    }
+    const dataBase64 = await fileToBase64(file);
+    setFavicon({
+      filename: file.name,
+      dataBase64,
+      previewUrl: URL.createObjectURL(file),
+    });
+    toast.success(`${file.name} loaded for favicon.`);
+  }
+
+  function buildBrandKit(): BrandKit {
+    return {
+      colors,
+      fonts: { heading: fontHeading, body: fontBody },
+      logo: {
+        filename: logo!.filename,
+        dataBase64: logo!.dataBase64,
+      },
+      favicon: {
+        filename: favicon!.filename,
+        dataBase64: favicon!.dataBase64,
+      },
+    };
+  }
+
   function validateStep(current: number): string | null {
     switch (current) {
       case 0:
@@ -255,6 +366,8 @@ export function LandingPageWizard({
       case 1:
         if (!colors.primary || !colors.secondary || !colors.accent)
           return "Choose primary, secondary, and accent colors.";
+        if (!logo?.dataBase64) return "Site logo is required.";
+        if (!favicon?.dataBase64) return "Site favicon is required.";
         return null;
       case 2:
         if (!name.trim()) return "Practice name is required.";
@@ -321,7 +434,7 @@ export function LandingPageWizard({
             wpUsername: username,
             wpAppPassword: appPassword || undefined,
           },
-          colors,
+          brandKit: buildBrandKit(),
           pages: buildPackage.pages.map((page) => ({
             pageName: page.page_type,
             pageTitle: page.page_type,
@@ -542,6 +655,36 @@ export function LandingPageWizard({
                   <FixedSwatch label="black" value="#191919" />
                   <FixedSwatch label="white" value="#FFFFFF" />
                 </div>
+                <SectionLabel>Typography</SectionLabel>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <FontSelect
+                    label="Heading font"
+                    value={fontHeading}
+                    onChange={setFontHeading}
+                  />
+                  <FontSelect
+                    label="Body font"
+                    value={fontBody}
+                    onChange={setFontBody}
+                  />
+                </div>
+                <SectionLabel>Assets</SectionLabel>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <AssetUpload
+                    label="Logo"
+                    hint="Required. PNG, JPG, or SVG. Max 2MB."
+                    accept=".png,.jpg,.jpeg,.svg"
+                    preview={logo?.previewUrl}
+                    onFile={handleLogo}
+                  />
+                  <AssetUpload
+                    label="Favicon"
+                    hint="Required. PNG or ICO. Max 500KB."
+                    accept=".png,.ico"
+                    preview={favicon?.previewUrl}
+                    onFile={handleFavicon}
+                  />
+                </div>
               </div>
             )}
 
@@ -594,23 +737,32 @@ export function LandingPageWizard({
                 <Review label="Practice" value={name} onEdit={() => setStep(2)} />
                 <Review label="WP site" value={siteUrl} onEdit={() => setStep(2)} />
                 <Review
-                  label="Colors"
+                  label="Brand kit"
                   onEdit={() => setStep(1)}
                   value={
-                    <span className="flex gap-1">
-                      {[colors.primary, colors.secondary, colors.accent, "#191919", "#FFFFFF"].map(
-                        (color) => (
+                    <span className="flex flex-wrap items-center gap-2">
+                      <span className="flex gap-1">
+                        {[
+                          colors.primary,
+                          colors.secondary,
+                          colors.accent,
+                          "#191919",
+                          "#FFFFFF",
+                        ].map((color) => (
                           <span
                             key={color}
                             className="inline-block h-4 w-4 rounded border"
                             style={{ backgroundColor: color }}
                             title={color}
                           />
-                        ),
-                      )}
+                        ))}
+                      </span>
+                      <span>{fontHeading} / {fontBody}</span>
                     </span>
                   }
                 />
+                <Review label="Logo" value={logo ? logo.filename : "none"} onEdit={() => setStep(1)} />
+                <Review label="Favicon" value={favicon ? favicon.filename : "none"} onEdit={() => setStep(1)} />
                 <Review label="Content file" value={packageFilename} onEdit={() => setStep(0)} />
                 <PackageSummary buildPackage={buildPackage} />
               </div>
@@ -761,6 +913,82 @@ function Field({
       {children}
       {hint && <p className="text-[12px] font-medium text-[var(--muted)]">{hint}</p>}
     </div>
+  );
+}
+
+function FontSelect({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="space-y-2.5">
+      <Label>{label}</Label>
+      <Select value={value} onValueChange={(next) => next && onChange(next)}>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {GOOGLE_FONTS.map((font) => (
+            <SelectItem key={font} value={font}>
+              {font}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+function AssetUpload({
+  label,
+  hint,
+  accept,
+  preview,
+  onFile,
+}: {
+  label: string;
+  hint: string;
+  accept: string;
+  preview?: string;
+  onFile: (file: File) => void | Promise<void>;
+}) {
+  function loadFile(file: File | undefined) {
+    if (!file) return;
+    void Promise.resolve(onFile(file)).catch((error) => {
+      toast.error(error instanceof Error ? error.message : "Could not read file.");
+    });
+  }
+
+  return (
+    <label className="flex min-h-36 cursor-pointer flex-col items-center justify-center gap-2 border border-dashed border-[var(--line-strong)] bg-[var(--paper-2)] p-5 text-center transition hover:bg-[var(--card)]">
+      <UploadCloud className="size-6 text-[var(--primary)]" />
+      <span className="text-sm font-semibold text-[var(--ink)]">
+        {preview ? `Replace ${label.toLowerCase()}` : `Upload ${label.toLowerCase()}`}
+      </span>
+      <span className="text-xs font-medium text-[var(--muted)]">{hint}</span>
+      <input
+        type="file"
+        accept={accept}
+        className="sr-only"
+        onChange={(e) => {
+          loadFile(e.target.files?.[0]);
+          e.currentTarget.value = "";
+        }}
+      />
+      {preview && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={preview}
+          alt={`${label} preview`}
+          className="mt-2 h-16 w-auto border border-[var(--line)] bg-[var(--card)] p-1"
+        />
+      )}
+    </label>
   );
 }
 

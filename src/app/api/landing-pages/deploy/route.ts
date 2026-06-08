@@ -9,6 +9,11 @@ import {
 } from "@/lib/landing-pages/inject";
 import { prisma } from "@/lib/prisma";
 import { checkDeployRateLimit } from "@/lib/rate-limit";
+import {
+  toCustomColors,
+  toSystemColors,
+  toSystemTypography,
+} from "@/lib/wp/brand";
 import { WpClient } from "@/lib/wp/client";
 
 export const runtime = "nodejs";
@@ -34,6 +39,11 @@ const hexColorSchema = z
   .string()
   .regex(/^#[0-9a-fA-F]{6}$/, "Use a 6-digit hex color.");
 
+const assetSchema = z.object({
+  filename: z.string().min(1),
+  dataBase64: z.string().min(1),
+});
+
 const bodySchema = z.object({
   clientId: z.string().optional(),
   client: z.object({
@@ -46,10 +56,17 @@ const bodySchema = z.object({
     wpUsername: z.string().min(1),
     wpAppPassword: z.string().optional(),
   }),
-  colors: z.object({
-    primary: hexColorSchema,
-    secondary: hexColorSchema,
-    accent: hexColorSchema,
+  brandKit: z.object({
+    colors: z.object({
+      primary: hexColorSchema,
+      secondary: hexColorSchema,
+      accent: hexColorSchema,
+      text: hexColorSchema,
+      background: hexColorSchema,
+    }),
+    fonts: z.object({ heading: z.string().min(1), body: z.string().min(1) }),
+    logo: assetSchema,
+    favicon: assetSchema,
   }),
   pages: z
     .array(
@@ -72,6 +89,27 @@ function ndjson(event: LandingPageDeployEvent): string {
   return JSON.stringify(event) + "\n";
 }
 
+async function landingStep(
+  send: (event: LandingPageDeployEvent) => void,
+  label: string,
+  action: () => Promise<void>,
+): Promise<boolean> {
+  send({ type: "step", status: "start", label });
+  try {
+    await action();
+    send({ type: "step", status: "ok", label });
+    return true;
+  } catch (e) {
+    send({
+      type: "step",
+      status: "fail",
+      label,
+      message: e instanceof Error ? e.message : "Step failed",
+    });
+    return false;
+  }
+}
+
 function isMissingBuildMetadataColumn(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);
   return (
@@ -90,7 +128,7 @@ async function createLandingPageBuildRecord({
 }: {
   clientId: string;
   userId: string;
-  colors: z.infer<typeof bodySchema>["colors"];
+  colors: z.infer<typeof bodySchema>["brandKit"]["colors"];
 }) {
   try {
     return await prisma.build.create({
@@ -99,7 +137,7 @@ async function createLandingPageBuildRecord({
         status: "in_progress",
         deployedBy: userId,
         type: "landing_page",
-        colors,
+    colors,
       },
       select: { id: true },
     });
@@ -161,26 +199,19 @@ export async function POST(req: NextRequest) {
     wpSiteUrl: body.client.wpSiteUrl,
     wpUsername: body.client.wpUsername,
     wpAppPassword: body.client.wpAppPassword,
-    brandKit: {
-      colors: {
-        ...body.colors,
-        text: "#191919",
-        background: "#FFFFFF",
-      },
-      fonts: { heading: "Inter", body: "Inter" },
-    },
+    brandKit: body.brandKit,
   });
 
   const build = await createLandingPageBuildRecord({
     clientId: client.id,
     userId,
-    colors: body.colors,
+    colors: body.brandKit.colors,
   });
 
   await audit(userId, "landing-page.deploy.start", client.id, {
     buildId: build.id,
     pages: body.pages.map((page) => page.slug),
-    colors: body.colors,
+    colors: body.brandKit.colors,
   });
 
   const encoder = new TextEncoder();
@@ -285,6 +316,48 @@ export async function POST(req: NextRequest) {
               message: e instanceof Error ? e.message : "Page creation failed",
             });
           }
+        }
+
+        if (!(await landingStep(send, "Setting site name", async () => {
+          await wp.setSiteName(client.wpUsername, client.appPassword, client.name);
+        }))) {
+          anyFail = true;
+        }
+
+        if (!(await landingStep(send, "Setting brand colors", async () => {
+          await wp.setBrandColors(
+            toSystemColors(body.brandKit.colors),
+            toCustomColors(body.brandKit.colors),
+          );
+        }))) {
+          anyFail = true;
+        }
+
+        if (!(await landingStep(send, "Setting brand fonts", async () => {
+          await wp.setBrandFonts(toSystemTypography(body.brandKit.fonts));
+        }))) {
+          anyFail = true;
+        }
+
+        if (!(await landingStep(send, "Setting site logo", async () => {
+          await wp.setLogo(body.brandKit.logo.filename, body.brandKit.logo.dataBase64);
+        }))) {
+          anyFail = true;
+        }
+
+        if (!(await landingStep(send, "Setting site favicon", async () => {
+          await wp.setFavicon(
+            body.brandKit.favicon.filename,
+            body.brandKit.favicon.dataBase64,
+          );
+        }))) {
+          anyFail = true;
+        }
+
+        if (!(await landingStep(send, "Flushing Elementor CSS cache", async () => {
+          await wp.flushCss();
+        }))) {
+          anyFail = true;
         }
 
         send({ type: "done", status: "ok", label: "Deploy complete" });
