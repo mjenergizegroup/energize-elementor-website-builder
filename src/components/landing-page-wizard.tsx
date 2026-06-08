@@ -447,7 +447,8 @@ export function LandingPageWizard({
 
       if (!res.ok || !res.body) {
         const err = await res.json().catch(() => ({}));
-        toast.error(err.error ?? `Deploy failed (status ${res.status}).`);
+        const detail = typeof err.detail === "string" ? ` ${err.detail}` : "";
+        toast.error(`${err.error ?? `Deploy failed (status ${res.status}).`}${detail}`);
         setFinished("failed");
         return;
       }

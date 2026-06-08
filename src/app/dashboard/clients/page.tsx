@@ -19,10 +19,18 @@ function formatDate(value: Date | string | null | undefined) {
 export default async function ClientsPage() {
   const clients = await prisma.client.findMany({
     orderBy: { updatedAt: "desc" },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      theme: true,
+      wpSiteUrl: true,
       builds: {
         orderBy: { createdAt: "desc" },
         take: 1,
+        select: {
+          deployedAt: true,
+          createdAt: true,
+        },
       },
     },
   });
