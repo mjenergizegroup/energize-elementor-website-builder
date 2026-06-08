@@ -5,19 +5,17 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "group/badge inline-flex h-6 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-[9px] border border-transparent px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap transition-all focus-visible:border-[var(--secondary)] focus-visible:ring-[3px] focus-visible:ring-[rgba(22,138,173,.15)] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  "group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden border-2 px-[9px] py-[3px] text-[10px] font-bold uppercase leading-none tracking-[0.12em] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-red)] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&>svg]:pointer-events-none [&>svg]:size-3!",
   {
     variants: {
       variant: {
-        default: "bg-[var(--primary)] text-primary-foreground [a]:hover:bg-[var(--primary-deep)]",
+        default: "border-[var(--color-black)] bg-[var(--color-black)] text-[var(--color-on-black)]",
         secondary:
-          "border-[var(--line)] bg-[var(--paper-2)] text-[var(--ink-soft)] [a]:hover:bg-[var(--card)]",
+          "border-[var(--color-red)] bg-[var(--color-red)] text-[var(--color-on-red)]",
         destructive:
-          "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
-        outline:
-          "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
-        ghost:
-          "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
+          "border-[var(--color-red)] bg-[var(--color-surface)] text-[var(--color-red)]",
+        outline: "border-[var(--color-black)] bg-[var(--color-surface)] text-[var(--color-black)]",
+        ghost: "border-transparent bg-transparent text-[var(--color-black)]",
         link: "text-primary underline-offset-4 hover:underline",
       },
     },

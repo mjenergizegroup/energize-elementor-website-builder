@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Energize Website Builder — Design Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,700&display=swap" rel="stylesheet" />
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red:        #bf2e31;
+  --red-dark:   #9e2527;
+  --red-light:  #f9ecec;
+  --black:      #191919;
+  --paper:      #F0EFEB;
+  --white:      #ffffff;
+  --muted:      #5a5a5a;
+  --border:     #D2CFC8;
+  --panel-bg:   #F7F6F2;
+}
+
+html, body {
+  font-family: 'Inter', sans-serif;
+  background: #E8E6E0;
+  color: var(--black);
+  min-height: 100vh;
+}
+
+/* ---- SCREEN SWITCHER ---- */
+.screen-bar {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--black);
+  padding: 0 32px;
+  display: flex; align-items: stretch;
+  border-bottom: 2px solid #333;
+}
+.screen-bar-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: #666;
+  display: flex; align-items: center; margin-right: 24px;
+  padding-right: 24px; border-right: 1px solid #333;
+}
+.screen-tabs { display: flex; }
+.screen-tab {
+  padding: 16px 20px; font-family: inherit;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #666;
+  background: transparent; border: 0;
+  border-right: 1px solid #2a2a2a;
+  cursor: pointer; transition: color 0.15s, background 0.15s;
+}
+.screen-tab:first-child { border-left: 1px solid #2a2a2a; }
+.screen-tab:hover { color: #ccc; }
+.screen-tab.active { background: var(--red); color: white; }
+.screen-note {
+  margin-left: auto; display: flex; align-items: center;
+  font-size: 11px; color: #555; font-weight: 500;
+}
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ================================================================ */
+/* SHARED APP SHELL                                                   */
+/* ================================================================ */
+.app-wrap {
+  max-width: 1440px; margin: 0 auto;
+  padding: 28px 32px 80px;
+}
+
+.app {
+  background: var(--paper);
+  border: 2px solid var(--black);
+  overflow: hidden;
+  position: relative;
+}
+
+/* TOP NAV */
+.topnav {
+  background: var(--black);
+  display: flex; align-items: stretch;
+  height: 52px;
+}
+.topnav-brand {
+  display: flex; align-items: center;
+  padding: 0 22px;
+  border-right: 1px solid #333;
+  gap: 10px;
+}
+.brand-mark {
+  width: 26px; height: 26px;
+  background: var(--red);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: white;
+  letter-spacing: -0.02em;
+}
+.brand-name {
+  font-size: 13px; font-weight: 700; color: white;
+  letter-spacing: -0.01em;
+}
+.brand-ver {
+  font-size: 10px; color: #555; font-weight: 500;
+  letter-spacing: 0.06em;
+}
+.topnav-links { display: flex; }
+.nav-link {
+  display: flex; align-items: center;
+  padding: 0 20px; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: #777; cursor: pointer;
+  border-right: 1px solid #222;
+  transition: color 0.15s, background 0.15s;
+}
+.nav-link:hover { color: #ccc; background: #222; }
+.nav-link.active { color: white; background: var(--red); }
+.topnav-right {
+  margin-left: auto; display: flex; align-items: center;
+  padding: 0 18px; gap: 12px;
+  border-left: 1px solid #333;
+}
+.user-chip {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: #777;
+}
+.user-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--red); display: flex; align-items: center;
+  justify-content: center; font-size: 10px; font-weight: 700; color: white;
+}
+
+/* ================================================================ */
+/* SCREEN 1: DASHBOARD                                                */
+/* ================================================================ */
+.dash-body { padding: 36px 36px 48px; }
+
+.dash-banner {
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center;
+  background: white; border: 2px solid var(--black);
+  padding: 28px 32px; margin-bottom: 24px;
+}
+.dash-banner .eyebrow {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--red); margin-bottom: 8px;
+}
+.dash-banner h1 {
+  font-size: 36px; font-weight: 900; letter-spacing: -0.04em; line-height: 1;
+}
+.dash-banner p {
+  font-size: 13px; color: var(--muted); margin-top: 8px; max-width: 500px;
+}
+.new-build-btn {
+  padding: 18px 28px; background: var(--red); color: white;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  border: 2px solid var(--black); cursor: pointer;
+  transition: background 0.15s;
+  display: flex; align-items: center; gap: 10px;
+}
+.new-build-btn:hover { background: var(--red-dark); }
+.new-build-btn .plus {
+  width: 22px; height: 22px; background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 300;
+}
+
+/* STAT GRID */
+.stat-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 2px solid var(--black); background: white;
+  margin-bottom: 24px;
+}
+.stat-cell {
+  padding: 20px 22px;
+  border-right: 2px solid var(--black);
+}
+.stat-cell:last-child { border-right: 0; }
+.stat-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--muted); margin-bottom: 10px;
+}
+.stat-val {
+  font-size: 34px; font-weight: 900; letter-spacing: -0.04em;
+  line-height: 1;
+}
+.stat-val span { font-size: 18px; color: #aaa; font-weight: 400; }
+.stat-delta {
+  font-size: 11px; font-weight: 600; color: var(--red); margin-top: 4px;
+}
+
+/* TABLE BLOCK */
+.table-block {
+  background: white; border: 2px solid var(--black); margin-bottom: 24px;
+}
+.table-header {
+  background: var(--black); padding: 0;
+  display: grid; align-items: center;
+}
+.table-header-inner {
+  display: flex; align-items: center;
+  padding: 13px 20px; gap: 16px;
+}
+.table-header-inner h2 {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.12em; color: white;
+}
+.table-header-inner .count {
+  font-size: 10px; color: #666; font-weight: 500;
+}
+.table-header-inner .view-all {
+  margin-left: auto; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em; color: #666;
+  cursor: pointer; transition: color 0.15s;
+}
+.table-header-inner .view-all:hover { color: var(--red); }
+
+.col-heads {
+  display: grid;
+  padding: 10px 20px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--muted);
+  border-bottom: 1px solid var(--black);
+  background: var(--panel-bg);
+}
+.col-heads.builds { grid-template-columns: 56px 1fr 120px 130px 140px 90px; }
+.col-heads.clients { grid-template-columns: 56px 1fr 100px 1fr 100px; }
+
+.trow {
+  display: grid; align-items: center;
+  padding: 15px 20px; border-bottom: 1px solid #E8E5DE;
+  transition: background 0.1s; cursor: pointer;
+  font-size: 13px;
+}
+.trow:last-child { border-bottom: 0; }
+.trow:hover { background: #FAF8F5; }
+.trow.builds { grid-template-columns: 56px 1fr 120px 130px 140px 90px; }
+.trow.clients { grid-template-columns: 56px 1fr 100px 1fr 100px; }
+.trow .idx {
+  font-size: 12px; font-weight: 700; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.trow .name { font-weight: 600; letter-spacing: -0.01em; }
+.trow .sub {
+  display: block; font-size: 11px; color: var(--muted);
+  font-weight: 400; margin-top: 2px;
+}
+.trow .theme {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--muted);
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 9px; border: 2px solid var(--black);
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.badge.success { background: var(--black); color: white; border-color: var(--black); }
+.badge.partial { background: white; color: var(--black); }
+.badge.inprogress { background: var(--red); color: white; border-color: var(--red); }
+
+.trow .time {
+  font-size: 11px; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.trow .action {
+  text-align: right; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--red);
+}
+.trow .action::after { content: " →"; }
+
+/* ================================================================ */
+/* SCREEN 2: NEW BUILD MODAL                                          */
+/* ================================================================ */
+.modal-overlay {
+  position: absolute; inset: 0;
+  background: rgba(25, 25, 25, 0.75);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 50; padding: 40px;
+}
+.modal {
+  background: white; border: 2px solid var(--black);
+  width: 100%; max-width: 760px;
+  position: relative;
+}
+.modal-head {
+  background: var(--black); padding: 16px 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.modal-head .pretitle {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--red);
+}
+.modal-head h2 {
+  font-size: 13px; font-weight: 700; color: white;
+  letter-spacing: -0.01em;
+}
+.modal-head .close {
+  margin-left: auto; width: 28px; height: 28px;
+  border: 1px solid #444; color: #888;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px;
+}
+.modal-body { padding: 28px 28px 32px; }
+.modal-body .sub {
+  font-size: 13px; color: var(--muted); margin-bottom: 24px;
+  max-width: 540px; line-height: 1.5;
+}
+.modal-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0; border: 2px solid var(--black);
+}
+.modal-card {
+  padding: 28px 24px;
+  border-right: 2px solid var(--black);
+  cursor: pointer; transition: background 0.15s;
+  display: flex; flex-direction: column;
+  gap: 0;
+}
+.modal-card:last-child { border-right: 0; }
+.modal-card:hover { background: var(--paper); }
+.modal-card:hover .card-select { background: var(--red); color: white; border-color: var(--red); }
+.card-num {
+  width: 36px; height: 36px; background: var(--black); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; margin-bottom: 18px;
+}
+.card-num.featured { background: var(--red); }
+.card-type {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--red); margin-bottom: 8px;
+}
+.card-title {
+  font-size: 20px; font-weight: 800; letter-spacing: -0.025em;
+  line-height: 1.1; margin-bottom: 12px;
+}
+.card-desc {
+  font-size: 12px; color: var(--muted); line-height: 1.5;
+  flex: 1; margin-bottom: 20px;
+}
+.card-select {
+  align-self: flex-start;
+  padding: 9px 16px; background: white; border: 2px solid var(--black);
+  font-family: inherit; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer;
+  transition: all 0.15s;
+}
+
+/* ================================================================ */
+/* SCREEN 3: BUILD WIZARD — THEME STEP                               */
+/* ================================================================ */
+.wizard-body {
+  padding: 28px 32px;
+}
+.wizard-topbar {
+  display: flex; align-items: center; padding: 10px 0;
+  margin-bottom: 24px; border-bottom: 2px solid var(--black);
+}
+.wizard-context {
+  display: flex; align-items: center; gap: 16px;
+}
+.wizard-context .type-badge {
+  padding: 5px 12px; background: var(--red); color: white;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; border: 2px solid var(--black);
+}
+.wizard-context .client-name {
+  font-size: 13px; font-weight: 600; letter-spacing: -0.01em;
+}
+.wizard-context .client-name span { color: var(--muted); font-weight: 400; }
+.wizard-actions { margin-left: auto; display: flex; gap: 0; }
+.wizard-btn {
+  padding: 8px 16px; background: white; border: 2px solid var(--black);
+  font-family: inherit; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer;
+  margin-left: -2px;
+}
+.wizard-btn.danger { color: var(--red); }
+
+.wizard-grid {
+  display: grid; grid-template-columns: 230px 1fr;
+  gap: 0; border: 2px solid var(--black); background: white;
+}
+
+/* STEPPER SIDEBAR */
+.w-stepper {
+  border-right: 2px solid var(--black);
+}
+.w-stepper-head {
+  background: var(--black); color: white; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.w-step {
+  display: flex; align-items: center; padding: 14px 16px;
+  border-bottom: 1px solid var(--black); cursor: pointer;
+  transition: background 0.1s;
+}
+.w-step:last-child { border-bottom: 0; }
+.w-step:hover:not(.active):not(.done) { background: #FAF8F5; }
+.w-step.done { background: white; }
+.w-step.active { background: var(--red-light); border-left: 3px solid var(--red); }
+.w-step.upcoming { background: white; opacity: 0.6; }
+.step-tile {
+  width: 26px; height: 26px; border: 2px solid var(--black);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; margin-right: 12px;
+  flex-shrink: 0; background: white;
+}
+.w-step.done .step-tile { background: var(--black); color: white; border-color: var(--black); }
+.w-step.active .step-tile { background: var(--red); color: white; border-color: var(--red); }
+.step-info .ttl { font-size: 12px; font-weight: 600; letter-spacing: -0.01em; }
+.step-info .sub {
+  display: block; font-size: 10px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; margin-top: 2px;
+}
+.w-step-foot {
+  padding: 16px; border-top: 2px solid var(--black);
+  background: var(--panel-bg);
+}
+.progress-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+}
+.progress-track {
+  flex: 1; height: 3px; background: #E0DDD6; overflow: hidden;
+}
+.progress-fill { height: 100%; background: var(--red); width: 29%; }
+.progress-pct {
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.progress-eta {
+  font-size: 10px; color: var(--muted); font-weight: 500;
+}
+
+/* STEP CONTENT PANEL */
+.w-panel { padding: 32px 36px; }
+.w-panel-eyebrow {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--red); margin-bottom: 10px;
+}
+.w-panel h2 {
+  font-size: 32px; font-weight: 900; letter-spacing: -0.04em;
+  line-height: 1; margin-bottom: 10px;
+}
+.w-panel .w-desc {
+  font-size: 13px; color: var(--muted); margin-bottom: 32px;
+  max-width: 500px; line-height: 1.5;
+}
+.field-block { margin-bottom: 28px; }
+.field-label {
+  display: block; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  margin-bottom: 8px;
+}
+.field-select {
+  width: 100%; max-width: 460px;
+  padding: 13px 16px; background: white; border: 2px solid var(--black);
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  color: var(--black); display: flex; align-items: center; cursor: pointer;
+}
+.field-select .sel-caret {
+  margin-left: auto; font-size: 12px; color: var(--muted);
+}
+.field-help {
+  font-size: 11px; color: var(--muted); margin-top: 6px;
+}
+.page-chips { display: flex; flex-wrap: wrap; gap: 0; max-width: 600px; }
+.p-chip {
+  padding: 9px 16px; background: white; border: 2px solid var(--black);
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.04em; cursor: pointer; margin: 0 -2px -2px 0;
+  transition: background 0.12s, color 0.12s;
+}
+.p-chip.on { background: var(--black); color: white; }
+
+.w-actions {
+  margin-top: 36px; padding-top: 24px; border-top: 2px solid var(--black);
+  display: flex; align-items: center; gap: 0;
+}
+.save-note {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--muted); margin-right: auto;
+}
+.save-note.saved { color: var(--red); }
+.btn-ghost {
+  padding: 12px 20px; background: white; border: 2px solid var(--black);
+  font-family: inherit; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer;
+  margin-left: -2px;
+}
+.btn-pri {
+  padding: 12px 24px; background: var(--red); color: white;
+  font-family: inherit; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  border: 2px solid var(--black); cursor: pointer; margin-left: -2px;
+  transition: background 0.15s;
+}
+.btn-pri:hover { background: var(--red-dark); }
+
+/* ================================================================ */
+/* SCREEN 4: BUILD DETAIL                                             */
+/* ================================================================ */
+.detail-body { padding: 32px 36px 48px; }
+.detail-head {
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: start;
+  background: white; border: 2px solid var(--black);
+  padding: 28px 32px; margin-bottom: 24px;
+}
+.detail-head .back {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--muted); margin-bottom: 14px;
+  cursor: pointer; display: flex; align-items: center; gap: 6px;
+}
+.detail-head .back:hover { color: var(--red); }
+.detail-head h1 {
+  font-size: 28px; font-weight: 900; letter-spacing: -0.035em;
+  margin-bottom: 10px;
+}
+.detail-meta {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 12px; color: var(--muted);
+}
+.detail-meta .sep { color: var(--border); }
+.detail-actions { display: flex; align-items: flex-end; gap: 0; }
+.rebuild-btn {
+  padding: 14px 22px; background: var(--red); color: white;
+  font-family: inherit; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  border: 2px solid var(--black); cursor: pointer;
+}
+.export-btn {
+  padding: 14px 18px; background: white;
+  font-family: inherit; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  border: 2px solid var(--black); border-left: 0; cursor: pointer;
+}
+
+/* Pages detail grid */
+.pages-block {
+  background: white; border: 2px solid var(--black); margin-bottom: 24px;
+}
+.block-head {
+  background: var(--black); color: white; padding: 13px 20px;
+  display: flex; align-items: center; gap: 14px;
+}
+.block-head h2 {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.block-head .note {
+  font-size: 10px; color: #777; font-weight: 500;
+}
+.pages-col-heads {
+  display: grid; grid-template-columns: 180px 1fr 130px 120px;
+  padding: 10px 20px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--muted);
+  border-bottom: 1px solid var(--black);
+  background: var(--panel-bg);
+}
+.page-row {
+  display: grid; grid-template-columns: 180px 1fr 130px 120px;
+  align-items: center; padding: 16px 20px;
+  border-bottom: 1px solid #E8E5DE;
+  transition: background 0.1s;
+}
+.page-row:last-child { border-bottom: 0; }
+.page-row:hover { background: #FAF8F5; }
+.page-row .page-name {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.wp-link {
+  font-size: 12px; color: var(--red); font-weight: 500;
+  text-decoration: none; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; max-width: 400px; display: block;
+}
+.wp-link:hover { text-decoration: underline; }
+.page-row .push-time {
+  font-size: 11px; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Build info sidebar */
+.detail-grid {
+  display: grid; grid-template-columns: 1fr 280px; gap: 24px;
+}
+.info-panel {
+  background: white; border: 2px solid var(--black); padding: 0;
+}
+.info-panel .block-head { border-bottom: 2px solid var(--black); }
+.info-rows { padding: 4px 0; }
+.info-row {
+  display: flex; align-items: flex-start; padding: 12px 20px;
+  border-bottom: 1px solid #E8E5DE; font-size: 12px;
+}
+.info-row:last-child { border-bottom: 0; }
+.info-row .lbl {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--muted); width: 110px; flex-shrink: 0;
+  padding-top: 1px;
+}
+.info-row .val { font-weight: 500; color: var(--black); }
+</style>
+</head>
+<body>
+
+<!-- SCREEN SWITCHER -->
+<div class="screen-bar">
+  <div class="screen-bar-label">// Screens</div>
+  <div class="screen-tabs">
+    <button class="screen-tab active" data-screen="1">01 — Dashboard</button>
+    <button class="screen-tab" data-screen="2">02 — New Build Modal</button>
+    <button class="screen-tab" data-screen="3">03 — Build Wizard</button>
+    <button class="screen-tab" data-screen="4">04 — Build Detail</button>
+  </div>
+  <div class="screen-note">Energize Website Builder &nbsp;·&nbsp; Brutalist / #bf2e31 / #191919</div>
+</div>
+
+<!-- ================================================== -->
+<!-- SCREEN 1: DASHBOARD                                  -->
+<!-- ================================================== -->
+<div class="screen active" data-screen="1">
+  <div class="app-wrap">
+    <div class="app">
+      <!-- NAV -->
+      <nav class="topnav">
+        <div class="topnav-brand">
+          <div class="brand-mark">E</div>
+          <div>
+            <div class="brand-name">Energize Builder</div>
+            <div class="brand-ver">v2.5.0 / production</div>
+          </div>
+        </div>
+        <div class="topnav-links">
+          <div class="nav-link active">Dashboard</div>
+          <div class="nav-link">Builds</div>
+          <div class="nav-link">Clients</div>
+          <div class="nav-link">Settings</div>
+        </div>
+        <div class="topnav-right">
+          <div class="user-chip">
+            <div class="user-avatar">M</div>
+            <span>Mark W.</span>
+          </div>
+        </div>
+      </nav>
+
+      <div class="dash-body">
+        <!-- BANNER -->
+        <div class="dash-banner">
+          <div>
+            <div class="eyebrow">// Workspace</div>
+            <h1>Dashboard.</h1>
+            <p>Track recent WordPress builds and restart saved client workflows.</p>
+          </div>
+          <button class="new-build-btn">
+            <span class="plus">＋</span> New Build
+          </button>
+        </div>
+
+        <!-- STATS -->
+        <div class="stat-grid">
+          <div class="stat-cell">
+            <div class="stat-label">Builds (30d)</div>
+            <div class="stat-val">42</div>
+            <div class="stat-delta">↑ 8 vs prev month</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-label">Success rate</div>
+            <div class="stat-val">88<span>%</span></div>
+            <div class="stat-delta">↑ 5% improvement</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-label">Saved clients</div>
+            <div class="stat-val">12</div>
+            <div class="stat-delta">↑ 4 this month</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-label">Avg build time</div>
+            <div class="stat-val">12<span>min</span></div>
+            <div class="stat-delta">↓ 3 min faster</div>
+          </div>
+        </div>
+
+        <!-- RECENT BUILDS -->
+        <div class="table-block">
+          <div class="table-header">
+            <div class="table-header-inner">
+              <h2>Recent builds</h2>
+              <span class="count">Last 7 days · 6 builds</span>
+              <span class="view-all">View all builds →</span>
+            </div>
+          </div>
+          <div class="col-heads builds">
+            <div>#</div><div>Client</div><div>Type</div><div>Theme</div><div>Status</div><div></div>
+          </div>
+          <div class="trow builds">
+            <div class="idx">01</div>
+            <div class="name">West Hempstead Pediatric Dentistry<span class="sub">Jun 5, 2026 · 7:00 PM</span></div>
+            <div class="theme">Website</div>
+            <div class="theme">Elevate</div>
+            <div><span class="badge success">Success</span></div>
+            <div class="action">Open</div>
+          </div>
+          <div class="trow builds">
+            <div class="idx">02</div>
+            <div class="name">Marlton Modern Dentistry<span class="sub">Jun 5, 2026 · 5:01 PM</span></div>
+            <div class="theme">Website</div>
+            <div class="theme">Elevate</div>
+            <div><span class="badge success">Success</span></div>
+            <div class="action">Open</div>
+          </div>
+          <div class="trow builds">
+            <div class="idx">03</div>
+            <div class="name">Marlton Modern Dentistry<span class="sub">Jun 5, 2026 · 3:50 AM</span></div>
+            <div class="theme">Website</div>
+            <div class="theme">Elevate</div>
+            <div><span class="badge partial">Partial</span></div>
+            <div class="action">Open</div>
+          </div>
+          <div class="trow builds">
+            <div class="idx">04</div>
+            <div class="name">Sunrise Dental — New Patient<span class="sub">Jun 4, 2026 · 4:15 PM</span></div>
+            <div class="theme">Landing Pg</div>
+            <div class="theme">Std V2</div>
+            <div><span class="badge success">Success</span></div>
+            <div class="action">Open</div>
+          </div>
+          <div class="trow builds">
+            <div class="idx">05</div>
+            <div class="name">Crownline Dental<span class="sub">Jun 4, 2026 · 2:14 PM</span></div>
+            <div class="theme">Migrate</div>
+            <div class="theme">Lux</div>
+            <div><span class="badge success">Success</span></div>
+            <div class="action">Open</div>
+          </div>
+          <div class="trow builds">
+            <div class="idx">06</div>
+            <div class="name">Toothology<span class="sub">Jun 3, 2026 · 11:33 AM</span></div>
+            <div class="theme">Website</div>
+            <div class="theme">Lux</div>
+            <div><span class="badge partial">Partial</span></div>
+            <div class="action">Open</div>
+          </div>
+        </div>
+
+        <!-- SAVED CLIENTS -->
+        <div class="table-block">
+          <div class="table-header">
+            <div class="table-header-inner">
+              <h2>Saved clients</h2>
+              <span class="count">12 active workspaces</span>
+              <span class="view-all">All clients →</span>
+            </div>
+          </div>
+          <div class="col-heads clients">
+            <div>#</div><div>Practice</div><div>Theme</div><div>WP Target</div><div></div>
+          </div>
+          <div class="trow clients">
+            <div class="idx">01</div>
+            <div class="name">West Hempstead Pediatric Dentistry</div>
+            <div class="theme">Elevate</div>
+            <div class="sub" style="font-size:11px;">westhempsteadp.wpenginepowered.com</div>
+            <div class="action">Rebuild</div>
+          </div>
+          <div class="trow clients">
+            <div class="idx">02</div>
+            <div class="name">Marlton Modern Dentistry</div>
+            <div class="theme">Elevate</div>
+            <div class="sub" style="font-size:11px;">marltonmodernd.wpenginepowered.com</div>
+            <div class="action">Rebuild</div>
+          </div>
+          <div class="trow clients">
+            <div class="idx">03</div>
+            <div class="name">Crownline Dental</div>
+            <div class="theme">Lux</div>
+            <div class="sub" style="font-size:11px;">crownlinedental.wpenginepowered.com</div>
+            <div class="action">Rebuild</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================== -->
+<!-- SCREEN 2: NEW BUILD MODAL                           -->
+<!-- ================================================== -->
+<div class="screen" data-screen="2">
+  <div class="app-wrap">
+    <div class="app" style="position:relative;">
+      <!-- NAV (dimmed) -->
+      <nav class="topnav" style="opacity:0.4;pointer-events:none;">
+        <div class="topnav-brand">
+          <div class="brand-mark">E</div>
+          <div>
+            <div class="brand-name">Energize Builder</div>
+            <div class="brand-ver">v2.5.0 / production</div>
+          </div>
+        </div>
+        <div class="topnav-links">
+          <div class="nav-link active">Dashboard</div>
+          <div class="nav-link">Builds</div>
+          <div class="nav-link">Clients</div>
+          <div class="nav-link">Settings</div>
+        </div>
+      </nav>
+
+      <!-- BG (dimmed) -->
+      <div class="dash-body" style="opacity:0.25;pointer-events:none;">
+        <div class="dash-banner">
+          <div>
+            <div class="eyebrow">// Workspace</div>
+            <h1>Dashboard.</h1>
+            <p>Track recent WordPress builds and restart saved client workflows.</p>
+          </div>
+          <button class="new-build-btn"><span class="plus">＋</span> New Build</button>
+        </div>
+        <div class="stat-grid" style="margin-bottom:0;">
+          <div class="stat-cell"><div class="stat-label">Builds (30d)</div><div class="stat-val">42</div></div>
+          <div class="stat-cell"><div class="stat-label">Success rate</div><div class="stat-val">88<span>%</span></div></div>
+          <div class="stat-cell"><div class="stat-label">Saved clients</div><div class="stat-val">12</div></div>
+          <div class="stat-cell"><div class="stat-label">Avg build time</div><div class="stat-val">12<span>min</span></div></div>
+        </div>
+      </div>
+
+      <!-- MODAL OVERLAY -->
+      <div class="modal-overlay">
+        <div class="modal">
+          <div class="modal-head">
+            <div>
+              <div class="pretitle">// New build</div>
+              <h2>Select build type</h2>
+            </div>
+            <div class="close">✕</div>
+          </div>
+          <div class="modal-body">
+            <p class="sub">Choose what you are building. Each path walks you through the steps specific to that type.</p>
+            <div class="modal-cards">
+
+              <div class="modal-card">
+                <div class="card-num">LP</div>
+                <div class="card-type">Google Ads</div>
+                <div class="card-title">Landing Page Build</div>
+                <p class="card-desc">Build one or more Google Ads landing pages for a client. Select templates, upload your structured content JSON, set colors, and push drafts to WordPress.</p>
+                <button class="card-select">Select →</button>
+              </div>
+
+              <div class="modal-card">
+                <div class="card-num featured">MG</div>
+                <div class="card-type">Migration</div>
+                <div class="card-title">Migrate a Website</div>
+                <p class="card-desc">Migrate a client from an existing site (Duda or other) to a new WordPress theme on WP Engine. Starts with a Firecrawl source crawl.</p>
+                <button class="card-select">Select →</button>
+              </div>
+
+              <div class="modal-card">
+                <div class="card-num">NW</div>
+                <div class="card-type">New build</div>
+                <div class="card-title">New Website Build</div>
+                <p class="card-desc">Build a brand new dental practice website from scratch. No existing site to crawl — goes straight to theme and content setup.</p>
+                <button class="card-select">Select →</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================== -->
+<!-- SCREEN 3: BUILD WIZARD — THEME STEP                 -->
+<!-- ================================================== -->
+<div class="screen" data-screen="3">
+  <div class="app-wrap">
+    <div class="app">
+      <nav class="topnav">
+        <div class="topnav-brand">
+          <div class="brand-mark">E</div>
+          <div>
+            <div class="brand-name">Energize Builder</div>
+            <div class="brand-ver">new build</div>
+          </div>
+        </div>
+        <div class="topnav-links">
+          <div class="nav-link">← Dashboard</div>
+        </div>
+        <div class="topnav-right">
+          <div class="user-chip">
+            <div class="user-avatar">M</div>
+            <span>Mark W.</span>
+          </div>
+        </div>
+      </nav>
+
+      <div class="wizard-body">
+        <div class="wizard-topbar">
+          <div class="wizard-context">
+            <span class="type-badge">New Website</span>
+            <span class="client-name">Untitled client <span>— Elevate theme</span></span>
+          </div>
+          <div class="wizard-actions">
+            <button class="wizard-btn">Save progress</button>
+            <button class="wizard-btn danger">Cancel build</button>
+          </div>
+        </div>
+
+        <div class="wizard-grid">
+          <!-- STEPPER -->
+          <div class="w-stepper">
+            <div class="w-stepper-head">// Build Steps</div>
+            <div class="w-step done">
+              <div class="step-tile">✓</div>
+              <div class="step-info"><div class="ttl">Crawl</div><span class="sub">Source pages</span></div>
+            </div>
+            <div class="w-step active">
+              <div class="step-tile">2</div>
+              <div class="step-info"><div class="ttl">Theme</div><span class="sub">Choose template</span></div>
+            </div>
+            <div class="w-step upcoming">
+              <div class="step-tile">3</div>
+              <div class="step-info"><div class="ttl">Practice info</div><span class="sub">Client identity</span></div>
+            </div>
+            <div class="w-step upcoming">
+              <div class="step-tile">4</div>
+              <div class="step-info"><div class="ttl">Brand kit</div><span class="sub">Colors &amp; assets</span></div>
+            </div>
+            <div class="w-step upcoming">
+              <div class="step-tile">5</div>
+              <div class="step-info"><div class="ttl">WP Target</div><span class="sub">Destination</span></div>
+            </div>
+            <div class="w-step upcoming">
+              <div class="step-tile">6</div>
+              <div class="step-info"><div class="ttl">Content</div><span class="sub">Markdown source</span></div>
+            </div>
+            <div class="w-step upcoming">
+              <div class="step-tile">7</div>
+              <div class="step-info"><div class="ttl">Review</div><span class="sub">Final check</span></div>
+            </div>
+            <div class="w-step-foot">
+              <div class="progress-row">
+                <div class="progress-track"><div class="progress-fill"></div></div>
+                <span class="progress-pct">29%</span>
+              </div>
+              <div class="progress-eta">~12 min remaining</div>
+            </div>
+          </div>
+
+          <!-- STEP CONTENT -->
+          <div class="w-panel">
+            <div class="w-panel-eyebrow">// Step 02 of 07</div>
+            <h2>Theme.</h2>
+            <p class="w-desc">Choose the Elementor theme for this build and confirm which pages will be produced.</p>
+
+            <div class="field-block">
+              <label class="field-label">Elementor theme</label>
+              <div class="field-select">
+                Elevate
+                <span class="sel-caret">▼</span>
+              </div>
+              <p class="field-help">Lux and Summit are pending port from the legacy system.</p>
+            </div>
+
+            <div class="field-block">
+              <label class="field-label">Pages to produce</label>
+              <div class="page-chips">
+                <span class="p-chip on">Homepage</span>
+                <span class="p-chip on">About</span>
+                <span class="p-chip on">Service Page</span>
+                <span class="p-chip on">First Visit</span>
+                <span class="p-chip on">Amenities</span>
+                <span class="p-chip">Insurance &amp; Financing</span>
+                <span class="p-chip on">Contact</span>
+                <span class="p-chip on">Thank You</span>
+              </div>
+              <p class="field-help" style="margin-top:10px;">Click to toggle pages on or off for this build.</p>
+            </div>
+
+            <div class="w-actions">
+              <div class="save-note">Unsaved — click Save progress to preserve</div>
+              <button class="btn-ghost">← Back</button>
+              <button class="btn-pri">Continue →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================== -->
+<!-- SCREEN 4: BUILD DETAIL                              -->
+<!-- ================================================== -->
+<div class="screen" data-screen="4">
+  <div class="app-wrap">
+    <div class="app">
+      <nav class="topnav">
+        <div class="topnav-brand">
+          <div class="brand-mark">E</div>
+          <div>
+            <div class="brand-name">Energize Builder</div>
+            <div class="brand-ver">build detail</div>
+          </div>
+        </div>
+        <div class="topnav-links">
+          <div class="nav-link active">Builds</div>
+          <div class="nav-link">Dashboard</div>
+          <div class="nav-link">Clients</div>
+          <div class="nav-link">Settings</div>
+        </div>
+        <div class="topnav-right">
+          <div class="user-chip">
+            <div class="user-avatar">M</div>
+            <span>Mark W.</span>
+          </div>
+        </div>
+      </nav>
+
+      <div class="detail-body">
+        <!-- HEADER -->
+        <div class="detail-head">
+          <div>
+            <div class="back">← All builds</div>
+            <h1>West Hempstead Pediatric Dentistry</h1>
+            <div class="detail-meta">
+              <span class="badge success">Success</span>
+              <span class="sep">·</span>
+              <span>Website build</span>
+              <span class="sep">·</span>
+              <span>Elevate theme</span>
+              <span class="sep">·</span>
+              <span>Jun 5, 2026 at 7:00 PM</span>
+              <span class="sep">·</span>
+              <span>Build ID: bld_a7f2c</span>
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button class="rebuild-btn">↻ Rebuild</button>
+            <button class="export-btn">↓ Export JSON</button>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <!-- PAGES TABLE -->
+          <div>
+            <div class="pages-block">
+              <div class="block-head">
+                <h2>Pages pushed</h2>
+                <span class="note">7 of 7 succeeded · Click WP link to open draft in WordPress</span>
+              </div>
+              <div class="pages-col-heads">
+                <div>Page</div>
+                <div>WordPress Draft Link</div>
+                <div>Status</div>
+                <div>Pushed at</div>
+              </div>
+              <div class="page-row">
+                <div class="page-name">Homepage</div>
+                <a class="wp-link" href="#">westhempsteadp.wpenginepowered.com/wp-admin/post.php?post=12</a>
+                <div><span class="badge success">Pushed</span></div>
+                <div class="push-time">7:01:04 PM</div>
+              </div>
+              <div class="page-row">
+                <div class="page-name">About</div>
+                <a class="wp-link" href="#">westhempsteadp.wpenginepowered.com/wp-admin/post.php?post=14</a>
+                <div><span class="badge success">Pushed</span></div>
+                <div class="push-time">7:01:22 PM</div>
+              </div>
+              <div class="page-row">
+                <div class="page-name">Service Page</div>
+                <a class="wp-link" href="#">westhempsteadp.wpenginepowered.com/wp-admin/post.php?post=16</a>
+                <div><span class="badge success">Pushed</span></div>
+                <div class="push-time">7:01:38 PM</div>
+              </div>
+              <div class="page-row">
+                <div class="page-name">First Visit</div>
+                <a class="wp-link" href="#">westhempsteadp.wpenginepowered.com/wp-admin/post.php?post=18</a>
+                <div><span class="badge success">Pushed</span></div>
+                <div class="push-time">7:01:51 PM</div>
+              </div>
+              <div class="page-row">
+                <div class="page-name">Amenities</div>
+                <a class="wp-link" href="#">westhempsteadp.wpenginepowered.com/wp-admin/post.php?post=20</a>
+                <div><span class="badge success">Pushed</span></div>
+                <div class="push-time">7:02:09 PM</div>
+              </div>
+              <div class="page-row">
+                <div class="page-name">Contact</div>
+                <a class="wp-link" href="#">westhempsteadp.wpenginepowered.com/wp-admin/post.php?post=22</a>
+                <div><span class="badge success">Pushed</span></div>
+                <div class="push-time">7:02:24 PM</div>
+              </div>
+              <div class="page-row">
+                <div class="page-name">Thank You</div>
+                <a class="wp-link" href="#">westhempsteadp.wpenginepowered.com/wp-admin/post.php?post=24</a>
+                <div><span class="badge success">Pushed</span></div>
+                <div class="push-time">7:02:41 PM</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUILD INFO SIDEBAR -->
+          <div>
+            <div class="info-panel">
+              <div class="block-head" style="border-bottom:2px solid var(--black);">
+                <h2>Build info</h2>
+              </div>
+              <div class="info-rows">
+                <div class="info-row">
+                  <span class="lbl">Client</span>
+                  <span class="val">West Hempstead Pediatric Dentistry</span>
+                </div>
+                <div class="info-row">
+                  <span class="lbl">Build type</span>
+                  <span class="val">Website build</span>
+                </div>
+                <div class="info-row">
+                  <span class="lbl">Theme</span>
+                  <span class="val">Elevate</span>
+                </div>
+                <div class="info-row">
+                  <span class="lbl">WP Target</span>
+                  <span class="val" style="font-size:11px;word-break:break-all;">westhempsteadp.wpenginepowered.com</span>
+                </div>
+                <div class="info-row">
+                  <span class="lbl">Status</span>
+                  <span class="val"><span class="badge success">Success</span></span>
+                </div>
+                <div class="info-row">
+                  <span class="lbl">Pages</span>
+                  <span class="val">7 of 7 pushed</span>
+                </div>
+                <div class="info-row">
+                  <span class="lbl">Started</span>
+                  <span class="val">Jun 5, 2026 7:00 PM</span>
+                </div>
+                <div class="info-row">
+                  <span class="lbl">Completed</span>
+                  <span class="val">Jun 5, 2026 7:02 PM</span>
+                </div>
+                <div class="info-row">
+                  <span class="lbl">Duration</span>
+                  <span class="val">2 min 41 sec</span>
+                </div>
+                <div class="info-row">
+                  <span class="lbl">Build ID</span>
+                  <span class="val" style="font-size:11px;font-weight:600;">bld_a7f2c</span>
+                </div>
+                <div class="info-row">
+                  <span class="lbl">Run by</span>
+                  <span class="val">Mark W.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.screen-tab');
+  const screens = document.querySelectorAll('.screen');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const id = tab.dataset.screen;
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.screen === id));
+      screens.forEach(s => s.classList.toggle('active', s.dataset.screen === id));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>

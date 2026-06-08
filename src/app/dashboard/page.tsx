@@ -3,12 +3,6 @@ import { Plus, RotateCw } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
@@ -16,143 +10,179 @@ type DeployedPage = {
   page: string;
   wpPageId: number;
   editUrl: string;
-  viewUrl: string;
+  viewUrl?: string;
 };
 
-const STATUS_VARIANT: Record<
-  string,
-  "default" | "secondary" | "destructive" | "outline"
-> = {
-  success: "default",
-  in_progress: "secondary",
-  pending: "outline",
-  partial: "secondary",
-  failed: "destructive",
-};
+function formatDate(value: Date | string | null | undefined) {
+  if (!value) return "Not deployed";
+  return new Date(value).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+function statusVariant(status: string) {
+  if (status === "success") return "default";
+  if (status === "partial" || status === "in_progress") return "secondary";
+  if (status === "failed") return "destructive";
+  return "outline";
+}
 
 export default async function DashboardPage() {
-  const [builds, clients] = await Promise.all([
+  const [builds, clients, buildCount30d, successCount30d] = await Promise.all([
     prisma.build.findMany({
       orderBy: { createdAt: "desc" },
-      take: 25,
+      take: 6,
       include: { client: true },
     }),
-    prisma.client.findMany({ orderBy: { updatedAt: "desc" }, take: 50 }),
+    prisma.client.findMany({ orderBy: { updatedAt: "desc" }, take: 3 }),
+    prisma.build.count({
+      where: {
+        createdAt: {
+          gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        },
+      },
+    }),
+    prisma.build.count({
+      where: {
+        status: "success",
+        createdAt: {
+          gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        },
+      },
+    }),
   ]);
 
+  const successRate =
+    buildCount30d > 0 ? Math.round((successCount30d / buildCount30d) * 100) : 0;
+
   return (
-    <div className="space-y-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="space-y-2">
-          <h1 className="text-[42px] font-bold leading-none tracking-[-0.025em] text-[var(--ink)]">
-            Dashboard
-          </h1>
-          <p className="max-w-2xl text-sm font-medium text-[var(--muted)]">
+    <main className="page-body">
+      <section className="page-banner">
+        <div>
+          <div className="eyebrow">{"// Workspace"}</div>
+          <h1 className="page-title">Dashboard.</h1>
+          <p className="page-copy">
             Track recent WordPress builds and restart saved client workflows.
           </p>
         </div>
-        <Link href="/dashboard/new" className={buttonVariants()}>
+        <Link href="/dashboard/new" className={buttonVariants({ size: "lg" })}>
           <Plus data-icon="inline-start" />
           New Build
         </Link>
-      </div>
+      </section>
 
-      <Card className="shadow-[var(--shadow-lg)]">
-        <CardHeader className="border-b border-[var(--line)] bg-[var(--paper-2)] py-5">
-          <CardTitle>Recent builds</CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          {builds.length === 0 ? (
-            <p className="px-5 py-8 text-sm font-medium text-[var(--muted)]">
-              No builds yet. Start one with New Build.
-            </p>
-          ) : (
-            <ul className="divide-y divide-[var(--line)]">
-              {builds.map((build) => {
-                const pages = (build.pagesDeployed ?? []) as DeployedPage[];
-                return (
-                  <li
-                    key={build.id}
-                    className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-[var(--paper-2)]"
-                  >
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-[var(--ink)]">
-                          {build.client?.name ?? "Unknown client"}
-                        </span>
-                        <Badge variant={STATUS_VARIANT[build.status] ?? "outline"}>
-                          {build.status}
-                        </Badge>
-                        <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
-                          {build.client?.theme}
-                        </span>
-                      </div>
-                      <div className="font-mono text-[11px] font-medium text-[var(--muted)]">
-                        {build.deployedAt
-                          ? new Date(build.deployedAt).toLocaleString()
-                          : new Date(build.createdAt).toLocaleString()}
-                        {pages.length > 0 ? ` · ${pages.length} pages` : ""}
-                      </div>
-                    </div>
-                    {pages.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {pages.map((p) => (
-                          <a
-                            key={p.wpPageId}
-                            href={p.editUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="rounded-[9px] border border-[var(--line)] bg-[var(--card)] px-2.5 py-1 text-xs font-semibold text-[var(--ink-soft)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--primary-deep)]"
-                          >
-                            {p.page}
-                          </a>
-                        ))}
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </CardContent>
-      </Card>
+      <section className="stat-grid" aria-label="Production stats">
+        <div className="stat-cell">
+          <div className="stat-label">Builds (30d)</div>
+          <div className="stat-value">{buildCount30d}</div>
+          <div className="stat-delta">↑ Live from build history</div>
+        </div>
+        <div className="stat-cell">
+          <div className="stat-label">Success rate</div>
+          <div className="stat-value">
+            {successRate}
+            <span>%</span>
+          </div>
+          <div className="stat-delta">↑ Successful deploys</div>
+        </div>
+        <div className="stat-cell">
+          <div className="stat-label">Saved clients</div>
+          <div className="stat-value">{clients.length}</div>
+          <div className="stat-delta">↑ Ready for rebuild</div>
+        </div>
+        <div className="stat-cell">
+          <div className="stat-label">Recent builds</div>
+          <div className="stat-value">{builds.length}</div>
+          <div className="stat-delta">↑ Latest activity</div>
+        </div>
+      </section>
 
-      <Card className="shadow-[var(--shadow-lg)]">
-        <CardHeader className="border-b border-[var(--line)] bg-[var(--paper-2)] py-5">
-          <CardTitle>Saved clients</CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          {clients.length === 0 ? (
-            <p className="px-5 py-8 text-sm font-medium text-[var(--muted)]">
-              No saved clients yet. Clients are saved automatically on first
-              deploy so credentials are reusable on rebuild.
-            </p>
-          ) : (
-            <ul className="divide-y divide-[var(--line)]">
-              {clients.map((client) => (
-                <li
-                  key={client.id}
-                  className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-[var(--paper-2)]"
-                >
-                  <div>
-                    <div className="font-semibold text-[var(--ink)]">{client.name}</div>
-                    <div className="font-mono text-[11px] font-medium text-[var(--muted)]">
-                      {client.theme} · {client.wpSiteUrl}
-                    </div>
+      <section className="table-block">
+        <div className="block-head">
+          <h2>Recent builds</h2>
+          <span className="block-note">Last {builds.length} builds</span>
+          <Link href="/dashboard/builds" className="view-all">
+            View all builds →
+          </Link>
+        </div>
+        <div className="grid-head build-grid">
+          <div>#</div>
+          <div>Client</div>
+          <div>Type</div>
+          <div>Theme</div>
+          <div>Status</div>
+          <div />
+        </div>
+        {builds.length === 0 ? (
+          <p className="grid-row">No builds yet. Start one with New Build.</p>
+        ) : (
+          builds.map((build, index) => {
+            const pages = (build.pagesDeployed ?? []) as DeployedPage[];
+            return (
+              <div key={build.id} className="grid-row build-grid">
+                <div className="idx">{String(index + 1).padStart(2, "0")}</div>
+                <div className="min-w-0">
+                  <div className="row-name truncate">
+                    {build.client?.name ?? "Unknown client"}
                   </div>
-                  <Link
-                    href={`/dashboard/new?clientId=${client.id}`}
-                    className={buttonVariants({ variant: "outline", size: "sm" })}
-                  >
-                    <RotateCw data-icon="inline-start" />
-                    Rebuild
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+                  <span className="row-sub">
+                    {formatDate(build.deployedAt ?? build.createdAt)}
+                    {pages.length > 0 ? ` / ${pages.length} pages` : ""}
+                  </span>
+                </div>
+                <div className="row-meta">Website</div>
+                <div className="row-meta">{build.client?.theme ?? "Pending"}</div>
+                <div>
+                  <Badge variant={statusVariant(build.status)}>{build.status}</Badge>
+                </div>
+                <Link href={`/dashboard/builds/${build.id}`} className="row-action">
+                  Open →
+                </Link>
+              </div>
+            );
+          })
+        )}
+      </section>
+
+      <section className="table-block">
+        <div className="block-head">
+          <h2>Saved clients</h2>
+          <span className="block-note">{clients.length} shown</span>
+          <Link href="/dashboard/clients" className="view-all">
+            All clients →
+          </Link>
+        </div>
+        <div className="grid-head client-grid">
+          <div>#</div>
+          <div>Practice</div>
+          <div>Theme</div>
+          <div>WP Target</div>
+          <div />
+        </div>
+        {clients.length === 0 ? (
+          <p className="grid-row">No saved clients yet. Clients appear after first deploy.</p>
+        ) : (
+          clients.map((client, index) => (
+            <div key={client.id} className="grid-row client-grid">
+              <div className="idx">{String(index + 1).padStart(2, "0")}</div>
+              <div className="row-name truncate">{client.name}</div>
+              <div className="row-meta">{client.theme}</div>
+              <div className="row-sub truncate">{client.wpSiteUrl}</div>
+              <Link
+                href={`/dashboard/new?type=new-website&clientId=${client.id}`}
+                className="row-action inline-flex items-center gap-1"
+              >
+                <RotateCw className="size-3" />
+                Rebuild
+              </Link>
+            </div>
+          ))
+        )}
+      </section>
+    </main>
   );
 }

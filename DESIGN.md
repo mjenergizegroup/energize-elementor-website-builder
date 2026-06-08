@@ -1,277 +1,454 @@
-# DESIGN.md - Energize Website Builder
+---
+version: alpha
+name: Energize Website Builder
+description: An internal dental agency production tool built on a brutalist grid
+  system. Warm paper canvas floored at #F0EFEB, ruled everywhere by 2px solid
+  #191919 borders and a single Energize Red accent. No border-radius on
+  interactive elements, no drop shadows anywhere. Typography is Inter across all
+  weights — the hierarchy lives entirely in size, weight, and uppercase tracking
+  rather than color or decoration. The interface reads like precision engineering
+  software: dense, fast, intentional.
 
-A design specification for the Energize Website Builder, an internal app for producing dental
-practice websites. This document defines the product, the design system, the screens, and
-the acceptance criteria. A coding agent should read this before writing or changing UI code,
-and should match the design language exactly.
+colors:
+  red:          "#bf2e31"
+  red-dark:     "#9e2527"
+  red-light:    "#f9ecec"
+  black:        "#191919"
+  canvas:       "#F0EFEB"
+  surface:      "#FFFFFF"
+  panel:        "#F7F6F2"
+  muted:        "#5a5a5a"
+  hairline:     "#D2CFC8"
+  on-red:       "#FFFFFF"
+  on-black:     "#FFFFFF"
 
-The reference implementation of the redesigned UI lives in `energize-build-tool.html`. When
-this document and the HTML disagree, this document wins, but the HTML is the source of truth
-for exact spacing, shadows, and markup structure.
+typography:
+  display:
+    fontFamily: "'Inter', sans-serif"
+    fontSize: 36px
+    fontWeight: 900
+    lineHeight: 1.0
+    letterSpacing: -0.04em
+  heading:
+    fontFamily: "'Inter', sans-serif"
+    fontSize: 32px
+    fontWeight: 900
+    lineHeight: 1.0
+    letterSpacing: -0.04em
+  subheading:
+    fontFamily: "'Inter', sans-serif"
+    fontSize: 20px
+    fontWeight: 800
+    lineHeight: 1.1
+    letterSpacing: -0.025em
+  body:
+    fontFamily: "'Inter', sans-serif"
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: 0
+  body-strong:
+    fontFamily: "'Inter', sans-serif"
+    fontSize: 13px
+    fontWeight: 600
+    lineHeight: 1.5
+    letterSpacing: -0.01em
+  label:
+    fontFamily: "'Inter', sans-serif"
+    fontSize: 10px
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: 0.12em
+    textTransform: uppercase
+  caption:
+    fontFamily: "'Inter', sans-serif"
+    fontSize: 11px
+    fontWeight: 500
+    lineHeight: 1.4
+    letterSpacing: 0
+  mono:
+    fontFamily: "'JetBrains Mono', monospace"
+    fontSize: 11px
+    fontWeight: 400
+    lineHeight: 1.4
+    letterSpacing: 0
+
+rounded:
+  none: 0px
+
+spacing:
+  xs:      4px
+  sm:      8px
+  md:      12px
+  base:    16px
+  lg:      24px
+  xl:      32px
+  2xl:     48px
+  section: 80px
+
+components:
+  button-primary:
+    backgroundColor: "{colors.red}"
+    textColor:       "{colors.on-red}"
+    borderColor:     "{colors.black}"
+    borderWidth:     2px
+    typography:      "{typography.label}"
+    padding:         12px 24px
+    rounded:         "{rounded.none}"
+    hover:           "backgroundColor: {colors.red-dark}"
+
+  button-ghost:
+    backgroundColor: "{colors.surface}"
+    textColor:       "{colors.black}"
+    borderColor:     "{colors.black}"
+    borderWidth:     2px
+    typography:      "{typography.label}"
+    padding:         12px 20px
+    rounded:         "{rounded.none}"
+    hover:           "backgroundColor: {colors.panel}"
+
+  badge-success:
+    backgroundColor: "{colors.black}"
+    textColor:       "{colors.on-black}"
+    borderColor:     "{colors.black}"
+    borderWidth:     2px
+    typography:      "{typography.label}"
+    padding:         3px 9px
+    rounded:         "{rounded.none}"
+
+  badge-partial:
+    backgroundColor: "{colors.surface}"
+    textColor:       "{colors.black}"
+    borderColor:     "{colors.black}"
+    borderWidth:     2px
+    typography:      "{typography.label}"
+    padding:         3px 9px
+    rounded:         "{rounded.none}"
+
+  badge-in-progress:
+    backgroundColor: "{colors.red}"
+    textColor:       "{colors.on-red}"
+    borderColor:     "{colors.red}"
+    borderWidth:     2px
+    typography:      "{typography.label}"
+    padding:         3px 9px
+    rounded:         "{rounded.none}"
+
+  nav-link:
+    backgroundColor: "transparent"
+    textColor:       "#777777"
+    borderRight:     "1px solid #222222"
+    typography:      "{typography.label}"
+    padding:         0 20px
+    height:          52px
+    active-backgroundColor: "{colors.red}"
+    active-textColor:       "{colors.on-red}"
+
+  stat-cell:
+    backgroundColor: "{colors.surface}"
+    borderRight:     "2px solid {colors.black}"
+    padding:         20px 22px
+    labelTypography: "{typography.label}"
+    valueTypography: "{typography.display}"
+    deltaTypography: "{typography.caption}"
+    deltaColor:      "{colors.red}"
+
+  table-row:
+    backgroundColor: "{colors.surface}"
+    typography:      "{typography.body}"
+    padding:         15px 20px
+    borderBottom:    "1px solid {colors.hairline}"
+    hover-backgroundColor: "{colors.panel}"
+
+  step-tile:
+    size:            26px
+    borderWidth:     2px
+    borderColor:     "{colors.black}"
+    typography:      "{typography.label}"
+    done-backgroundColor: "{colors.black}"
+    done-textColor:       "{colors.on-black}"
+    active-backgroundColor: "{colors.red}"
+    active-textColor:       "{colors.on-red}"
+    upcoming-backgroundColor: "{colors.surface}"
+    upcoming-textColor:       "{colors.muted}"
+
+  step-row:
+    padding:         14px 16px
+    borderBottom:    "1px solid {colors.black}"
+    active-backgroundColor:  "{colors.red-light}"
+    active-borderLeft:       "3px solid {colors.red}"
+    done-backgroundColor:    "{colors.surface}"
+    upcoming-opacity:        0.6
+
+  page-chip:
+    padding:         9px 16px
+    borderWidth:     2px
+    borderColor:     "{colors.black}"
+    typography:      "{typography.label}"
+    off-backgroundColor: "{colors.surface}"
+    off-textColor:       "{colors.black}"
+    on-backgroundColor:  "{colors.black}"
+    on-textColor:        "{colors.on-black}"
+
+  modal:
+    backgroundColor:   "{colors.surface}"
+    borderWidth:       2px
+    borderColor:       "{colors.black}"
+    rounded:           "{rounded.none}"
+    header-backgroundColor: "{colors.black}"
+    header-textColor:       "{colors.on-black}"
+    overlay:           "rgba(25, 25, 25, 0.75)"
+    maxWidth:          760px
+
+  topnav:
+    backgroundColor:   "{colors.black}"
+    height:            52px
+    borderBottom:      "2px solid {colors.black}"
+    brand-mark-color:  "{colors.red}"
+---
+
+## Overview
+
+Energize Website Builder is an internal production tool used by the Energize Group
+web team to build, migrate, and deploy dental practice websites to WordPress on
+WP Engine. The interface needs to feel fast and confident — this is a tool people
+use daily, not a product they demo.
+
+The aesthetic is **brutalist functional**: a warm paper canvas ({colors.canvas})
+ruled by 2px {colors.black} borders everywhere, with {colors.red} (#bf2e31) as
+the sole brand accent. There is no secondary brand color. Red carries every
+primary CTA, active nav state, active step indicator, and the stat deltas. Used
+at that frequency it stays energetic without becoming noise.
+
+Inter is the only typeface. Hierarchy comes entirely from weight (400 to 900) and
+size, with uppercase letter-tracked labels ({typography.label}) doing the
+organizational work that color would do in a softer system.
+
+Zero border-radius on interactive elements. Zero drop shadows anywhere. Depth
+comes from layering {colors.canvas} under {colors.surface} white panels, divided
+by {colors.black} 2px borders. The result is a grid-locked, highly legible
+interface that looks nothing like a generic SaaS dashboard.
+
+**Key Characteristics:**
+- Single accent: {colors.red} carries all primary actions, active states, and brand moments.
+- 2px solid {colors.black} borders on every interactive element and panel boundary.
+- No border-radius on buttons, chips, badges, modals, or table containers.
+- No drop shadows anywhere in the system.
+- All category labels and button text in {typography.label} — 10px, 700 weight, 0.12em tracking, uppercase.
+- Inter 900 weight for display headings at -0.04em tracking — tight, confident, loud.
+- Warm canvas background ({colors.canvas}) with white ({colors.surface}) for cards and panels.
+- Active wizard step uses {colors.red-light} background wash with a 3px red left border.
+- Stat delta values always render in {colors.red} to signal direction and urgency.
 
 ---
 
-## 1. Product overview
+## Colors
 
-The Energize Website Builder turns approved dental practice content into live-ready WordPress sites.
-A producer runs a single client through a six-step wizard, then the tool injects content into
-theme-specific Elementor JSON and pushes to the client's WordPress (WP Engine) target.
+### Brand & Accent
+- **Red** ({colors.red} — #bf2e31): The Energize brand color. Used on all
+  primary buttons, the active nav link, active step tiles, badge-in-progress,
+  the brand mark, and stat delta text. Never used for backgrounds except
+  on CTA buttons and the active nav item.
+- **Red Dark** ({colors.red-dark} — #9e2527): Button hover and pressed state only.
+- **Red Light** ({colors.red-light} — #f9ecec): The active step row background
+  wash in the wizard stepper. Subtle tint — communicates active without
+  competing with the border accent.
 
-There are two top-level surfaces:
+### Surface
+- **Canvas** ({colors.canvas} — #F0EFEB): The page floor. A warm off-white
+  rather than pure white — lower glare, more character. All page backgrounds
+  sit on this.
+- **Surface** ({colors.surface} — #FFFFFF): White. Used for cards, table
+  backgrounds, panels, and modal bodies. Floats one visible step above
+  the canvas because of the 2px border.
+- **Panel** ({colors.panel} — #F7F6F2): Slightly off-white. Used for table
+  column headers, stepper footers, and any secondary surface that sits
+  inside a white card.
 
-1. **Dashboard** - recent builds and saved clients, plus a "New Build" entry point.
-2. **New Build wizard** - a six-step linear flow that collects everything needed for one build.
+### Text
+- **Black** ({colors.black} — #191919): The primary text, border, and
+  button-ghost color. Soft black rather than pure #000 — less harsh on
+  the warm canvas.
+- **Muted** ({colors.muted} — #5a5a5a): Secondary labels, timestamps, helper
+  text, and placeholder values.
 
-The redesign goal is to make a tool that is run many times a day feel fast, legible, and
-trustworthy, not like a default web form. The aesthetic is refined utility: a warm paper
-canvas, an ink-and-teal palette, one confident sans-serif typeface, and a left-rail stepper
-that shows progress.
-
-### Primary user
-An internal website producer at Energize Group. They are technical, repeat the flow constantly,
-and care about speed, clarity, and not losing in-progress work.
-
----
-
-## 2. Design language
-
-### 2.1 Two separate palettes (do not confuse these)
-
-There are two distinct color sets in this app.
-
-**App chrome palette** is the fixed UI of the tool itself. It never changes per client.
-
-**Client brand palette** is data the producer enters on the Brand Kit step. It is stored per
-client and injected into the built site. It must never be hardcoded into the app chrome, and
-the app chrome must never be driven by client values. The Brand Kit fields are inputs, not theme
-variables for this app.
-
-### 2.2 App chrome tokens
-
-Use these as CSS custom properties on `:root`. Values are taken from the reference HTML.
-
-```css
-:root {
-  /* text */
-  --ink:        #15212b;  /* primary text, headings */
-  --ink-soft:   #3c4a55;  /* secondary text, labels */
-  --muted:      #74828c;  /* tertiary text, hints, captions */
-
-  /* lines and surfaces */
-  --line:        #e4e0d8; /* default borders */
-  --line-strong: #d2cdc2; /* hover borders, dashed dropzones */
-  --paper:       #f6f3ec; /* app background */
-  --paper-2:     #fbf9f4; /* inset / muted panel background */
-  --card:        #ffffff; /* cards, panels, inputs */
-
-  /* brand accents (chrome) */
-  --primary:      #1e6091; /* primary actions, active step */
-  --primary-deep: #164a70; /* gradient end, hover */
-  --secondary:    #168aad; /* focus rings, gradient partner */
-  --accent:       #d9a566; /* highlights, client pill dot, CTA in previews */
-  --accent-deep:  #b9863f;
-  --good:         #2f7a55; /* completed steps, autosave tick, success */
-
-  --radius: 16px;          /* cards and panels */
-  /* inputs and buttons use 11px, swatches 12px, chips 9px */
-
-  --shadow:    0 1px 2px rgba(21,33,43,.04), 0 12px 30px -18px rgba(21,33,43,.22);
-  --shadow-lg: 0 2px 4px rgba(21,33,43,.05), 0 28px 60px -28px rgba(21,33,43,.3);
-}
-```
-
-Background atmosphere: layer two soft radial gradients over `--paper` (teal at top right,
-accent at bottom left, both very low opacity) plus a fixed grain overlay at about 3.5 percent
-opacity. See the `body` and `.grain` rules in the reference HTML.
-
-### 2.3 Typography
-
-The entire app is sans-serif. Use one typeface family.
-
-- **Display / UI font:** `Bricolage Grotesque` (Google Fonts), weights 400 to 800.
-- **Mono font:** `IBM Plex Mono`, used only for hex codes and URLs.
-- Do not introduce a serif. Do not use Inter, Roboto, Arial, or system-ui as the primary face.
-
-Type scale (approximate, from the reference):
-
-| Role | Size | Weight | Notes |
-|------|------|--------|-------|
-| Page title (h1) | 42px | 700 | letter-spacing -0.025em |
-| Panel title (h2) | 24px | 700 | letter-spacing -0.02em |
-| Section / group label | 11px | 600 | uppercase, letter-spacing 0.15em, muted |
-| Body / inputs | 14px | 400 to 500 | |
-| Field label | 12.5px | 600 | ink-soft |
-| Caption / hint | 11.5px to 13px | 400 to 500 | muted |
-| Mono (hex, url) | 11px to 13.5px | 500 | IBM Plex Mono |
-
-### 2.4 Spacing and layout
-
-- App max width: `1240px`, centered, with `34px` horizontal page padding.
-- Wizard layout: two columns, `264px` fixed left rail and a fluid right panel, `28px` gap.
-- Cards and panels use `--radius` (16px), `1px` `--line` border, and `--shadow` or `--shadow-lg`.
-- Panels are structured as head, body, foot. Head and foot sit on `--paper-2`, body on `--card`.
-- Below `980px` width, collapse to a single column and make the rail static (not sticky).
-
-### 2.5 Motion
-
-Keep motion subtle and purposeful. Transitions of about 0.18s ease on hover for steps, swatches,
-buttons, and dropzones. Primary buttons lift 1px on hover. The only looping animation allowed is a
-slow pulse on a live status dot if one is present. No scattered micro-animations.
+### Structure
+- **Hairline** ({colors.hairline} — #D2CFC8): Row dividers inside tables and
+  info panels. Lighter than the 2px structural borders — separates rows
+  without competing with the outer panel border.
 
 ---
 
-## 3. Components
+## Typography
 
-All components below exist in the reference HTML. Match markup and styling.
+Font family: Inter (Google Fonts). Full weight range 400–900 is used.
+No fallback to system fonts in production — load Inter explicitly.
 
-### 3.1 Top bar
-Sticky, blurred translucent background over `--paper`, bottom `--line` border. Left: a 34px
-gradient logo mark (primary to secondary) plus the product name "Energize Website Builder" and a small
-uppercase tag. Right: ghost text links (Dashboard, Docs, Cancel) and a 36px circular avatar.
+| Style          | Size  | Weight | Tracking   | Transform | Usage |
+|----------------|-------|--------|------------|-----------|-------|
+| display        | 36px  | 900    | -0.04em    | none      | Page headings, banner H1 |
+| heading        | 32px  | 900    | -0.04em    | none      | Step panel H2 titles |
+| subheading     | 20px  | 800    | -0.025em   | none      | Card H2, modal card titles |
+| body-strong    | 13px  | 600    | -0.01em    | none      | Table names, client names |
+| body           | 13px  | 400    | 0          | none      | Descriptions, helper text |
+| label          | 10px  | 700    | 0.12em     | uppercase | Section headers, buttons, badges, field labels |
+| caption        | 11px  | 500    | 0          | none      | Timestamps, sub-labels, stat deltas |
+| mono           | 11px  | 400    | 0          | none      | Build IDs, technical values |
 
-### 3.2 Page head
-A large h1 plus a muted subline on the left. On the right, a **client pill**: a rounded `--card`
-chip with an accent dot, showing the current client name and theme. The pill persists across all
-wizard steps so the producer always knows which build they are in.
-
-### 3.3 Stepper rail
-A sticky `--card` card containing an uppercase "Build Steps" title and one row per step. Each row
-has a 26px square number badge and a label with a small sub-line describing the step. States:
-
-- **done:** badge is `--good` with a checkmark, connector line below is `--good` at 40 percent.
-- **active:** row has a faint primary gradient background, badge is `--primary` with shadow,
-  label is `--primary-deep`.
-- **default:** muted badge on `--paper`, ink-soft label.
-
-A 2px connector line runs between badges. The rail foot has a gradient progress bar
-(primary to secondary) and a "X% complete" label with a time estimate.
-
-### 3.4 Main panel
-`--shadow-lg` card with three regions:
-
-- **panel-head:** a 42px rounded icon tile (faint primary tint), the step title, and a one-line
-  description.
-- **panel-body:** the step's fields, grouped under uppercase section labels. A section label is
-  text followed by a thin rule that fills the remaining width.
-- **panel-foot:** Back button on the left (ghost style), an autosave indicator in the center
-  ("Saved to [client name]" with a green tick), and the primary forward button on the right.
-
-### 3.5 Form controls
-
-- **Text input / textarea:** `--card`, `1px --line`, 11px radius, 14px text. Focus state:
-  `--secondary` border plus a 3px `rgba(22,138,173,.15)` ring.
-- **Select:** custom caret, same border and focus treatment.
-- **Color swatch (Brand Kit):** a row with a 40px rounded color chip, a uppercase role label, and a
-  monospace hex input. Hover lifts 1px and strengthens the border. Editing the hex updates the chip.
-- **Dropzone (uploads):** dashed `--line-strong` border, `--paper-2` fill, centered upload icon,
-  title, and a size hint. Hover turns the border `--secondary`.
-
-### 3.6 Buttons
-
-- **Primary:** gradient `--primary` to `--primary-deep`, white text, soft primary shadow, lifts on hover.
-- **Ghost:** transparent with a `--line` border and muted text; darkens on hover.
-- Both: 14px weight 600, 11px radius, about 12px by 22px padding.
+### Principles
+Display and heading sizes lean on Inter Black (900) at aggressive negative
+tracking (-0.04em). The tightness reads like compressed engineering notation —
+intentional, not accidental. Body copy stays at regular 13px with zero
+tracking for maximum readability at information density. Labels are
+the organizational workhorse: 10px uppercase with wide positive tracking
+creates clear visual separation between categories and content without
+using color to do it.
 
 ---
 
-## 4. Screens and steps
+## Layout
 
-The wizard is strictly linear with six steps. Each step validates before advancing. In-progress
-state autosaves to the client record (the dashboard shows a "partial" badge for incomplete builds).
+Container max-width: 1440px, centered with `margin: 0 auto`.
+Page padding: 28px top, 32px horizontal on the `.app-wrap`.
+The app shell itself is a single block element with `border: 2px solid {colors.black}`
+that contains the topnav and all page content.
 
-### Step 1 - Theme
-- **Field:** theme select. Options are the seven themes (Harbor, Radiance, Summit, Elevate, Aurora,
-  Lux, Pediatrics Dental). Default shown in screenshots is `elevate`.
-- Below the select, show the page list the theme produces, for example for Elevate:
-  Homepage, About, Service Page, First Visit, Amenities, Insurance & Financing, Contact, Thank You.
-- The page list must come from theme config, not be hardcoded inline.
+### Spacing scale
+Uses the spacing tokens defined in YAML. The most common values in practice:
+- `{spacing.base}` (16px): Default inner padding unit.
+- `{spacing.lg}` (24px): Section gaps and card padding.
+- `{spacing.xl}` (32px): Page body padding, wizard panel padding.
+- `{spacing.2xl}` (48px): Banner and detail view top padding.
 
-### Step 2 - Practice Info
-Fields, in order: Practice name; Slug (hint: "Used as the saved client identifier"); Address;
-Phone and Email (two columns); Hours (textarea); Doctors (repeatable group of Name + Bio with an
-"Add doctor" control). Doctors is an array; support adding and removing entries.
+### Grid patterns
+- **Stat grid**: 4 equal columns, each `border-right: 2px solid {colors.black}`.
+- **Table**: Full-width with named column-template grids. Each table type
+  (builds, clients, pages) has its own `grid-template-columns` defined.
+- **Wizard**: 2-column — 230px fixed stepper sidebar + 1fr content panel,
+  separated by `border-right: 2px solid {colors.black}`.
+- **Build Detail**: 2-column — 1fr pages table + 280px fixed info sidebar.
+- **Dashboard banner**: 2-column — 1fr copy + auto CTA button.
 
-### Step 3 - Brand Kit (fully realized in the reference HTML)
-- **Color Palette** group, swatches in a three-column grid: Primary `#1e6091`, Secondary `#168aad`,
-  Accent `#d9a566`, Text `#1b2a33`, Background `#ffffff`. These default values are examples; they are
-  editable per client and are stored as the client brand palette.
-- **Typography** group: Heading font and Body font selects (two columns). Defaults Poppins and Inter.
-- **Assets** group: Logo dropzone (PNG, JPG, SVG, max 2MB) and Favicon dropzone (PNG or ICO, max 500KB).
-- There is no live site preview on this step. (It was removed by request.)
-
-### Step 4 - WP Target
-- Destination WordPress site for the build. At minimum a site URL field
-  (for example `https://marltonmodernd.wpenginepowered.com`). Include whatever credentials or
-  environment selector the existing backend requires; confirm against the repo before adding fields.
-
-### Step 5 - Content
-- Inject approved markdown content into the selected theme. Provide a way to paste or upload the
-  per-page markdown that the build pipeline consumes.
-
-### Step 6 - Review
-- Read-only summary of all prior steps grouped by section, each with an edit link back to its step.
-- Primary action builds the site. Show progress and a clear success or failure result.
-
-### Dashboard
-- Header with title "Dashboard" and a primary "New Build" button.
-- **Recent builds** card: rows showing client name, a status badge (for example `partial`), theme,
-  and a timestamp.
-- **Saved clients** card: rows showing client name, a "theme · url" subline, and a "Rebuild" action
-  that starts a new build prefilled from the saved client.
+### Whitespace philosophy
+Density over breathing room. Padding is consistent and tight. Borders do
+the separating work — there is no need for large gaps when a 2px line
+already creates a hard edge. Vertical rhythm comes from consistent row
+heights (stat cells at ~70px, table rows at ~48px) rather than variable spacing.
 
 ---
 
-## 5. Decisions already made
+## Elevation
 
-These are locked. Do not relitigate them.
+There are no drop shadows in this design system. None. Ever.
 
-1. Sans-serif only, single family (Bricolage Grotesque). No serif anywhere.
-2. Six-step linear wizard with a left vertical stepper rail, not top tabs.
-3. App chrome palette and client brand palette are strictly separate.
-4. No live site preview on the Brand Kit step.
-5. Warm paper canvas with subtle radial gradients and a grain overlay, not flat white.
-6. Client context (name + theme pill) is visible on every wizard step.
-7. Autosave per client; incomplete builds are marked "partial" on the dashboard.
-8. House style for any generated copy or labels: no em dashes anywhere, no "welcome" or
-   "welcoming" language, benefit-driven and patient-first wording, no fabricated practice data.
+Depth is created through two mechanisms only:
+1. **Canvas vs Surface contrast** — {colors.canvas} (#F0EFEB) as the page
+   floor, {colors.surface} (#FFFFFF) white for cards. The color step is
+   small but the 2px border makes it unmistakable.
+2. **Border weight** — 2px {colors.black} outer borders on panels, 1px
+   {colors.hairline} inner row dividers. The weight difference signals
+   structural hierarchy without shadows.
 
----
-
-## 6. Tech stack and integration notes
-
-The current app runs at `localhost:3001` and appears to be a React single-page app. Confirm the
-existing stack from the repo before scaffolding anything new. Recommended defaults if greenfield:
-
-- React with a component-per-step structure for the wizard.
-- CSS custom properties for the chrome tokens exactly as listed in section 2.2. A utility framework
-  is fine, but the tokens above are the source of truth for color, radius, and shadow.
-- Client and build state held in app state and persisted to whatever store the backend already uses;
-  do not invent a new persistence layer without checking.
-- Build, content injection, and WP push are backend concerns. This document covers the UI; wire the
-  forms to the existing API endpoints rather than reimplementing the pipeline.
-
-Do not add new dependencies, change the backend contract, or rename existing data fields without
-confirming against the current codebase first. Extend the existing patterns.
+Modal overlays use `rgba(25, 25, 25, 0.75)` as the backdrop scrim. This is
+the only transparency in the system.
 
 ---
 
-## 7. Acceptance criteria
+## Components
 
-A change is done when all of the following hold.
+**`button-primary`** — The main action button. Background {colors.red},
+text {colors.on-red}, {typography.label} type, 12px × 24px padding,
+border: 2px solid {colors.black}, zero radius. Hover shifts to {colors.red-dark}.
+Used for: New Build, Continue in wizard, Rebuild, card Select actions.
+Never use more than one primary button per visible panel.
 
-- [ ] The chrome uses the exact tokens in section 2.2 via CSS variables.
-- [ ] All text renders in Bricolage Grotesque; hex codes and URLs render in IBM Plex Mono. No serif.
-- [ ] The wizard shows a left stepper rail with done / active / default states and a working
-      progress bar that reflects the current step.
-- [ ] All six steps exist with the fields listed in section 4, validate before advancing, and
-      support going back without losing entered data.
-- [ ] The client pill shows the current client name and theme on every wizard step.
-- [ ] Brand Kit shows five editable color swatches in a three-column grid, heading and body font
-      selects, and logo and favicon dropzones with the stated file constraints. No live preview.
-- [ ] The Doctors field on Practice Info supports adding and removing multiple entries.
-- [ ] The dashboard lists recent builds with a status badge and timestamp, and saved clients with a
-      "theme · url" subline and a working Rebuild action.
-- [ ] Layout collapses cleanly to a single column below 980px and the rail becomes static.
-- [ ] No client brand value is hardcoded into the app chrome, and no chrome color is driven by a
-      client brand value.
-- [ ] Any user-facing copy follows the house style in section 5, item 8.
+**`button-ghost`** — Secondary action. Background {colors.surface}, text
+{colors.black}, {typography.label}, 12px × 20px padding, border: 2px solid
+{colors.black}. Hover background {colors.panel}. Used for: Back, Save progress,
+Export, Cancel. Ghost buttons can stack edge-to-edge (margin-left: -2px) to
+create a segmented button group with shared borders.
+
+**`badge-success`** — Filled {colors.black} with {colors.on-black} text.
+{typography.label}, 3px × 9px padding, 2px {colors.black} border. Communicates
+a completed, successful build. Solid fill signals done.
+
+**`badge-partial`** — Outlined. Background {colors.surface}, text and border
+{colors.black}. Same padding and type as badge-success. Communicates an incomplete
+or partially-failed build. Outline vs fill is the only difference — no color change.
+
+**`badge-in-progress`** — Filled {colors.red}. Background {colors.red}, text
+{colors.on-red}, border {colors.red}. Communicates an actively running build.
+
+**`nav-link`** — Inside the topnav ({colors.black} bar, 52px tall). Text #777777
+at rest, {typography.label}. `border-right: 1px solid #222222`. Active state:
+background {colors.red}, text {colors.on-red}. No underlines, no hover background
+other than a subtle #222 darkening.
+
+**`stat-cell`** — Inside the 4-column stat grid. Background {colors.surface},
+`border-right: 2px solid {colors.black}`. Label in {typography.label} and
+{colors.muted}. Value in {typography.display} at {colors.black}. Delta line in
+{typography.caption} at {colors.red} with an arrow prefix (↑ / ↓).
+
+**`table-row`** — Grid-based row. Background {colors.surface}, padding 15px 20px,
+`border-bottom: 1px solid {colors.hairline}`. {typography.body-strong} for the
+primary name column. {typography.caption} for timestamps and secondary values.
+Hover: background {colors.panel}. Action column text in {colors.red}, right-aligned,
+{typography.label}, with ` →` appended.
+
+**`step-tile`** — 26px × 26px square. Border: 2px solid {colors.black}.
+Three states: upcoming (background {colors.surface}, text {colors.muted}),
+done (background {colors.black}, text {colors.on-black}, showing ✓),
+active (background {colors.red}, text {colors.on-red}). {typography.label} for
+the number. Never rounded.
+
+**`step-row`** — Full stepper row containing a step-tile and text. Padding 14px 16px,
+`border-bottom: 1px solid {colors.black}`. Active state: `background: {colors.red-light}`,
+`border-left: 3px solid {colors.red}`. Done and upcoming rows: white background,
+full opacity for done, 0.6 opacity for upcoming. Title in {typography.body-strong},
+sub-label in {typography.label} at {colors.muted}.
+
+**`page-chip`** — Toggle chip for page selection. Padding 9px 16px,
+`border: 2px solid {colors.black}`, {typography.label}. Chips stack edge-to-edge
+using `margin: 0 -2px -2px 0` so their borders merge into a grid. Off state:
+background {colors.surface}, text {colors.black}. On state: background {colors.black},
+text {colors.on-black}.
+
+**`modal`** — Centered overlay panel. Background {colors.surface},
+`border: 2px solid {colors.black}`, no border-radius. Max-width 760px.
+Backdrop: `rgba(25, 25, 25, 0.75)`. Header bar: background {colors.black}, text
+{colors.on-black}, {typography.label}. Body padding 28px. Modal card grid is 3-up
+inside a shared `border: 2px solid {colors.black}` wrapper, cards separated by
+`border-right: 2px solid {colors.black}`.
+
+**`topnav`** — Full-width bar, background {colors.black}, height 52px. Left: brand
+mark (26px × 26px {colors.red} square with white E glyph) + product name in
+{typography.body-strong} at {colors.on-black} + version in {typography.caption}
+at #555. Center: nav-link list. Right: user chip (avatar + name).
+
+---
+
+## Responsive Behavior
+
+| Breakpoint | Width      | Key changes |
+|------------|------------|-------------|
+| Desktop    | ≥ 1280px   | Full layout as designed. All columns visible. |
+| Laptop     | 1024–1279px | Stat grid stays 4-up; table columns may truncate text. |
+| Tablet     | 768–1023px | Wizard stepper collapses to top progress bar; tables drop secondary columns. |
+| Mobile     | < 768px    | Not a target use case — this is a desktop production tool. |
+
+This tool is used on desktop only. Mobile responsiveness is not a design priority.
+The interface can scroll horizontally on small screens rather than reflow.
+
+---
+
+## Known Gaps
+
+- Dark mode is not a documented variant. One canvas, one mode.
+- Animation and transition timings are not specified. Hover transitions use
+  `0.15s ease` by convention throughout.
+- Error and empty states are not yet designed.
+- The Landing Page build wizard steps are not yet designed — this is a planned
+  addition with its own step sequence.
+- Form validation states are not specified.
+- The Clients page and Settings page layouts are not yet designed — they follow
+  the same brutalist grid system but their specific column structures are TBD.
