@@ -1,0 +1,33 @@
+{
+  "template": "inv_v1",
+  "description": "Invisalign / Clear Aligners Version 1 - Full content build with 6 callouts, FAQ, and schedule CTA",
+  "slots": {
+    "HERO_HEADING":        {"widget_id": "6439c3e6", "field": "title"},
+    "HERO_DESC":           {"widget_id": "107a2360", "field": "editor"},
+    "SECTION1_DESC":       {"widget_id": "bd48e7a",  "field": "editor"},
+    "SECTION2_DESC":       {"widget_id": "ae2d9fa",  "field": "editor"},
+    "SECTION3_INTRO_DESC": {"widget_id": "9433fd1",  "field": "editor"},
+    "CALLOUT1_TITLE":      {"widget_id": "5ddc24e",  "field": "title"},
+    "CALLOUT1_DESC":       {"widget_id": "35f1030",  "field": "editor"},
+    "CALLOUT2_TITLE":      {"widget_id": "6e4c883",  "field": "title"},
+    "CALLOUT2_DESC":       {"widget_id": "9240903",  "field": "editor"},
+    "CALLOUT3_TITLE":      {"widget_id": "c2b8e5d",  "field": "title"},
+    "CALLOUT3_DESC":       {"widget_id": "ebf5297",  "field": "editor"},
+    "CALLOUT4_TITLE":      {"widget_id": "57e6b64",  "field": "title"},
+    "CALLOUT4_DESC":       {"widget_id": "25891a0",  "field": "editor"},
+    "CALLOUT5_TITLE":      {"widget_id": "bd5c2df",  "field": "title"},
+    "CALLOUT5_DESC":       {"widget_id": "2416853",  "field": "editor"},
+    "CALLOUT6_TITLE":      {"widget_id": "a90cb7f",  "field": "title"},
+    "CALLOUT6_DESC":       {"widget_id": "01760e3",  "field": "editor"},
+    "REVIEWS_TITLE":       {"widget_id": "6c515fb",  "field": "title"},
+    "REVIEWS_SUBTITLE":    {"widget_id": "2127e10",  "field": "editor"},
+    "GHL_REVIEW_URL":      {"widget_id": "592d440",  "field": "review_html"},
+    "FAQ_TITLE":           {"widget_id": "49c55ed",  "field": "title"},
+    "FAQ_ITEMS":           {"widget_id": "6edc947",  "field": "faq_items"},
+    "SECTION6_TITLE":      {"widget_id": "c078db8",  "field": "title"},
+    "SECTION6_DESC":       {"widget_id": "e8a5f5b",  "field": "editor"},
+    "SECTION6_BULLETS":    {"widget_id": "2fb0eb2",  "field": "icon_list_all"},
+    "SECTION7_TITLE":      {"widget_id": "508af81",  "field": "title"},
+    "SECTION7_DESC":       {"widget_id": "ca17eef",  "field": "editor"}
+  }
+}

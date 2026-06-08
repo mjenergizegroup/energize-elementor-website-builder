@@ -1,0 +1,3179 @@
+{
+    "content": [
+        {
+            "id": "38797421",
+            "elType": "container",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "flex_direction": "row",
+                "flex_gap": {
+                    "unit": "px",
+                    "size": 0,
+                    "column": "0",
+                    "row": "0",
+                    "isLinked": true
+                },
+                "flex_align_items": "center",
+                "background_background": "classic",
+                "background_image": {
+                    "url": "",
+                    "id": "",
+                    "size": "",
+                    "alt": "",
+                    "source": "library"
+                },
+                "background_overlay_background": "classic",
+                "background_overlay_image": {
+                    "id": 346,
+                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/stripesbg-brown-1.webp"
+                },
+                "background_overlay_position": "center center",
+                "background_overlay_repeat": "no-repeat",
+                "background_overlay_size": "cover",
+                "background_overlay_opacity": {
+                    "unit": "px",
+                    "size": 0.07,
+                    "sizes": []
+                },
+                "background_overlay_hover_transition": {
+                    "unit": "px",
+                    "size": 0.3,
+                    "sizes": []
+                },
+                "padding": {
+                    "unit": "%",
+                    "top": "3",
+                    "right": "0",
+                    "bottom": "3",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "20",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "40",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "__globals__": {
+                    "background_color": "",
+                    "background_overlay_color": "globals\/colors?id=primary"
+                },
+                "animation": "none",
+                "flex_justify_content": "center",
+                "flex_justify_content_tablet": "center",
+                "background_color": "#132A46",
+                "background_overlay_color": "#3D78C9"
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "7356e1e1",
+                    "elType": "container",
+                    "isInner": true,
+                    "isLocked": false,
+                    "settings": {
+                        "flex_direction": "column",
+                        "content_width": "full",
+                        "width": {
+                            "unit": "%",
+                            "size": "50"
+                        },
+                        "background_overlay_hover_transition": {
+                            "unit": "px",
+                            "size": 0.3,
+                            "sizes": []
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "30",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "animation": "fadeIn",
+                        "flex_gap": {
+                            "column": "0",
+                            "row": "0",
+                            "isLinked": true,
+                            "unit": "px",
+                            "size": 0
+                        }
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "bc1bc08",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "html": "<style>\n\n.implant-cta-section{\nwidth:100%;\nbackground:linear-gradient(180deg,#132a46,#0c2037);\nborder-radius:15px;\npadding:50px 30px;\ntext-align:center;\ncolor:white;\nfont-family:Arial, Helvetica, sans-serif;\n}\n\n.implant-cta-title{\nfont-size:36px;\nfont-weight:700;\nmargin-bottom:10px;\n}\n\n.implant-cta-price{\nfont-size:32px;\nfont-weight:800;\ncolor:#ff8c00;\nmargin-bottom:15px;\n}\n\n.implant-cta-sub{\nfont-size:20px;\nmargin-bottom:25px;\nopacity:.95;\n}\n\n.implant-cta-financing{\nfont-size:30px;\nfont-weight:800;\ncolor:#ff8c00;\nmargin-bottom:10px;\n}\n\n.implant-cta-small{\nfont-size:16px;\nopacity:.85;\nmargin-bottom:10px;\n}\n\n.implant-cta-note{\nfont-size:17px;\nmargin-bottom:30px;\n}\n\n.implant-divider{\nheight:1px;\nbackground:rgba(255,255,255,.2);\nmargin:25px auto 35px;\nmax-width:600px;\n}\n\n.implant-cta-btn a{\ndisplay:inline-block;\nbackground:#f5a623;\ncolor:#fff;\npadding:16px 32px;\nborder-radius:10px;\nfont-weight:700;\ntext-decoration:none;\nletter-spacing:.5px;\ntransition:.25s;\n}\n\n.implant-cta-btn a:hover{\nbackground:#e59418;\ntransform:translateY(-2px);\n}\n\n.implant-cta-btn i{\nmargin-right:8px;\n}\n\n\/* Tablet *\/\n\n@media (max-width:1024px){\n\n.implant-cta-title{\nfont-size:30px;\n}\n\n.implant-cta-price{\nfont-size:26px;\n}\n\n.implant-cta-financing{\nfont-size:26px;\n}\n\n}\n\n\/* Mobile *\/\n\n@media (max-width:640px){\n\n.implant-cta-section{\npadding:35px 20px;\n}\n\n.implant-cta-title{\nfont-size:26px;\n}\n\n.implant-cta-price{\nfont-size:22px;\n}\n\n.implant-cta-financing{\nfont-size:22px;\n}\n\n}\n\n<\/style>\n\n\n<div class=\"implant-cta-section\">\n\n<div class=\"implant-cta-title\">\nAll On 4 Dental Implants\n<\/div>\n\n<div class=\"implant-cta-price\">\nCost $13,495\/Arch*\n<\/div>\n\n<div class=\"implant-cta-sub\">\nAll Inclusive PMMA New Teeth\n<\/div>\n\n<div class=\"implant-cta-financing\">\nAffordable Financing\n<\/div>\n\n<div class=\"implant-cta-note\">\nGet Fixed Permanent Teeth In Just Two Visits\n<\/div>\n\n<div class=\"implant-divider\"><\/div>\n\n<div class=\"implant-cta-btn\">\n<a href=\"https:\/\/api.leadconnectorhq.com\/widget\/form\/Kyz5BF2paUZ6TjWQZRZR\" target=\"_blank\">\nFREE CONSULTATION\n<\/a>\n<\/div>\n\n<\/div>"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "html",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "3132e293",
+                    "elType": "container",
+                    "isInner": true,
+                    "isLocked": false,
+                    "settings": {
+                        "flex_direction": "column",
+                        "content_width": "full",
+                        "width": {
+                            "unit": "%",
+                            "size": "50"
+                        },
+                        "animation": "fadeIn",
+                        "min_height": {
+                            "unit": "px",
+                            "size": 432,
+                            "sizes": []
+                        },
+                        "min_height_tablet": {
+                            "unit": "px",
+                            "size": 462,
+                            "sizes": []
+                        },
+                        "min_height_mobile": {
+                            "unit": "px",
+                            "size": 276,
+                            "sizes": []
+                        },
+                        "flex_gap": {
+                            "column": "0",
+                            "row": "0",
+                            "isLinked": true,
+                            "unit": "px",
+                            "size": 0
+                        },
+                        "background_background": "slideshow",
+                        "background_slideshow_gallery": [
+                            {
+                                "id": 390,
+                                "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2026\/03\/IMG_5495-scaled.jpg"
+                            },
+                            {
+                                "id": 389,
+                                "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2026\/03\/IMG_2251-scaled.jpg"
+                            },
+                            {
+                                "id": 365,
+                                "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/12\/IMG_5491.jpg"
+                            }
+                        ],
+                        "border_radius": {
+                            "unit": "px",
+                            "top": "15",
+                            "right": "15",
+                            "bottom": "15",
+                            "left": "15",
+                            "isLinked": true
+                        }
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "52c51a6",
+            "elType": "container",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "flex_direction": "column",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "0",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "%",
+                    "top": "2",
+                    "right": "0",
+                    "bottom": "4",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "%",
+                    "top": "",
+                    "right": "",
+                    "bottom": "",
+                    "left": "",
+                    "isLinked": true
+                },
+                "padding_mobile": {
+                    "unit": "%",
+                    "top": "",
+                    "right": "",
+                    "bottom": "",
+                    "left": "",
+                    "isLinked": true
+                }
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "b4bcfb9",
+                    "elType": "widget",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "html": "<style>\n\n.implant-pricing-section{\nwidth:100%;\nfont-family: Arial, Helvetica, sans-serif;\n}\n\n.implant-grid{\ndisplay:grid;\ngrid-template-columns:repeat(4,1fr);\ngap:25px;\n}\n\n.implant-card{\nbackground:#fff;\nborder-radius:12px;\nbox-shadow:0 6px 20px rgba(0,0,0,.08);\npadding:25px;\ntext-align:left;\ndisplay:flex;\nflex-direction:column;\nheight:100%;\n}\n\n.implant-title{\nfont-size:18px;\nfont-weight:700;\nmargin-bottom:5px;\n}\n\n.implant-financing{\ncolor:#1e73be;\nfont-size:14px;\nmargin-bottom:15px;\n}\n\n.implant-price{\ncolor:#ff6600;\nfont-size:28px;\nfont-weight:800;\nmargin-bottom:15px;\n}\n\n.implant-img{\nwidth:100%;\ntext-align:center;\nmargin-bottom:20px;\n}\n\n.implant-img img{\nmax-width:100%;\nheight:auto;\n}\n\n.implant-desc{\nfont-size:14px;\nmargin-bottom:10px;\nfont-weight:600;\n}\n\n.implant-list{\npadding-left:18px;\nmargin-bottom:15px;\n}\n\n.implant-list li{\nmargin-bottom:6px;\nfont-size:14px;\n}\n\n.implant-note{\nfont-size:13px;\ncolor:#555;\nmargin-bottom:20px;\n}\n\n.implant-btn{\nmargin-top:auto;\ntext-align:center;\n}\n\n.implant-btn a{\ndisplay:inline-block;\nbackground:#ff9f1c;\ncolor:#fff;\npadding:12px 22px;\nborder-radius:30px;\nfont-weight:700;\ntext-decoration:none;\ntransition:.25s;\n}\n\n.implant-btn a:hover{\nbackground:#e68f18;\n}\n\n.implant-sub{\nfont-size:14px;\nmargin-top:-8px;\nmargin-bottom:10px;\ncolor:#1e73be;\n}\n\n\/* Tablet *\/\n\n@media (max-width:1024px){\n\n.implant-grid{\ngrid-template-columns:repeat(2,1fr);\n}\n\n}\n\n\/* Mobile *\/\n\n@media (max-width:640px){\n\n.implant-grid{\ngrid-template-columns:1fr;\n}\n\n.implant-card{\npadding:20px;\n}\n\n}\n\n<\/style>\n\n\n<div class=\"implant-pricing-section\">\n\n<div class=\"implant-grid\">\n\n\n<!-- CARD 1 -->\n\n<div class=\"implant-card\">\n\n<div class=\"implant-title\">Permanent PMMA Teeth<br>Single Arch (all in)<\/div>\n\n<div class=\"implant-financing\">Financing Available<\/div>\n\n<div class=\"implant-price\">$13,495*<\/div>\n\n<div class=\"implant-img\">\n<img src=\"https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2026\/03\/full-arch-implants.png-1.webp\">\n<\/div>\n\n<div class=\"implant-desc\">The treatment fee includes:<\/div>\n\n<ul class=\"implant-list\">\n<li>Complete Oral Evaluation<\/li>\n<li>Cone-Beam CT Scan<\/li>\n<li>All extractions<\/li>\n<li>4-6 implants per arch<\/li>\n<li>Any needed bone graft<\/li>\n<li>IV Sedation Available to reduce fear & Anxiety<\/li>\n<li><strong>Fixed Milled PMMA Bridge<\/strong><\/li>\n<li>in two visits<\/li>\n<li>Photorealistic 3D visualization of your smile before surgery<\/li>\n<\/ul>\n\n<div class=\"implant-note\">\nPMMA is a high performance material with high strength and good long-term durability.\n<\/div>\n\n<div class=\"implant-btn\">\n<a href=\"https:\/\/api.leadconnectorhq.com\/widget\/form\/Kyz5BF2paUZ6TjWQZRZR\" target=\"_blank\">\nFREE CONSULTATION\n<\/a>\n<\/div>\n\n<\/div>\n\n\n<!-- CARD 2 -->\n\n<div class=\"implant-card\">\n\n<div class=\"implant-title\">Permanent Zirconia Teeth<br>Single Arch (all in)<\/div>\n\n<div class=\"implant-financing\">Financing Available<\/div>\n\n<div class=\"implant-price\">$16,995<\/div>\n\n<div class=\"implant-sub\">Double Arch $33,995<\/div>\n\n<div class=\"implant-img\">\n<img src=\"https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2026\/03\/All-on-4-Zirconia-Single-Arch.png-1.webp\">\n<\/div>\n\n<div class=\"implant-desc\">The treatment fee includes:<\/div>\n\n<ul class=\"implant-list\">\n<li>Complete Oral Evaluation<\/li>\n<li>Cone-Beam CT Scan<\/li>\n<li>All extractions<\/li>\n<li>4-6 implants per arch<\/li>\n<li>Any needed bone graft<\/li>\n<li>IV Sedation Available to reduce fear & Anxiety<\/li>\n<li><strong>Fixed Permanent Zirconia New Teeth<\/strong><\/li>\n<li>Photorealistic 3D visualization of your smile before surgery<\/li>\n<\/ul>\n\n<div class=\"implant-note\">\nZirconia is the strongest and most durable material for dental bridges.\n<\/div>\n\n<div class=\"implant-btn\">\n<a href=\"https:\/\/api.leadconnectorhq.com\/widget\/form\/Kyz5BF2paUZ6TjWQZRZR\" target=\"_blank\">\nFREE CONSULTATION\n<\/a>\n<\/div>\n\n<\/div>\n\n\n<!-- CARD 3 -->\n\n<div class=\"implant-card\">\n\n<div class=\"implant-title\">Permanent Zirconia Teeth<br>Double Arch (all in)<\/div>\n\n<div class=\"implant-financing\">Financing Available<\/div>\n\n<div class=\"implant-price\">$33,995<\/div>\n\n<div class=\"implant-img\">\n<img src=\"https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2026\/03\/All-On-4-Zirconia-Double-Arch-300x228.png.webp\">\n<\/div>\n\n<div class=\"implant-desc\">The treatment fee includes:<\/div>\n\n<ul class=\"implant-list\">\n<li>Complete Oral Evaluation<\/li>\n<li>Cone-Beam CT Scan<\/li>\n<li>All extractions<\/li>\n<li>4-6 implants per arch<\/li>\n<li>Any needed bone graft<\/li>\n<li>IV Sedation Available to reduce fear & Anxiety<\/li>\n<li><strong>Fixed Permanent Double Zirconia Teeth<\/strong><\/li>\n<li>Photorealistic 3D visualization of your smile before surgery<\/li>\n<\/ul>\n\n<div class=\"implant-btn\">\n<a href=\"https:\/\/api.leadconnectorhq.com\/widget\/form\/Kyz5BF2paUZ6TjWQZRZR\" target=\"_blank\">\nFREE CONSULTATION\n<\/a>\n<\/div>\n\n<\/div>\n\n\n<!-- CARD 4 -->\n\n<div class=\"implant-card\">\n\n<div class=\"implant-title\">Zygoma Zirconia Permanent Teeth<\/div>\n\n<div class=\"implant-financing\">Financing Available<\/div>\n\n<div class=\"implant-price\">$22,995<\/div>\n\n<div class=\"implant-sub\">Double Arch $39,990<\/div>\n\n<div class=\"implant-img\">\n<img src=\"https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2026\/03\/zygomatic-implants-preview-1.png-1.webp\">\n<\/div>\n\n<div class=\"implant-desc\">The treatment fee includes:<\/div>\n\n<ul class=\"implant-list\">\n<li>Complete Oral Evaluation<\/li>\n<li>Cone-Beam CT Scan<\/li>\n<li>All extractions<\/li>\n<li>Zygomatic Implants to secure arch<\/li>\n<li>Any needed bone graft<\/li>\n<li><strong>Zygoma Highly Specialized Implants<\/strong><\/li>\n<li>Photorealistic 3D visualization of your smile before surgery<\/li>\n<\/ul>\n\n<div class=\"implant-btn\">\n<a href=\"https:\/\/api.leadconnectorhq.com\/widget\/form\/Kyz5BF2paUZ6TjWQZRZR\" target=\"_blank\">\nFREE CONSULTATION\n<\/a>\n<\/div>\n\n<\/div>\n\n\n<\/div>\n<\/div>"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [],
+                    "widgetType": "html",
+                    "editSettings": {
+                        "defaultEditRoute": "content"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "6c1fad40",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "padding": {
+                    "unit": "%",
+                    "top": "4",
+                    "right": "0",
+                    "bottom": "1",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "10",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "10",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "content_position": "middle",
+                "background_background": "classic",
+                "__globals__": {
+                    "background_color": "globals\/colors?id=primary"
+                }
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "571a1129",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 100,
+                        "_inline_size": null,
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "4a959a2",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "title": "Real Patients. Real Smiles. Real Results.",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_family": "Montserrat",
+                                "typography_font_size": {
+                                    "unit": "px",
+                                    "size": 37,
+                                    "sizes": []
+                                },
+                                "typography_font_size_tablet": {
+                                    "unit": "px",
+                                    "size": 42,
+                                    "sizes": []
+                                },
+                                "typography_font_size_mobile": {
+                                    "unit": "px",
+                                    "size": 32,
+                                    "sizes": []
+                                },
+                                "typography_font_weight": "600",
+                                "typography_line_height": {
+                                    "unit": "em",
+                                    "size": 1.2,
+                                    "sizes": []
+                                },
+                                "__globals__": {
+                                    "typography_typography": "",
+                                    "title_color": "globals\/colors?id=c3e5fb3"
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "heading",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        },
+                        {
+                            "id": "521592e",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "editor": "<p data-start=\"463\" data-end=\"565\">Patients who transformed their smile with All-on-4 dental implants.<\/p>",
+                                "align": "center",
+                                "__globals__": {
+                                    "text_color": "globals\/colors?id=c3e5fb3",
+                                    "link_color": "globals\/colors?id=c3e5fb3"
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "text-editor",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "0680ff4",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "structure": "40",
+                "padding": {
+                    "unit": "%",
+                    "top": "1",
+                    "right": "0",
+                    "bottom": "1",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "10",
+                    "right": "10",
+                    "bottom": "10",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "content_position": "middle",
+                "background_background": "classic",
+                "__globals__": {
+                    "background_color": "globals\/colors?id=primary"
+                }
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "1a72371",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 25,
+                        "_inline_size": null,
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "a5a1972",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "id": 352,
+                                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/1b47fe5bfef4280c44caa0536e2b892303d9de2e-2048x2048-2.avif"
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "9ac79e5",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 25,
+                        "_inline_size": null,
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "8c23854",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "id": 353,
+                                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/12e0be9a37f110216a63c19b812ee132d8a3f0f2-2048x2048-1.avif"
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "4e498bb",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 25,
+                        "_inline_size": null,
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "08762ea",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "id": 354,
+                                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/ab9af2b07ba14a9e5b1084404f57395b453f79b6-2048x2048-2.avif"
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "9db6beb",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 25,
+                        "_inline_size": null,
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "319fa53",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "id": 355,
+                                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/2a6376428d82a5d1871dfea8d571dc27b82cf9eb-825x825-1.avif"
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "af6f096",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "structure": "40",
+                "padding": {
+                    "unit": "%",
+                    "top": "1",
+                    "right": "0",
+                    "bottom": "4",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "10",
+                    "right": "10",
+                    "bottom": "20",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "content_position": "middle",
+                "background_background": "classic",
+                "__globals__": {
+                    "background_color": "globals\/colors?id=primary"
+                }
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "5ddf406",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 25,
+                        "_inline_size": null,
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "c3b5fbd",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "id": 374,
+                                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2026\/03\/Bridge_Before-After.jpg",
+                                    "alt": "",
+                                    "source": "library",
+                                    "size": ""
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "7bccec3",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 25,
+                        "_inline_size": null,
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "ce07485",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "id": 376,
+                                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2026\/03\/Upper-Crowns_Before-After-1-angle.jpg",
+                                    "alt": "",
+                                    "source": "library",
+                                    "size": ""
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "c9610af",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 25,
+                        "_inline_size": null,
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "bc06478",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "id": 388,
+                                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2026\/03\/Crowns_Before-After.jpg",
+                                    "alt": "",
+                                    "source": "library",
+                                    "size": ""
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "1cf775a",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 25,
+                        "_inline_size": null,
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "01d16e3",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "id": 384,
+                                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2026\/03\/Full-Mouth-Rehab_Before-After-1.jpg",
+                                    "alt": "",
+                                    "source": "library",
+                                    "size": ""
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "4bbc5913",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "structure": "20",
+                "padding": {
+                    "unit": "%",
+                    "top": "4",
+                    "right": "0",
+                    "bottom": "4",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "40",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "content_position": "middle",
+                "background_background": "classic",
+                "__globals__": {
+                    "background_color": "globals\/colors?id=859c1da"
+                }
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "533e8571",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "background_background": "classic",
+                        "background_position": "center center",
+                        "background_repeat": "no-repeat",
+                        "background_size": "cover",
+                        "_inline_size_tablet": 100,
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "background_image": {
+                            "url": "",
+                            "id": "",
+                            "size": "",
+                            "alt": "",
+                            "source": "library"
+                        },
+                        "border_radius": {
+                            "unit": "px",
+                            "top": "30",
+                            "right": "30",
+                            "bottom": "30",
+                            "left": "30",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInLeft"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "51afd670",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "title": "Dentistry For The Hometown People We Love\u200b",
+                                "__globals__": {
+                                    "title_color": "globals\/colors?id=secondary",
+                                    "typography_typography": "globals\/typography?id=primary"
+                                },
+                                "align": "left"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "heading",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        },
+                        {
+                            "id": "666ab3ef",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "editor": "<p>Pleasant Smiles Dental is your local dental practice in Mt. Pleasant that cares deeply for its community. We provide professional, compassionate dental care, especially through our cleanings, which are more than just polishing; they are a preventative measure to help protect your teeth and overall oral health. Our qualified dental hygienists utilize advanced tools to ensure your cleaning reaches spots that regular brushing and flossing miss. We also take the time to examine your oral health, answer your questions, and recommend home dental care tailored to your needs.<\/p>",
+                                "__globals__": {
+                                    "typography_typography": "",
+                                    "text_color": "globals\/colors?id=text"
+                                },
+                                "typography_line_height": {
+                                    "unit": "em",
+                                    "size": 1.5,
+                                    "sizes": []
+                                },
+                                "typography_word_spacing": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "drop_cap_typography_line_height": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "drop_cap_typography_word_spacing": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "unit": "px",
+                                    "size": 18,
+                                    "sizes": []
+                                },
+                                "typography_font_size_mobile": {
+                                    "unit": "px",
+                                    "size": 14,
+                                    "sizes": []
+                                },
+                                "typography_font_weight": "400",
+                                "text_color": "#000000"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "text-editor",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "560a8746",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "padding": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "30",
+                            "isLinked": false
+                        },
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "757e3e0b",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "id": 336,
+                                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/09\/1cdb8506b39b541dea37007cd149ab02b9bb61b0-3000x2250-1.avif",
+                                    "alt": "",
+                                    "source": "library",
+                                    "size": ""
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "f206a66",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "structure": "20",
+                "padding": {
+                    "unit": "%",
+                    "top": "4",
+                    "right": "0",
+                    "bottom": "4",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "40",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "content_position": "middle"
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "558f926a",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "padding": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "30",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "56f27ee5",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "id": 356,
+                                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/fe7477bfb3a76ba79cd97345a868be35192af351-700x601-1.avif"
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "229388a6",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "background_background": "classic",
+                        "background_position": "center center",
+                        "background_repeat": "no-repeat",
+                        "background_size": "cover",
+                        "_inline_size_tablet": 100,
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "background_image": {
+                            "url": "",
+                            "id": "",
+                            "size": "",
+                            "alt": "",
+                            "source": "library"
+                        },
+                        "border_radius": {
+                            "unit": "px",
+                            "top": "30",
+                            "right": "30",
+                            "bottom": "30",
+                            "left": "30",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInLeft"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "2cd75ebd",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "title": "Full Arch Dental Implants",
+                                "__globals__": {
+                                    "title_color": "globals\/colors?id=secondary",
+                                    "typography_typography": "globals\/typography?id=primary"
+                                },
+                                "align": "left"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "heading",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        },
+                        {
+                            "id": "1d1b2eec",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "editor": "<div class=\"prose max-w-none prose-strong:text-primary prose-headings:text-primary-heading prose-p:text-primary prose-a:text-primary prose-li:marker:text-primary prose-h1:text-3xl prose-h1:tracking-wide prose-h1:font-[800] md:prose-h1:text-3xl lg:prose-h1:text-4xl lg:prose-h1:tracking-wider xl:prose-h1:text-5xl prose-h2:text-2xl prose-h2:font-bold md:prose-h2:text-2xl lg:prose-h2:text-3xl xl:prose-h2:text-4xl prose-h3:text-xl prose-h3:font-bold md:prose-h3:text-xl lg:prose-h3:text-2xl xl:prose-h3:text-3xl prose-h4:text-lg prose-h4:font-bold md:prose-h4:text-lg lg:prose-h4:text-xl xl:prose-h4:text-2xl prose-p:opacity-85\"><div class=\"prose max-w-none prose-strong:text-primary prose-headings:text-primary-heading prose-p:text-primary prose-a:text-primary prose-li:marker:text-primary prose-h1:text-3xl prose-h1:tracking-wide prose-h1:font-[800] md:prose-h1:text-3xl lg:prose-h1:text-4xl lg:prose-h1:tracking-wider xl:prose-h1:text-5xl prose-h2:text-2xl prose-h2:font-bold md:prose-h2:text-2xl lg:prose-h2:text-3xl xl:prose-h2:text-4xl prose-h3:text-xl prose-h3:font-bold md:prose-h3:text-xl lg:prose-h3:text-2xl xl:prose-h3:text-3xl prose-h4:text-lg prose-h4:font-bold md:prose-h4:text-lg lg:prose-h4:text-xl xl:prose-h4:text-2xl prose-p:opacity-85\"><p class=\"my-4\">Full Arch implants have transformed countless patients' lives by providing a permanent, stable alternative to removable dentures. The implants are anchored directly into the jawbone, preventing bone loss and maintaining facial structure while delivering a natural-looking smile and restored chewing function. Many patients can receive their new teeth in just one day, dramatically reducing treatment time compared to conventional implant approaches.<\/p><\/div><ul class=\"mt-4 space-y-2 list-none list-inside\"><li class=\"flex gap-x-2 items-start text-primary\"><div>Supports an entire arch of teeth with just four implants, reducing surgical complexity and recovery time<\/div><\/li><li class=\"flex gap-x-2 items-start text-primary\"><div>Prevents jawbone deterioration that typically occurs with tooth loss or traditional dentures<\/div><\/li><li class=\"flex gap-x-2 items-start text-primary\"><div>Restores nearly 100% of natural chewing ability, allowing patients to enjoy all their favorite foods<\/div><\/li><li class=\"flex gap-x-2 items-start text-primary\"><div>Provides a permanent, non-removable solution that looks, feels, and functions like natural teeth<\/div><\/li><li class=\"flex gap-x-2 items-start text-primary\"><div>Can often be completed in a single day, with immediate loading of a provisional prosthesis<\/div><\/li><\/ul><\/div>",
+                                "__globals__": {
+                                    "typography_typography": "",
+                                    "text_color": "globals\/colors?id=text"
+                                },
+                                "typography_line_height": {
+                                    "unit": "em",
+                                    "size": 1.5,
+                                    "sizes": []
+                                },
+                                "typography_word_spacing": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "drop_cap_typography_line_height": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "drop_cap_typography_word_spacing": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "unit": "px",
+                                    "size": 18,
+                                    "sizes": []
+                                },
+                                "typography_font_size_mobile": {
+                                    "unit": "px",
+                                    "size": 14,
+                                    "sizes": []
+                                },
+                                "typography_font_weight": "400",
+                                "text_color": "#000000"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "text-editor",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "22ca102",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "structure": "20",
+                "padding": {
+                    "unit": "%",
+                    "top": "4",
+                    "right": "0",
+                    "bottom": "4",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "40",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "content_position": "middle",
+                "background_background": "classic",
+                "__globals__": {
+                    "background_color": ""
+                },
+                "background_color": "#505A62"
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "3692202f",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "padding": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "30",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeIn"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "10e14937",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "title": "What Our Patients Say About Us\u200b",
+                                "__globals__": {
+                                    "title_color": "globals\/colors?id=c3e5fb3",
+                                    "typography_typography": "globals\/typography?id=primary"
+                                },
+                                "align": "left"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "heading",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "5cc78a6c",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "background_background": "classic",
+                        "background_position": "center center",
+                        "background_repeat": "no-repeat",
+                        "background_size": "cover",
+                        "_inline_size_tablet": 100,
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "background_image": {
+                            "url": "",
+                            "id": "",
+                            "size": "",
+                            "alt": "",
+                            "source": "library"
+                        },
+                        "border_radius": {
+                            "unit": "px",
+                            "top": "30",
+                            "right": "30",
+                            "bottom": "30",
+                            "left": "30",
+                            "isLinked": true
+                        },
+                        "animation": "fadeIn"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "1b15b95f",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "slides_name": "Slides",
+                                "slides": [
+                                    {
+                                        "content": "The staff here is so lovely! Very nice ladies! And the doctors perform wonderful work. I have severe anxiety at the dentist, but they always make me feel comfortable.",
+                                        "name": "Angelica Hernandez",
+                                        "title": "",
+                                        "image": {
+                                            "url": "",
+                                            "id": "",
+                                            "size": ""
+                                        },
+                                        "_id": "0bdb8ef",
+                                        "rating": 5,
+                                        "selected_social_icon": {
+                                            "value": {
+                                                "id": 348,
+                                                "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/g-2.svg"
+                                            },
+                                            "library": "svg"
+                                        }
+                                    },
+                                    {
+                                        "content": "I hate going to the dentist but going here makes it so much better. Everyone is so kind and friendly. And I don't think I've ever waited more than 5 minutes to be seen. I've been to several different Dental Offices here in the area and this is hands down the very best one! I highly recommend going here for your dental needs. 10\/10!",
+                                        "name": "Kimberly Soaper",
+                                        "title": "",
+                                        "image": {
+                                            "url": "",
+                                            "id": "",
+                                            "size": ""
+                                        },
+                                        "_id": "1e5f9ec",
+                                        "rating": 5,
+                                        "selected_social_icon": {
+                                            "value": {
+                                                "id": 348,
+                                                "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/g-2.svg"
+                                            },
+                                            "library": "svg"
+                                        }
+                                    }
+                                ],
+                                "space_between": {
+                                    "unit": "px",
+                                    "size": 12,
+                                    "sizes": []
+                                },
+                                "slide_border_radius": {
+                                    "unit": "px",
+                                    "size": 20,
+                                    "sizes": []
+                                },
+                                "slide_padding": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                },
+                                "content_gap": {
+                                    "unit": "px",
+                                    "size": 15,
+                                    "sizes": []
+                                },
+                                "separator_size": {
+                                    "unit": "px",
+                                    "size": 2,
+                                    "sizes": []
+                                },
+                                "name_typography_typography": "custom",
+                                "name_typography_font_size": {
+                                    "unit": "px",
+                                    "size": 20,
+                                    "sizes": []
+                                },
+                                "title_typography_typography": "custom",
+                                "title_typography_font_size": {
+                                    "unit": "px",
+                                    "size": 26,
+                                    "sizes": []
+                                },
+                                "content_typography_typography": "custom",
+                                "content_typography_font_size": {
+                                    "unit": "px",
+                                    "size": 18,
+                                    "sizes": []
+                                },
+                                "content_typography_line_height": {
+                                    "unit": "em",
+                                    "size": 1.5,
+                                    "sizes": []
+                                },
+                                "image_size": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "icon_size": {
+                                    "unit": "px",
+                                    "size": 61,
+                                    "sizes": []
+                                },
+                                "star_style": "star_unicode",
+                                "unmarked_star_style": "",
+                                "star_size": {
+                                    "unit": "px",
+                                    "size": 24,
+                                    "sizes": []
+                                },
+                                "star_space": {
+                                    "unit": "px",
+                                    "size": 6,
+                                    "sizes": []
+                                },
+                                "stars_color": "#FFDB00",
+                                "__globals__": {
+                                    "stars_color": ""
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "reviews",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "5f3351c",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "structure": "20",
+                "padding": {
+                    "unit": "%",
+                    "top": "4",
+                    "right": "0",
+                    "bottom": "4",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "40",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "content_width": {
+                    "unit": "px",
+                    "size": 1170,
+                    "sizes": []
+                },
+                "content_position": "middle",
+                "background_background": "classic",
+                "__globals__": {
+                    "background_color": "globals\/colors?id=859c1da"
+                }
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "efea03e",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "padding": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "30",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInLeft"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "dcd85ed",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "title": "Why Patients are Choosing Pleasant Smiles",
+                                "__globals__": {
+                                    "title_color": "globals\/colors?id=secondary",
+                                    "typography_typography": "globals\/typography?id=primary"
+                                },
+                                "align": "left"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "heading",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        },
+                        {
+                            "id": "7095f88",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "editor": "<p>Your hometown doctors who are here to serve you. Our mission is to help you have the best oral health possible. We understand your oral health is the gateway to your overall health so we focus on the total person.<\/p>",
+                                "__globals__": {
+                                    "typography_typography": "",
+                                    "text_color": "globals\/colors?id=text"
+                                },
+                                "drop_cap_typography_line_height": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "drop_cap_typography_word_spacing": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "text_color": "#000000",
+                                "typography_typography": "custom",
+                                "typography_font_family": "Montserrat",
+                                "typography_font_size": {
+                                    "unit": "px",
+                                    "size": 19,
+                                    "sizes": []
+                                },
+                                "typography_font_size_mobile": {
+                                    "unit": "px",
+                                    "size": 14,
+                                    "sizes": []
+                                },
+                                "typography_font_weight": "400",
+                                "typography_line_height": {
+                                    "unit": "em",
+                                    "size": 1.5,
+                                    "sizes": []
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "text-editor",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        },
+                        {
+                            "id": "fdbd7ea",
+                            "elType": "section",
+                            "isInner": true,
+                            "isLocked": false,
+                            "settings": {
+                                "margin": {
+                                    "unit": "px",
+                                    "top": "10",
+                                    "right": 0,
+                                    "bottom": "20",
+                                    "left": 0,
+                                    "isLinked": false
+                                },
+                                "gap": "no",
+                                "margin_mobile": {
+                                    "unit": "px",
+                                    "top": "0",
+                                    "right": 0,
+                                    "bottom": "0",
+                                    "left": 0,
+                                    "isLinked": false
+                                },
+                                "content_position": "middle"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [
+                                {
+                                    "id": "bcf3fe6",
+                                    "elType": "column",
+                                    "isInner": true,
+                                    "isLocked": false,
+                                    "settings": {
+                                        "_column_size": 100,
+                                        "_inline_size": null,
+                                        "margin": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "20",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        },
+                                        "margin_mobile": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        }
+                                    },
+                                    "defaultEditSettings": {
+                                        "defaultEditRoute": "content"
+                                    },
+                                    "interactions": [],
+                                    "elements": [
+                                        {
+                                            "id": "912c3da",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "icon_list": [
+                                                    {
+                                                        "text": "Same Day Appointments Available",
+                                                        "_id": "a978734"
+                                                    },
+                                                    {
+                                                        "text": "Friendly, Attentive Team",
+                                                        "_id": "d4743f4"
+                                                    },
+                                                    {
+                                                        "text": "Supportive for New Patients",
+                                                        "_id": "535c17d"
+                                                    }
+                                                ],
+                                                "space_between": {
+                                                    "unit": "px",
+                                                    "size": 6,
+                                                    "sizes": []
+                                                },
+                                                "text_indent": {
+                                                    "unit": "px",
+                                                    "size": 3,
+                                                    "sizes": []
+                                                },
+                                                "_margin": {
+                                                    "unit": "px",
+                                                    "top": "0",
+                                                    "right": "0",
+                                                    "bottom": "0",
+                                                    "left": "0",
+                                                    "isLinked": false
+                                                },
+                                                "__globals__": {
+                                                    "text_color": "globals\/colors?id=text",
+                                                    "icon_typography_typography": "",
+                                                    "icon_color": "globals\/colors?id=text"
+                                                },
+                                                "icon_typography_line_height": {
+                                                    "unit": "em",
+                                                    "size": 1.5,
+                                                    "sizes": []
+                                                },
+                                                "icon_color": "#000000",
+                                                "icon_size": {
+                                                    "unit": "px",
+                                                    "size": 18,
+                                                    "sizes": []
+                                                },
+                                                "icon_self_align": "left",
+                                                "icon_self_vertical_align": "flex-start",
+                                                "icon_vertical_offset": {
+                                                    "unit": "px",
+                                                    "size": 3,
+                                                    "sizes": []
+                                                },
+                                                "icon_typography_typography": "custom",
+                                                "icon_typography_font_size": {
+                                                    "unit": "px",
+                                                    "size": 19,
+                                                    "sizes": []
+                                                },
+                                                "icon_typography_font_size_mobile": {
+                                                    "unit": "px",
+                                                    "size": 14,
+                                                    "sizes": []
+                                                },
+                                                "icon_typography_font_weight": "400",
+                                                "text_color": "#000000",
+                                                "icon_typography_font_family": "Montserrat",
+                                                "icon_typography_text_transform": "capitalize"
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "icon-list",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        }
+                                    ],
+                                    "editSettings": {
+                                        "defaultEditRoute": "layout"
+                                    }
+                                }
+                            ],
+                            "editSettings": {
+                                "defaultEditRoute": "layout"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "eb97b38",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "background_background": "classic",
+                        "background_position": "center center",
+                        "background_repeat": "no-repeat",
+                        "background_size": "cover",
+                        "_inline_size_tablet": 100,
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "background_image": {
+                            "url": "",
+                            "id": "",
+                            "size": "",
+                            "alt": "",
+                            "source": "library"
+                        },
+                        "border_radius": {
+                            "unit": "px",
+                            "top": "30",
+                            "right": "30",
+                            "bottom": "30",
+                            "left": "30",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "3cafec8",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/2025-03-29.webp",
+                                    "id": 339,
+                                    "size": "",
+                                    "alt": "",
+                                    "source": "library"
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "a5be059",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1170,
+                    "sizes": []
+                },
+                "structure": "20",
+                "padding": {
+                    "unit": "px",
+                    "top": "80",
+                    "right": "0",
+                    "bottom": "80",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "content_position": "middle",
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "80",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "40",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "background_background": "classic",
+                "background_color": "#FFFFFF"
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "8ae54a1",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "_inline_size_tablet": 100,
+                        "content_position": "center",
+                        "animation": "fadeIn"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "b3dead3",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "address": "Pleasant Smiles Dental 204 W 19th St, Mt Pleasant, TX 75455",
+                                "height": {
+                                    "unit": "px",
+                                    "size": 499,
+                                    "sizes": []
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "google_maps",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "668744b",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "margin": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "_inline_size_tablet": 100,
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "margin_mobile": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "content_position": "center",
+                        "animation": "fadeIn"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "6ccead7",
+                            "elType": "section",
+                            "isInner": true,
+                            "isLocked": false,
+                            "settings": {
+                                "gap": "no",
+                                "background_background": "classic",
+                                "background_position": "initial",
+                                "background_ypos": {
+                                    "unit": "%",
+                                    "size": 27,
+                                    "sizes": []
+                                },
+                                "background_repeat": "no-repeat",
+                                "background_size": "cover",
+                                "structure": "20"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [
+                                {
+                                    "id": "612054d",
+                                    "elType": "column",
+                                    "isInner": true,
+                                    "isLocked": false,
+                                    "settings": {
+                                        "_column_size": 50,
+                                        "_inline_size": null,
+                                        "background_background": "classic",
+                                        "background_image": {
+                                            "id": 338,
+                                            "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/2021-02-18-e1761693394715.webp",
+                                            "alt": "",
+                                            "source": "library",
+                                            "size": ""
+                                        },
+                                        "background_position": "center center",
+                                        "background_repeat": "no-repeat",
+                                        "background_size": "cover",
+                                        "border_radius": {
+                                            "unit": "px",
+                                            "top": "30",
+                                            "right": "3",
+                                            "bottom": "3",
+                                            "left": "3",
+                                            "isLinked": false
+                                        },
+                                        "margin": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "15",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        },
+                                        "border_radius_mobile": {
+                                            "unit": "px",
+                                            "top": "30",
+                                            "right": "30",
+                                            "bottom": "5",
+                                            "left": "5",
+                                            "isLinked": false
+                                        },
+                                        "margin_mobile": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        }
+                                    },
+                                    "defaultEditSettings": {
+                                        "defaultEditRoute": "content"
+                                    },
+                                    "interactions": [],
+                                    "elements": [
+                                        {
+                                            "id": "8e0bb10",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "space": {
+                                                    "unit": "px",
+                                                    "size": 260,
+                                                    "sizes": []
+                                                }
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "spacer",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        }
+                                    ],
+                                    "editSettings": {
+                                        "defaultEditRoute": "layout"
+                                    }
+                                },
+                                {
+                                    "id": "12988bf",
+                                    "elType": "column",
+                                    "isInner": true,
+                                    "isLocked": false,
+                                    "settings": {
+                                        "_column_size": 50,
+                                        "_inline_size": null,
+                                        "background_background": "classic",
+                                        "background_image": {
+                                            "id": 337,
+                                            "url": "https:\/\/visitpleasantsmilesdental.energizesmartsite.com\/wp-content\/uploads\/2025\/09\/3981689387562cacb69765e6dd82dc57367c75fb-4032x3024-1.avif",
+                                            "alt": "",
+                                            "source": "library",
+                                            "size": ""
+                                        },
+                                        "background_position": "initial",
+                                        "background_xpos": {
+                                            "unit": "%",
+                                            "size": 85,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_tablet": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_mobile": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_repeat": "no-repeat",
+                                        "background_size": "cover",
+                                        "border_radius": {
+                                            "unit": "px",
+                                            "top": "3",
+                                            "right": "30",
+                                            "bottom": "3",
+                                            "left": "3",
+                                            "isLinked": false
+                                        },
+                                        "margin": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "15",
+                                            "isLinked": false
+                                        },
+                                        "border_radius_mobile": {
+                                            "unit": "px",
+                                            "top": "5",
+                                            "right": "5",
+                                            "bottom": "30",
+                                            "left": "30",
+                                            "isLinked": false
+                                        },
+                                        "margin_mobile": {
+                                            "unit": "px",
+                                            "top": "20",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        }
+                                    },
+                                    "defaultEditSettings": {
+                                        "defaultEditRoute": "content"
+                                    },
+                                    "interactions": [],
+                                    "elements": [
+                                        {
+                                            "id": "a57dde7",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "space": {
+                                                    "unit": "px",
+                                                    "size": 260,
+                                                    "sizes": []
+                                                }
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "spacer",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        }
+                                    ],
+                                    "editSettings": {
+                                        "defaultEditRoute": "layout"
+                                    }
+                                }
+                            ],
+                            "editSettings": {
+                                "defaultEditRoute": "layout"
+                            }
+                        },
+                        {
+                            "id": "ba22921",
+                            "elType": "section",
+                            "isInner": true,
+                            "isLocked": false,
+                            "settings": {
+                                "gap": "no",
+                                "background_background": "classic",
+                                "background_position": "initial",
+                                "background_ypos": {
+                                    "unit": "%",
+                                    "size": 27,
+                                    "sizes": []
+                                },
+                                "background_repeat": "no-repeat",
+                                "background_size": "cover",
+                                "structure": "20",
+                                "margin": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": 0,
+                                    "bottom": "10",
+                                    "left": 0,
+                                    "isLinked": false
+                                },
+                                "padding": {
+                                    "unit": "px",
+                                    "top": "30",
+                                    "right": "10",
+                                    "bottom": "30",
+                                    "left": "10",
+                                    "isLinked": false
+                                },
+                                "__globals__": {
+                                    "background_color": "globals\/colors?id=primary"
+                                },
+                                "content_position": "middle",
+                                "border_radius": {
+                                    "unit": "px",
+                                    "top": "3",
+                                    "right": "3",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": false
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [
+                                {
+                                    "id": "a07d5d7",
+                                    "elType": "column",
+                                    "isInner": true,
+                                    "isLocked": false,
+                                    "settings": {
+                                        "_column_size": 50,
+                                        "_inline_size": 55,
+                                        "background_background": "classic",
+                                        "background_image": {
+                                            "url": "",
+                                            "id": "",
+                                            "size": "",
+                                            "alt": "Dentist at work",
+                                            "source": "library"
+                                        },
+                                        "background_position": "initial",
+                                        "background_xpos": {
+                                            "unit": "%",
+                                            "size": 85,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_tablet": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_mobile": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_repeat": "no-repeat",
+                                        "background_size": "cover",
+                                        "margin": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "15",
+                                            "isLinked": false
+                                        },
+                                        "__globals__": {
+                                            "background_color": ""
+                                        },
+                                        "border_border": "solid",
+                                        "border_width": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "1",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        },
+                                        "border_color": "#FFFFFF1F"
+                                    },
+                                    "defaultEditSettings": {
+                                        "defaultEditRoute": "content"
+                                    },
+                                    "interactions": [],
+                                    "elements": [
+                                        {
+                                            "id": "d5e4f39",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "title": "Work Hours",
+                                                "__globals__": {
+                                                    "title_color": "globals\/colors?id=c3e5fb3",
+                                                    "typography_typography": "globals\/typography?id=3966f58"
+                                                },
+                                                "header_size": "h3"
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "heading",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        },
+                                        {
+                                            "id": "e53da32",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "icon_list": [
+                                                    {
+                                                        "text": "Mon - Thurs: 8\u202fAM \u2013 5\u202fPM",
+                                                        "selected_icon": {
+                                                            "value": "fas fa-clock",
+                                                            "library": "fa-solid"
+                                                        },
+                                                        "_id": "8e5ccb4"
+                                                    },
+                                                    {
+                                                        "text": "Fri: 8AM \u2013 2PM",
+                                                        "selected_icon": {
+                                                            "value": "fas fa-clock",
+                                                            "library": "fa-solid"
+                                                        },
+                                                        "_id": "a65fed7"
+                                                    },
+                                                    {
+                                                        "text": "Sat - Sun: Closed",
+                                                        "selected_icon": {
+                                                            "value": "fas fa-clock",
+                                                            "library": "fa-solid"
+                                                        },
+                                                        "_id": "5b3605b"
+                                                    }
+                                                ],
+                                                "space_between": {
+                                                    "unit": "px",
+                                                    "size": "13",
+                                                    "sizes": []
+                                                },
+                                                "__globals__": {
+                                                    "text_color_hover": "",
+                                                    "text_color": "",
+                                                    "icon_color": "globals\/colors?id=secondary",
+                                                    "icon_typography_typography": "globals\/typography?id=text"
+                                                },
+                                                "icon_color": "#95846A",
+                                                "icon_typography_typography": "custom",
+                                                "icon_typography_font_family": "Heebo",
+                                                "icon_typography_font_size": {
+                                                    "unit": "px",
+                                                    "size": 16,
+                                                    "sizes": []
+                                                },
+                                                "icon_typography_font_size_mobile": {
+                                                    "unit": "px",
+                                                    "size": 14,
+                                                    "sizes": []
+                                                },
+                                                "icon_typography_font_weight": "300",
+                                                "icon_typography_line_height": {
+                                                    "unit": "em",
+                                                    "size": 1.5,
+                                                    "sizes": []
+                                                },
+                                                "text_color": "#FFFFFF"
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "icon-list",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        }
+                                    ],
+                                    "editSettings": {
+                                        "defaultEditRoute": "layout"
+                                    }
+                                },
+                                {
+                                    "id": "6fc040b",
+                                    "elType": "column",
+                                    "isInner": true,
+                                    "isLocked": false,
+                                    "settings": {
+                                        "_column_size": 50,
+                                        "_inline_size": 44.803,
+                                        "background_background": "classic",
+                                        "background_image": {
+                                            "url": "",
+                                            "id": "",
+                                            "size": "",
+                                            "alt": "Dentist at work",
+                                            "source": "library"
+                                        },
+                                        "background_position": "initial",
+                                        "background_xpos": {
+                                            "unit": "%",
+                                            "size": 85,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_tablet": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_mobile": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_repeat": "no-repeat",
+                                        "background_size": "cover",
+                                        "border_radius": {
+                                            "unit": "px",
+                                            "top": "3",
+                                            "right": "30",
+                                            "bottom": "3",
+                                            "left": "3",
+                                            "isLinked": false
+                                        },
+                                        "margin": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "15",
+                                            "isLinked": false
+                                        },
+                                        "__globals__": {
+                                            "background_color": ""
+                                        },
+                                        "margin_mobile": {
+                                            "unit": "px",
+                                            "top": "20",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "15",
+                                            "isLinked": false
+                                        }
+                                    },
+                                    "defaultEditSettings": {
+                                        "defaultEditRoute": "content"
+                                    },
+                                    "interactions": [],
+                                    "elements": [
+                                        {
+                                            "id": "01076f1",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "selected_icon": {
+                                                    "value": "fas fa-phone-alt",
+                                                    "library": "fa-solid"
+                                                },
+                                                "title_text": "Call Us Now",
+                                                "description_text": "(903) 572-4141",
+                                                "icon_size": {
+                                                    "unit": "px",
+                                                    "size": 24,
+                                                    "sizes": []
+                                                },
+                                                "content_vertical_alignment": "middle",
+                                                "title_bottom_space": {
+                                                    "unit": "px",
+                                                    "size": 10,
+                                                    "sizes": []
+                                                },
+                                                "title_color": "#FFFFFF",
+                                                "__globals__": {
+                                                    "primary_color": "",
+                                                    "description_color": "",
+                                                    "title_typography_typography": "globals\/typography?id=accent",
+                                                    "secondary_color": "globals\/colors?id=accent",
+                                                    "description_typography_typography": "globals\/typography?id=text"
+                                                },
+                                                "primary_color": "#FFFFFF",
+                                                "text_align_mobile": "left",
+                                                "view": "framed",
+                                                "icon_padding": {
+                                                    "unit": "px",
+                                                    "size": 14,
+                                                    "sizes": []
+                                                },
+                                                "border_width": {
+                                                    "unit": "px",
+                                                    "top": "0",
+                                                    "right": "0",
+                                                    "bottom": "0",
+                                                    "left": "0",
+                                                    "isLinked": false
+                                                },
+                                                "title_typography_line_height": {
+                                                    "unit": "em",
+                                                    "size": 1,
+                                                    "sizes": []
+                                                },
+                                                "title_typography_word_spacing": {
+                                                    "unit": "em",
+                                                    "size": "",
+                                                    "sizes": []
+                                                },
+                                                "border_radius": {
+                                                    "unit": "px",
+                                                    "top": "50",
+                                                    "right": "50",
+                                                    "bottom": "50",
+                                                    "left": "50",
+                                                    "isLinked": false
+                                                },
+                                                "secondary_color": "#95846A",
+                                                "title_typography_typography": "custom",
+                                                "title_typography_font_family": "Inter",
+                                                "title_typography_font_size": {
+                                                    "unit": "px",
+                                                    "size": 18,
+                                                    "sizes": []
+                                                },
+                                                "title_typography_font_size_mobile": {
+                                                    "unit": "px",
+                                                    "size": 16,
+                                                    "sizes": []
+                                                },
+                                                "title_typography_font_weight": "500",
+                                                "description_typography_typography": "custom",
+                                                "description_typography_font_family": "Heebo",
+                                                "description_typography_font_size": {
+                                                    "unit": "px",
+                                                    "size": 16,
+                                                    "sizes": []
+                                                },
+                                                "description_typography_font_size_mobile": {
+                                                    "unit": "px",
+                                                    "size": 14,
+                                                    "sizes": []
+                                                },
+                                                "description_typography_font_weight": "300",
+                                                "description_typography_line_height": {
+                                                    "unit": "em",
+                                                    "size": 1.5,
+                                                    "sizes": []
+                                                },
+                                                "description_color": "#FFFFFF",
+                                                "link": {
+                                                    "url": "tel:903-572-4141",
+                                                    "is_external": "on",
+                                                    "nofollow": "",
+                                                    "custom_attributes": ""
+                                                },
+                                                "position": "left",
+                                                "position_tablet": "left",
+                                                "position_mobile": "left"
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "icon-box",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        }
+                                    ],
+                                    "editSettings": {
+                                        "defaultEditRoute": "layout"
+                                    }
+                                }
+                            ],
+                            "editSettings": {
+                                "defaultEditRoute": "layout"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        }
+    ],
+    "page_settings": {
+        "template": "elementor_header_footer"
+    },
+    "version": "0.4",
+    "title": "Landing Page Full Arch\/Cosmetic Version 1",
+    "type": "page"
+}

@@ -31,6 +31,10 @@ function statusVariant(status: string) {
   return "outline";
 }
 
+function buildTypeLabel(type: string | null | undefined) {
+  return type === "landing_page" ? "Landing Page" : "Website";
+}
+
 export default async function DashboardPage() {
   const [builds, clients, buildCount30d, successCount30d] = await Promise.all([
     prisma.build.findMany({
@@ -134,8 +138,12 @@ export default async function DashboardPage() {
                     {pages.length > 0 ? ` / ${pages.length} pages` : ""}
                   </span>
                 </div>
-                <div className="row-meta">Website</div>
-                <div className="row-meta">{build.client?.theme ?? "Pending"}</div>
+                <div className="row-meta">{buildTypeLabel(build.type)}</div>
+                <div className="row-meta">
+                  {build.type === "landing_page"
+                    ? "Google Ads"
+                    : build.client?.theme ?? "Pending"}
+                </div>
                 <div>
                   <Badge variant={statusVariant(build.status)}>{build.status}</Badge>
                 </div>

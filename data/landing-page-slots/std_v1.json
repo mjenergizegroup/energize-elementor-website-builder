@@ -1,0 +1,21 @@
+{
+  "template": "std_v1",
+  "description": "Standard Landing Page Version 1 - Simpler layout with no products section",
+  "slots": {
+    "HERO_HEADING":       {"widget_id": "dbe8420",  "field": "title"},
+    "HERO_BENEFIT_1":     {"widget_id": "c6fb34b",  "field": "icon_list_item", "index": 0},
+    "HERO_BENEFIT_2":     {"widget_id": "c6fb34b",  "field": "icon_list_item", "index": 1},
+    "HERO_BENEFIT_3":     {"widget_id": "c6fb34b",  "field": "icon_list_item", "index": 2},
+    "FORM_LINK":          {"widget_id": "7be3157",  "field": "form_html"},
+    "SECTION1_TITLE":     {"widget_id": "b4d7647",  "field": "title"},
+    "SECTION1_DESC":      {"widget_id": "73c8954",  "field": "editor"},
+    "REVIEWS_HEADING":    {"widget_id": "3b84128",  "field": "title"},
+    "REVIEWS_SUBDESC":    {"widget_id": "b20959d",  "field": "editor"},
+    "SECTION2_TITLE":     {"widget_id": "f48abf5",  "field": "title"},
+    "SECTION2_DESC":      {"widget_id": "3dacfd3",  "field": "editor"},
+    "SECTION2_BULLETS":   {"widget_id": "68efed2",  "field": "icon_list_all"},
+    "MAPS_ADDRESS":       {"widget_id": "a2948d5",  "field": "maps_address"},
+    "WORK_HOURS":         {"widget_id": "24424744", "field": "icon_list_all"},
+    "PHONE_NUMBER":       {"widget_id": "46dd9758", "field": "description_text"}
+  }
+}

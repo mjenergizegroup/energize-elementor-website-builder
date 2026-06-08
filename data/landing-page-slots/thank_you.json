@@ -1,0 +1,12 @@
+{
+  "template": "thank_you",
+  "description": "Thank You page - minimal replacements: heading, body text, bullets, and website link",
+  "slots": {
+    "THANK_YOU_HEADING":   {"widget_id": "161743df", "field": "title"},
+    "THANK_YOU_BODY":      {"widget_id": "2858bc1c", "field": "editor"},
+    "THANK_YOU_BULLETS":   {"widget_id": "502f8cfe", "field": "icon_list_all"},
+    "WEBSITE_URL": [
+      {"widget_id": "79fe23e0", "field": "editor"}
+    ]
+  }
+}

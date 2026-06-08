@@ -1,0 +1,26 @@
+{
+  "template": "inv_v2",
+  "description": "Invisalign / Clear Aligners Version 2 - Icon-box feature grid layout with animated section headings",
+  "slots": {
+    "HERO_BADGE_TITLE":    {"widget_id": "3d6396d",  "field": "title"},
+    "HERO_LOCATION_TITLE": {"widget_id": "c8976ee",  "field": "title"},
+    "HERO_PRICE_TITLE":    {"widget_id": "66f6145",  "field": "title"},
+    "PHONE_NUMBER": [
+      {"widget_id": "2c22455", "field": "button_phone"}
+    ],
+    "ADDRESS_LINE":        {"widget_id": "cefb42c",  "field": "icon_list_item", "index": 0},
+    "SECTION1_DESC":       {"widget_id": "73c8954",  "field": "editor"},
+    "SECTION2_DESC":       {"widget_id": "b49d3b2",  "field": "editor"},
+    "SECTION3_DESC":       {"widget_id": "b1bd039",  "field": "editor"},
+    "WHY_CHOOSE_DESC":     {"widget_id": "bc98bd5",  "field": "editor"},
+    "REVIEW1_TEXT":        {"widget_id": "35e0678",  "field": "editor"},
+    "REVIEW2_TEXT":        {"widget_id": "ed2010a",  "field": "editor"},
+    "FORM_LINK": [
+      {"widget_id": "9dd68ac",  "field": "button_url"},
+      {"widget_id": "4bacc7b",  "field": "button_url"},
+      {"widget_id": "7435d59",  "field": "button_url"},
+      {"widget_id": "fd779cf",  "field": "button_url"},
+      {"widget_id": "58fd779c", "field": "button_url"}
+    ]
+  }
+}

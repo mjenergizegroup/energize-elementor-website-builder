@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { listThemes } from "@/lib/injection/registry";
 import { prisma } from "@/lib/prisma";
 import { BuildWizard, type InitialClient } from "@/components/build-wizard";
+import { LandingPageWizard } from "@/components/landing-page-wizard";
 import { buttonVariants } from "@/components/ui/button";
 import type { BrandKit } from "@/lib/types";
 
@@ -58,6 +59,10 @@ export default async function NewBuildPage({
   }
 
   if (type) {
+    if (type === "landing-page") {
+      return <LandingPageWizard initialClient={initialClient} />;
+    }
+
     return (
       <BuildWizard
         themes={themes}

@@ -1,0 +1,39 @@
+{
+  "template": "fa_v2",
+  "description": "Full Arch / Cosmetic Version 2 - Treatment card layout with All-on-X focus and jkit dual buttons",
+  "notes": "Crown Abutment card (widgets 5f16ed + 3feee152) is optional. If CROWN_ABUTMENT_NAME is absent from content JSON, those widgets are left unchanged from template defaults.",
+  "slots": {
+    "HERO_BULLETS":           {"widget_id": "72ef3a57", "field": "icon_list_all"},
+    "PHONE_NUMBER": [
+      {"widget_id": "5dfe8c13",  "field": "button_phone"},
+      {"widget_id": "1f68f6b",   "field": "jkit_dual_phone"},
+      {"widget_id": "17693b59",  "field": "jkit_dual_phone"}
+    ],
+    "FORM_LINK": [
+      {"widget_id": "70a74c8a",  "field": "button_url"},
+      {"widget_id": "4261bc95",  "field": "button_url"},
+      {"widget_id": "5209ef1b",  "field": "button_url"},
+      {"widget_id": "4ec58537",  "field": "button_url"},
+      {"widget_id": "68d83883",  "field": "button_url"},
+      {"widget_id": "1e0a4a4d",  "field": "button_url"},
+      {"widget_id": "5de3bf7a",  "field": "button_url"},
+      {"widget_id": "1f68f6b",   "field": "jkit_dual_form_url"},
+      {"widget_id": "17693b59",  "field": "jkit_dual_form_url"}
+    ],
+    "CARD1_NAME":             {"widget_id": "7ea7145d", "field": "editor"},
+    "CARD2_NAME":             {"widget_id": "2562f93a", "field": "editor"},
+    "CARD3_NAME":             {"widget_id": "676c50da", "field": "editor"},
+    "CROWN_ABUTMENT_NAME":    {"widget_id": "5f16ed",   "field": "editor"},
+    "IMPLANT_EDU_HEADING":    {"widget_id": "224d95",   "field": "title"},
+    "IMPLANT_EDU_DESC":       {"widget_id": "67016af8", "field": "editor"},
+    "IMPLANT_EDU_BULLETS":    {"widget_id": "a069954",  "field": "icon_list_all"},
+    "ALL_ON_X_TITLE":         {"widget_id": "24e8a98c", "field": "title"},
+    "ALL_ON_X_DESC":          {"widget_id": "7a7be541", "field": "editor"},
+    "ALL_ON_X_BULLETS":       {"widget_id": "1b5b21c9", "field": "icon_list_all"},
+    "WHY_CHOOSE_TITLE":       {"widget_id": "77c5c22c", "field": "title"},
+    "WHY_CHOOSE_DESC":        {"widget_id": "1aaad266", "field": "editor"},
+    "MAPS_ADDRESS":           {"widget_id": "55e23ea",  "field": "maps_address"},
+    "WORK_HOURS":             {"widget_id": "793b9e8b", "field": "icon_list_all"},
+    "PHONE_ICON_BOX":         {"widget_id": "a6cc567",  "field": "description_text"}
+  }
+}

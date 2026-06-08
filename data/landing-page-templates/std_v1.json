@@ -1,0 +1,2187 @@
+{
+    "content": [
+        {
+            "id": "2e995d2",
+            "elType": "container",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "flex_direction": "row",
+                "flex_gap": {
+                    "unit": "px",
+                    "size": 0,
+                    "column": "0",
+                    "row": "0"
+                },
+                "flex_align_items": "center",
+                "background_background": "classic",
+                "background_image": {
+                    "url": "",
+                    "id": "",
+                    "size": "",
+                    "alt": "",
+                    "source": "library"
+                },
+                "background_overlay_background": "classic",
+                "background_overlay_image": {
+                    "url": "https:\/\/nelliegailorthodontics.energizesmartsite.com\/wp-content\/uploads\/2025\/09\/7feeeccb6bbd17a77f7c6c2f40360d094e744eaf-1080x1080-1.avif",
+                    "id": 284,
+                    "size": "",
+                    "alt": "",
+                    "source": "library"
+                },
+                "background_overlay_position": "center center",
+                "background_overlay_repeat": "no-repeat",
+                "background_overlay_size": "cover",
+                "background_overlay_opacity": {
+                    "unit": "px",
+                    "size": 0.12,
+                    "sizes": []
+                },
+                "background_overlay_hover_transition": {
+                    "unit": "px",
+                    "size": 0.3,
+                    "sizes": []
+                },
+                "padding": {
+                    "unit": "%",
+                    "top": "4",
+                    "right": "0",
+                    "bottom": "4",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "40",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "__globals__": {
+                    "background_color": "globals\/colors?id=primary",
+                    "background_overlay_color": "globals\/colors?id=primary"
+                },
+                "animation": "none",
+                "background_overlay_attachment": "fixed"
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "b7cc06c",
+                    "elType": "container",
+                    "isInner": true,
+                    "isLocked": false,
+                    "settings": {
+                        "flex_direction": "column",
+                        "content_width": "full",
+                        "width": {
+                            "unit": "%",
+                            "size": "50"
+                        },
+                        "background_overlay_hover_transition": {
+                            "unit": "px",
+                            "size": 0.3,
+                            "sizes": []
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "30",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "animation": "fadeIn"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "dbe8420",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "title": "Book Your Free Orthodontic Consult Today",
+                                "__globals__": {
+                                    "title_color": "globals\/colors?id=c3e5fb3",
+                                    "typography_typography": ""
+                                },
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "unit": "px",
+                                    "size": 44,
+                                    "sizes": []
+                                },
+                                "typography_font_size_mobile": {
+                                    "unit": "px",
+                                    "size": 29,
+                                    "sizes": []
+                                },
+                                "typography_font_weight": "600",
+                                "typography_text_transform": "capitalize",
+                                "align": "left",
+                                "header_size": "h1"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "heading",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        },
+                        {
+                            "id": "efe5370",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "url": "https:\/\/nelliegailorthodontics.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/Braces-Invisalign.png",
+                                    "id": 295,
+                                    "size": "",
+                                    "alt": "",
+                                    "source": "library"
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        },
+                        {
+                            "id": "c6fb34b",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "icon_list": [
+                                    {
+                                        "text": "Get the smile you've dreamed of with an expert orthodontic team",
+                                        "_id": "a978734"
+                                    },
+                                    {
+                                        "text": "Tried-and-true orthodontic solution for children, teens, and adults",
+                                        "_id": "d4743f4"
+                                    },
+                                    {
+                                        "text": "Modern, sleek, smaller braces for optimal comfort",
+                                        "_id": "535c17d"
+                                    }
+                                ],
+                                "space_between": {
+                                    "unit": "px",
+                                    "size": 6,
+                                    "sizes": []
+                                },
+                                "text_indent": {
+                                    "unit": "px",
+                                    "size": 3,
+                                    "sizes": []
+                                },
+                                "_margin": {
+                                    "unit": "px",
+                                    "top": "0",
+                                    "right": "0",
+                                    "bottom": "0",
+                                    "left": "0",
+                                    "isLinked": false
+                                },
+                                "__globals__": {
+                                    "text_color": "globals\/colors?id=c3e5fb3",
+                                    "icon_typography_typography": "",
+                                    "icon_color": "globals\/colors?id=c3e5fb3"
+                                },
+                                "icon_typography_line_height": {
+                                    "unit": "em",
+                                    "size": 1.5,
+                                    "sizes": []
+                                },
+                                "icon_color": "#FFFFFF",
+                                "icon_typography_typography": "custom",
+                                "icon_typography_font_size": {
+                                    "unit": "px",
+                                    "size": 21,
+                                    "sizes": []
+                                },
+                                "icon_typography_font_size_mobile": {
+                                    "unit": "px",
+                                    "size": 14,
+                                    "sizes": []
+                                },
+                                "icon_typography_font_weight": "400",
+                                "text_color": "#000000",
+                                "icon_size": {
+                                    "unit": "px",
+                                    "size": 18,
+                                    "sizes": []
+                                },
+                                "icon_self_align": "left",
+                                "icon_self_vertical_align": "flex-start",
+                                "icon_vertical_offset": {
+                                    "unit": "px",
+                                    "size": 7,
+                                    "sizes": []
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "icon-list",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "3da8d15",
+                    "elType": "container",
+                    "isInner": true,
+                    "isLocked": false,
+                    "settings": {
+                        "flex_direction": "column",
+                        "content_width": "full",
+                        "width": {
+                            "unit": "%",
+                            "size": "50"
+                        },
+                        "_element_id": "booknow",
+                        "css_classes": "booknow",
+                        "animation": "fadeIn"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "13a4347",
+                            "elType": "container",
+                            "isInner": true,
+                            "isLocked": false,
+                            "settings": {
+                                "content_width": "full",
+                                "background_background": "classic",
+                                "background_color": "#FCFBFC",
+                                "border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                },
+                                "padding": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                },
+                                "__globals__": {
+                                    "background_color": ""
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [
+                                {
+                                    "id": "7be3157",
+                                    "elType": "widget",
+                                    "isInner": false,
+                                    "isLocked": false,
+                                    "settings": {
+                                        "html": "<iframe\n    src=\"https:\/\/api.leadconnectorhq.com\/widget\/form\/3w9KzM4pm2F8um7m97Nl\"\n    style=\"width:100%;height:100%;border:none;border-radius:4px\"\n    id=\"inline-3w9KzM4pm2F8um7m97Nl\" \n    data-layout=\"{'id':'INLINE'}\"\n    data-trigger-type=\"alwaysShow\"\n    data-trigger-value=\"\"\n    data-activation-type=\"alwaysActivated\"\n    data-activation-value=\"\"\n    data-deactivation-type=\"neverDeactivate\"\n    data-deactivation-value=\"\"\n    data-form-name=\"Google Ads: Implants\"\n    data-height=\"undefined\"\n    data-layout-iframe-id=\"inline-3w9KzM4pm2F8um7m97Nl\"\n    data-form-id=\"3w9KzM4pm2F8um7m97Nl\"\n    title=\"Google Ads: Implants\"\n        >\n<\/iframe>\n<script src=\"https:\/\/link.msgsndr.com\/js\/form_embed.js\"><\/script>"
+                                    },
+                                    "defaultEditSettings": {
+                                        "defaultEditRoute": "content"
+                                    },
+                                    "interactions": [],
+                                    "elements": [],
+                                    "widgetType": "html",
+                                    "editSettings": {
+                                        "defaultEditRoute": "content"
+                                    }
+                                }
+                            ],
+                            "editSettings": {
+                                "defaultEditRoute": "layout"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "d902fb2",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "structure": "20",
+                "padding": {
+                    "unit": "%",
+                    "top": "4",
+                    "right": "0",
+                    "bottom": "4",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "40",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "content_width": {
+                    "unit": "px",
+                    "size": 1170,
+                    "sizes": []
+                },
+                "content_position": "middle"
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "23d9f70",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "background_background": "classic",
+                        "background_position": "center center",
+                        "background_repeat": "no-repeat",
+                        "background_size": "cover",
+                        "_inline_size_tablet": 100,
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "background_image": {
+                            "url": "",
+                            "id": "",
+                            "size": "",
+                            "alt": "",
+                            "source": "library"
+                        },
+                        "border_radius": {
+                            "unit": "px",
+                            "top": "30",
+                            "right": "30",
+                            "bottom": "30",
+                            "left": "30",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInLeft"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "1292f77",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "url": "https:\/\/nelliegailorthodontics.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/2024-12-11-e1760291921876.webp",
+                                    "id": 292,
+                                    "size": "",
+                                    "alt": "",
+                                    "source": "library"
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "73f8cda",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "padding": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "30",
+                            "isLinked": false
+                        },
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "b4d7647",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "title": "Our Team",
+                                "__globals__": {
+                                    "title_color": "globals\/colors?id=accent",
+                                    "typography_typography": ""
+                                },
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "unit": "px",
+                                    "size": 40,
+                                    "sizes": []
+                                },
+                                "typography_font_size_mobile": {
+                                    "unit": "px",
+                                    "size": 29,
+                                    "sizes": []
+                                },
+                                "typography_font_weight": "600",
+                                "typography_text_transform": "capitalize",
+                                "align": "left"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "heading",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        },
+                        {
+                            "id": "73c8954",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "editor": "<div class=\"prose max-w-none prose-strong:text-primary prose-headings:text-primary-heading prose-p:text-primary prose-a:text-primary prose-li:marker:text-primary prose-h1:text-3xl prose-h1:tracking-wide prose-h1:font-[800] md:prose-h1:text-3xl lg:prose-h1:text-4xl lg:prose-h1:tracking-wider xl:prose-h1:text-5xl prose-h2:text-2xl prose-h2:font-bold md:prose-h2:text-2xl lg:prose-h2:text-3xl xl:prose-h2:text-4xl prose-h3:text-xl prose-h3:font-bold md:prose-h3:text-xl lg:prose-h3:text-2xl xl:prose-h3:text-3xl prose-h4:text-lg prose-h4:font-bold md:prose-h4:text-lg lg:prose-h4:text-xl xl:prose-h4:text-2xl prose-p:opacity-85\"><div class=\"prose max-w-none prose-strong:text-primary prose-headings:text-primary-heading prose-p:text-primary prose-a:text-primary prose-li:marker:text-primary prose-h1:text-3xl prose-h1:tracking-wide prose-h1:font-[800] md:prose-h1:text-3xl lg:prose-h1:text-4xl lg:prose-h1:tracking-wider xl:prose-h1:text-5xl prose-h2:text-2xl prose-h2:font-bold md:prose-h2:text-2xl lg:prose-h2:text-3xl xl:prose-h2:text-4xl prose-h3:text-xl prose-h3:font-bold md:prose-h3:text-xl lg:prose-h3:text-2xl xl:prose-h3:text-3xl prose-h4:text-lg prose-h4:font-bold md:prose-h4:text-lg lg:prose-h4:text-xl xl:prose-h4:text-2xl prose-p:opacity-85\"><p class=\"my-4\">At Nellie Gail Orthodontics, our outstanding orthodontic team is truly exceptional. Patient-focused, compassionate, and dedicated to your smile journey, they treat you like family. Our team embodies the principles of care, warmth, and excellence that define our practice. We pride ourselves on having a diverse team, including fluent Spanish speakers, enabling us to provide a welcoming experience for patients from various backgrounds. Communication is key, which is why our team is proficient in English, Spanish, and Arabic. We warmly welcome patients of all languages and backgrounds. When you choose Nellie Gail Orthodontics, you\u2019re choosing a team that cares about your unique needs and delivers top-quality orthodontic care.<\/p><\/div><\/div>",
+                                "__globals__": {
+                                    "typography_typography": "globals\/typography?id=text",
+                                    "text_color": "globals\/colors?id=text"
+                                },
+                                "drop_cap_typography_line_height": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "drop_cap_typography_word_spacing": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "text_color": "#000000"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "text-editor",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "34dd2d9",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "structure": "20",
+                "padding": {
+                    "unit": "%",
+                    "top": "4",
+                    "right": "0",
+                    "bottom": "4",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "40",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "content_width": {
+                    "unit": "px",
+                    "size": 1170,
+                    "sizes": []
+                },
+                "content_position": "middle",
+                "background_background": "classic",
+                "__globals__": {
+                    "background_color": "globals\/colors?id=primary"
+                },
+                "background_overlay_background": "classic",
+                "background_overlay_image": {
+                    "url": "https:\/\/nelliegailorthodontics.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/palm-4-2.png",
+                    "id": 290,
+                    "size": "",
+                    "alt": "",
+                    "source": "library"
+                },
+                "background_overlay_position": "center center",
+                "background_overlay_repeat": "no-repeat",
+                "background_overlay_size": "cover",
+                "background_overlay_opacity": {
+                    "unit": "px",
+                    "size": 0.3,
+                    "sizes": []
+                }
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "6646d61",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "padding": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "30",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeIn"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "3b84128",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "title": "See What Our Patients Have to Say",
+                                "__globals__": {
+                                    "title_color": "globals\/colors?id=c3e5fb3",
+                                    "typography_typography": ""
+                                },
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "unit": "px",
+                                    "size": 40,
+                                    "sizes": []
+                                },
+                                "typography_font_size_mobile": {
+                                    "unit": "px",
+                                    "size": 29,
+                                    "sizes": []
+                                },
+                                "typography_font_weight": "600",
+                                "typography_text_transform": "capitalize",
+                                "align": "left"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "heading",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        },
+                        {
+                            "id": "b20959d",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "editor": "<div class=\"prose max-w-none prose-strong:text-secondary prose-headings:text-secondary-heading prose-p:text-secondary prose-a:text-secondary prose-li:marker:text-secondary prose-h1:text-3xl prose-h1:tracking-wide prose-h1:font-[800] md:prose-h1:text-3xl lg:prose-h1:text-4xl lg:prose-h1:tracking-wider xl:prose-h1:text-5xl prose-h2:text-2xl prose-h2:font-bold md:prose-h2:text-2xl lg:prose-h2:text-3xl xl:prose-h2:text-4xl prose-h3:text-xl prose-h3:font-bold md:prose-h3:text-xl lg:prose-h3:text-2xl xl:prose-h3:text-3xl prose-h4:text-lg prose-h4:font-bold md:prose-h4:text-lg lg:prose-h4:text-xl xl:prose-h4:text-2xl prose-p:opacity-85\"><p class=\"mt-4 max-w-[450px] text-primary\">We love seeing smiles shine! Every visit is designed for comfort, care, and results that make you feel amazing. See why patients can\u2019t stop smiling about Nellie Gail Orthodontics.<\/p><\/div>",
+                                "__globals__": {
+                                    "typography_typography": "globals\/typography?id=text",
+                                    "text_color": "globals\/colors?id=c3e5fb3"
+                                },
+                                "drop_cap_typography_line_height": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "drop_cap_typography_word_spacing": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "text_color": "#000000"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "text-editor",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "cbcf0d0",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "background_background": "classic",
+                        "background_position": "center center",
+                        "background_repeat": "no-repeat",
+                        "background_size": "cover",
+                        "_inline_size_tablet": 100,
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "background_image": {
+                            "url": "",
+                            "id": "",
+                            "size": "",
+                            "alt": "",
+                            "source": "library"
+                        },
+                        "border_radius": {
+                            "unit": "px",
+                            "top": "30",
+                            "right": "30",
+                            "bottom": "30",
+                            "left": "30",
+                            "isLinked": true
+                        },
+                        "animation": "fadeIn"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "7098f33",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "slides_name": "Slides",
+                                "slides": [
+                                    {
+                                        "content": "My daughter had her braces removed and we are so happy with the results! Our experience at this office was amazing! Every appointment was smooth, we never had a long wait time, the Dr was always so nice and friendly and talked with us at every appointment. My daughter enjoyed coming here and she is in love with her new smile! Thank you so much Nellie Gail Orthodontics! We definitely recommend!",
+                                        "name": "Wilkinson Memphis",
+                                        "title": "",
+                                        "image": {
+                                            "url": "",
+                                            "id": ""
+                                        },
+                                        "_id": "0bdb8ef",
+                                        "rating": 5,
+                                        "selected_social_icon": {
+                                            "value": {
+                                                "url": "https:\/\/nelliegailorthodontics.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/g.svg",
+                                                "id": 266
+                                            },
+                                            "library": "svg"
+                                        }
+                                    },
+                                    {
+                                        "content": "I had a great experience throughout my whole braces experience!! The office is clean and comfortable, would recommend to people who need any orthodontic treatments!!! So thankful to Dr. Stephanie and her team for making my braces journey a good one. Happy with my new smile!! :)",
+                                        "name": "Hailey Holden (Keona)",
+                                        "title": "",
+                                        "image": {
+                                            "url": "",
+                                            "id": ""
+                                        },
+                                        "_id": "1e5f9ec",
+                                        "rating": 5,
+                                        "selected_social_icon": {
+                                            "value": {
+                                                "url": "https:\/\/nelliegailorthodontics.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/g.svg",
+                                                "id": 266
+                                            },
+                                            "library": "svg"
+                                        }
+                                    }
+                                ],
+                                "space_between": {
+                                    "unit": "px",
+                                    "size": 12,
+                                    "sizes": []
+                                },
+                                "slide_border_radius": {
+                                    "unit": "px",
+                                    "size": 20,
+                                    "sizes": []
+                                },
+                                "slide_padding": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                },
+                                "content_gap": {
+                                    "unit": "px",
+                                    "size": 15,
+                                    "sizes": []
+                                },
+                                "separator_size": {
+                                    "unit": "px",
+                                    "size": 2,
+                                    "sizes": []
+                                },
+                                "name_typography_typography": "custom",
+                                "name_typography_font_size": {
+                                    "unit": "px",
+                                    "size": 20,
+                                    "sizes": []
+                                },
+                                "title_typography_typography": "custom",
+                                "title_typography_font_size": {
+                                    "unit": "px",
+                                    "size": 26,
+                                    "sizes": []
+                                },
+                                "content_typography_typography": "custom",
+                                "content_typography_font_size": {
+                                    "unit": "px",
+                                    "size": 18,
+                                    "sizes": []
+                                },
+                                "content_typography_line_height": {
+                                    "unit": "em",
+                                    "size": 1.5,
+                                    "sizes": []
+                                },
+                                "image_size": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "icon_size": {
+                                    "unit": "px",
+                                    "size": 61,
+                                    "sizes": []
+                                },
+                                "star_style": "star_unicode",
+                                "unmarked_star_style": "",
+                                "star_size": {
+                                    "unit": "px",
+                                    "size": 24,
+                                    "sizes": []
+                                },
+                                "star_space": {
+                                    "unit": "px",
+                                    "size": 6,
+                                    "sizes": []
+                                },
+                                "stars_color": "#FFDB00",
+                                "__globals__": {
+                                    "stars_color": ""
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "reviews",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "0b1ec5d",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "structure": "20",
+                "padding": {
+                    "unit": "%",
+                    "top": "4",
+                    "right": "0",
+                    "bottom": "4",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "20",
+                    "right": "10",
+                    "bottom": "40",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "content_width": {
+                    "unit": "px",
+                    "size": 1170,
+                    "sizes": []
+                },
+                "content_position": "middle",
+                "background_background": "classic",
+                "__globals__": {
+                    "background_color": "globals\/colors?id=859c1da"
+                }
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "549bb39",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "padding": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "30",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "_inline_size_tablet": 100,
+                        "padding_mobile": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": false
+                        },
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "padding_tablet": {
+                            "unit": "px",
+                            "top": "10",
+                            "right": "10",
+                            "bottom": "10",
+                            "left": "10",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInLeft"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "f48abf5",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "title": "Community and Family-Focused Care",
+                                "__globals__": {
+                                    "title_color": "globals\/colors?id=text",
+                                    "typography_typography": ""
+                                },
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "unit": "px",
+                                    "size": 40,
+                                    "sizes": []
+                                },
+                                "typography_font_size_mobile": {
+                                    "unit": "px",
+                                    "size": 29,
+                                    "sizes": []
+                                },
+                                "typography_font_weight": "600",
+                                "typography_text_transform": "capitalize",
+                                "align": "left"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "heading",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        },
+                        {
+                            "id": "3dacfd3",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "editor": "<div class=\"prose max-w-none prose-strong:text-tertiary prose-headings:text-tertiary-heading prose-p:text-tertiary prose-a:text-tertiary prose-li:marker:text-tertiary prose-h1:text-3xl prose-h1:tracking-wide prose-h1:font-[800] md:prose-h1:text-3xl lg:prose-h1:text-4xl lg:prose-h1:tracking-wider xl:prose-h1:text-5xl prose-h2:text-2xl prose-h2:font-bold md:prose-h2:text-2xl lg:prose-h2:text-3xl xl:prose-h2:text-4xl prose-h3:text-xl prose-h3:font-bold md:prose-h3:text-xl lg:prose-h3:text-2xl xl:prose-h3:text-3xl prose-h4:text-lg prose-h4:font-bold md:prose-h4:text-lg lg:prose-h4:text-xl xl:prose-h4:text-2xl prose-p:opacity-85\">\n<p class=\"my-4\">As a husband and wife orthodontist team, we understand the value of family. Our approach is built on the principles of trust, warmth, and inclusivity. When you\u2019re with us, you\u2019re treated as part of our family, and your comfort and well-being are our top priority.<\/p><\/div>",
+                                "__globals__": {
+                                    "typography_typography": "globals\/typography?id=text",
+                                    "text_color": "globals\/colors?id=text"
+                                },
+                                "drop_cap_typography_line_height": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "drop_cap_typography_word_spacing": {
+                                    "unit": "em",
+                                    "size": "",
+                                    "sizes": []
+                                },
+                                "text_color": "#000000"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "text-editor",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        },
+                        {
+                            "id": "c3d6021",
+                            "elType": "section",
+                            "isInner": true,
+                            "isLocked": false,
+                            "settings": {
+                                "margin": {
+                                    "unit": "px",
+                                    "top": "10",
+                                    "right": 0,
+                                    "bottom": "20",
+                                    "left": 0,
+                                    "isLinked": false
+                                },
+                                "gap": "no",
+                                "margin_mobile": {
+                                    "unit": "px",
+                                    "top": "0",
+                                    "right": 0,
+                                    "bottom": "0",
+                                    "left": 0,
+                                    "isLinked": false
+                                },
+                                "content_position": "middle"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [
+                                {
+                                    "id": "3bc48d8",
+                                    "elType": "column",
+                                    "isInner": true,
+                                    "isLocked": false,
+                                    "settings": {
+                                        "_column_size": 100,
+                                        "_inline_size": null,
+                                        "margin": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "20",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        },
+                                        "margin_mobile": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        }
+                                    },
+                                    "defaultEditSettings": {
+                                        "defaultEditRoute": "content"
+                                    },
+                                    "interactions": [],
+                                    "elements": [
+                                        {
+                                            "id": "68efed2",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "icon_list": [
+                                                    {
+                                                        "text": "Committed to our community through local events, activities, and fundraisers",
+                                                        "_id": "a978734"
+                                                    },
+                                                    {
+                                                        "text": "Cutting edge technology for convenience and comfort",
+                                                        "_id": "d4743f4"
+                                                    },
+                                                    {
+                                                        "text": "Indoor and Outdoor games for an enjoyable visit, even while waiting",
+                                                        "_id": "535c17d"
+                                                    }
+                                                ],
+                                                "space_between": {
+                                                    "unit": "px",
+                                                    "size": 6,
+                                                    "sizes": []
+                                                },
+                                                "text_indent": {
+                                                    "unit": "px",
+                                                    "size": 3,
+                                                    "sizes": []
+                                                },
+                                                "_margin": {
+                                                    "unit": "px",
+                                                    "top": "0",
+                                                    "right": "0",
+                                                    "bottom": "0",
+                                                    "left": "0",
+                                                    "isLinked": false
+                                                },
+                                                "__globals__": {
+                                                    "text_color": "globals\/colors?id=text",
+                                                    "icon_typography_typography": "globals\/typography?id=text",
+                                                    "icon_color": "globals\/colors?id=text"
+                                                },
+                                                "icon_color": "#FFFFFF",
+                                                "icon_size": {
+                                                    "unit": "px",
+                                                    "size": 18,
+                                                    "sizes": []
+                                                },
+                                                "icon_self_align": "left",
+                                                "icon_self_vertical_align": "flex-start",
+                                                "icon_vertical_offset": {
+                                                    "unit": "px",
+                                                    "size": 7,
+                                                    "sizes": []
+                                                },
+                                                "text_color": "#000000"
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "icon-list",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        }
+                                    ],
+                                    "editSettings": {
+                                        "defaultEditRoute": "layout"
+                                    }
+                                }
+                            ],
+                            "editSettings": {
+                                "defaultEditRoute": "layout"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "85a5fe2",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "background_background": "classic",
+                        "background_position": "center center",
+                        "background_repeat": "no-repeat",
+                        "background_size": "cover",
+                        "_inline_size_tablet": 100,
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "background_image": {
+                            "url": "",
+                            "id": "",
+                            "size": "",
+                            "alt": "",
+                            "source": "library"
+                        },
+                        "border_radius": {
+                            "unit": "px",
+                            "top": "30",
+                            "right": "30",
+                            "bottom": "30",
+                            "left": "30",
+                            "isLinked": true
+                        },
+                        "animation": "fadeInRight"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "3a0cefe",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "image": {
+                                    "url": "https:\/\/nelliegailorthodontics.energizesmartsite.com\/wp-content\/uploads\/2025\/09\/00794320522d8325965a8e67812615974110dc6f-1165x1280-1.avif",
+                                    "id": 282,
+                                    "size": "",
+                                    "alt": "",
+                                    "source": "library"
+                                },
+                                "align": "center",
+                                "image_border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "image",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        },
+        {
+            "id": "1ef21f1a",
+            "elType": "section",
+            "isInner": false,
+            "isLocked": false,
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1170,
+                    "sizes": []
+                },
+                "structure": "20",
+                "padding": {
+                    "unit": "px",
+                    "top": "80",
+                    "right": "0",
+                    "bottom": "80",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "content_position": "middle",
+                "padding_tablet": {
+                    "unit": "px",
+                    "top": "80",
+                    "right": "10",
+                    "bottom": "80",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "padding_mobile": {
+                    "unit": "px",
+                    "top": "40",
+                    "right": "10",
+                    "bottom": "40",
+                    "left": "10",
+                    "isLinked": false
+                },
+                "background_background": "classic",
+                "background_color": "#FFFFFF"
+            },
+            "defaultEditSettings": {
+                "defaultEditRoute": "content"
+            },
+            "interactions": [],
+            "elements": [
+                {
+                    "id": "a60903a",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "_inline_size_tablet": 100,
+                        "content_position": "center",
+                        "animation": "fadeIn"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "a2948d5",
+                            "elType": "widget",
+                            "isInner": false,
+                            "isLocked": false,
+                            "settings": {
+                                "address": "Nellie Gail Orthodontics: Braces and Invisalign",
+                                "height": {
+                                    "unit": "px",
+                                    "size": 571,
+                                    "sizes": []
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [],
+                            "widgetType": "google_maps",
+                            "editSettings": {
+                                "defaultEditRoute": "content"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                },
+                {
+                    "id": "c244e20",
+                    "elType": "column",
+                    "isInner": false,
+                    "isLocked": false,
+                    "settings": {
+                        "_column_size": 50,
+                        "_inline_size": null,
+                        "margin": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "_inline_size_tablet": 100,
+                        "margin_tablet": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "margin_mobile": {
+                            "unit": "px",
+                            "top": "20",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": false
+                        },
+                        "content_position": "center",
+                        "animation": "fadeIn"
+                    },
+                    "defaultEditSettings": {
+                        "defaultEditRoute": "content"
+                    },
+                    "interactions": [],
+                    "elements": [
+                        {
+                            "id": "345e14f",
+                            "elType": "section",
+                            "isInner": true,
+                            "isLocked": false,
+                            "settings": {
+                                "gap": "no",
+                                "background_background": "classic",
+                                "background_position": "initial",
+                                "background_ypos": {
+                                    "unit": "%",
+                                    "size": 27,
+                                    "sizes": []
+                                },
+                                "background_repeat": "no-repeat",
+                                "background_size": "cover",
+                                "structure": "20"
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [
+                                {
+                                    "id": "1678e076",
+                                    "elType": "column",
+                                    "isInner": true,
+                                    "isLocked": false,
+                                    "settings": {
+                                        "_column_size": 50,
+                                        "_inline_size": null,
+                                        "background_background": "classic",
+                                        "background_image": {
+                                            "id": 291,
+                                            "url": "https:\/\/nelliegailorthodontics.energizesmartsite.com\/wp-content\/uploads\/2025\/10\/2024-12-11-1.webp",
+                                            "alt": "",
+                                            "source": "library",
+                                            "size": ""
+                                        },
+                                        "background_position": "top center",
+                                        "background_repeat": "no-repeat",
+                                        "background_size": "cover",
+                                        "border_radius": {
+                                            "unit": "px",
+                                            "top": "30",
+                                            "right": "3",
+                                            "bottom": "3",
+                                            "left": "3",
+                                            "isLinked": false
+                                        },
+                                        "margin": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "15",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        },
+                                        "border_radius_mobile": {
+                                            "unit": "px",
+                                            "top": "30",
+                                            "right": "30",
+                                            "bottom": "5",
+                                            "left": "5",
+                                            "isLinked": false
+                                        },
+                                        "margin_mobile": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        }
+                                    },
+                                    "defaultEditSettings": {
+                                        "defaultEditRoute": "content"
+                                    },
+                                    "interactions": [],
+                                    "elements": [
+                                        {
+                                            "id": "675c0818",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "space": {
+                                                    "unit": "px",
+                                                    "size": 260,
+                                                    "sizes": []
+                                                }
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "spacer",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        }
+                                    ],
+                                    "editSettings": {
+                                        "defaultEditRoute": "layout"
+                                    }
+                                },
+                                {
+                                    "id": "35c86ea",
+                                    "elType": "column",
+                                    "isInner": true,
+                                    "isLocked": false,
+                                    "settings": {
+                                        "_column_size": 50,
+                                        "_inline_size": null,
+                                        "background_background": "classic",
+                                        "background_image": {
+                                            "id": 283,
+                                            "url": "https:\/\/nelliegailorthodontics.energizesmartsite.com\/wp-content\/uploads\/2025\/09\/888ec28c1d8bca4cc0987fb0c7ad72726a660ea7-4032x3024-1.avif",
+                                            "alt": "",
+                                            "source": "library",
+                                            "size": ""
+                                        },
+                                        "background_position": "initial",
+                                        "background_xpos": {
+                                            "unit": "%",
+                                            "size": 85,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_tablet": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_mobile": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_repeat": "no-repeat",
+                                        "background_size": "cover",
+                                        "border_radius": {
+                                            "unit": "px",
+                                            "top": "3",
+                                            "right": "30",
+                                            "bottom": "3",
+                                            "left": "3",
+                                            "isLinked": false
+                                        },
+                                        "margin": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "15",
+                                            "isLinked": false
+                                        },
+                                        "border_radius_mobile": {
+                                            "unit": "px",
+                                            "top": "5",
+                                            "right": "5",
+                                            "bottom": "30",
+                                            "left": "30",
+                                            "isLinked": false
+                                        },
+                                        "margin_mobile": {
+                                            "unit": "px",
+                                            "top": "20",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        }
+                                    },
+                                    "defaultEditSettings": {
+                                        "defaultEditRoute": "content"
+                                    },
+                                    "interactions": [],
+                                    "elements": [
+                                        {
+                                            "id": "35bf7c49",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "space": {
+                                                    "unit": "px",
+                                                    "size": 260,
+                                                    "sizes": []
+                                                }
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "spacer",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        }
+                                    ],
+                                    "editSettings": {
+                                        "defaultEditRoute": "layout"
+                                    }
+                                }
+                            ],
+                            "editSettings": {
+                                "defaultEditRoute": "layout"
+                            }
+                        },
+                        {
+                            "id": "565ab350",
+                            "elType": "section",
+                            "isInner": true,
+                            "isLocked": false,
+                            "settings": {
+                                "gap": "no",
+                                "background_background": "classic",
+                                "background_position": "initial",
+                                "background_ypos": {
+                                    "unit": "%",
+                                    "size": 27,
+                                    "sizes": []
+                                },
+                                "background_repeat": "no-repeat",
+                                "background_size": "cover",
+                                "structure": "20",
+                                "margin": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": 0,
+                                    "bottom": "10",
+                                    "left": 0,
+                                    "isLinked": false
+                                },
+                                "padding": {
+                                    "unit": "px",
+                                    "top": "30",
+                                    "right": "10",
+                                    "bottom": "30",
+                                    "left": "10",
+                                    "isLinked": false
+                                },
+                                "__globals__": {
+                                    "background_color": "globals\/colors?id=primary"
+                                },
+                                "content_position": "middle",
+                                "border_radius": {
+                                    "unit": "px",
+                                    "top": "3",
+                                    "right": "3",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": false
+                                }
+                            },
+                            "defaultEditSettings": {
+                                "defaultEditRoute": "content"
+                            },
+                            "interactions": [],
+                            "elements": [
+                                {
+                                    "id": "6913f592",
+                                    "elType": "column",
+                                    "isInner": true,
+                                    "isLocked": false,
+                                    "settings": {
+                                        "_column_size": 50,
+                                        "_inline_size": 55,
+                                        "background_background": "classic",
+                                        "background_image": {
+                                            "url": "",
+                                            "id": "",
+                                            "size": "",
+                                            "alt": "Dentist at work",
+                                            "source": "library"
+                                        },
+                                        "background_position": "initial",
+                                        "background_xpos": {
+                                            "unit": "%",
+                                            "size": 85,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_tablet": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_mobile": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_repeat": "no-repeat",
+                                        "background_size": "cover",
+                                        "margin": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "15",
+                                            "isLinked": false
+                                        },
+                                        "__globals__": {
+                                            "background_color": ""
+                                        },
+                                        "border_border": "solid",
+                                        "border_width": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "1",
+                                            "bottom": "0",
+                                            "left": "0",
+                                            "isLinked": false
+                                        },
+                                        "border_color": "#FFFFFF1F"
+                                    },
+                                    "defaultEditSettings": {
+                                        "defaultEditRoute": "content"
+                                    },
+                                    "interactions": [],
+                                    "elements": [
+                                        {
+                                            "id": "76c59a8f",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "title": "Work Hours",
+                                                "__globals__": {
+                                                    "title_color": "globals\/colors?id=c3e5fb3",
+                                                    "typography_typography": "globals\/typography?id=3966f58"
+                                                },
+                                                "header_size": "h3"
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "heading",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        },
+                                        {
+                                            "id": "24424744",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "icon_list": [
+                                                    {
+                                                        "text": "Mon: 10\u202fAM \u2013 6\u202fPM",
+                                                        "selected_icon": {
+                                                            "value": "fas fa-clock",
+                                                            "library": "fa-solid"
+                                                        },
+                                                        "_id": "8e5ccb4"
+                                                    },
+                                                    {
+                                                        "text": "Tues - Thur: 9\u202fAM \u2013 5\u202fPM",
+                                                        "selected_icon": {
+                                                            "value": "fas fa-clock",
+                                                            "library": "fa-solid"
+                                                        },
+                                                        "_id": "c3aa453"
+                                                    },
+                                                    {
+                                                        "text": "Fri: Closed",
+                                                        "selected_icon": {
+                                                            "value": "fas fa-clock",
+                                                            "library": "fa-solid"
+                                                        },
+                                                        "_id": "11bdb81"
+                                                    },
+                                                    {
+                                                        "text": "Sat: Closed",
+                                                        "selected_icon": {
+                                                            "value": "fas fa-clock",
+                                                            "library": "fa-solid"
+                                                        },
+                                                        "_id": "28d75de"
+                                                    },
+                                                    {
+                                                        "text": "Sun: Closed",
+                                                        "selected_icon": {
+                                                            "value": "fas fa-clock",
+                                                            "library": "fa-solid"
+                                                        },
+                                                        "_id": "1bd0d43"
+                                                    }
+                                                ],
+                                                "space_between": {
+                                                    "unit": "px",
+                                                    "size": "13",
+                                                    "sizes": []
+                                                },
+                                                "__globals__": {
+                                                    "text_color_hover": "",
+                                                    "text_color": "",
+                                                    "icon_color": "globals\/colors?id=secondary",
+                                                    "icon_typography_typography": "globals\/typography?id=text"
+                                                },
+                                                "icon_color": "#95846A",
+                                                "icon_typography_typography": "custom",
+                                                "icon_typography_font_family": "Heebo",
+                                                "icon_typography_font_size": {
+                                                    "unit": "px",
+                                                    "size": 16,
+                                                    "sizes": []
+                                                },
+                                                "icon_typography_font_size_mobile": {
+                                                    "unit": "px",
+                                                    "size": 14,
+                                                    "sizes": []
+                                                },
+                                                "icon_typography_font_weight": "300",
+                                                "icon_typography_line_height": {
+                                                    "unit": "em",
+                                                    "size": 1.5,
+                                                    "sizes": []
+                                                },
+                                                "text_color": "#FFFFFF"
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "icon-list",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        }
+                                    ],
+                                    "editSettings": {
+                                        "defaultEditRoute": "layout"
+                                    }
+                                },
+                                {
+                                    "id": "5238b78d",
+                                    "elType": "column",
+                                    "isInner": true,
+                                    "isLocked": false,
+                                    "settings": {
+                                        "_column_size": 50,
+                                        "_inline_size": 44.803,
+                                        "background_background": "classic",
+                                        "background_image": {
+                                            "url": "",
+                                            "id": "",
+                                            "size": "",
+                                            "alt": "Dentist at work",
+                                            "source": "library"
+                                        },
+                                        "background_position": "initial",
+                                        "background_xpos": {
+                                            "unit": "%",
+                                            "size": 85,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_tablet": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_xpos_mobile": {
+                                            "unit": "%",
+                                            "size": 0,
+                                            "sizes": []
+                                        },
+                                        "background_repeat": "no-repeat",
+                                        "background_size": "cover",
+                                        "border_radius": {
+                                            "unit": "px",
+                                            "top": "3",
+                                            "right": "30",
+                                            "bottom": "3",
+                                            "left": "3",
+                                            "isLinked": false
+                                        },
+                                        "margin": {
+                                            "unit": "px",
+                                            "top": "0",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "15",
+                                            "isLinked": false
+                                        },
+                                        "__globals__": {
+                                            "background_color": ""
+                                        },
+                                        "margin_mobile": {
+                                            "unit": "px",
+                                            "top": "20",
+                                            "right": "0",
+                                            "bottom": "0",
+                                            "left": "15",
+                                            "isLinked": false
+                                        }
+                                    },
+                                    "defaultEditSettings": {
+                                        "defaultEditRoute": "content"
+                                    },
+                                    "interactions": [],
+                                    "elements": [
+                                        {
+                                            "id": "46dd9758",
+                                            "elType": "widget",
+                                            "isInner": false,
+                                            "isLocked": false,
+                                            "settings": {
+                                                "selected_icon": {
+                                                    "value": "fas fa-phone-alt",
+                                                    "library": "fa-solid"
+                                                },
+                                                "title_text": "Call Us Now",
+                                                "description_text": "949-362-9971",
+                                                "icon_size": {
+                                                    "unit": "px",
+                                                    "size": 24,
+                                                    "sizes": []
+                                                },
+                                                "content_vertical_alignment": "middle",
+                                                "title_bottom_space": {
+                                                    "unit": "px",
+                                                    "size": 10,
+                                                    "sizes": []
+                                                },
+                                                "title_color": "#FFFFFF",
+                                                "__globals__": {
+                                                    "primary_color": "",
+                                                    "description_color": "globals\/colors?id=accent",
+                                                    "title_typography_typography": "globals\/typography?id=accent",
+                                                    "secondary_color": "globals\/colors?id=accent",
+                                                    "description_typography_typography": "globals\/typography?id=text",
+                                                    "hover_title_color": "globals\/colors?id=accent",
+                                                    "hover_primary_color": ""
+                                                },
+                                                "primary_color": "#FFFFFF",
+                                                "text_align_mobile": "left",
+                                                "view": "framed",
+                                                "icon_padding": {
+                                                    "unit": "px",
+                                                    "size": 14,
+                                                    "sizes": []
+                                                },
+                                                "border_width": {
+                                                    "unit": "px",
+                                                    "top": "0",
+                                                    "right": "0",
+                                                    "bottom": "0",
+                                                    "left": "0",
+                                                    "isLinked": false
+                                                },
+                                                "title_typography_line_height": {
+                                                    "unit": "em",
+                                                    "size": 1,
+                                                    "sizes": []
+                                                },
+                                                "title_typography_word_spacing": {
+                                                    "unit": "em",
+                                                    "size": "",
+                                                    "sizes": []
+                                                },
+                                                "border_radius": {
+                                                    "unit": "px",
+                                                    "top": "50",
+                                                    "right": "50",
+                                                    "bottom": "50",
+                                                    "left": "50",
+                                                    "isLinked": false
+                                                },
+                                                "secondary_color": "#0BE0D9",
+                                                "title_typography_typography": "custom",
+                                                "title_typography_font_family": "Montserrat",
+                                                "title_typography_font_size": {
+                                                    "unit": "px",
+                                                    "size": 18,
+                                                    "sizes": []
+                                                },
+                                                "title_typography_font_size_mobile": {
+                                                    "unit": "px",
+                                                    "size": 16,
+                                                    "sizes": []
+                                                },
+                                                "title_typography_font_weight": "500",
+                                                "description_typography_typography": "custom",
+                                                "description_typography_font_family": "Montserrat",
+                                                "description_typography_font_size": {
+                                                    "unit": "px",
+                                                    "size": 16,
+                                                    "sizes": []
+                                                },
+                                                "description_typography_font_size_mobile": {
+                                                    "unit": "px",
+                                                    "size": 14,
+                                                    "sizes": []
+                                                },
+                                                "description_typography_font_weight": "300",
+                                                "description_typography_line_height": {
+                                                    "unit": "em",
+                                                    "size": 1.5,
+                                                    "sizes": []
+                                                },
+                                                "link": {
+                                                    "url": "tel:949-362-9971",
+                                                    "is_external": "on",
+                                                    "nofollow": "",
+                                                    "custom_attributes": ""
+                                                },
+                                                "position": "left",
+                                                "position_tablet": "left",
+                                                "position_mobile": "left",
+                                                "hover_title_color": "#0BE0D9"
+                                            },
+                                            "defaultEditSettings": {
+                                                "defaultEditRoute": "content"
+                                            },
+                                            "interactions": [],
+                                            "elements": [],
+                                            "widgetType": "icon-box",
+                                            "editSettings": {
+                                                "defaultEditRoute": "content"
+                                            }
+                                        }
+                                    ],
+                                    "editSettings": {
+                                        "defaultEditRoute": "layout"
+                                    }
+                                }
+                            ],
+                            "editSettings": {
+                                "defaultEditRoute": "layout"
+                            }
+                        }
+                    ],
+                    "editSettings": {
+                        "defaultEditRoute": "layout"
+                    }
+                }
+            ],
+            "editSettings": {
+                "defaultEditRoute": "layout"
+            }
+        }
+    ],
+    "page_settings": {
+        "template": "elementor_header_footer"
+    },
+    "version": "0.4",
+    "title": "Landing Page Standard Version 1",
+    "type": "page"
+}

@@ -1,0 +1,21 @@
+{
+  "template": "fa_v1",
+  "description": "Full Arch / Cosmetic Version 1 - Custom HTML pricing cards + standard layout sections",
+  "notes": "bc1bc08 = hero CTA HTML card. b4bcfb9 = pricing grid HTML (3-4 cards). Both require raw_html replacement - Claude builds the full HTML from brief content using the CSS classes documented in reference/fa_v1_html_guide.md",
+  "slots": {
+    "HERO_CTA_HTML":      {"widget_id": "bc1bc08",  "field": "raw_html"},
+    "PRICING_GRID_HTML":  {"widget_id": "b4bcfb9",  "field": "raw_html"},
+    "BEFORE_AFTER_DESC":  {"widget_id": "521592e",  "field": "editor"},
+    "ABOUT_TITLE":        {"widget_id": "51afd670", "field": "title"},
+    "ABOUT_DESC":         {"widget_id": "666ab3ef", "field": "editor"},
+    "IMPLANT_EDU_TITLE":  {"widget_id": "2cd75ebd", "field": "title"},
+    "IMPLANT_EDU_DESC":   {"widget_id": "1d1b2eec", "field": "editor"},
+    "REVIEWS_HEADING":    {"widget_id": "10e14937", "field": "title"},
+    "WHY_CHOOSE_TITLE":   {"widget_id": "dcd85ed",  "field": "title"},
+    "WHY_CHOOSE_DESC":    {"widget_id": "7095f88",  "field": "editor"},
+    "WHY_CHOOSE_BULLETS": {"widget_id": "912c3da",  "field": "icon_list_all"},
+    "MAPS_ADDRESS":       {"widget_id": "b3dead3",  "field": "maps_address"},
+    "WORK_HOURS":         {"widget_id": "e53da32",  "field": "icon_list_all"},
+    "PHONE_NUMBER":       {"widget_id": "01076f1",  "field": "description_text"}
+  }
+}

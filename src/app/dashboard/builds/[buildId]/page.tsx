@@ -42,6 +42,10 @@ function statusVariant(status: string) {
   return "outline";
 }
 
+function buildTypeLabel(type: string | null | undefined) {
+  return type === "landing_page" ? "Landing Page build" : "Website build";
+}
+
 export default async function BuildDetailPage({
   params,
 }: {
@@ -57,6 +61,7 @@ export default async function BuildDetailPage({
 
   const pages = (build.pagesDeployed ?? []) as DeployedPage[];
   const pushedCount = pages.filter((page) => page.editUrl).length;
+  const isLandingPageBuild = build.type === "landing_page";
 
   return (
     <main className="page-body">
@@ -74,8 +79,8 @@ export default async function BuildDetailPage({
           </h1>
           <div className="mt-3 flex flex-wrap items-center gap-3 text-[12px] text-[var(--color-muted)]">
             <Badge variant={statusVariant(build.status)}>{build.status}</Badge>
-            <span>Website build</span>
-            <span>{build.client?.theme ?? "Pending"} theme</span>
+            <span>{buildTypeLabel(build.type)}</span>
+            <span>{isLandingPageBuild ? "Google Ads" : `${build.client?.theme ?? "Pending"} theme`}</span>
             <span>{formatDate(build.deployedAt ?? build.createdAt)}</span>
             <span>Build ID: {build.id}</span>
           </div>
@@ -84,7 +89,7 @@ export default async function BuildDetailPage({
           <Link
             href={
               build.client
-                ? `/dashboard/new?type=new-website&clientId=${build.client.id}`
+                ? `/dashboard/new?type=${isLandingPageBuild ? "landing-page" : "new-website"}&clientId=${build.client.id}`
                 : "/dashboard/new"
             }
             className={buttonVariants({ className: "-mr-0.5" })}
@@ -151,8 +156,11 @@ export default async function BuildDetailPage({
           </div>
           <div>
             <InfoRow label="Client" value={build.client?.name ?? "Unknown client"} />
-            <InfoRow label="Build type" value="Website build" />
-            <InfoRow label="Theme" value={build.client?.theme ?? "Pending"} />
+            <InfoRow label="Build type" value={buildTypeLabel(build.type)} />
+            <InfoRow
+              label={isLandingPageBuild ? "Campaign type" : "Theme"}
+              value={isLandingPageBuild ? "Google Ads" : build.client?.theme ?? "Pending"}
+            />
             <InfoRow label="WP Target" value={build.client?.wpSiteUrl ?? "Pending"} />
             <InfoRow label="Status" value={<Badge variant={statusVariant(build.status)}>{build.status}</Badge>} />
             <InfoRow label="Pages" value={`${pushedCount} of ${pages.length} pushed`} />

@@ -1,0 +1,36 @@
+{
+  "template": "std_v2",
+  "description": "Standard Landing Page Version 2 - Full layout with products section",
+  "slots": {
+    "HERO_HEADING":       {"widget_id": "6dd67001", "field": "title"},
+    "HERO_BENEFIT_1":     {"widget_id": "04fe6e3",  "field": "icon_list_item", "index": 0},
+    "HERO_BENEFIT_2":     {"widget_id": "04fe6e3",  "field": "icon_list_item", "index": 1},
+    "HERO_BENEFIT_3":     {"widget_id": "04fe6e3",  "field": "icon_list_item", "index": 2},
+    "PHONE_NUMBER": [
+      {"widget_id": "f2adfda",  "field": "button_phone"},
+      {"widget_id": "b6f1a62",  "field": "button_phone"},
+      {"widget_id": "5bf1630",  "field": "button_phone"},
+      {"widget_id": "8f6296f",  "field": "button_phone"},
+      {"widget_id": "880b6af",  "field": "button_phone"}
+    ],
+    "SECTION1_TITLE":     {"widget_id": "43a28fbc", "field": "title"},
+    "SECTION1_DESC":      {"widget_id": "796e7264", "field": "editor"},
+    "SECTION2_TITLE":     {"widget_id": "6be18615", "field": "title"},
+    "SECTION2_DESC":      {"widget_id": "5dbab7c9", "field": "editor"},
+    "SECTION2_BULLETS":   {"widget_id": "1fb09090", "field": "icon_list_all"},
+    "SECTION3_HEADING":   {"widget_id": "4cdda9bc", "field": "title"},
+    "SECTION3_P1_TITLE":  {"widget_id": "418b0955", "field": "title"},
+    "SECTION3_P1_DESC":   {"widget_id": "23fc7f58", "field": "editor"},
+    "SECTION3_P2_TITLE":  {"widget_id": "679585ae", "field": "title"},
+    "SECTION3_P2_DESC":   {"widget_id": "8ab8e79",  "field": "editor"},
+    "SECTION3_P3_TITLE":  {"widget_id": "2386d100", "field": "title"},
+    "SECTION3_P3_DESC":   {"widget_id": "36e6a698", "field": "editor"},
+    "SECTION3_P4_TITLE":  {"widget_id": "128f641",  "field": "title"},
+    "SECTION3_P4_DESC":   {"widget_id": "dc128a0",  "field": "editor"},
+    "REVIEWS_HEADING":    {"widget_id": "18c0e217", "field": "title"},
+    "REVIEWS_SUBDESC":    {"widget_id": "583e5ee8", "field": "editor"},
+    "GHL_REVIEW_URL":     {"widget_id": "1dc8161",  "field": "review_html"},
+    "WHY_CHOOSE_TITLE":   {"widget_id": "3041bd3",  "field": "title"},
+    "WHY_CHOOSE_DESC":    {"widget_id": "2831acae", "field": "editor"}
+  }
+}
