@@ -653,6 +653,103 @@
   box-shadow: none !important;
 }
 
+.energize-clerk-avatar,
+.cl-userButtonAvatarBox,
+.cl-avatarBox {
+  width: 34px !important;
+  height: 34px !important;
+  background: var(--color-red) !important;
+  border: 2px solid var(--color-black) !important;
+  border-radius: 0 !important;
+  color: var(--color-on-red) !important;
+  box-shadow: none !important;
+}
+
+.cl-userButtonTrigger {
+  border-radius: 0 !important;
+  outline-color: var(--color-red) !important;
+}
+
+.cl-userButtonAvatarImage,
+.cl-avatarImage {
+  border-radius: 0 !important;
+}
+
+.energize-clerk-menu,
+.cl-userButtonPopoverCard {
+  width: 360px !important;
+  overflow: hidden !important;
+  background: var(--color-surface) !important;
+  border: 2px solid var(--color-black) !important;
+  border-radius: 0 !important;
+  color: var(--color-black) !important;
+  box-shadow: none !important;
+}
+
+.cl-userPreview {
+  gap: 16px !important;
+  padding: 22px 24px !important;
+  border-bottom: 2px solid var(--color-black) !important;
+}
+
+.cl-userPreviewAvatarBox {
+  width: 48px !important;
+  height: 48px !important;
+  background: var(--color-red) !important;
+  border: 2px solid var(--color-black) !important;
+  border-radius: 0 !important;
+}
+
+.cl-userPreviewMainIdentifier {
+  color: var(--color-black) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.cl-userPreviewSecondaryIdentifier {
+  color: var(--color-muted) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+}
+
+.energize-clerk-menu-action,
+.cl-userButtonPopoverActionButton {
+  min-height: 52px !important;
+  padding: 0 24px !important;
+  background: var(--color-surface) !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid var(--color-hairline) !important;
+  color: var(--color-black) !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
+.energize-clerk-menu-action:hover,
+.cl-userButtonPopoverActionButton:hover {
+  background: var(--color-panel) !important;
+  color: var(--color-red) !important;
+}
+
+.cl-userButtonPopoverActionButtonIcon {
+  color: var(--color-black) !important;
+}
+
+.energize-clerk-menu-footer,
+.cl-userButtonPopoverFooter {
+  padding: 14px 24px !important;
+  background: var(--color-panel) !important;
+  border-top: 2px solid var(--color-black) !important;
+  border-radius: 0 !important;
+  color: var(--color-muted) !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
 body * {
   box-shadow: none !important;
 }
