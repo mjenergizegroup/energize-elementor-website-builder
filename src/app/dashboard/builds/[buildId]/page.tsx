@@ -42,8 +42,12 @@ function statusVariant(status: string) {
   return "outline";
 }
 
-function buildTypeLabel(type: string | null | undefined) {
-  return type === "landing_page" ? "Landing Page build" : "Website build";
+function isLandingPageBuild(theme: string | null | undefined) {
+  return theme === "landing-page";
+}
+
+function buildTypeLabel(landingPageBuild: boolean) {
+  return landingPageBuild ? "Landing Page build" : "Website build";
 }
 
 export default async function BuildDetailPage({
@@ -54,14 +58,29 @@ export default async function BuildDetailPage({
   const { buildId } = await params;
   const build = await prisma.build.findUnique({
     where: { id: buildId },
-    include: { client: true },
+    select: {
+      id: true,
+      pagesDeployed: true,
+      status: true,
+      deployedAt: true,
+      deployedBy: true,
+      createdAt: true,
+      client: {
+        select: {
+          id: true,
+          name: true,
+          theme: true,
+          wpSiteUrl: true,
+        },
+      },
+    },
   });
 
   if (!build) notFound();
 
   const pages = (build.pagesDeployed ?? []) as DeployedPage[];
   const pushedCount = pages.filter((page) => page.editUrl).length;
-  const isLandingPageBuild = build.type === "landing_page";
+  const landingPageBuild = isLandingPageBuild(build.client?.theme);
 
   return (
     <main className="page-body">
@@ -79,8 +98,8 @@ export default async function BuildDetailPage({
           </h1>
           <div className="mt-3 flex flex-wrap items-center gap-3 text-[12px] text-[var(--color-muted)]">
             <Badge variant={statusVariant(build.status)}>{build.status}</Badge>
-            <span>{buildTypeLabel(build.type)}</span>
-            <span>{isLandingPageBuild ? "Google Ads" : `${build.client?.theme ?? "Pending"} theme`}</span>
+            <span>{buildTypeLabel(landingPageBuild)}</span>
+            <span>{landingPageBuild ? "Google Ads" : `${build.client?.theme ?? "Pending"} theme`}</span>
             <span>{formatDate(build.deployedAt ?? build.createdAt)}</span>
             <span>Build ID: {build.id}</span>
           </div>
@@ -89,7 +108,7 @@ export default async function BuildDetailPage({
           <Link
             href={
               build.client
-                ? `/dashboard/new?type=${isLandingPageBuild ? "landing-page" : "new-website"}&clientId=${build.client.id}`
+                ? `/dashboard/new?type=${landingPageBuild ? "landing-page" : "new-website"}&clientId=${build.client.id}`
                 : "/dashboard/new"
             }
             className={buttonVariants({ className: "-mr-0.5" })}
@@ -156,10 +175,10 @@ export default async function BuildDetailPage({
           </div>
           <div>
             <InfoRow label="Client" value={build.client?.name ?? "Unknown client"} />
-            <InfoRow label="Build type" value={buildTypeLabel(build.type)} />
+            <InfoRow label="Build type" value={buildTypeLabel(landingPageBuild)} />
             <InfoRow
-              label={isLandingPageBuild ? "Campaign type" : "Theme"}
-              value={isLandingPageBuild ? "Google Ads" : build.client?.theme ?? "Pending"}
+              label={landingPageBuild ? "Campaign type" : "Theme"}
+              value={landingPageBuild ? "Google Ads" : build.client?.theme ?? "Pending"}
             />
             <InfoRow label="WP Target" value={build.client?.wpSiteUrl ?? "Pending"} />
             <InfoRow label="Status" value={<Badge variant={statusVariant(build.status)}>{build.status}</Badge>} />

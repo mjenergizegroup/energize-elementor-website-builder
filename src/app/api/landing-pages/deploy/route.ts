@@ -72,6 +72,53 @@ function ndjson(event: LandingPageDeployEvent): string {
   return JSON.stringify(event) + "\n";
 }
 
+function isMissingBuildMetadataColumn(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return (
+    message.includes("does not exist") &&
+    (message.includes("Build.type") ||
+      message.includes("Build.colors") ||
+      message.includes("column \"type\"") ||
+      message.includes("column \"colors\""))
+  );
+}
+
+async function createLandingPageBuildRecord({
+  clientId,
+  userId,
+  colors,
+}: {
+  clientId: string;
+  userId: string;
+  colors: z.infer<typeof bodySchema>["colors"];
+}) {
+  try {
+    return await prisma.build.create({
+      data: {
+        clientId,
+        status: "in_progress",
+        deployedBy: userId,
+        type: "landing_page",
+        colors,
+      },
+      select: { id: true },
+    });
+  } catch (e) {
+    if (!isMissingBuildMetadataColumn(e)) throw e;
+    console.warn(
+      "Build.type/colors columns are missing. Create the landing page build using legacy columns.",
+    );
+    return prisma.build.create({
+      data: {
+        clientId,
+        status: "in_progress",
+        deployedBy: userId,
+      },
+      select: { id: true },
+    });
+  }
+}
+
 export async function POST(req: NextRequest) {
   const { userId } = await auth();
   if (!userId) {
@@ -124,14 +171,10 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  const build = await prisma.build.create({
-    data: {
-      clientId: client.id,
-      status: "in_progress",
-      deployedBy: userId,
-      type: "landing_page",
-      colors: body.colors,
-    },
+  const build = await createLandingPageBuildRecord({
+    clientId: client.id,
+    userId,
+    colors: body.colors,
   });
 
   await audit(userId, "landing-page.deploy.start", client.id, {
@@ -263,6 +306,7 @@ export async function POST(req: NextRequest) {
               deployedAt: new Date(),
               pagesDeployed: deployed as unknown as object,
             },
+            select: { id: true },
           });
           await audit(userId, "landing-page.deploy.finish", client.id, {
             buildId: build.id,

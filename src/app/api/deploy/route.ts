@@ -137,6 +137,7 @@ export async function POST(req: NextRequest) {
       status: "in_progress",
       deployedBy: userId,
     },
+    select: { id: true },
   });
 
   await audit(userId, "deploy.start", client.id, {
@@ -223,6 +224,7 @@ export async function POST(req: NextRequest) {
               deployedAt: new Date(),
               pagesDeployed: deployed as unknown as object,
             },
+            select: { id: true },
           });
           await audit(userId, "deploy.finish", client.id, {
             buildId: build.id,

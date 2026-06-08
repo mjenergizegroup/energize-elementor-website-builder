@@ -31,8 +31,8 @@ function statusVariant(status: string) {
   return "outline";
 }
 
-function buildTypeLabel(type: string | null | undefined) {
-  return type === "landing_page" ? "Landing Page" : "Website";
+function isLandingPageBuild(theme: string | null | undefined) {
+  return theme === "landing-page";
 }
 
 export default async function BuildsPage({
@@ -46,7 +46,19 @@ export default async function BuildsPage({
     where: statusFilter ? { status: statusFilter } : undefined,
     orderBy: { createdAt: "desc" },
     take: 100,
-    include: { client: true },
+    select: {
+      id: true,
+      pagesDeployed: true,
+      status: true,
+      deployedAt: true,
+      createdAt: true,
+      client: {
+        select: {
+          name: true,
+          theme: true,
+        },
+      },
+    },
   });
 
   return (
@@ -99,6 +111,7 @@ export default async function BuildsPage({
         ) : (
           builds.map((build, index) => {
             const pages = (build.pagesDeployed ?? []) as DeployedPage[];
+            const landingPageBuild = isLandingPageBuild(build.client?.theme);
             return (
               <div key={build.id} className="grid-row build-grid">
                 <div className="idx">{String(index + 1).padStart(2, "0")}</div>
@@ -111,11 +124,11 @@ export default async function BuildsPage({
                     {pages.length > 0 ? ` / ${pages.length} pages` : ""}
                   </span>
                 </div>
-                <div className="row-meta">{buildTypeLabel(build.type)}</div>
                 <div className="row-meta">
-                  {build.type === "landing_page"
-                    ? "Google Ads"
-                    : build.client?.theme ?? "Pending"}
+                  {landingPageBuild ? "Landing Page" : "Website"}
+                </div>
+                <div className="row-meta">
+                  {landingPageBuild ? "Google Ads" : build.client?.theme ?? "Pending"}
                 </div>
                 <div>
                   <Badge variant={statusVariant(build.status)}>{build.status}</Badge>
