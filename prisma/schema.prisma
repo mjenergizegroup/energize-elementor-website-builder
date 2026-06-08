@@ -34,8 +34,6 @@ model Build {
   id            String    @id @default(cuid())
   clientId      String
   client        Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  type          String    @default("website")
-  colors        Json?
   // Array of deployed page records: { page, wpPageId, editUrl, status }.
   pagesDeployed Json?
   // pending | in_progress | success | partial | failed
