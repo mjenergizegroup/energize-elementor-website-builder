@@ -36,6 +36,7 @@ const BASE_CUSTOM_COLORS: KitColor[] = [
 
 export function toCustomColors(colors: BrandColors): KitColor[] {
   return [
+    { _id: "background", title: "Background", color: colors.background },
     ...TINT_COLOR_KEYS.flatMap((key) =>
       TINT_LEVELS.map((level) => ({
         _id: `${key}_${level}`,

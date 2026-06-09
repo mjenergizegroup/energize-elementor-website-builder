@@ -245,7 +245,10 @@ export async function POST(req: NextRequest) {
           send({ type: "step", status: "start", label });
 
           try {
-            const injected = injectLandingPage(page.templateName, page.contentJson);
+            const injected = injectLandingPage(page.templateName, page.contentJson, {
+              brandColors: body.brandKit.colors,
+              practiceName: body.client.name,
+            });
             const elementorData = Array.isArray(injected.data.content)
               ? injected.data.content
               : [];
