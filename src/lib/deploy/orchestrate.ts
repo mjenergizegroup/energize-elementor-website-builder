@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { buildElevatePage } from "@/lib/builders/elevate";
 import type { ElementorJSON } from "@/lib/builders/elevate/types";
+import { repairElementorTextContrast } from "@/lib/elementor/contrast";
 import { getInjector } from "@/lib/injection/registry";
 import { DEFAULT_WP_PAGE_TEMPLATE } from "@/lib/injection/base";
 import { WpClient } from "@/lib/wp/client";
@@ -36,6 +37,7 @@ export async function* runDeploy(
 
     try {
       const injected = buildPage(req, pageContent);
+      repairElementorTextContrast(injected.elementorData, req.brandKit.colors);
       allBuildNotes.push(...injected.buildNotes);
       allWarnings.push(...injected.warnings);
 
