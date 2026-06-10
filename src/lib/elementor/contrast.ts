@@ -146,7 +146,7 @@ function resolveColorValue(value: unknown, colors: BrandColors): ResolvedColor |
 }
 
 function colorTokenToHex(token: string, colors: BrandColors): string | null {
-  if (token in colors) return colors[token as keyof BrandColors];
+  if (token in colors) return colors[token as keyof BrandColors] ?? null;
   if (token === "white") return "#FFFFFF";
   if (token === "black") return "#111111";
   return null;

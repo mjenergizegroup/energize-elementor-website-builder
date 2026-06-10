@@ -35,6 +35,7 @@ const BASE_CUSTOM_COLORS: KitColor[] = [
 ];
 
 export function toCustomColors(colors: BrandColors): KitColor[] {
+  const highlight = colors.highlight;
   return [
     { _id: "background", title: "Background", color: colors.background },
     ...TINT_COLOR_KEYS.flatMap((key) =>
@@ -44,6 +45,16 @@ export function toCustomColors(colors: BrandColors): KitColor[] {
         color: tintTowardWhite(colors[key], level),
       })),
     ),
+    ...(highlight
+      ? [
+          { _id: "highlight", title: "Highlight", color: highlight },
+          ...TINT_LEVELS.map((level) => ({
+            _id: `highlight_${level}`,
+            title: `Highlight ${level}`,
+            color: tintTowardWhite(highlight, level),
+          })),
+        ]
+      : []),
     ...BASE_CUSTOM_COLORS,
   ];
 }

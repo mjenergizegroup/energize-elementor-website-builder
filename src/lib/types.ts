@@ -7,6 +7,8 @@ export interface BrandColors {
   accent: string;
   text: string;
   background: string;
+  // Optional extra brand color. Only present when the build opted into it.
+  highlight?: string;
 }
 
 export interface BrandFonts {

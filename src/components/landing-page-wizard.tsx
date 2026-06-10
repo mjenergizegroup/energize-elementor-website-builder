@@ -17,18 +17,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Combobox } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import type { InitialClient } from "@/components/build-wizard";
 import { GOOGLE_FONTS } from "@/lib/google-fonts";
-import type { BrandKit, UploadedAsset } from "@/lib/types";
+import type { BrandColors, BrandKit, UploadedAsset } from "@/lib/types";
 
 type TemplateName =
   | "std_v1"
@@ -149,6 +143,21 @@ const DEFAULT_COLORS = {
   background: "#FFFFFF",
 };
 
+const DEFAULT_HIGHLIGHT = "#2a9d8f";
+
+// Every landing page build ships with a Thank You page. When the Build
+// Package does not include one, these defaults fill the template so the
+// leftover demo content (including its website link) never goes live.
+function defaultThankYouSlots(siteUrl: string): Record<string, unknown> {
+  const url = siteUrl.trim().replace(/\/+$/, "");
+  return {
+    THANK_YOU_HEADING: "Thank You for Contacting Us!",
+    THANK_YOU_BODY:
+      "<p>We received your request. Our team will reach out shortly to confirm your appointment.</p>",
+    WEBSITE_URL: `<p style="text-align: center;">Please feel free to explore our <strong><a href="${url}" target="_blank" rel="noopener noreferrer">website</a></strong> for more information about our services, our team, and our philosophy.</p>`,
+  };
+}
+
 function mimeFromFilename(filename: string): string {
   const ext = filename.split(".").pop()?.toLowerCase();
   if (ext === "svg") return "image/svg+xml";
@@ -252,6 +261,16 @@ export function LandingPageWizard({
   const [colors, setColors] = useState(
     initialClient?.brandKit.colors ?? DEFAULT_COLORS,
   );
+  const [useAccent, setUseAccent] = useState(() => {
+    const stored = initialClient?.brandKit.colors;
+    return stored ? stored.accent !== stored.secondary : false;
+  });
+  const [useHighlight, setUseHighlight] = useState(
+    Boolean(initialClient?.brandKit.colors.highlight),
+  );
+  const [highlight, setHighlight] = useState(
+    initialClient?.brandKit.colors.highlight ?? DEFAULT_HIGHLIGHT,
+  );
   const [fontHeading, setFontHeading] = useState(
     initialClient?.brandKit.fonts.heading ?? "Poppins",
   );
@@ -343,9 +362,22 @@ export function LandingPageWizard({
     toast.success(`${file.name} loaded for favicon.`);
   }
 
+  function buildColors(): BrandColors {
+    return {
+      primary: colors.primary,
+      secondary: colors.secondary,
+      // When accent is not used the accent slot falls back to secondary so
+      // templates referencing it stay on brand.
+      accent: useAccent ? colors.accent : colors.secondary,
+      text: colors.text,
+      background: colors.background,
+      ...(useHighlight ? { highlight } : {}),
+    };
+  }
+
   function buildBrandKit(): BrandKit {
     return {
-      colors,
+      colors: buildColors(),
       fonts: { heading: fontHeading, body: fontBody },
       logo: {
         filename: logo!.filename,
@@ -364,8 +396,12 @@ export function LandingPageWizard({
         if (!buildPackage) return "Upload a valid Build Package JSON file.";
         return null;
       case 1:
-        if (!colors.primary || !colors.secondary || !colors.accent)
-          return "Choose primary, secondary, and accent colors.";
+        if (!colors.primary || !colors.secondary)
+          return "Choose primary and secondary colors.";
+        if (useAccent && !colors.accent)
+          return "Choose an accent color or uncheck it.";
+        if (useHighlight && !highlight)
+          return "Choose a highlight color or uncheck it.";
         if (!logo?.dataBase64) return "Site logo is required.";
         if (!favicon?.dataBase64) return "Site favicon is required.";
         return null;
@@ -435,13 +471,26 @@ export function LandingPageWizard({
             wpAppPassword: appPassword || undefined,
           },
           brandKit: buildBrandKit(),
-          pages: buildPackage.pages.map((page) => ({
-            pageName: page.page_type,
-            pageTitle: page.page_type,
-            slug: slugify(page.page_type === "Thank You" ? "thank-you" : page.page_type),
-            templateName: page.template,
-            contentJson: page.slots,
-          })),
+          pages: [
+            ...buildPackage.pages.map((page) => ({
+              pageName: page.page_type,
+              pageTitle: page.page_type,
+              slug: slugify(page.page_type === "Thank You" ? "thank-you" : page.page_type),
+              templateName: page.template,
+              contentJson: page.slots,
+            })),
+            ...(buildPackage.pages.some((page) => page.template === "thank_you")
+              ? []
+              : [
+                  {
+                    pageName: "Thank You",
+                    pageTitle: "Thank You",
+                    slug: "thank-you",
+                    templateName: "thank_you" as TemplateName,
+                    contentJson: defaultThankYouSlots(siteUrl),
+                  },
+                ]),
+          ],
         }),
       });
 
@@ -644,8 +693,8 @@ export function LandingPageWizard({
             {step === 1 && (
               <div className="space-y-6">
                 <SectionLabel>Color palette</SectionLabel>
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {(["primary", "secondary", "accent"] as const).map((key) => (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {(["primary", "secondary"] as const).map((key) => (
                     <ColorField
                       key={key}
                       label={key}
@@ -653,8 +702,28 @@ export function LandingPageWizard({
                       onChange={(value) => setColors({ ...colors, [key]: value })}
                     />
                   ))}
-                  <FixedSwatch label="black" value="#191919" />
-                  <FixedSwatch label="white" value="#FFFFFF" />
+                </div>
+                <p className="text-[12px] font-medium text-[var(--muted)]">
+                  Black and white are always part of the kit, so they are not shown
+                  here. Check an optional color below to add it to the build.
+                </p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <OptionalColorField
+                    label="accent"
+                    hint="When unchecked, the accent slot reuses the secondary color."
+                    checked={useAccent}
+                    onCheckedChange={setUseAccent}
+                    value={colors.accent}
+                    onChange={(value) => setColors({ ...colors, accent: value })}
+                  />
+                  <OptionalColorField
+                    label="highlight"
+                    hint="Extra brand color added to the Elementor custom colors."
+                    checked={useHighlight}
+                    onCheckedChange={setUseHighlight}
+                    value={highlight}
+                    onChange={setHighlight}
+                  />
                 </div>
                 <SectionLabel>Typography</SectionLabel>
                 <div className="grid gap-4 md:grid-cols-2">
@@ -746,9 +815,8 @@ export function LandingPageWizard({
                         {[
                           colors.primary,
                           colors.secondary,
-                          colors.accent,
-                          "#191919",
-                          "#FFFFFF",
+                          ...(useAccent ? [colors.accent] : []),
+                          ...(useHighlight ? [highlight] : []),
                         ].map((color) => (
                           <span
                             key={color}
@@ -891,6 +959,12 @@ function PackageSummary({
           Client name detected from the file:{" "}
           <strong className="font-bold">{buildPackage.client}</strong>
         </p>
+        {!buildPackage.pages.some((page) => page.template === "thank_you") && (
+          <p className="font-medium text-[var(--muted)]">
+            No Thank You page in this file. One will be added automatically with
+            default content and a link to the practice website.
+          </p>
+        )}
         <p className="font-medium text-[var(--muted)]">
           Review the pages above. If anything looks wrong, upload a corrected file.
         </p>
@@ -929,18 +1003,14 @@ function FontSelect({
   return (
     <div className="space-y-2.5">
       <Label>{label}</Label>
-      <Select value={value} onValueChange={(next) => next && onChange(next)}>
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {GOOGLE_FONTS.map((font) => (
-            <SelectItem key={font} value={font}>
-              {font}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <Combobox
+        items={GOOGLE_FONTS}
+        value={value}
+        onValueChange={onChange}
+        placeholder="Select a font"
+        searchPlaceholder="Search Google Fonts..."
+        emptyMessage="No fonts found."
+      />
     </div>
   );
 }
@@ -958,6 +1028,8 @@ function AssetUpload({
   preview?: string;
   onFile: (file: File) => void | Promise<void>;
 }) {
+  const [dragging, setDragging] = useState(false);
+
   function loadFile(file: File | undefined) {
     if (!file) return;
     void Promise.resolve(onFile(file)).catch((error) => {
@@ -966,12 +1038,41 @@ function AssetUpload({
   }
 
   return (
-    <label className="flex min-h-36 cursor-pointer flex-col items-center justify-center gap-2 border border-dashed border-[var(--line-strong)] bg-[var(--paper-2)] p-5 text-center transition hover:bg-[var(--card)]">
+    <label
+      onDragEnter={(e) => {
+        e.preventDefault();
+        setDragging(true);
+      }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragging(true);
+      }}
+      onDragLeave={(e) => {
+        e.preventDefault();
+        if (e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget)) {
+          return;
+        }
+        setDragging(false);
+      }}
+      onDrop={(e) => {
+        e.preventDefault();
+        setDragging(false);
+        loadFile(e.dataTransfer.files?.[0]);
+      }}
+      className={`flex min-h-36 cursor-pointer flex-col items-center justify-center gap-2 border border-dashed p-5 text-center transition ${
+        dragging
+          ? "border-[var(--color-red)] bg-[var(--color-red-light)]"
+          : "border-[var(--line-strong)] bg-[var(--paper-2)] hover:bg-[var(--card)]"
+      }`}
+    >
       <UploadCloud className="size-6 text-[var(--primary)]" />
       <span className="text-sm font-semibold text-[var(--ink)]">
         {preview ? `Replace ${label.toLowerCase()}` : `Upload ${label.toLowerCase()}`}
       </span>
       <span className="text-xs font-medium text-[var(--muted)]">{hint}</span>
+      <span className="text-xs font-medium text-[var(--muted)]">
+        Drag and drop or click to browse.
+      </span>
       <input
         type="file"
         accept={accept}
@@ -1029,17 +1130,39 @@ function ColorField({
   );
 }
 
-function FixedSwatch({ label, value }: { label: string; value: string }) {
+function OptionalColorField({
+  label,
+  hint,
+  checked,
+  onCheckedChange,
+  value,
+  onChange,
+}: {
+  label: string;
+  hint: string;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  value: string;
+  onChange: (value: string) => void;
+}) {
   return (
-    <div className="flex items-center gap-3 border border-[var(--line)] bg-[var(--paper-2)] p-3">
-      <span
-        className="size-10 border border-[var(--line-strong)]"
-        style={{ backgroundColor: value }}
-      />
-      <div>
-        <Label className="text-[10px] uppercase tracking-[0.15em]">{label}</Label>
-        <p className="mt-1 font-mono text-[12px]">{value}</p>
-      </div>
+    <div className="space-y-3 border border-[var(--line)] bg-[var(--paper-2)] p-3">
+      <label className="flex cursor-pointer items-center gap-2.5">
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => onCheckedChange(e.target.checked)}
+          className="size-4 shrink-0 cursor-pointer accent-[var(--color-red)]"
+        />
+        <span className="text-[10px] font-semibold uppercase tracking-[0.15em]">
+          Use {label} color
+        </span>
+      </label>
+      {checked ? (
+        <ColorField label={label} value={value} onChange={onChange} />
+      ) : (
+        <p className="text-[12px] font-medium text-[var(--muted)]">{hint}</p>
+      )}
     </div>
   );
 }

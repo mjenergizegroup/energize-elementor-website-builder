@@ -63,6 +63,7 @@ const bodySchema = z.object({
       accent: hexColorSchema,
       text: hexColorSchema,
       background: hexColorSchema,
+      highlight: hexColorSchema.optional(),
     }),
     fonts: z.object({ heading: z.string().min(1), body: z.string().min(1) }),
     logo: assetSchema,
