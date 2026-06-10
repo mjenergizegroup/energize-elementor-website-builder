@@ -19,10 +19,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <header className="topnav">
           <Link href="/dashboard" className="topnav-brand">
             <span className="brand-mark">E</span>
-            <span>
-              <span className="brand-name">Energize Builder</span>
-              <span className="brand-ver">Production</span>
-            </span>
+            <span className="brand-name">Energize Website Builder</span>
           </Link>
           <nav className="topnav-links" aria-label="Primary navigation">
             {navItems.map((item) => {

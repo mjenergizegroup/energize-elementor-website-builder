@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { GOOGLE_FONTS } from "@/lib/google-fonts";
+import { cn } from "@/lib/utils";
 import type { BrandKit, UploadedAsset } from "@/lib/types";
 import type { PageContent } from "@/lib/injection/types";
 import type { ElevatePageType } from "@/lib/builders/elevate/types";
@@ -922,7 +923,10 @@ export function BuildWizard({
       >
         <Link
           href="/dashboard"
-          className={buttonVariants({ variant: "ghost", size: "sm" })}
+          className={cn(
+            buttonVariants({ variant: "ghost" }),
+            "-ml-0.5 h-auto self-stretch px-4"
+          )}
         >
           Cancel
         </Link>
@@ -1513,26 +1517,26 @@ function ColorField({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex items-center gap-3 border border-[var(--line)] bg-[var(--paper-2)] p-3 transition-all duration-200 hover:border-[var(--line-strong)]">
-      <label
-        className="relative flex size-10 shrink-0 cursor-pointer overflow-hidden border border-[var(--line-strong)]"
-        style={{ backgroundColor: value }}
-      >
-        <span className="sr-only">{label} color picker</span>
-        <input
-          type="color"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="absolute inset-0 size-full cursor-pointer opacity-0"
-          aria-label={`${label} color picker`}
-        />
-      </label>
-      <div className="min-w-0 flex-1 space-y-1">
-        <Label className="text-[10px] uppercase tracking-[0.15em]">{label}</Label>
+    <div className="space-y-2 border border-[var(--line)] bg-[var(--paper-2)] p-3 transition-all duration-200 hover:border-[var(--line-strong)]">
+      <Label className="text-[10px] uppercase tracking-[0.15em]">{label}</Label>
+      <div className="flex items-center gap-3">
+        <label
+          className="relative flex size-10 shrink-0 cursor-pointer overflow-hidden border border-[var(--line-strong)]"
+          style={{ backgroundColor: value }}
+        >
+          <span className="sr-only">{label} color picker</span>
+          <input
+            type="color"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            className="absolute inset-0 size-full cursor-pointer opacity-0"
+            aria-label={`${label} color picker`}
+          />
+        </label>
         <Input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-8 font-mono text-[12px]"
+          className="h-10 min-w-0 flex-1 font-mono text-[12px]"
         />
       </div>
     </div>

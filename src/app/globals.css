@@ -188,15 +188,6 @@
     line-height: 1;
   }
 
-  .brand-ver {
-    margin-top: 3px;
-    color: #555555;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    line-height: 1;
-    text-transform: uppercase;
-  }
 
   .topnav-links {
     display: flex;
