@@ -32,6 +32,62 @@ interface SlotMap {
   slots: Record<string, SlotDefinition | SlotDefinition[]>;
 }
 
+const SLOT_ALIASES: Record<string, string[]> = {
+  MAPS_ADDRESS: [
+    "GOOGLE_MAPS_ADDRESS",
+    "GOOGLE_MAPS_QUERY",
+    "GOOGLE_MAPS_URL",
+    "GOOGLE_BUSINESS_PROFILE",
+    "GOOGLE_BUSINESS_PROFILE_URL",
+    "GBP_URL",
+    "GBP_LINK",
+    "BUSINESS_ADDRESS",
+    "ADDRESS",
+    "ADDRESS_LINE",
+  ],
+  WORK_HOURS: [
+    "HOURS",
+    "BUSINESS_HOURS",
+    "WORKING_HOURS",
+    "OFFICE_HOURS",
+    "PRACTICE_HOURS",
+  ],
+  PHONE_NUMBER: [
+    "PHONE",
+    "PHONE_ICON_BOX",
+    "CALL_PHONE",
+    "CALL_TRACKING_NUMBER",
+    "TRACKING_PHONE",
+  ],
+  PHONE_ICON_BOX: [
+    "PHONE_NUMBER",
+    "PHONE",
+    "CALL_PHONE",
+    "CALL_TRACKING_NUMBER",
+    "TRACKING_PHONE",
+  ],
+  GHL_REVIEW_URL: [
+    "GOOGLE_BUSINESS_PROFILE_URL",
+    "GOOGLE_REVIEW_URL",
+    "GOOGLE_REVIEWS_URL",
+    "GOOGLE_MAPS_URL",
+    "GBP_URL",
+    "GBP_LINK",
+    "REVIEW_URL",
+    "REVIEWS_URL",
+  ],
+};
+
+const DEFAULT_PRACTICE_NAMES = [
+  "Nellie Gail Orthodontics: Braces and Invisalign",
+  "Nellie Gail Orthodontics",
+  "Pleasant Smiles Dental",
+  "Elevate Smile Design & Sleep Wellness",
+  "Dental By Design",
+  "Dental Inc.",
+  "DENTAL INC.",
+];
+
 export interface LandingPageTemplateSummary {
   name: LandingPageTemplateName;
   description?: string;
@@ -84,15 +140,16 @@ export function injectLandingPage(
 ): LandingPageInjectionResult {
   const data = structuredCloneJson(loadTemplate(templateName));
   const slotMap = loadSlotMap(templateName);
+  const normalizedContent = normalizeLandingPageContent(content);
   const populatedSlots: string[] = [];
   const missingSlots: string[] = [];
 
   for (const [slotName, rawDefs] of Object.entries(slotMap.slots)) {
-    if (!(slotName in content)) {
+    if (!(slotName in normalizedContent)) {
       missingSlots.push(slotName);
       continue;
     }
-    const value = content[slotName];
+    const value = normalizedContent[slotName];
     const defs = Array.isArray(rawDefs) ? rawDefs : [rawDefs];
     for (const def of defs) {
       applySlot(data, def, value, options);
@@ -103,6 +160,7 @@ export function injectLandingPage(
   if (options.normalizeCtaText ?? true) {
     normalizeCtaButtons(data);
   }
+  replaceDefaultPracticeNames(data, options.practiceName);
   if (options.brandColors) {
     repairElementorTextContrast(data, options.brandColors);
   }
@@ -132,6 +190,36 @@ function loadSlotMap(templateName: LandingPageTemplateName): SlotMap {
 
 function structuredCloneJson<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
+}
+
+function normalizeLandingPageContent(content: LandingPageContent): LandingPageContent {
+  const normalized: LandingPageContent = { ...content };
+  const byCanonicalKey = new Map<string, unknown>();
+
+  for (const [key, value] of Object.entries(content)) {
+    const canonicalKey = canonicalSlotKey(key);
+    byCanonicalKey.set(canonicalKey, value);
+    if (normalized[canonicalKey] == null) {
+      normalized[canonicalKey] = value;
+    }
+  }
+
+  for (const [slotName, aliases] of Object.entries(SLOT_ALIASES)) {
+    if (normalized[slotName] != null) continue;
+    for (const alias of aliases) {
+      const value = byCanonicalKey.get(canonicalSlotKey(alias));
+      if (value != null && valueToText(value).trim() !== "") {
+        normalized[slotName] = value;
+        break;
+      }
+    }
+  }
+
+  return normalized;
+}
+
+function canonicalSlotKey(value: string): string {
+  return value.trim().toUpperCase().replace(/[^A-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
 }
 
 function findWidget(node: unknown, widgetId: string): ElementorNode | null {
@@ -234,15 +322,69 @@ function setIconListItem(settings: ElementorNode, index: number, text: string): 
 }
 
 function toIconList(value: unknown, existing: unknown): ElementorNode[] {
-  const items = Array.isArray(value) ? value : valueToText(value).split(/\r?\n/);
+  const items = toTextList(value);
   const existingItems = Array.isArray(existing) ? existing : [];
   return items
-    .map((item) => valueToText(item).trim())
+    .map((item) => item.trim())
     .filter(Boolean)
     .map((text, index) => {
       const existingItem = isObject(existingItems[index]) ? existingItems[index] : {};
       return { ...existingItem, _id: existingItem._id ?? makeElementorId(), text };
     });
+}
+
+function toTextList(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.map((item) => structuredListItemToText(item));
+  }
+
+  if (isObject(value)) {
+    const nested =
+      value.items ??
+      value.hours ??
+      value.work_hours ??
+      value.workHours ??
+      value.business_hours ??
+      value.businessHours;
+    if (Array.isArray(nested)) {
+      return nested.map((item) => structuredListItemToText(item));
+    }
+
+    return Object.entries(value).map(([key, item]) => {
+      const label = humanizeKey(key);
+      if (isObject(item)) {
+        return structuredListItemToText({ ...item, day: item.day ?? label });
+      }
+      return `${label}: ${valueToText(item)}`;
+    });
+  }
+
+  return valueToText(value).split(/\r?\n/);
+}
+
+function structuredListItemToText(item: unknown): string {
+  if (!isObject(item)) return valueToText(item);
+
+  const text = item.text ?? item.label ?? item.value;
+  if (text != null) return valueToText(text);
+
+  const day = valueToText(item.day ?? item.days ?? item.name).trim();
+  const closed = Boolean(item.closed ?? item.isClosed);
+  if (closed) return day ? `${day}: Closed` : "Closed";
+
+  const hours = item.hours ?? item.time ?? item.times;
+  if (hours != null) {
+    return day ? `${day}: ${valueToText(hours)}` : valueToText(hours);
+  }
+
+  const open = item.open ?? item.start ?? item.from;
+  const close = item.close ?? item.end ?? item.to;
+  if (open != null || close != null) {
+    const range = [open, close].map(valueToText).filter(Boolean).join(" - ");
+    return day ? `${day}: ${range}` : range;
+  }
+
+  return valueToText(item);
 }
 
 function toFaqItems(value: unknown, existing: unknown): ElementorNode[] {
@@ -273,20 +415,59 @@ function replaceFormHtml(html: string, formUrl: string): string {
 function replaceReviewHtml(settings: ElementorNode, reviewUrl: string): void {
   const target = typeof settings.html === "string" ? "html" : "shortcode";
   const current = valueToText(settings[target]);
-  settings[target] = current.replace(
-    /src=(["'])https?:\/\/[^"']*reputationhub[^"']+\1/i,
-    `src="${reviewUrl}"`,
-  );
+  const reputationPattern = /src=(["'])https?:\/\/[^"']*reputationhub[^"']+\1/i;
+  const firstIframePattern = /src=(["'])https?:\/\/[^"']+\1/i;
+  settings[target] = current
+    .replace(reputationPattern, `src="${reviewUrl}"`)
+    .replace(firstIframePattern, (match) =>
+      match.includes(reviewUrl) ? match : `src="${reviewUrl}"`,
+    );
 }
 
 function toMapSearchAddress(address: string, practiceName?: string): string {
   const cleanAddress = address.trim();
   const cleanPractice = practiceName?.trim();
+  if (isLikelyUrl(cleanAddress)) return cleanAddress;
   if (!cleanAddress || !cleanPractice) return cleanAddress;
   if (cleanAddress.toLowerCase().startsWith(cleanPractice.toLowerCase())) {
     return cleanAddress;
   }
   return `${cleanPractice} ${cleanAddress}`;
+}
+
+function isLikelyUrl(value: string): boolean {
+  return /^https?:\/\//i.test(value);
+}
+
+function replaceDefaultPracticeNames(node: unknown, practiceName?: string): void {
+  const cleanPractice = practiceName?.trim();
+  if (!cleanPractice) return;
+
+  if (Array.isArray(node)) {
+    node.forEach((child) => replaceDefaultPracticeNames(child, cleanPractice));
+    return;
+  }
+  if (!isObject(node)) return;
+
+  for (const [key, value] of Object.entries(node)) {
+    if (typeof value === "string") {
+      node[key] = replaceDefaultPracticeNameText(value, cleanPractice);
+    } else if (isObject(value) || Array.isArray(value)) {
+      replaceDefaultPracticeNames(value, cleanPractice);
+    }
+  }
+}
+
+function replaceDefaultPracticeNameText(value: string, practiceName: string): string {
+  return DEFAULT_PRACTICE_NAMES.reduce(
+    (text, defaultName) =>
+      text.replace(new RegExp(escapeRegExp(defaultName), "gi"), practiceName),
+    value,
+  );
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function normalizeCtaButtons(node: unknown): void {
@@ -354,6 +535,14 @@ function valueToText(value: unknown): string {
   if (typeof value === "string") return value;
   if (typeof value === "number" || typeof value === "boolean") return String(value);
   return JSON.stringify(value);
+}
+
+function humanizeKey(value: string): string {
+  return value
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 function escapeHtml(value: string): string {

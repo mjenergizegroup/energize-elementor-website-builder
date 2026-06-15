@@ -19,6 +19,16 @@ const BACKGROUND_FIELDS = [
   "background_color_b",
 ] as const;
 
+const BUTTON_COLOR_PAIRS = [
+  ["background_color", "button_text_color"],
+  ["button_background_hover_color", "hover_color"],
+  ["st_one_normal_background_background_color", "st_one_normal_color_responsive"],
+  ["st_one_hover_background_background_color", "st_one_hover_color_responsive"],
+  ["st_two_normal_background_background_color", "st_two_normal_color_responsive"],
+  ["st_two_hover_background_background_color", "st_two_hover_color_responsive"],
+  ["st_middle_background_background_color", "st_middle_color_responsive"],
+] as const;
+
 interface ResolvedColor {
   hex?: string;
   token?: string;
@@ -56,6 +66,10 @@ function repairNodeTextContrast(
     for (const field of FOREGROUND_FIELDS) {
       repairForeground(settings, field, textBackground, colors);
     }
+
+    if (isButtonNode(node)) {
+      repairButtonColors(settings, colors);
+    }
   }
 
   const children = Array.isArray(node.elements)
@@ -64,6 +78,23 @@ function repairNodeTextContrast(
       ? node.content
       : [];
   children.forEach((child) => repairNodeTextContrast(child, colors, nodeBackground));
+}
+
+function repairButtonColors(settings: ElementorNode, colors: BrandColors): void {
+  for (const [backgroundField, foregroundField] of BUTTON_COLOR_PAIRS) {
+    const background = resolveColor(settings, backgroundField, colors);
+    if (!background?.hex) continue;
+
+    const foreground = resolveColor(settings, foregroundField, colors);
+    const needsRepair =
+      !foreground?.hex ||
+      foreground.unresolvedGlobal ||
+      contrastRatio(foreground.hex, background.hex) < 4.5;
+
+    if (needsRepair) {
+      setDirectColor(settings, foregroundField, readableForeground(background.hex, colors));
+    }
+  }
 }
 
 function resolveBackground(

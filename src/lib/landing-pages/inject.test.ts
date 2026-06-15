@@ -30,6 +30,14 @@ const brandColors = {
   background: "#F8F5EA",
 };
 
+const darkButtonBrandColors = {
+  primary: "#000000",
+  secondary: "#566169",
+  accent: "#000000",
+  text: "#000000",
+  background: "#FFFFFF",
+};
+
 function findNode(node: unknown, id: string): NodeRecord | null {
   if (Array.isArray(node)) {
     for (const item of node) {
@@ -102,7 +110,61 @@ async function main(): Promise<void> {
   const cta = settingsFor(standardV2.data, "10a65223");
   assert.equal(cta.text, "Free Consultation");
 
+  const aliasStandard = injectLandingPage(
+    "std_v1",
+    {
+      GOOGLE_BUSINESS_PROFILE_URL: "https://maps.app.goo.gl/example",
+      business_hours: {
+        monday: "9 AM - 5 PM",
+        friday: { closed: true },
+      },
+      phone: "(555) 123-4567",
+    },
+    {
+      brandColors,
+      practiceName: "BiteSize Dentistry",
+    },
+  );
+
+  assert(!aliasStandard.missingSlots.includes("MAPS_ADDRESS"));
+  assert(!aliasStandard.missingSlots.includes("WORK_HOURS"));
+  assert(!aliasStandard.missingSlots.includes("PHONE_NUMBER"));
+
+  const aliasMap = settingsFor(aliasStandard.data, "a2948d5");
+  assert.equal(aliasMap.address, "https://maps.app.goo.gl/example");
+
+  const hours = settingsFor(aliasStandard.data, "24424744");
+  assert(Array.isArray(hours.icon_list));
+  assert.equal((hours.icon_list[0] as NodeRecord).text, "Monday: 9 AM - 5 PM");
+  assert.equal((hours.icon_list[1] as NodeRecord).text, "Friday: Closed");
+
+  const phone = settingsFor(aliasStandard.data, "46dd9758");
+  assert.equal(phone.description_text, "(555) 123-4567");
+
+  const reviewSubdesc = settingsFor(aliasStandard.data, "b20959d");
+  assert.equal(
+    valueHasText(reviewSubdesc.editor, "Nellie Gail Orthodontics"),
+    false,
+  );
+  assert.equal(valueHasText(reviewSubdesc.editor, "BiteSize Dentistry"), true);
+
+  const darkButtons = injectLandingPage(
+    "std_v2",
+    {},
+    {
+      brandColors: darkButtonBrandColors,
+      practiceName: "BiteSize Dentistry",
+    },
+  );
+
+  const darkCta = settingsFor(darkButtons.data, "10a65223");
+  assert.equal(darkCta.button_text_color, "#FFFFFF");
+
   console.log("landing page injection checks passed");
+}
+
+function valueHasText(value: unknown, text: string): boolean {
+  return typeof value === "string" && value.includes(text);
 }
 
 main().catch((error: unknown) => {
