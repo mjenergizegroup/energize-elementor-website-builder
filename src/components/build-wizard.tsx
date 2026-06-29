@@ -90,6 +90,29 @@ interface DeployedLink {
   title: string;
   editUrl: string;
   viewUrl: string;
+  kind?: "content" | "accessibility-statement";
+}
+
+interface AccessibilityIssue {
+  id: string;
+  severity: "pass" | "warning" | "fail" | "manual";
+  rule: string;
+  page?: string;
+  message: string;
+  guidance?: string;
+}
+
+interface AccessibilityReport {
+  target: "WCAG 2.2 AA";
+  summary: {
+    pass: number;
+    warning: number;
+    fail: number;
+    manual: number;
+  };
+  launchReady: boolean;
+  issues: AccessibilityIssue[];
+  checkedAt: string;
 }
 
 interface CrawlPageEntry {
@@ -314,6 +337,8 @@ export function BuildWizard({
   const [deployedLinks, setDeployedLinks] = useState<DeployedLink[]>([]);
   const [buildNotes, setBuildNotes] = useState<string[]>([]);
   const [warnings, setWarnings] = useState<string[]>([]);
+  const [accessibilityReport, setAccessibilityReport] =
+    useState<AccessibilityReport | null>(null);
   const [finished, setFinished] = useState<null | "success" | "partial" | "failed">(
     null,
   );
@@ -661,6 +686,7 @@ export function BuildWizard({
     setDeployedLinks([]);
     setBuildNotes([]);
     setWarnings([]);
+    setAccessibilityReport(null);
     setFinished(null);
     if (logo && !logo.dataBase64) {
       toast.error("Logo file data is missing. Upload the logo again.");
@@ -751,10 +777,16 @@ export function BuildWizard({
           } else if (event.type === "done") {
             setBuildNotes(event.buildNotes ?? []);
             setWarnings(event.warnings ?? []);
+            if (event.accessibilityReport) {
+              setAccessibilityReport(event.accessibilityReport);
+            }
           } else {
             if (event.status === "fail") sawFail = true;
+            if (event.accessibilityReport) {
+              setAccessibilityReport(event.accessibilityReport);
+            }
             upsertEvent(event.label, event.status, event.message);
-            if (event.step === "page" && event.status === "ok" && event.data?.wpPageId) {
+            if (event.status === "ok" && event.data?.wpPageId) {
               setDeployedLinks((prev) => [
                 ...prev,
                 {
@@ -762,6 +794,10 @@ export function BuildWizard({
                   title: event.data.title ?? event.data.page,
                   editUrl: event.data.editUrl,
                   viewUrl: event.data.viewUrl,
+                  kind:
+                    event.step === "accessibility-statement"
+                      ? "accessibility-statement"
+                      : "content",
                 },
               ]);
             }
@@ -848,6 +884,9 @@ export function BuildWizard({
                 {deployedLinks.map((l) => (
                   <li key={l.wpPageId} className="flex flex-wrap items-center gap-3">
                     <span className="font-medium">{l.title}</span>
+                    {l.kind === "accessibility-statement" && (
+                      <Badge variant="outline">Accessibility</Badge>
+                    )}
                     <a
                       href={l.editUrl}
                       target="_blank"
@@ -867,6 +906,69 @@ export function BuildWizard({
                   </li>
                 ))}
               </ul>
+              </div>
+            )}
+
+            {accessibilityReport && (
+              <div className="space-y-3">
+                <SectionLabel>Accessibility QA</SectionLabel>
+                <div className="space-y-4 border-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4 text-sm">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant={accessibilityReport.launchReady ? "default" : "destructive"}>
+                      {accessibilityReport.launchReady ? "No blocking issues" : "Launch blocked"}
+                    </Badge>
+                    <Badge variant="secondary">
+                      {accessibilityReport.summary.pass} pass
+                    </Badge>
+                    <Badge variant="secondary">
+                      {accessibilityReport.summary.warning} warnings
+                    </Badge>
+                    <Badge variant="destructive">
+                      {accessibilityReport.summary.fail} fail
+                    </Badge>
+                    <Badge variant="outline">
+                      {accessibilityReport.summary.manual} manual
+                    </Badge>
+                  </div>
+                  <div className="max-h-80 space-y-2 overflow-auto">
+                    {accessibilityReport.issues
+                      .filter((issue) => issue.severity !== "pass")
+                      .map((issue) => (
+                        <div
+                          key={issue.id}
+                          className="border border-[var(--line)] bg-[var(--paper-2)] p-3"
+                        >
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Badge
+                              variant={
+                                issue.severity === "fail"
+                                  ? "destructive"
+                                  : issue.severity === "warning"
+                                    ? "secondary"
+                                    : "outline"
+                              }
+                            >
+                              {issue.severity}
+                            </Badge>
+                            <span className="font-semibold text-[var(--ink)]">
+                              {issue.rule}
+                            </span>
+                            {issue.page && (
+                              <span className="text-xs text-[var(--muted)]">
+                                {issue.page}
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-2 text-[var(--ink)]">{issue.message}</p>
+                          {issue.guidance && (
+                            <p className="mt-1 text-[var(--muted)]">
+                              {issue.guidance}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                  </div>
+                </div>
               </div>
             )}
 

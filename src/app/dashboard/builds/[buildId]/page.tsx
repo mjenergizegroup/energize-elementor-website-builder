@@ -9,10 +9,34 @@ export const dynamic = "force-dynamic";
 
 type DeployedPage = {
   page: string;
+  title?: string;
   wpPageId: number;
   editUrl: string;
   viewUrl?: string;
   status?: string;
+  kind?: "content" | "accessibility-statement";
+};
+
+type AccessibilityIssue = {
+  id: string;
+  severity: "pass" | "warning" | "fail" | "manual";
+  rule: string;
+  page?: string;
+  message: string;
+  guidance?: string;
+};
+
+type AccessibilityReport = {
+  target: "WCAG 2.2 AA";
+  summary: {
+    pass: number;
+    warning: number;
+    fail: number;
+    manual: number;
+  };
+  launchReady: boolean;
+  issues: AccessibilityIssue[];
+  checkedAt: string;
 };
 
 function formatDate(value: Date | string | null | undefined) {
@@ -50,6 +74,16 @@ function buildTypeLabel(landingPageBuild: boolean) {
   return landingPageBuild ? "Landing Page build" : "Website build";
 }
 
+function parseAccessibilityReport(errorLog: string | null): AccessibilityReport | null {
+  if (!errorLog) return null;
+  try {
+    const parsed = JSON.parse(errorLog) as { accessibilityReport?: AccessibilityReport };
+    return parsed.accessibilityReport ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function BuildDetailPage({
   params,
 }: {
@@ -65,6 +99,7 @@ export default async function BuildDetailPage({
       deployedAt: true,
       deployedBy: true,
       createdAt: true,
+      errorLog: true,
       client: {
         select: {
           id: true,
@@ -81,6 +116,7 @@ export default async function BuildDetailPage({
   const pages = (build.pagesDeployed ?? []) as DeployedPage[];
   const pushedCount = pages.filter((page) => page.editUrl).length;
   const landingPageBuild = isLandingPageBuild(build.client?.theme);
+  const accessibilityReport = parseAccessibilityReport(build.errorLog);
 
   return (
     <main className="page-body">
@@ -127,47 +163,109 @@ export default async function BuildDetailPage({
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
-        <section className="table-block">
-          <div className="block-head">
-            <h2>Pages pushed</h2>
-            <span className="block-note">
-              {pushedCount} of {pages.length} pushed
-            </span>
-          </div>
-          <div className="grid-head pages-grid">
-            <div>Page</div>
-            <div>WordPress Draft Link</div>
-            <div>Status</div>
-            <div>Pushed at</div>
-          </div>
-          {pages.length === 0 ? (
-            <p className="grid-row">No page records were saved for this build.</p>
-          ) : (
-            pages.map((page) => (
-              <div key={`${page.wpPageId}-${page.page}`} className="grid-row pages-grid">
-                <div className="row-meta">{page.page}</div>
-                {page.editUrl ? (
-                  <a
-                    href={page.editUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="truncate text-[12px] font-medium text-[var(--color-red)] hover:underline"
-                  >
-                    {page.editUrl}
-                  </a>
-                ) : (
-                  <span className="row-sub">No WordPress link</span>
-                )}
-                <div>
-                  <Badge variant={statusVariant(page.status ?? "pushed")}>
-                    {page.status ?? "pushed"}
-                  </Badge>
+        <div className="space-y-6">
+          <section className="table-block">
+            <div className="block-head">
+              <h2>Pages pushed</h2>
+              <span className="block-note">
+                {pushedCount} of {pages.length} pushed
+              </span>
+            </div>
+            <div className="grid-head pages-grid">
+              <div>Page</div>
+              <div>WordPress Draft Link</div>
+              <div>Status</div>
+              <div>Pushed at</div>
+            </div>
+            {pages.length === 0 ? (
+              <p className="grid-row">No page records were saved for this build.</p>
+            ) : (
+              pages.map((page) => (
+                <div key={`${page.wpPageId}-${page.page}`} className="grid-row pages-grid">
+                  <div className="row-meta">{page.page}</div>
+                  {page.editUrl ? (
+                    <a
+                      href={page.editUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="truncate text-[12px] font-medium text-[var(--color-red)] hover:underline"
+                    >
+                      {page.editUrl}
+                    </a>
+                  ) : (
+                    <span className="row-sub">No WordPress link</span>
+                  )}
+                  <div>
+                    <Badge variant={statusVariant(page.status ?? "pushed")}>
+                      {page.status ?? "pushed"}
+                    </Badge>
+                  </div>
+                  <div className="row-sub">{formatTime(build.deployedAt)}</div>
                 </div>
-                <div className="row-sub">{formatTime(build.deployedAt)}</div>
+              ))
+            )}
+          </section>
+
+          {accessibilityReport && (
+            <section className="table-block">
+              <div className="block-head">
+                <h2>Accessibility QA</h2>
+                <span className="block-note">
+                  {accessibilityReport.launchReady
+                    ? "No blocking issues"
+                    : `${accessibilityReport.summary.fail} blocking issue(s)`}
+                </span>
               </div>
-            ))
+              <div className="grid gap-3 p-4 text-sm">
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant={accessibilityReport.launchReady ? "default" : "destructive"}>
+                    {accessibilityReport.target}
+                  </Badge>
+                  <Badge variant="secondary">{accessibilityReport.summary.pass} pass</Badge>
+                  <Badge variant="secondary">
+                    {accessibilityReport.summary.warning} warnings
+                  </Badge>
+                  <Badge variant="destructive">{accessibilityReport.summary.fail} fail</Badge>
+                  <Badge variant="outline">{accessibilityReport.summary.manual} manual</Badge>
+                </div>
+                {accessibilityReport.issues
+                  .filter((issue) => issue.severity !== "pass")
+                  .map((issue) => (
+                    <div
+                      key={issue.id}
+                      className="border border-[var(--line)] bg-[var(--paper-2)] p-3"
+                    >
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge
+                          variant={
+                            issue.severity === "fail"
+                              ? "destructive"
+                              : issue.severity === "warning"
+                                ? "secondary"
+                                : "outline"
+                          }
+                        >
+                          {issue.severity}
+                        </Badge>
+                        <span className="font-semibold text-[var(--ink)]">
+                          {issue.rule}
+                        </span>
+                        {issue.page && (
+                          <span className="text-xs text-[var(--muted)]">
+                            {issue.page}
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-2 text-[var(--ink)]">{issue.message}</p>
+                      {issue.guidance && (
+                        <p className="mt-1 text-[var(--muted)]">{issue.guidance}</p>
+                      )}
+                    </div>
+                  ))}
+              </div>
+            </section>
           )}
-        </section>
+        </div>
 
         <aside className="info-panel self-start">
           <div className="block-head">
@@ -183,6 +281,16 @@ export default async function BuildDetailPage({
             <InfoRow label="WP Target" value={build.client?.wpSiteUrl ?? "Pending"} />
             <InfoRow label="Status" value={<Badge variant={statusVariant(build.status)}>{build.status}</Badge>} />
             <InfoRow label="Pages" value={`${pushedCount} of ${pages.length} pushed`} />
+            {accessibilityReport && (
+              <InfoRow
+                label="Accessibility"
+                value={
+                  accessibilityReport.launchReady
+                    ? "No blocking issues"
+                    : `${accessibilityReport.summary.fail} blocking issue(s)`
+                }
+              />
+            )}
             <InfoRow label="Started" value={formatDate(build.createdAt)} />
             <InfoRow label="Completed" value={formatDate(build.deployedAt)} />
             <InfoRow label="Build ID" value={build.id} />

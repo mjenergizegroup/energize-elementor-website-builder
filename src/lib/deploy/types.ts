@@ -1,6 +1,7 @@
 import type { ParsedContent } from "@/lib/injection/types";
 import type { ElevatePageType, PageData } from "@/lib/builders/elevate/types";
 import type { BrandKit } from "@/lib/types";
+import type { AccessibilityReport } from "@/lib/accessibility/audit";
 
 export interface BuilderPageContent {
   page: string;
@@ -37,6 +38,8 @@ export interface DeployRequest {
 
 export type DeployStep =
   | "page"
+  | "accessibility-statement"
+  | "accessibility-qa"
   | "site-identity"
   | "brand-colors"
   | "brand-fonts"
@@ -64,6 +67,7 @@ export interface DeployEvent {
   // Accumulated build notes / warnings surfaced at the end.
   buildNotes?: string[];
   warnings?: string[];
+  accessibilityReport?: AccessibilityReport;
 }
 
 export interface DeployedPageRecord {
@@ -73,4 +77,5 @@ export interface DeployedPageRecord {
   editUrl: string;
   viewUrl: string;
   status: "draft";
+  kind?: "content" | "accessibility-statement";
 }

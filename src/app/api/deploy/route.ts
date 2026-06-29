@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { WpClient } from "@/lib/wp/client";
 import { runDeploy } from "@/lib/deploy/orchestrate";
 import type { DeployEvent, DeployedPageRecord } from "@/lib/deploy/types";
+import type { AccessibilityReport } from "@/lib/accessibility/audit";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -148,6 +149,7 @@ export async function POST(req: NextRequest) {
 
   const encoder = new TextEncoder();
   const deployed: DeployedPageRecord[] = [];
+  let accessibilityReport: AccessibilityReport | undefined;
   let anyFail = false;
   let fatal = false;
 
@@ -194,7 +196,10 @@ export async function POST(req: NextRequest) {
           elementorVersion: body.elementorVersion,
         })) {
           if (event.status === "fail") anyFail = true;
-          if (event.step === "page" && event.status === "ok" && event.data?.wpPageId) {
+          if (event.accessibilityReport) {
+            accessibilityReport = event.accessibilityReport;
+          }
+          if (event.status === "ok" && event.data?.wpPageId) {
             deployed.push({
               page: event.data.page!,
               title: event.data.title ?? event.data.page!,
@@ -202,6 +207,10 @@ export async function POST(req: NextRequest) {
               editUrl: event.data.editUrl!,
               viewUrl: event.data.viewUrl!,
               status: "draft",
+              kind:
+                event.step === "accessibility-statement"
+                  ? "accessibility-statement"
+                  : "content",
             });
           }
           send(event);
@@ -223,6 +232,9 @@ export async function POST(req: NextRequest) {
               status,
               deployedAt: new Date(),
               pagesDeployed: deployed as unknown as object,
+              errorLog: accessibilityReport
+                ? JSON.stringify({ accessibilityReport })
+                : undefined,
             },
             select: { id: true },
           });
@@ -230,6 +242,7 @@ export async function POST(req: NextRequest) {
             buildId: build.id,
             status,
             pagesDeployed: deployed.length,
+            accessibilitySummary: accessibilityReport?.summary,
           });
         } catch (e) {
           console.error("failed to finalize build record", e);

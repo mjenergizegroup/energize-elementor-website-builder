@@ -1,0 +1,736 @@
+import type { BrandColors } from "@/lib/types";
+
+type ElementorNode = Record<string, unknown>;
+type AuditContentPage = {
+  page: string;
+  slug?: string;
+  slots?: unknown;
+  pageData?: unknown;
+};
+
+type AuditContent = {
+  practiceName: string;
+  site?: Record<string, string>;
+  pages: AuditContentPage[];
+};
+
+export type AccessibilitySeverity = "pass" | "warning" | "fail" | "manual";
+
+export interface AccessibilityIssue {
+  id: string;
+  severity: AccessibilitySeverity;
+  rule: string;
+  page?: string;
+  message: string;
+  guidance?: string;
+}
+
+export interface AccessibilityReport {
+  target: "WCAG 2.2 AA";
+  summary: {
+    pass: number;
+    warning: number;
+    fail: number;
+    manual: number;
+  };
+  launchReady: boolean;
+  issues: AccessibilityIssue[];
+  checkedAt: string;
+}
+
+export interface AccessibilityPageInput {
+  page: string;
+  title: string;
+  elementorData: unknown[];
+}
+
+interface HeadingRef {
+  id: string;
+  level: string;
+  text: string;
+  settings: ElementorNode;
+  field: string;
+}
+
+const VAGUE_LINK_TEXT = new Set([
+  "click here",
+  "learn more",
+  "read more",
+  "more",
+  "details",
+]);
+
+const HEADING_ORDER = ["h1", "h2", "h3", "h4", "h5", "h6"];
+
+export function createAccessibilityReport(input: {
+  content: AuditContent;
+  colors: BrandColors;
+  pages: AccessibilityPageInput[];
+  statementCreated: boolean;
+}): AccessibilityReport {
+  const issues: AccessibilityIssue[] = [
+    ...auditBrandColors(input.colors),
+    ...auditContent(input.content),
+  ];
+
+  for (const page of input.pages) {
+    issues.push(...auditElementorPage(page));
+  }
+
+  if (input.statementCreated) {
+    issues.push({
+      id: "accessibility-statement-created",
+      severity: "pass",
+      rule: "Accessibility Statement",
+      page: "accessibility-statement",
+      message: "A native HTML Accessibility Statement draft was created.",
+    });
+  } else {
+    issues.push({
+      id: "accessibility-statement-missing",
+      severity: "fail",
+      rule: "Accessibility Statement",
+      page: "accessibility-statement",
+      message: "The build did not create an Accessibility Statement page.",
+      guidance: "Create a native HTML statement page before launch.",
+    });
+  }
+
+  issues.push({
+    id: "footer-link-manual-check",
+    severity: "manual",
+    rule: "Footer Accessibility Statement Link",
+    message: "Confirm the footer links to the Accessibility Statement before launch.",
+    guidance:
+      "Footer structure is controlled by the active WordPress theme, so this must be verified in WordPress after draft review.",
+  });
+
+  issues.push({
+    id: "keyboard-manual-check",
+    severity: "manual",
+    rule: "Keyboard Navigation",
+    message: "Keyboard navigation and focus order require browser QA before launch.",
+    guidance:
+      "Tab through header menus, dropdowns, forms, accordions, popups, sticky mobile buttons, and footer links.",
+  });
+
+  issues.push({
+    id: "third-party-manual-check",
+    severity: "manual",
+    rule: "Third-Party Widgets",
+    message: "Check maps, reviews, chat, cookie banners, and embedded forms manually.",
+    guidance:
+      "If a widget creates a keyboard or screen reader issue, document it before launch.",
+  });
+
+  const summary = summarizeIssues(issues);
+
+  return {
+    target: "WCAG 2.2 AA",
+    summary,
+    launchReady: summary.fail === 0,
+    issues,
+    checkedAt: new Date().toISOString(),
+  };
+}
+
+export function buildAccessibilityStatementElementorData(input: {
+  practiceName: string;
+  contactEmail?: string;
+  contactPhone?: string;
+}): unknown[] {
+  const practiceName = input.practiceName.trim() || "our practice";
+  const contact =
+    input.contactEmail?.trim() ||
+    input.contactPhone?.trim() ||
+    "the practice directly";
+
+  return [
+    {
+      id: "a11y001",
+      elType: "container",
+      isInner: false,
+      settings: {
+        content_width: "boxed",
+        flex_direction: "column",
+        padding: {
+          unit: "px",
+          top: "72",
+          right: "24",
+          bottom: "72",
+          left: "24",
+          isLinked: false,
+        },
+      },
+      elements: [
+        {
+          id: "a11y002",
+          elType: "widget",
+          widgetType: "heading",
+          isInner: false,
+          settings: {
+            title: "Accessibility Statement",
+            header_size: "h1",
+          },
+          elements: [],
+        },
+        {
+          id: "a11y003",
+          elType: "widget",
+          widgetType: "text-editor",
+          isInner: false,
+          settings: {
+            editor: statementHtml(practiceName, contact),
+          },
+          elements: [],
+        },
+      ],
+    },
+  ];
+}
+
+export function repairElementorHeadingStructure(tree: unknown): void {
+  const headings = collectHeadingRefs(tree);
+  let h1Seen = false;
+  let lastLevel = 0;
+
+  for (const heading of headings) {
+    let level = headingNumber(heading.level);
+    if (level === 0) continue;
+
+    if (!h1Seen) {
+      if (level !== 1) {
+        setHeadingLevel(heading, "h1");
+        level = 1;
+      }
+      h1Seen = true;
+      lastLevel = level;
+      continue;
+    }
+
+    if (level === 1) {
+      setHeadingLevel(heading, "h2");
+      lastLevel = 2;
+      continue;
+    }
+
+    if (lastLevel > 0 && level > lastLevel + 1) {
+      const repaired = Math.min(lastLevel + 1, 6);
+      setHeadingLevel(heading, `h${repaired}`);
+      lastLevel = repaired;
+      continue;
+    }
+
+    lastLevel = level;
+  }
+}
+
+export function accessibilityReportToWarnings(report: AccessibilityReport): string[] {
+  return report.issues
+    .filter((issue) => issue.severity !== "pass")
+    .map((issue) => {
+      const page = issue.page ? `${issue.page}: ` : "";
+      return `[ACCESSIBILITY ${issue.severity.toUpperCase()}: ${page}${issue.message}]`;
+    });
+}
+
+function auditBrandColors(colors: BrandColors): AccessibilityIssue[] {
+  const checks = [
+    {
+      id: "contrast-body",
+      rule: "Color Contrast",
+      label: "Body text on background",
+      foreground: colors.text,
+      background: colors.background,
+      required: 4.5,
+    },
+    {
+      id: "contrast-primary-on-background",
+      rule: "Color Contrast",
+      label: "Primary text on background",
+      foreground: colors.primary,
+      background: colors.background,
+      required: 4.5,
+    },
+    {
+      id: "contrast-accent-on-background",
+      rule: "Color Contrast",
+      label: "Accent text on background",
+      foreground: colors.accent,
+      background: colors.background,
+      required: 4.5,
+    },
+    {
+      id: "contrast-text-on-primary",
+      rule: "Color Contrast",
+      label: "Text color on primary button",
+      foreground: colors.text,
+      background: colors.primary,
+      required: 4.5,
+    },
+    {
+      id: "contrast-background-on-primary",
+      rule: "Color Contrast",
+      label: "Background color on primary button",
+      foreground: colors.background,
+      background: colors.primary,
+      required: 4.5,
+    },
+  ];
+
+  return checks.map((check) => {
+    const ratio = contrastRatio(check.foreground, check.background);
+    const passes = ratio >= check.required;
+    return {
+      id: check.id,
+      severity: passes ? "pass" : "fail",
+      rule: check.rule,
+      message: `${check.label} contrast ratio is ${ratio.toFixed(2)}:1.`,
+      guidance: passes
+        ? undefined
+        : "Adjust the brand palette or let the builder repair final Elementor text colors before launch.",
+    };
+  });
+}
+
+function auditContent(content: AuditContent): AccessibilityIssue[] {
+  const issues: AccessibilityIssue[] = [];
+
+  for (const page of content.pages) {
+    const pageName = page.slug ?? page.page;
+    const payload = page.pageData ?? page.slots ?? {};
+
+    walkValues(payload, (path, value, parent) => {
+      const key = path.at(-1) ?? "";
+      if (typeof value === "string" && isPotentialCtaKey(key) && isVagueText(value)) {
+        issues.push({
+          id: `vague-cta-${pageName}-${path.join(".")}`,
+          severity: "fail",
+          rule: "Button and Link Clarity",
+          page: pageName,
+          message: `CTA text "${value}" is too vague.`,
+          guidance:
+            "Use specific text such as Schedule an Appointment, Call the Practice, or View Dental Implant Services.",
+        });
+      }
+
+      if (typeof value === "string" && isAltKey(key) && !value.trim()) {
+        issues.push({
+          id: `missing-alt-${pageName}-${path.join(".")}`,
+          severity: "fail",
+          rule: "Images and Alt Text",
+          page: pageName,
+          message: "A meaningful image field has empty alt text.",
+          guidance:
+            "Describe the image naturally, or mark it decorative only when it does not communicate content.",
+        });
+      }
+
+      if (isObject(parent) && key === "image_url" && typeof value === "string" && value.trim()) {
+        const alt = parent.image_alt;
+        if (typeof alt !== "string" || !alt.trim()) {
+          issues.push({
+            id: `missing-image-alt-${pageName}-${path.join(".")}`,
+            severity: "fail",
+            rule: "Images and Alt Text",
+            page: pageName,
+            message: "An image URL was supplied without matching image alt text.",
+            guidance:
+              "Add an image_alt value that describes the image for screen reader users.",
+          });
+        }
+      }
+    });
+  }
+
+  return issues;
+}
+
+function auditElementorPage(page: AccessibilityPageInput): AccessibilityIssue[] {
+  const issues: AccessibilityIssue[] = [];
+  const headings = collectHeadings(page.elementorData);
+  const h1Count = headings.filter((heading) => heading.level === "h1").length;
+
+  issues.push({
+    id: `h1-count-${page.page}`,
+    severity: h1Count === 1 ? "pass" : "fail",
+    rule: "Page Structure and Headings",
+    page: page.page,
+    message:
+      h1Count === 1
+        ? "Exactly one H1 was found."
+        : `${h1Count} H1 headings were found.`,
+    guidance:
+      h1Count === 1
+        ? undefined
+        : "Each page should have one H1 only, then use H2 and H3 for sections.",
+  });
+
+  const headingSkip = firstHeadingSkip(headings);
+  if (headingSkip) {
+    issues.push({
+      id: `heading-order-${page.page}`,
+      severity: "fail",
+      rule: "Page Structure and Headings",
+      page: page.page,
+      message: headingSkip,
+      guidance: "Keep page headings in logical order without skipped levels.",
+    });
+  } else {
+    issues.push({
+      id: `heading-order-${page.page}`,
+      severity: "pass",
+      rule: "Page Structure and Headings",
+      page: page.page,
+      message: "Heading levels follow a logical order.",
+    });
+  }
+
+  for (const image of collectImages(page.elementorData)) {
+    if (!image.hasImage) continue;
+    if (!image.alt.trim() && !isLikelyDecorativeImage(image)) {
+      issues.push({
+        id: `elementor-image-alt-${page.page}-${image.id}`,
+        severity: "warning",
+        rule: "Images and Alt Text",
+        page: page.page,
+        message: "An Elementor image or background image has empty alt text.",
+        guidance:
+          "Add descriptive alt text for meaningful photos. Decorative images can stay empty.",
+      });
+    }
+  }
+
+  for (const button of collectButtons(page.elementorData)) {
+    if (!button.label.trim()) {
+      issues.push({
+        id: `button-label-${page.page}-${button.id}`,
+        severity: "fail",
+        rule: "Buttons and Links",
+        page: page.page,
+        message: "A button has no visible label.",
+        guidance: "Add clear action text to the button.",
+      });
+    } else if (isVagueText(button.label)) {
+      issues.push({
+        id: `button-vague-${page.page}-${button.id}`,
+        severity: "fail",
+        rule: "Buttons and Links",
+        page: page.page,
+        message: `Button text "${button.label}" is too vague.`,
+        guidance: "Use specific CTA copy that explains the destination or action.",
+      });
+    }
+
+    if (button.href.startsWith("tel:") && !/call|phone|\d/.test(button.label.toLowerCase())) {
+      issues.push({
+        id: `phone-button-${page.page}-${button.id}`,
+        severity: "warning",
+        rule: "Buttons and Links",
+        page: page.page,
+        message: "A phone button does not clearly identify that it calls the practice.",
+        guidance: "Use text such as Call Orange County Dental Care.",
+      });
+    }
+  }
+
+  return issues;
+}
+
+function collectHeadings(tree: unknown): Array<{ id: string; level: string; text: string }> {
+  return collectHeadingRefs(tree).map(({ id, level, text }) => ({ id, level, text }));
+}
+
+function collectHeadingRefs(tree: unknown): HeadingRef[] {
+  const headings: HeadingRef[] = [];
+
+  visitNodes(tree, (node) => {
+    const settings = getSettings(node);
+    const widgetType = widgetTypeOf(node);
+
+    if (widgetType === "heading") {
+      const level = headingLevel(settings.header_size);
+      if (!level) return;
+      headings.push({
+        id: nodeId(node),
+        level,
+        text: stringValue(settings.title),
+        settings,
+        field: "header_size",
+      });
+      return;
+    }
+
+    if (widgetType.includes("heading")) {
+      const [field, value] = headingField(settings);
+      const level = headingLevel(value);
+      if (!level) return;
+      headings.push({
+        id: nodeId(node),
+        level,
+        text: stringValue(
+          settings.ekit_heading_title ??
+            settings.title ??
+            settings.text ??
+            settings.heading_title,
+        ),
+        settings,
+        field,
+      });
+    }
+  });
+
+  return headings;
+}
+
+function headingField(settings: ElementorNode): [string, unknown] {
+  const fields = [
+    "header_size",
+    "title_size",
+    "ekit_heading_title_tag",
+    "ekit_heading_title_html_tag",
+  ];
+  for (const field of fields) {
+    if (settings[field] !== undefined) return [field, settings[field]];
+  }
+  return ["header_size", undefined];
+}
+
+function setHeadingLevel(heading: HeadingRef, level: string): void {
+  heading.settings[heading.field] = level;
+  heading.level = level;
+}
+
+function headingNumber(level: string): number {
+  return HEADING_ORDER.indexOf(level) + 1;
+}
+
+function collectImages(tree: unknown): Array<{
+  id: string;
+  alt: string;
+  hasImage: boolean;
+  url: string;
+}> {
+  const images: Array<{ id: string; alt: string; hasImage: boolean; url: string }> = [];
+
+  visitNodes(tree, (node) => {
+    const settings = getSettings(node);
+    const image = isObject(settings.image) ? settings.image : null;
+    if (image) {
+      images.push({
+        id: nodeId(node),
+        alt: stringValue(image.alt),
+        hasImage: Boolean(stringValue(image.url)),
+        url: stringValue(image.url),
+      });
+    }
+
+    const background = isObject(settings.background_image)
+      ? settings.background_image
+      : null;
+    if (background) {
+      images.push({
+        id: `${nodeId(node)}-background`,
+        alt: stringValue(background.alt),
+        hasImage: Boolean(stringValue(background.url)),
+        url: stringValue(background.url),
+      });
+    }
+  });
+
+  return images;
+}
+
+function collectButtons(tree: unknown): Array<{
+  id: string;
+  label: string;
+  href: string;
+}> {
+  const buttons: Array<{ id: string; label: string; href: string }> = [];
+
+  visitNodes(tree, (node) => {
+    const widgetType = widgetTypeOf(node);
+    if (!widgetType.includes("button")) return;
+
+    const settings = getSettings(node);
+    const link = isObject(settings.link)
+      ? settings.link
+      : isObject(settings.sg_content_link)
+        ? settings.sg_content_link
+        : {};
+
+    buttons.push({
+      id: nodeId(node),
+      label: stringValue(settings.text ?? settings.button_text ?? settings.sg_content_label),
+      href: stringValue(link.url),
+    });
+  });
+
+  return buttons;
+}
+
+function firstHeadingSkip(headings: Array<{ level: string; text: string }>): string | null {
+  let lastLevel = 0;
+  for (const heading of headings) {
+    const level = HEADING_ORDER.indexOf(heading.level) + 1;
+    if (level === 0) continue;
+    if (lastLevel > 0 && level > lastLevel + 1) {
+      return `Heading "${heading.text || heading.level}" skips from H${lastLevel} to H${level}.`;
+    }
+    lastLevel = level;
+  }
+  return null;
+}
+
+function isLikelyDecorativeImage(image: { url: string }): boolean {
+  return (
+    /\.(svg|png)$/i.test(image.url) &&
+    /icon|logo|shape|pattern|blanket|tv|headphones/i.test(image.url)
+  );
+}
+
+function visitNodes(tree: unknown, visitor: (node: ElementorNode) => void): void {
+  if (Array.isArray(tree)) {
+    tree.forEach((item) => visitNodes(item, visitor));
+    return;
+  }
+  if (!isObject(tree)) return;
+  visitor(tree);
+
+  if (Array.isArray(tree.elements)) {
+    tree.elements.forEach((child) => visitNodes(child, visitor));
+  }
+  if (Array.isArray(tree.content)) {
+    tree.content.forEach((child) => visitNodes(child, visitor));
+  }
+}
+
+function walkValues(
+  value: unknown,
+  visitor: (path: string[], value: unknown, parent: unknown) => void,
+  path: string[] = [],
+  parent: unknown = null,
+): void {
+  visitor(path, value, parent);
+  if (Array.isArray(value)) {
+    value.forEach((item, index) =>
+      walkValues(item, visitor, [...path, String(index)], value),
+    );
+    return;
+  }
+  if (isObject(value)) {
+    for (const [key, child] of Object.entries(value)) {
+      walkValues(child, visitor, [...path, key], value);
+    }
+  }
+}
+
+function summarizeIssues(issues: AccessibilityIssue[]): AccessibilityReport["summary"] {
+  return issues.reduce(
+    (summary, issue) => {
+      summary[issue.severity] += 1;
+      return summary;
+    },
+    { pass: 0, warning: 0, fail: 0, manual: 0 },
+  );
+}
+
+function statementHtml(practiceName: string, contact: string): string {
+  return [
+    `<p>${escapeHtml(practiceName)} is committed to making our website accessible and usable for all visitors.</p>`,
+    "<p>Our goal is to follow Web Content Accessibility Guidelines (WCAG) 2.2 AA best practices where reasonably possible.</p>",
+    "<p>If you have trouble accessing information on this website, please contact us for assistance.</p>",
+    `<p>You can request help by contacting ${escapeHtml(contact)}. Please describe the page, feature, or content that caused difficulty so our team can respond.</p>`,
+    "<p>We continue to review and improve the website as content, technology, and accessibility standards evolve.</p>",
+  ].join("");
+}
+
+function isPotentialCtaKey(key: string): boolean {
+  return /cta|button|label|link_text|anchor/i.test(key);
+}
+
+function isAltKey(key: string): boolean {
+  return key === "alt" || key === "image_alt";
+}
+
+function isVagueText(value: string): boolean {
+  return VAGUE_LINK_TEXT.has(value.trim().toLowerCase());
+}
+
+function headingLevel(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const level = value.trim().toLowerCase();
+  return HEADING_ORDER.includes(level) ? level : null;
+}
+
+function getSettings(node: ElementorNode): ElementorNode {
+  return isObject(node.settings) ? node.settings : {};
+}
+
+function widgetTypeOf(node: ElementorNode): string {
+  return typeof node.widgetType === "string" ? node.widgetType.toLowerCase() : "";
+}
+
+function nodeId(node: ElementorNode): string {
+  return typeof node.id === "string" ? node.id : "unknown";
+}
+
+function stringValue(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+function contrastRatio(foreground: string, background: string): number {
+  const fg = relativeLuminance(foreground);
+  const bg = relativeLuminance(background);
+  const lighter = Math.max(fg, bg);
+  const darker = Math.min(fg, bg);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function relativeLuminance(hex: string): number {
+  const { r, g, b } = hexToRgb(hex);
+  const channels = [r, g, b].map((channel) => {
+    const value = channel / 255;
+    return value <= 0.03928
+      ? value / 12.92
+      : Math.pow((value + 0.055) / 1.055, 2.4);
+  });
+  return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+}
+
+function hexToRgb(hex: string): { r: number; g: number; b: number } {
+  const normalized = normalizeHexColor(hex) ?? "#000000";
+  const value = Number.parseInt(normalized.slice(1), 16);
+  return {
+    r: (value >> 16) & 255,
+    g: (value >> 8) & 255,
+    b: value & 255,
+  };
+}
+
+function normalizeHexColor(value: string): string | null {
+  const match = value.trim().match(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/);
+  if (!match) return null;
+  const raw = match[1];
+  const expanded =
+    raw.length === 3
+      ? raw
+          .split("")
+          .map((char) => `${char}${char}`)
+          .join("")
+      : raw;
+  return `#${expanded.toUpperCase()}`;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function isObject(value: unknown): value is ElementorNode {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
