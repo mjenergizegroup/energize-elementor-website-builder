@@ -38,7 +38,6 @@ export interface DeployRequest {
 
 export type DeployStep =
   | "page"
-  | "accessibility-statement"
   | "accessibility-qa"
   | "site-identity"
   | "brand-colors"

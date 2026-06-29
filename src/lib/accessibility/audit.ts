@@ -66,7 +66,7 @@ export function createAccessibilityReport(input: {
   content: AuditContent;
   colors: BrandColors;
   pages: AccessibilityPageInput[];
-  statementCreated: boolean;
+  statementHandledByPlugin: boolean;
 }): AccessibilityReport {
   const issues: AccessibilityIssue[] = [
     ...auditBrandColors(input.colors),
@@ -77,13 +77,13 @@ export function createAccessibilityReport(input: {
     issues.push(...auditElementorPage(page));
   }
 
-  if (input.statementCreated) {
+  if (input.statementHandledByPlugin) {
     issues.push({
-      id: "accessibility-statement-created",
+      id: "accessibility-statement-plugin-managed",
       severity: "pass",
       rule: "Accessibility Statement",
       page: "accessibility-statement",
-      message: "A native HTML Accessibility Statement draft was created.",
+      message: "The Accessibility Statement is handled by the WordPress plugin.",
     });
   } else {
     issues.push({
@@ -132,61 +132,6 @@ export function createAccessibilityReport(input: {
     issues,
     checkedAt: new Date().toISOString(),
   };
-}
-
-export function buildAccessibilityStatementElementorData(input: {
-  practiceName: string;
-  contactEmail?: string;
-  contactPhone?: string;
-}): unknown[] {
-  const practiceName = input.practiceName.trim() || "our practice";
-  const contact =
-    input.contactEmail?.trim() ||
-    input.contactPhone?.trim() ||
-    "the practice directly";
-
-  return [
-    {
-      id: "a11y001",
-      elType: "container",
-      isInner: false,
-      settings: {
-        content_width: "boxed",
-        flex_direction: "column",
-        padding: {
-          unit: "px",
-          top: "72",
-          right: "24",
-          bottom: "72",
-          left: "24",
-          isLinked: false,
-        },
-      },
-      elements: [
-        {
-          id: "a11y002",
-          elType: "widget",
-          widgetType: "heading",
-          isInner: false,
-          settings: {
-            title: "Accessibility Statement",
-            header_size: "h1",
-          },
-          elements: [],
-        },
-        {
-          id: "a11y003",
-          elType: "widget",
-          widgetType: "text-editor",
-          isInner: false,
-          settings: {
-            editor: statementHtml(practiceName, contact),
-          },
-          elements: [],
-        },
-      ],
-    },
-  ];
 }
 
 export function repairElementorHeadingStructure(tree: unknown): void {
@@ -635,16 +580,6 @@ function summarizeIssues(issues: AccessibilityIssue[]): AccessibilityReport["sum
   );
 }
 
-function statementHtml(practiceName: string, contact: string): string {
-  return [
-    `<p>${escapeHtml(practiceName)} is committed to making our website accessible and usable for all visitors.</p>`,
-    "<p>Our goal is to follow Web Content Accessibility Guidelines (WCAG) 2.2 AA best practices where reasonably possible.</p>",
-    "<p>If you have trouble accessing information on this website, please contact us for assistance.</p>",
-    `<p>You can request help by contacting ${escapeHtml(contact)}. Please describe the page, feature, or content that caused difficulty so our team can respond.</p>`,
-    "<p>We continue to review and improve the website as content, technology, and accessibility standards evolve.</p>",
-  ].join("");
-}
-
 function isPotentialCtaKey(key: string): boolean {
   return /cta|button|label|link_text|anchor/i.test(key);
 }
@@ -720,15 +655,6 @@ function normalizeHexColor(value: string): string | null {
           .join("")
       : raw;
   return `#${expanded.toUpperCase()}`;
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 }
 
 function isObject(value: unknown): value is ElementorNode {

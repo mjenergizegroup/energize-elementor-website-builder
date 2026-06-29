@@ -5,11 +5,9 @@ import { buildElevatePage } from "@/lib/builders/elevate";
 import type { ElementorJSON } from "@/lib/builders/elevate/types";
 import {
   accessibilityReportToWarnings,
-  buildAccessibilityStatementElementorData,
   createAccessibilityReport,
   repairElementorHeadingStructure,
   type AccessibilityPageInput,
-  type AccessibilityReport,
 } from "@/lib/accessibility/audit";
 import { repairElementorTextContrast } from "@/lib/elementor/contrast";
 import { getInjector } from "@/lib/injection/registry";
@@ -38,8 +36,6 @@ export async function* runDeploy(
   const allWarnings: string[] = [];
   const deployed: DeployedPageRecord[] = [];
   const accessibilityPages: AccessibilityPageInput[] = [];
-  let statementCreated = false;
-  let accessibilityReport: AccessibilityReport | undefined;
 
   // 1. Pages (content.pages is the selected set; may contain several services)
   for (const pageContent of req.content.pages) {
@@ -101,78 +97,17 @@ export async function* runDeploy(
     }
   }
 
-  const statementLabel = "Creating Accessibility Statement";
-  yield {
-    type: "step",
-    step: "accessibility-statement",
-    status: "start",
-    label: statementLabel,
-  };
-  try {
-    const statementData = buildAccessibilityStatementElementorData({
-      practiceName: req.content.practiceName || req.siteName,
-      contactEmail: req.content.site?.email,
-      contactPhone: req.content.site?.phone,
-    });
-    repairElementorHeadingStructure(statementData);
-    repairElementorTextContrast(statementData, req.brandKit.colors);
-    const result = await wp.createPage({
-      title: "Accessibility Statement",
-      slug: "accessibility-statement",
-      template: DEFAULT_WP_PAGE_TEMPLATE,
-      elementorData: statementData,
-      elementorVersion: req.elementorVersion,
-      status: "draft",
-    });
-    statementCreated = true;
-    accessibilityPages.push({
-      page: "accessibility-statement",
-      title: "Accessibility Statement",
-      elementorData: statementData,
-    });
-    deployed.push({
-      page: "accessibility-statement",
-      title: "Accessibility Statement",
-      wpPageId: result.id,
-      editUrl: result.editUrl,
-      viewUrl: result.viewUrl,
-      status: "draft",
-      kind: "accessibility-statement",
-    });
-    yield {
-      type: "step",
-      step: "accessibility-statement",
-      status: "ok",
-      label: statementLabel,
-      data: {
-        page: "accessibility-statement",
-        title: "Accessibility Statement",
-        wpPageId: result.id,
-        editUrl: result.editUrl,
-        viewUrl: result.viewUrl,
-      },
-    };
-  } catch (e) {
-    yield {
-      type: "step",
-      step: "accessibility-statement",
-      status: "fail",
-      label: statementLabel,
-      message: e instanceof Error ? e.message : "Statement page creation failed",
-    };
-  }
-
   yield {
     type: "step",
     step: "accessibility-qa",
     status: "start",
     label: "Running accessibility QA",
   };
-  accessibilityReport = createAccessibilityReport({
+  const accessibilityReport = createAccessibilityReport({
     content: req.content,
     colors: req.brandKit.colors,
     pages: accessibilityPages,
-    statementCreated,
+    statementHandledByPlugin: true,
   });
   const accessibilityWarnings = accessibilityReportToWarnings(accessibilityReport);
   allWarnings.push(...accessibilityWarnings);

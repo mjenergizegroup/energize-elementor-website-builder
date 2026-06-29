@@ -207,10 +207,7 @@ export async function POST(req: NextRequest) {
               editUrl: event.data.editUrl!,
               viewUrl: event.data.viewUrl!,
               status: "draft",
-              kind:
-                event.step === "accessibility-statement"
-                  ? "accessibility-statement"
-                  : "content",
+              kind: "content",
             });
           }
           send(event);

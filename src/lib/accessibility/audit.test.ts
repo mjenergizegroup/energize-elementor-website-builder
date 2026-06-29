@@ -1,16 +1,8 @@
 import assert from "node:assert/strict";
 import {
-  buildAccessibilityStatementElementorData,
   createAccessibilityReport,
   repairElementorHeadingStructure,
 } from "./audit";
-
-const statement = buildAccessibilityStatementElementorData({
-  practiceName: "Orange County Dental Care",
-  contactEmail: "hello@example.com",
-});
-
-assert.ok(JSON.stringify(statement).includes("Accessibility Statement"));
 
 const headingTree = [
   {
@@ -98,13 +90,8 @@ const report = createAccessibilityReport({
         },
       ],
     },
-    {
-      page: "accessibility-statement",
-      title: "Accessibility Statement",
-      elementorData: statement,
-    },
   ],
-  statementCreated: true,
+  statementHandledByPlugin: true,
 });
 
 assert.equal(report.target, "WCAG 2.2 AA");

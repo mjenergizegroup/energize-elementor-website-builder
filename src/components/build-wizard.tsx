@@ -794,10 +794,7 @@ export function BuildWizard({
                   title: event.data.title ?? event.data.page,
                   editUrl: event.data.editUrl,
                   viewUrl: event.data.viewUrl,
-                  kind:
-                    event.step === "accessibility-statement"
-                      ? "accessibility-statement"
-                      : "content",
+                  kind: "content",
                 },
               ]);
             }
