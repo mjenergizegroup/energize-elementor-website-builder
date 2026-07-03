@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Combobox } from "@/components/ui/combobox";
 import {
   Select,
   SelectContent,
@@ -282,10 +283,7 @@ export function BuildWizard({
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [hours, setHours] = useState("");
-  const [doctors, setDoctors] = useState<{ name: string; bio: string }[]>([
-    { name: "", bio: "" },
-  ]);
-  const [services, setServices] = useState("");
+  const [bookingLink, setBookingLink] = useState("");
   const [social, setSocial] = useState("");
 
   const [colors, setColors] = useState(
@@ -309,7 +307,9 @@ export function BuildWizard({
   });
 
   const [siteUrl, setSiteUrl] = useState(initialClient?.wpSiteUrl ?? "");
-  const [username, setUsername] = useState(initialClient?.wpUsername ?? "");
+  const [username, setUsername] = useState(
+    initialClient?.wpUsername || "websites@energize-group.com",
+  );
   const [appPassword, setAppPassword] = useState("");
 
   const [markdownName, setMarkdownName] = useState("");
@@ -720,11 +720,20 @@ export function BuildWizard({
         return;
       }
     }
+    // The wizard's booking link and phone override the content doc: every
+    // booking button uses booking_url, click-to-call buttons use phone_tel.
+    const site = {
+      ...structuredResult?.site,
+      ...(bookingLink.trim() ? { booking_url: bookingLink.trim() } : {}),
+      ...(phone.trim()
+        ? { phone: phone.trim(), phone_tel: `tel:${phone.replace(/[^\d+]/g, "")}` }
+        : {}),
+    };
     const content = {
       practiceName: practiceMeta?.practiceName ?? name,
       city: practiceMeta?.city,
       doctorName: practiceMeta?.doctorName,
-      site: structuredResult?.site,
+      site,
       pages,
     };
 
@@ -1268,55 +1277,20 @@ export function BuildWizard({
               <Field label="Hours">
                 <Textarea value={hours} onChange={(e) => setHours(e.target.value)} rows={2} />
               </Field>
-              <SectionLabel>Doctors</SectionLabel>
-              <div className="space-y-3">
-                {doctors.map((doc, i) => (
-                  <div key={i} className="space-y-3 border border-[var(--line)] bg-[var(--paper-2)] p-4">
-                    <Input
-                      placeholder="Name"
-                      value={doc.name}
-                      onChange={(e) => {
-                        const copy = [...doctors];
-                        copy[i] = { ...copy[i], name: e.target.value };
-                        setDoctors(copy);
-                      }}
-                    />
-                    <Textarea
-                      placeholder="Bio"
-                      rows={2}
-                      value={doc.bio}
-                      onChange={(e) => {
-                        const copy = [...doctors];
-                        copy[i] = { ...copy[i], bio: e.target.value };
-                        setDoctors(copy);
-                      }}
-                    />
-                    {doctors.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setDoctors(doctors.filter((_, j) => j !== i))}
-                      >
-                        <ArrowLeft data-icon="inline-start" />
-                        Remove
-                      </Button>
-                    )}
-                  </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setDoctors([...doctors, { name: "", bio: "" }])}
-                >
-                  Add doctor
-                </Button>
-              </div>
-              <SectionLabel>Production notes</SectionLabel>
-              <Field label="Services" hint="One per line.">
-                <Textarea value={services} onChange={(e) => setServices(e.target.value)} rows={4} />
+              <Field
+                label="Booking link"
+                hint="Used as the link for every booking button. Click-to-call buttons always use the practice phone number instead."
+              >
+                <Input
+                  placeholder="https://booking.example.com/practice"
+                  value={bookingLink}
+                  onChange={(e) => setBookingLink(e.target.value)}
+                />
               </Field>
+              <p className="text-[12px] font-medium text-[var(--muted)]">
+                Doctor names, bios, and services come from the uploaded content document, so there is nothing to fill out for those here.
+              </p>
+              <SectionLabel>Production notes</SectionLabel>
               <Field label="Social URLs" hint="One per line.">
                 <Textarea value={social} onChange={(e) => setSocial(e.target.value)} rows={3} />
               </Field>
@@ -1654,18 +1628,14 @@ function FontSelect({
   return (
     <div className="space-y-2.5">
       <Label>{label}</Label>
-      <Select value={value} onValueChange={(v) => v && onChange(v)}>
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {GOOGLE_FONTS.map((f) => (
-            <SelectItem key={f} value={f}>
-              {f}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <Combobox
+        items={GOOGLE_FONTS}
+        value={value}
+        onValueChange={onChange}
+        placeholder="Select a font"
+        searchPlaceholder="Search fonts..."
+        emptyMessage="No fonts match."
+      />
     </div>
   );
 }
