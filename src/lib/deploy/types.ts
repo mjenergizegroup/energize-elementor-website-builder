@@ -23,7 +23,10 @@ export interface DeployContent {
   pages: BuilderPageContent[];
 }
 
+export type DeployMode = "pages" | "branding-only";
+
 export interface DeployRequest {
+  deployMode: DeployMode;
   theme: string;
   siteUrl: string;
   siteName: string;

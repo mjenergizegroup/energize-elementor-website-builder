@@ -313,6 +313,7 @@ export function BuildWizard({
   const [appPassword, setAppPassword] = useState("");
 
   const [markdownName, setMarkdownName] = useState("");
+  const [deployMode, setDeployMode] = useState<"pages" | "branding-only">("pages");
   const [parsing, setParsing] = useState(false);
   const [structuredResult, setStructuredResult] =
     useState<StructuredParseResult | null>(null);
@@ -626,6 +627,7 @@ export function BuildWizard({
           return "Application password is required for a new client.";
         return null;
       case 5:
+        if (deployMode === "branding-only") return null;
         if (!markdownName) return "Upload the approved markdown content.";
         if (detectedPages.length === 0)
           return "No pages were detected. Check that the markdown matches the selected theme.";
@@ -699,9 +701,9 @@ export function BuildWizard({
       return;
     }
 
-    const pages = detectedPages
-      .filter((p) => p.selected)
-      .map((p) => ({
+    const pages = deployMode === "branding-only"
+      ? []
+      : detectedPages.filter((p) => p.selected).map((p) => ({
         page: p.page,
         wpTitle: p.wpTitle,
         slug: p.slug,
@@ -712,7 +714,7 @@ export function BuildWizard({
         serviceSlug: p.serviceSlug,
         pageData: p.pageData,
       }));
-    if (structuredResult) {
+    if (deployMode === "pages" && structuredResult) {
       const unsupported = pages.find((p) => !p.builderPageType || !p.pageData);
       if (unsupported) {
         toast.error(`No Elevate builder is mapped for ${unsupported.page}.`);
@@ -743,6 +745,7 @@ export function BuildWizard({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          deployMode,
           clientId: initialClient?.id,
           client: {
             name,
@@ -845,7 +848,11 @@ export function BuildWizard({
           <PanelHead
             icon={Rocket}
             title="Deployment progress"
-            description="Routes, page drafts, assets, and Elementor cache status."
+            description={
+              deployMode === "branding-only"
+                ? "Site identity, brand kit, assets, and Elementor cache status."
+                : "Routes, page drafts, assets, and Elementor cache status."
+            }
           />
           <div className="space-y-6 bg-[var(--color-surface)] p-6 sm:p-8">
             <ul className="space-y-2 text-sm">
@@ -1370,6 +1377,47 @@ export function BuildWizard({
 
           {step === 5 && (
             <div className="space-y-5">
+              <SectionLabel>Deployment scope</SectionLabel>
+              <div className="grid gap-3 md:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => setDeployMode("pages")}
+                  className={`border p-4 text-left transition ${
+                    deployMode === "pages"
+                      ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                      : "border-[var(--line)] bg-[var(--paper-2)]"
+                  }`}
+                >
+                  <span className="block text-sm font-semibold text-[var(--ink)]">
+                    Brand kit and pages
+                  </span>
+                  <span className="mt-1 block text-xs font-medium leading-5 text-[var(--muted)]">
+                    Upload content, create selected draft pages, and apply the brand kit.
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDeployMode("branding-only")}
+                  className={`border p-4 text-left transition ${
+                    deployMode === "branding-only"
+                      ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                      : "border-[var(--line)] bg-[var(--paper-2)]"
+                  }`}
+                >
+                  <span className="block text-sm font-semibold text-[var(--ink)]">
+                    Brand kit only
+                  </span>
+                  <span className="mt-1 block text-xs font-medium leading-5 text-[var(--muted)]">
+                    Skip content and page creation. Apply the site name, colors, fonts, logo, and favicon.
+                  </span>
+                </button>
+              </div>
+              {deployMode === "branding-only" ? (
+                <div className="border border-[var(--line)] bg-[var(--paper-2)] p-4 text-sm leading-6 text-[var(--ink)]">
+                  No content file is needed and no WordPress pages will be created.
+                </div>
+              ) : (
+                <>
               <SectionLabel>Markdown source</SectionLabel>
               <FileField
                 label="Approved content markdown"
@@ -1467,6 +1515,8 @@ export function BuildWizard({
                   </div>
                 </>
               )}
+                </>
+              )}
             </div>
           )}
 
@@ -1501,8 +1551,17 @@ export function BuildWizard({
               <Review label="Fonts" value={`${fontHeading} / ${fontBody}`} onEdit={() => setStep(3)} />
               <Review label="Site logo" value={logo ? logo.filename : "none"} onEdit={() => setStep(3)} />
               <Review label="Site favicon" value={favicon ? favicon.filename : "none"} onEdit={() => setStep(3)} />
-              <Review label="Content" value={markdownName || "none"} onEdit={() => setStep(5)} />
-              {structuredResult && (
+              <Review
+                label="Deploy scope"
+                value={deployMode === "branding-only" ? "Brand kit only" : "Brand kit and pages"}
+                onEdit={() => setStep(5)}
+              />
+              <Review
+                label="Content"
+                value={deployMode === "branding-only" ? "Not included" : markdownName || "none"}
+                onEdit={() => setStep(5)}
+              />
+              {deployMode === "pages" && structuredResult && (
                 <>
                   <Review
                     label="Parser result"
@@ -1520,15 +1579,19 @@ export function BuildWizard({
                 label="Pages"
                 onEdit={() => setStep(5)}
                 value={
-                  <span className="flex flex-wrap gap-1">
-                    {detectedPages
-                      .filter((p) => p.selected)
-                      .map((p, i) => (
-                        <Badge key={`${p.page}-${i}`} variant="secondary">
-                          {p.wpTitle || p.page}
-                        </Badge>
-                      ))}
-                  </span>
+                  deployMode === "branding-only" ? (
+                    "No pages will be created"
+                  ) : (
+                    <span className="flex flex-wrap gap-1">
+                      {detectedPages
+                        .filter((p) => p.selected)
+                        .map((p, i) => (
+                          <Badge key={`${p.page}-${i}`} variant="secondary">
+                            {p.wpTitle || p.page}
+                          </Badge>
+                        ))}
+                    </span>
+                  )
                 }
               />
             </div>
@@ -1551,7 +1614,7 @@ export function BuildWizard({
               </Button>
             ) : (
               <Button onClick={deploy}>
-                Deploy
+                {deployMode === "branding-only" ? "Deploy brand kit" : "Deploy"}
                 <Rocket data-icon="inline-end" />
               </Button>
             )}

@@ -7,82 +7,12 @@ import { audit } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
 import { WpClient } from "@/lib/wp/client";
 import { runDeploy } from "@/lib/deploy/orchestrate";
+import { deployBodySchema } from "@/lib/deploy/schema";
 import type { DeployEvent, DeployedPageRecord } from "@/lib/deploy/types";
 import type { AccessibilityReport } from "@/lib/accessibility/audit";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
-
-const assetSchema = z.object({
-  filename: z.string().min(1),
-  dataBase64: z.string().min(1),
-});
-
-const wpPageTemplateSchema = z.enum([
-  "default",
-  "elementor_header_footer",
-  "elementor_canvas",
-]);
-
-const bodySchema = z.object({
-  clientId: z.string().optional(),
-  client: z.object({
-    name: z.string().min(1),
-    slug: z
-      .string()
-      .min(1)
-      .regex(/^[a-z0-9-]+$/, "slug must be lowercase letters, numbers, and dashes"),
-    theme: z.string().min(1),
-    wpSiteUrl: z.string().url(),
-    wpUsername: z.string().min(1),
-    wpAppPassword: z.string().optional(),
-  }),
-  brandKit: z.object({
-    colors: z.object({
-      primary: z.string(),
-      secondary: z.string(),
-      accent: z.string(),
-      text: z.string(),
-      background: z.string(),
-    }),
-    fonts: z.object({ heading: z.string(), body: z.string() }),
-    logo: assetSchema,
-    favicon: assetSchema,
-  }),
-  // Structured parser output, already filtered to the pages the user selected.
-  content: z.object({
-    practiceName: z.string(),
-    city: z.string().optional(),
-    doctorName: z.string().optional(),
-    pages: z
-      .array(
-        z.object({
-          page: z.string(),
-          wpTitle: z.string().optional(),
-          slug: z.string().optional(),
-          wpPageTemplate: wpPageTemplateSchema.optional(),
-          slots: z.record(z.string(), z.any()).optional(),
-          builderPageType: z
-            .enum([
-              "homepage",
-              "about",
-              "service-page",
-              "contact",
-              "amenities",
-              "first-visit",
-              "insurance-and-financing",
-            ])
-            .optional(),
-          serviceSlug: z.string().optional(),
-          pageData: z.record(z.string(), z.record(z.string(), z.any())).optional(),
-          buildNotes: z.array(z.string()).optional(),
-        }),
-      )
-      .min(1),
-    site: z.record(z.string(), z.string()).optional(),
-  }),
-  elementorVersion: z.string().optional(),
-});
 
 function ndjson(event: DeployEvent): string {
   return JSON.stringify(event) + "\n";
@@ -97,9 +27,9 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  let body: z.infer<typeof bodySchema>;
+  let body: z.infer<typeof deployBodySchema>;
   try {
-    body = bodySchema.parse(await req.json());
+    body = deployBodySchema.parse(await req.json());
   } catch (e) {
     return new Response(
       JSON.stringify({
@@ -144,6 +74,7 @@ export async function POST(req: NextRequest) {
   await audit(userId, "deploy.start", client.id, {
     buildId: build.id,
     theme: client.theme,
+    deployMode: body.deployMode,
     pages: body.content.pages.map((p) => p.slug ?? p.page),
   });
 
@@ -186,6 +117,7 @@ export async function POST(req: NextRequest) {
         });
 
         for await (const event of runDeploy({
+          deployMode: body.deployMode,
           theme: client.theme,
           siteUrl: client.wpSiteUrl,
           siteName: client.name,

@@ -36,92 +36,95 @@ export async function* runDeploy(
   const allWarnings: string[] = [];
   const deployed: DeployedPageRecord[] = [];
   const accessibilityPages: AccessibilityPageInput[] = [];
+  let accessibilityReport: ReturnType<typeof createAccessibilityReport> | undefined;
 
-  // 1. Pages (content.pages is the selected set; may contain several services)
-  for (const pageContent of req.content.pages) {
-    const label = `Creating ${pageContent.wpTitle || pageContent.page}`;
-    yield { type: "step", step: "page", status: "start", label };
+  if (req.deployMode === "pages") {
+    // 1. Pages (content.pages is the selected set; may contain several services)
+    for (const pageContent of req.content.pages) {
+      const label = `Creating ${pageContent.wpTitle || pageContent.page}`;
+      yield { type: "step", step: "page", status: "start", label };
 
-    try {
-      const injected = buildPage(req, pageContent);
-      repairElementorHeadingStructure(injected.elementorData);
-      repairElementorTextContrast(injected.elementorData, req.brandKit.colors);
-      allBuildNotes.push(...injected.buildNotes);
-      allWarnings.push(...injected.warnings);
-      accessibilityPages.push({
-        page: injected.slug,
-        title: injected.title,
-        elementorData: injected.elementorData,
-      });
+      try {
+        const injected = buildPage(req, pageContent);
+        repairElementorHeadingStructure(injected.elementorData);
+        repairElementorTextContrast(injected.elementorData, req.brandKit.colors);
+        allBuildNotes.push(...injected.buildNotes);
+        allWarnings.push(...injected.warnings);
+        accessibilityPages.push({
+          page: injected.slug,
+          title: injected.title,
+          elementorData: injected.elementorData,
+        });
 
-      const result = await wp.createPage({
-        title: injected.title,
-        slug: injected.slug,
-        template: injected.wpPageTemplate,
-        elementorData: injected.elementorData,
-        elementorVersion: injected.elementorVersion,
-        status: "draft",
-      });
+        const result = await wp.createPage({
+          title: injected.title,
+          slug: injected.slug,
+          template: injected.wpPageTemplate,
+          elementorData: injected.elementorData,
+          elementorVersion: injected.elementorVersion,
+          status: "draft",
+        });
 
-      deployed.push({
-        page: pageContent.page,
-        title: injected.title,
-        wpPageId: result.id,
-        editUrl: result.editUrl,
-        viewUrl: result.viewUrl,
-        status: "draft",
-        kind: "content",
-      });
-
-      yield {
-        type: "step",
-        step: "page",
-        status: "ok",
-        label,
-        data: {
+        deployed.push({
           page: pageContent.page,
           title: injected.title,
           wpPageId: result.id,
           editUrl: result.editUrl,
           viewUrl: result.viewUrl,
-        },
-      };
-    } catch (e) {
-      yield {
-        type: "step",
-        step: "page",
-        status: "fail",
-        label,
-        message: e instanceof Error ? e.message : "Page creation failed",
-      };
-    }
-  }
+          status: "draft",
+          kind: "content",
+        });
 
-  yield {
-    type: "step",
-    step: "accessibility-qa",
-    status: "start",
-    label: "Running accessibility QA",
-  };
-  const accessibilityReport = createAccessibilityReport({
-    content: req.content,
-    colors: req.brandKit.colors,
-    pages: accessibilityPages,
-    statementHandledByPlugin: true,
-  });
-  const accessibilityWarnings = accessibilityReportToWarnings(accessibilityReport);
-  allWarnings.push(...accessibilityWarnings);
-  yield {
-    type: "step",
-    step: "accessibility-qa",
-    status: accessibilityReport.summary.fail > 0 ? "fail" : "ok",
-    label: "Running accessibility QA",
-    message:
-      accessibilityReport.summary.fail > 0
-        ? `${accessibilityReport.summary.fail} launch-blocking accessibility issue(s) found.`
-        : "Accessibility QA completed.",
-    accessibilityReport,
-  };
+        yield {
+          type: "step",
+          step: "page",
+          status: "ok",
+          label,
+          data: {
+            page: pageContent.page,
+            title: injected.title,
+            wpPageId: result.id,
+            editUrl: result.editUrl,
+            viewUrl: result.viewUrl,
+          },
+        };
+      } catch (e) {
+        yield {
+          type: "step",
+          step: "page",
+          status: "fail",
+          label,
+          message: e instanceof Error ? e.message : "Page creation failed",
+        };
+      }
+    }
+
+    yield {
+      type: "step",
+      step: "accessibility-qa",
+      status: "start",
+      label: "Running accessibility QA",
+    };
+    accessibilityReport = createAccessibilityReport({
+      content: req.content,
+      colors: req.brandKit.colors,
+      pages: accessibilityPages,
+      statementHandledByPlugin: true,
+    });
+    const accessibilityWarnings = accessibilityReportToWarnings(accessibilityReport);
+    allWarnings.push(...accessibilityWarnings);
+    yield {
+      type: "step",
+      step: "accessibility-qa",
+      status: accessibilityReport.summary.fail > 0 ? "fail" : "ok",
+      label: "Running accessibility QA",
+      message:
+        accessibilityReport.summary.fail > 0
+          ? `${accessibilityReport.summary.fail} launch-blocking accessibility issue(s) found.`
+          : "Accessibility QA completed.",
+      accessibilityReport,
+    };
+  }
 
   // 2. Site identity
   yield* step("site-identity", "Setting site name", async () => {
