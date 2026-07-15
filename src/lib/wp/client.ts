@@ -4,6 +4,11 @@ import {
   createAtomicFoundation,
   createBrandedVariableValues,
 } from "@/lib/elementor/atomic/foundation";
+import {
+  createGlobalClassRepairPayload,
+  findMissingGlobalClasses,
+  type ElementorGlobalClassListItem,
+} from "@/lib/elementor/atomic/sync";
 import type { BrandKit } from "@/lib/types";
 
 // Server-side WordPress client. Talks to the Energize REST endpoints
@@ -32,6 +37,7 @@ export interface CreatePageResult {
 export interface AtomicFoundationSyncResult {
   variablesUpdated: number;
   classesVerified: number;
+  classesCreated: number;
   componentsCreated: number;
 }
 
@@ -270,6 +276,16 @@ export class WpClient {
       if (!res.ok) {
         return { ok: false, detail: `WordPress returned status ${res.status}.` };
       }
+      try {
+        await this.postPlugin<{ ok: boolean; version: string }>("/health", {});
+      } catch (error) {
+        return {
+          ok: false,
+          detail: `WordPress credentials are valid, but the Energize bridge snippet failed its secret check: ${
+            error instanceof Error ? error.message : "Unknown bridge error"
+          }`,
+        };
+      }
       return { ok: true, detail: "Credentials valid." };
     } catch (e) {
       return {
@@ -372,21 +388,55 @@ export class WpClient {
       variablesUpdated += 1;
     }
 
-    const classResponse = await this.requestElementor<{
-      data: Array<{ id: string; label: string }>;
+    let classResponse = await this.requestElementor<{
+      data: ElementorGlobalClassListItem[];
     }>("/global-classes", "GET", username, appPassword);
-    const existingClassIds = new Set(
-      (classResponse.data ?? []).map(({ id }) => id),
-    );
-    const missingClasses = foundation.classes.filter(
-      (globalClass) => !existingClassIds.has(globalClass.id),
+    let existingClasses = classResponse.data ?? [];
+    const missingClasses = findMissingGlobalClasses(
+      foundation.classes,
+      existingClasses,
     );
     if (missingClasses.length > 0) {
-      throw new WpApiError(
-        `Energize Atomic Foundation is missing ${missingClasses.length} global class(es). Re-import the Atomic Foundation with classes enabled.`,
-        409,
-        "energize_atomic_classes_missing",
+      const missingSummary = missingClasses
+        .map(({ label, id }) => `${label} (${id})`)
+        .join(", ");
+      try {
+        await this.requestElementor(
+          "/global-classes",
+          "PUT",
+          username,
+          appPassword,
+          createGlobalClassRepairPayload(foundation.classes, existingClasses),
+        );
+      } catch (error) {
+        throw new WpApiError(
+          `Elementor skipped ${missingClasses.length} Atomic class(es) during import: ${missingSummary}. The builder attempted an automatic repair, but Elementor rejected it: ${
+            error instanceof Error ? error.message : "Unknown Elementor error"
+          }`,
+          error instanceof WpApiError ? error.status : 409,
+          error instanceof WpApiError
+            ? error.code
+            : "energize_atomic_class_repair_failed",
+        );
+      }
+
+      classResponse = await this.requestElementor<{
+        data: ElementorGlobalClassListItem[];
+      }>("/global-classes", "GET", username, appPassword);
+      existingClasses = classResponse.data ?? [];
+      const stillMissing = findMissingGlobalClasses(
+        foundation.classes,
+        existingClasses,
       );
+      if (stillMissing.length > 0) {
+        throw new WpApiError(
+          `Elementor did not retain the repaired Atomic class(es): ${stillMissing
+            .map(({ label, id }) => `${label} (${id})`)
+            .join(", ")}.`,
+          409,
+          "energize_atomic_class_repair_not_retained",
+        );
+      }
     }
 
     const componentResponse = await this.requestElementor<{
@@ -414,6 +464,7 @@ export class WpClient {
     return {
       variablesUpdated,
       classesVerified: foundation.classes.length,
+      classesCreated: missingClasses.length,
       componentsCreated: missingComponents.length,
     };
   }

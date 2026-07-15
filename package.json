@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "verify:injection": "tsx scripts/verify-injection.ts",
     "verify:atomic": "tsx src/lib/elementor/atomic/foundation.test.ts",
+    "verify:bridge": "tsx scripts/verify-bridge-snippet.ts",
     "build:atomic-foundation": "tsx scripts/build-atomic-foundation.ts",
     "verify:parser": "tsx src/lib/parser.test.ts",
     "db:generate": "prisma generate",

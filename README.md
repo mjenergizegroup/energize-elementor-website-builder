@@ -2,7 +2,7 @@
 
 Internal web app for the Energize Group website team. It builds Elementor V4
 pages from the shared Energize Atomic Foundation and pushes finished pages to
-client WordPress sites as drafts via a custom mu-plugin.
+client WordPress sites as drafts through a custom WPCode bridge snippet.
 
 See [BUILD_BRIEF.md](BUILD_BRIEF.md) for the full product brief.
 
@@ -32,7 +32,7 @@ See [.env.example](.env.example). Required:
 | `DATABASE_URL` / `DIRECT_URL` | Neon Postgres (pooled / direct for migrations) |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` | Clerk auth |
 | `ENCRYPTION_KEY` | 32-byte hex (`openssl rand -hex 32`) for AES-256-GCM of WP credentials |
-| `ENERGIZE_PLUGIN_SECRET` | Shared secret matching `ENERGIZE_BUILD_SECRET` in each client's `wp-config.php` |
+| `ENERGIZE_PLUGIN_SECRET` | Shared secret matching the live `ENERGIZE_BUILD_SECRET` line in each client's WPCode bridge snippet |
 
 ## Architecture
 
@@ -49,7 +49,7 @@ src/app/api/parse/        Markdown parse route
 src/components/build-wizard.tsx   Multi-step form + live deploy progress
 theme-templates/{theme}/  Historical V3 references and preset page coverage
 artifacts/                Generated Elementor Design System import ZIP
-wordpress-plugin/         energize-build-tool.php (mu-plugin)
+wordpress-plugin/         energize-build-tool.php (WPCode-compatible snippet)
 ```
 
 ### Injection flow
@@ -71,6 +71,7 @@ embeds. Components are Atomic-only.
 
 ```bash
 npm run verify:injection
+npm run verify:bridge
 ```
 
 ## Adding an Atomic visual preset
@@ -86,20 +87,20 @@ new preset without forking the design system:
 
 The theme then appears automatically (themes are discovered from disk).
 
-## The mu-plugin
+## The WPCode bridge snippet
 
-`wordpress-plugin/energize-build-tool.php` is a must-use plugin. Install it once
-on the blank WP template install at `/wp-content/mu-plugins/`; it is copied with
-full site duplication on WP Engine. Define the secret in `wp-config.php`:
+Paste `artifacts/energize-build-tool-wpcode-snippet.txt` into a PHP snippet in
+WPCode on the blank WP template install. Choose Run Everywhere and replace the
+placeholder in the live configuration near the top of the snippet:
 
 ```php
-define('ENERGIZE_BUILD_SECRET', 'your-shared-secret');
+define('ENERGIZE_BUILD_SECRET', 'PASTE_YOUR_EXISTING_SECRET_HERE');
 ```
 
 Endpoints (all POST, all require `X-Energize-Secret`): `/wp-json/energize/v1/`
-`page`, `logo`, `favicon`, `flush-css`. Atomic variables, global classes, and
-components use Elementor's authenticated V4 REST APIs. Auth failures are logged
-to a custom table.
+`health`, `page`, `logo`, `favicon`, `flush-css`. Atomic variables, global
+classes, and components use Elementor's authenticated V4 REST APIs. Auth
+failures are logged to a custom table.
 
 The `/page` endpoint requires Elementor 4.1.1 or newer and rejects classic
 layout or content widgets. The only accepted classic widgets are the explicit
@@ -117,7 +118,8 @@ npm run verify:parser
 ## Atomic Foundation
 
 Read [docs/ATOMIC_FOUNDATION.md](docs/ATOMIC_FOUNDATION.md) for the default-site
-installation workflow, naming contract, t-shirt scales, component catalog, and
-regeneration commands. The existing V3 JSON files remain as visual and content
-references only. New website and landing-page deploys do not load them.
+installation workflow, WPCode bridge setup, naming contract, t-shirt scales,
+component catalog, and regeneration commands. The existing V3 JSON files remain
+as visual and content references only. New website and landing-page deploys do
+not load them.
 ```

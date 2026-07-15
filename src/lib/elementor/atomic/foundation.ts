@@ -330,7 +330,7 @@ function classes(): AtomicGlobalClass[] {
         color: cv("color-white"),
       }),
     ]),
-    classItem(CLASS_IDS.container, "container", [
+    classItem(CLASS_IDS.container, "site-container", [
       desktop({
         display: stringProp("flex"),
         "flex-direction": stringProp("column"),

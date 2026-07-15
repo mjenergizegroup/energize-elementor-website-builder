@@ -18,7 +18,7 @@ export interface BrandFonts {
 
 export interface UploadedAsset {
   filename: string;
-  // base64 (no data URI prefix needed; the mu-plugin strips it either way)
+  // base64 (no data URI prefix needed; the bridge snippet strips it either way)
   dataBase64: string;
 }
 

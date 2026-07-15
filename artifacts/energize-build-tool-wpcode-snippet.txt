@@ -1,4 +1,3 @@
-<?php
 /**
  * Plugin Name: Energize Website Builder
  * Description: WPCode-compatible REST bridge used by the Energize Website Builder to create Elementor V4 Atomic pages and manage site assets.

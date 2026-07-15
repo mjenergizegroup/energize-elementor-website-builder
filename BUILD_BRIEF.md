@@ -2,7 +2,7 @@
 
 ## What we're building
 
-An internal web app for the Energize Group website team (3 users) to build dental practice WordPress sites without manually downloading/uploading Elementor JSON files. The tool injects approved content + brand kit into theme JSON templates and pushes finished pages to client WordPress sites as drafts via the WP REST API and a custom mu-plugin.
+An internal web app for the Energize Group website team (3 users) to build dental practice WordPress sites without manually downloading/uploading Elementor JSON files. The tool injects approved content + brand kit into theme JSON templates and pushes finished pages to client WordPress sites as drafts via the WP REST API and a custom WPCode bridge snippet.
 
 ## Why
 
@@ -114,24 +114,25 @@ Templates live in the repo at `/theme-templates/{theme}/`. Only Elevate, Summit,
 - `_elementor_version` (match the active target version, minimum `4.1.1`)
 - `_wp_page_template` (defaults to `elementor_header_footer`; canvas only for explicit standalone pages)
 
-**WP REST endpoint:** `POST /wp-json/wp/v2/pages` with `status: draft`. Auth via Application Passwords (Basic Auth: `username:app_password` base64-encoded). Elementor meta must be writable via REST -- the mu-plugin handles this reliably.
+**WP REST endpoint:** `POST /wp-json/wp/v2/pages` with `status: draft`. Auth via Application Passwords (Basic Auth: `username:app_password` base64-encoded). Elementor meta must be writable via REST -- the WPCode bridge snippet handles this reliably.
 
-## Energize Website Builder mu-plugin
+## Energize Website Builder WPCode bridge
 
-A custom WordPress must-use plugin baked into the team's blank WP template install. Once installed there, every duplicated client site inherits it automatically. Must-use plugins live in `/wp-content/mu-plugins/` and are copied with full site duplication on WP Engine.
+A custom PHP snippet added through WPCode on the team's blank WP template install. Once the site is duplicated, every client site inherits the active snippet automatically.
 
-**Plugin filename:** `energize-build-tool.php` (single file, top level of `/wp-content/mu-plugins/`)
+**Snippet source:** `wordpress-plugin/energize-build-tool.php`
 
 **Endpoints exposed (all under `/wp-json/energize/v1/`):**
 
 | Endpoint | Purpose |
 |---|---|
+| `POST /health` | Confirm that WPCode is executing the bridge and the shared secret matches |
 | `POST /page` | Create page with title, slug, template, and Elementor data in one call (writes `_elementor_data` and all related meta server-side, bypassing unreliable standard REST meta exposure for Elementor keys) |
 | `POST /logo` | Accept logo file (base64), upload to media library, set `custom_logo` theme option |
 | `POST /favicon` | Accept favicon file (base64), upload to media library, set `site_icon` option |
 | `POST /flush-css` | Trigger Elementor CSS regeneration (equivalent to `wp elementor flush_css`) |
 
-**Authentication:** every endpoint requires a shared secret header `X-Energize-Secret`. Secret stored as a PHP constant in `wp-config.php`:
+**Authentication:** every endpoint requires a shared secret header `X-Energize-Secret`. The secret is stored in the live configuration near the top of the WPCode snippet:
 
 ```php
 define('ENERGIZE_BUILD_SECRET', '...');
@@ -207,7 +208,7 @@ AuditLog {
 - Element IDs are unique per page with no widget conflicts in the Elementor editor
 - WP credentials and plugin secret are encrypted and never exposed to the browser
 - Audit log captures every deploy with user, client, pages, and timestamp
-- Mu-plugin PHP file generated and placed in `/wordpress-plugin/` in the repo for Mark to install on the blank WP template
+- WPCode-compatible PHP bridge stored in `/wordpress-plugin/` for Mark to add to the blank WP template
 - App is deployed at build.energizegroup.com with working Clerk auth
 
 ## Environment variables needed

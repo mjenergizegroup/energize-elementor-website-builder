@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import {
   copyFileSync,
   mkdirSync,
+  readFileSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
@@ -33,6 +34,21 @@ const publicStyleGuideOutput = path.join(
   "public",
   "downloads",
   "energize-atomic-style-guide.json",
+);
+const bridgeSource = path.join(
+  root,
+  "wordpress-plugin",
+  "energize-build-tool.php",
+);
+const bridgeSnippetOutput = path.join(
+  artifactsDir,
+  "energize-build-tool-wpcode-snippet.txt",
+);
+const publicBridgeSnippetOutput = path.join(
+  root,
+  "public",
+  "downloads",
+  "energize-build-tool-wpcode-snippet.txt",
 );
 const foundation = createAtomicFoundation();
 
@@ -87,10 +103,16 @@ mkdirSync(path.dirname(publicOutput), { recursive: true });
 copyFileSync(output, publicOutput);
 writeJson(styleGuideOutput, createAtomicStyleGuide());
 copyFileSync(styleGuideOutput, publicStyleGuideOutput);
+const bridgeSnippet = readFileSync(bridgeSource, "utf8").replace(
+  /^<\?php\s*\n/,
+  "",
+);
+writeFileSync(bridgeSnippetOutput, bridgeSnippet, "utf8");
+copyFileSync(bridgeSnippetOutput, publicBridgeSnippetOutput);
 rmSync(buildDir, { recursive: true, force: true });
 
 console.log(
-  `Built Atomic Foundation and Style Guide downloads with ${foundation.variables.length} variables, ${foundation.classes.length} classes, and ${foundation.components.length} components.`,
+  `Built Atomic Foundation, Style Guide, and WPCode bridge downloads with ${foundation.variables.length} variables, ${foundation.classes.length} classes, and ${foundation.components.length} components.`,
 );
 
 function writeJson(file: string, value: unknown): void {

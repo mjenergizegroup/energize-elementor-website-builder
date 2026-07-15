@@ -130,6 +130,14 @@ export default async function NewBuildPage({
             >
               Download the Atomic Style Guide
             </a>
+            {" · "}
+            <a
+              href="/downloads/energize-build-tool-wpcode-snippet.txt"
+              className="font-bold text-[var(--color-black)] underline underline-offset-4"
+              download
+            >
+              Download the WPCode Bridge
+            </a>
           </div>
         </div>
       </section>

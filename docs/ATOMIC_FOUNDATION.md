@@ -9,17 +9,25 @@ variables, global classes, Atomic elements, and reusable components.
 
 1. Install Elementor 4.1.1 or newer on the blank WP Engine default site.
 2. Enable the Atomic Editor, Global Classes, Variables, and Components features.
-3. In Elementor, open Website Templates, then Import / Export, then Import.
-4. Import `artifacts/energize-atomic-foundation.zip`, choose the Design System
+3. Download `artifacts/energize-build-tool-wpcode-snippet.txt` and paste its
+   complete contents into a WPCode PHP snippet. Set it to Run Everywhere,
+   replace `PASTE_YOUR_EXISTING_SECRET_HERE` in the live configuration line,
+   save it, and activate it. The value must match `ENERGIZE_PLUGIN_SECRET` in
+   the website builder.
+4. In Elementor, open Website Templates, then Import / Export, then Import.
+5. Import `artifacts/energize-atomic-foundation.zip`, choose the Design System
    options for variables and classes, and use **Override all** on the blank
    default site. This preserves the deterministic IDs used by generated pages.
-5. Run one branding-only build against the default site. The builder validates
-   the foundation, seeds the 12 Energize components, and applies the default
-   brand values.
-6. Import `artifacts/energize-atomic-style-guide.json` as an Elementor page
+6. Run one branding-only build against the default site. The builder validates
+   the foundation, repairs any class that Elementor skipped during import,
+   seeds the 12 Energize components, and applies the default brand values.
+7. Import `artifacts/energize-atomic-style-guide.json` as an Elementor page
    template, create the `/style-guide` page, and set it to noindex.
-7. Duplicate that site for each client. The cloned variables, class IDs, and
+8. Duplicate that site for each client. The cloned variables, class IDs, and
    component post IDs become the stable base for future builds.
+
+The builder preflight checks both the WordPress Application Password and the
+WPCode bridge secret. A connection is not reported as ready until both pass.
 
 Do not import the foundation separately into every client clone. The normal
 path is to import it once into the default site and then duplicate that site.
@@ -45,6 +53,9 @@ Global classes are intentionally finite. They cover page structure, stacks,
 clusters, grids, type roles, buttons, cards, media, badges, radii, shadows, and
 a small set of responsive utilities. New classes should represent a repeated
 design decision, not a single page adjustment.
+
+The main width wrapper is labeled `site-container`. Elementor 4.1.4 reserves
+the bare class label `container`, so the foundation does not use that name.
 
 ## T-shirt scale
 
@@ -77,6 +88,7 @@ inside a component.
 
 ```bash
 npm run verify:atomic
+npm run verify:bridge
 npm run build:atomic-foundation
 ```
 

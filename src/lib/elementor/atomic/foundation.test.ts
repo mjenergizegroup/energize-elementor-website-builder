@@ -5,6 +5,10 @@ import {
 } from "./foundation";
 import { buildAtomicPage } from "./page-builder";
 import { createAtomicStyleGuide } from "./style-guide";
+import {
+  createGlobalClassRepairPayload,
+  findMissingGlobalClasses,
+} from "./sync";
 
 const foundation = createAtomicFoundation();
 const variableIds = new Set(foundation.variables.map(({ id }) => id));
@@ -34,6 +38,30 @@ const references = serializedClasses.match(/e-gv-[a-z0-9-]+/g) ?? [];
 for (const reference of references) {
   assert.equal(variableIds.has(reference), true, `Unknown variable ${reference}`);
 }
+
+const classLabels = new Set(foundation.classes.map(({ label }) => label));
+assert.equal(classLabels.size, foundation.classes.length);
+assert.equal(classLabels.has("container"), false);
+assert.equal(classLabels.has("site-container"), true);
+
+const importedClasses = foundation.classes.slice(0, -1).map(({ id, label }) => ({
+  id,
+  label,
+}));
+const missingClass = foundation.classes.at(-1);
+assert.ok(missingClass);
+assert.deepEqual(
+  findMissingGlobalClasses(foundation.classes, importedClasses).map(({ id }) => id),
+  [missingClass.id],
+);
+const classRepair = createGlobalClassRepairPayload(
+  foundation.classes,
+  importedClasses,
+);
+assert.deepEqual(classRepair.changes.added, [missingClass.id]);
+assert.equal(classRepair.items[missingClass.id]?.label, missingClass.label);
+assert.equal(classRepair.order.length, foundation.classes.length);
+assert.equal(classRepair.order.at(-1), missingClass.id);
 
 for (const component of foundation.components) {
   assert.match(component.uid, /^energize-[a-z0-9-]+$/);
