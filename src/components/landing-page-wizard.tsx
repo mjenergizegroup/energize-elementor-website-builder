@@ -92,8 +92,8 @@ const STEP_DETAILS: {
   },
   {
     title: "Brand Kit",
-    rail: "Colors and assets",
-    description: "Set the WordPress brand colors, fonts, logo, and favicon.",
+    rail: "Variables and assets",
+    description: "Map brand values to Atomic variables, then add the logo and favicon.",
     icon: Palette,
   },
   {
@@ -566,7 +566,7 @@ export function LandingPageWizard({
       <main className="page-body">
         <PageHead
           title={title}
-          subline="Landing pages are pushed to WordPress as Elementor drafts."
+          subline="Landing pages are generated with Atomic elements and pushed as Elementor drafts."
           clientName={name || buildPackage?.client || "Untitled client"}
         />
         <section className="wizard-frame">
@@ -711,8 +711,8 @@ export function LandingPageWizard({
                   ))}
                 </div>
                 <p className="text-[12px] font-medium text-[var(--muted)]">
-                  Black and white are always part of the kit, so they are not shown
-                  here. Check an optional color below to add it to the build.
+                  Black and white are permanent foundation variables, so they are
+                  not shown here. Optional colors update semantic Atomic variables.
                 </p>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <OptionalColorField
@@ -725,7 +725,7 @@ export function LandingPageWizard({
                   />
                   <OptionalColorField
                     label="highlight"
-                    hint="Extra brand color added to the Elementor custom colors."
+                    hint="Maps to the shared color-surface Atomic variable."
                     checked={useHighlight}
                     onCheckedChange={setUseHighlight}
                     value={highlight}

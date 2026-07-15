@@ -393,15 +393,17 @@ function collectHeadingRefs(tree: unknown): HeadingRef[] {
     const settings = getSettings(node);
     const widgetType = widgetTypeOf(node);
 
-    if (widgetType === "heading") {
+    if (widgetType === "heading" || widgetType === "e-heading") {
       const level = headingLevel(settings.header_size);
-      if (!level) return;
+      const atomicLevel = headingLevel(settings.tag);
+      const resolvedLevel = level ?? atomicLevel;
+      if (!resolvedLevel) return;
       headings.push({
         id: nodeId(node),
-        level,
-        text: stringValue(settings.title),
+        level: resolvedLevel,
+        text: htmlText(settings.title),
         settings,
-        field: "header_size",
+        field: level ? "header_size" : "tag",
       });
       return;
     }
@@ -430,6 +432,7 @@ function collectHeadingRefs(tree: unknown): HeadingRef[] {
 
 function headingField(settings: ElementorNode): [string, unknown] {
   const fields = [
+    "tag",
     "header_size",
     "title_size",
     "ekit_heading_title_tag",
@@ -442,7 +445,10 @@ function headingField(settings: ElementorNode): [string, unknown] {
 }
 
 function setHeadingLevel(heading: HeadingRef, level: string): void {
-  heading.settings[heading.field] = level;
+  const current = heading.settings[heading.field];
+  heading.settings[heading.field] = isAtomicProp(current)
+    ? { ...current, value: level }
+    : level;
   heading.level = level;
 }
 
@@ -460,13 +466,16 @@ function collectImages(tree: unknown): Array<{
 
   visitNodes(tree, (node) => {
     const settings = getSettings(node);
-    const image = isObject(settings.image) ? settings.image : null;
+    const imageValue = unwrapAtomic(settings.image);
+    const image = isObject(imageValue) ? imageValue : null;
     if (image) {
+      const source = unwrapAtomic(image.src);
+      const sourceObject = isObject(source) ? source : image;
       images.push({
         id: nodeId(node),
-        alt: stringValue(image.alt),
-        hasImage: Boolean(stringValue(image.url)),
-        url: stringValue(image.url),
+        alt: stringValue(sourceObject.alt ?? image.alt),
+        hasImage: Boolean(stringValue(sourceObject.url)),
+        url: stringValue(sourceObject.url),
       });
     }
 
@@ -498,16 +507,17 @@ function collectButtons(tree: unknown): Array<{
     if (!widgetType.includes("button")) return;
 
     const settings = getSettings(node);
-    const link = isObject(settings.link)
-      ? settings.link
+    const atomicLink = unwrapAtomic(settings.link);
+    const link = isObject(atomicLink)
+      ? atomicLink
       : isObject(settings.sg_content_link)
         ? settings.sg_content_link
         : {};
 
     buttons.push({
       id: nodeId(node),
-      label: stringValue(settings.text ?? settings.button_text ?? settings.sg_content_label),
-      href: stringValue(link.url),
+      label: htmlText(settings.text ?? settings.button_text ?? settings.sg_content_label),
+      href: linkHref(link),
     });
   });
 
@@ -593,8 +603,9 @@ function isVagueText(value: string): boolean {
 }
 
 function headingLevel(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-  const level = value.trim().toLowerCase();
+  const resolved = unwrapAtomic(value);
+  if (typeof resolved !== "string") return null;
+  const level = resolved.trim().toLowerCase();
   return HEADING_ORDER.includes(level) ? level : null;
 }
 
@@ -611,7 +622,29 @@ function nodeId(node: ElementorNode): string {
 }
 
 function stringValue(value: unknown): string {
-  return typeof value === "string" ? value : "";
+  const resolved = unwrapAtomic(value);
+  return typeof resolved === "string" ? resolved : "";
+}
+
+function htmlText(value: unknown): string {
+  const resolved = unwrapAtomic(value);
+  if (!isObject(resolved)) return stringValue(resolved);
+  return stringValue(resolved.content);
+}
+
+function linkHref(link: ElementorNode): string {
+  const direct = stringValue(link.url ?? link.href);
+  if (direct) return direct;
+  return stringValue(link.destination);
+}
+
+function unwrapAtomic(value: unknown): unknown {
+  if (isAtomicProp(value)) return unwrapAtomic(value.value);
+  return value;
+}
+
+function isAtomicProp(value: unknown): value is ElementorNode & { value: unknown } {
+  return isObject(value) && typeof value.$$type === "string" && "value" in value;
 }
 
 function contrastRatio(foreground: string, background: string): number {

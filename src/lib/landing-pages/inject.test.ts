@@ -22,95 +22,32 @@ moduleWithLoader._load = function loadWithServerOnlyStub(
 
 type NodeRecord = Record<string, unknown>;
 
-const brandColors = {
-  primary: "#AD9614",
-  secondary: "#566169",
-  accent: "#F7941D",
-  text: "#AD9614",
-  background: "#F8F5EA",
-};
-
-const darkButtonBrandColors = {
-  primary: "#000000",
-  secondary: "#566169",
-  accent: "#000000",
-  text: "#000000",
-  background: "#FFFFFF",
-};
-
-function findNode(node: unknown, id: string): NodeRecord | null {
-  if (Array.isArray(node)) {
-    for (const item of node) {
-      const found = findNode(item, id);
-      if (found) return found;
-    }
-    return null;
-  }
-
-  if (!isObject(node)) return null;
-  if (node.id === id) return node;
-
-  for (const value of Object.values(node)) {
-    const found = findNode(value, id);
-    if (found) return found;
-  }
-
-  return null;
-}
-
-function isObject(value: unknown): value is NodeRecord {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function settingsFor(data: unknown, id: string): NodeRecord {
-  const node = findNode(data, id);
-  assert(node);
-  assert(isObject(node.settings));
-  return node.settings;
-}
-
 async function main(): Promise<void> {
-  const { injectLandingPage } = await import("./inject");
+  const {
+    injectLandingPage,
+    LANDING_PAGE_TEMPLATES,
+  } = await import("./inject");
 
-  const standard = injectLandingPage(
-    "std_v1",
-    {
-      HERO_HEADING: "Join Our Membership Plan From $33.25/Month",
-      MAPS_ADDRESS: "1195 N Fayette St, Alexandria, VA 22314",
-    },
-    {
-      brandColors,
-      practiceName: "Prewitt Dental Ranchos",
-    },
-  );
+  for (const template of LANDING_PAGE_TEMPLATES) {
+    const result = injectLandingPage(
+      template,
+      {
+        HERO_HEADING: "Comfortable dentistry starts here",
+        HERO_BODY: "A focused landing page built with Elementor Atomic elements.",
+        PHONE: "(555) 123-4567",
+      },
+      { practiceName: "BiteSize Dentistry" },
+    );
+    const serialized = JSON.stringify(result.data);
+    assert.equal(serialized.includes('"elType":"e-flexbox"'), true);
+    assert.equal(serialized.includes('"widgetType":"e-heading"'), true);
+    assert.equal(serialized.includes('"widgetType":"heading"'), false);
+    assert.equal(serialized.includes('"elType":"container"'), false);
+    assert.equal(serialized.includes("BiteSize Dentistry"), true);
+    assert.equal(result.data.version, "4.1.1");
+  }
 
-  const heroHeading = settingsFor(standard.data, "dbe8420");
-  assert.equal(heroHeading.title_color, "#111111");
-  assert(
-    !("__globals__" in heroHeading) ||
-      !isObject(heroHeading.__globals__) ||
-      !("title_color" in heroHeading.__globals__),
-  );
-
-  const map = settingsFor(standard.data, "a2948d5");
-  assert.equal(
-    map.address,
-    "Prewitt Dental Ranchos 1195 N Fayette St, Alexandria, VA 22314",
-  );
-
-  const standardV2 = injectLandingPage(
-    "std_v2",
-    {},
-    {
-      brandColors,
-      practiceName: "Prewitt Dental Ranchos",
-    },
-  );
-
-  const cta = settingsFor(standardV2.data, "10a65223");
-  assert.equal(cta.text, "Free Consultation");
-
-  const aliasStandard = injectLandingPage(
+  const aliases = injectLandingPage(
     "std_v1",
     {
       GOOGLE_BUSINESS_PROFILE_URL: "https://maps.app.goo.gl/example",
@@ -119,52 +56,52 @@ async function main(): Promise<void> {
         friday: { closed: true },
       },
       phone: "(555) 123-4567",
+      FORM_HTML:
+        '<iframe src="https://api.leadconnectorhq.com/widget/form/example"></iframe>',
     },
-    {
-      brandColors,
-      practiceName: "BiteSize Dentistry",
-    },
+    { practiceName: "BiteSize Dentistry" },
   );
 
-  assert(!aliasStandard.missingSlots.includes("MAPS_ADDRESS"));
-  assert(!aliasStandard.missingSlots.includes("WORK_HOURS"));
-  assert(!aliasStandard.missingSlots.includes("PHONE_NUMBER"));
+  assert(!aliases.missingSlots.includes("MAPS_ADDRESS"));
+  assert(!aliases.missingSlots.includes("WORK_HOURS"));
+  assert(!aliases.missingSlots.includes("PHONE_NUMBER"));
 
-  const aliasMap = settingsFor(aliasStandard.data, "a2948d5");
-  assert.equal(aliasMap.address, "https://maps.app.goo.gl/example");
-
-  const hours = settingsFor(aliasStandard.data, "24424744");
-  assert(Array.isArray(hours.icon_list));
-  assert.equal((hours.icon_list[0] as NodeRecord).text, "Monday: 9 AM - 5 PM");
-  assert.equal((hours.icon_list[1] as NodeRecord).text, "Friday: Closed");
-
-  const phone = settingsFor(aliasStandard.data, "46dd9758");
-  assert.equal(phone.description_text, "(555) 123-4567");
-
-  const reviewSubdesc = settingsFor(aliasStandard.data, "b20959d");
-  assert.equal(
-    valueHasText(reviewSubdesc.editor, "Nellie Gail Orthodontics"),
-    false,
+  const nodes = collectNodes(aliases.data);
+  const classicWidgets = nodes.filter(
+    (node) =>
+      node.elType === "widget" &&
+      typeof node.widgetType === "string" &&
+      !node.widgetType.startsWith("e-"),
   );
-  assert.equal(valueHasText(reviewSubdesc.editor, "BiteSize Dentistry"), true);
-
-  const darkButtons = injectLandingPage(
-    "std_v2",
-    {},
-    {
-      brandColors: darkButtonBrandColors,
-      practiceName: "BiteSize Dentistry",
-    },
+  assert(
+    classicWidgets.every((node) =>
+      ["html", "shortcode", "google_maps"].includes(String(node.widgetType)),
+    ),
   );
+  assert(classicWidgets.some((node) => node.widgetType === "google_maps"));
+  assert(classicWidgets.some((node) => node.widgetType === "html"));
 
-  const darkCta = settingsFor(darkButtons.data, "10a65223");
-  assert.equal(darkCta.button_text_color, "#FFFFFF");
-
-  console.log("landing page injection checks passed");
+  console.log("Atomic landing page injection checks passed");
 }
 
-function valueHasText(value: unknown, text: string): boolean {
-  return typeof value === "string" && value.includes(text);
+function collectNodes(value: unknown): NodeRecord[] {
+  const nodes: NodeRecord[] = [];
+  const visit = (node: unknown): void => {
+    if (Array.isArray(node)) {
+      node.forEach(visit);
+      return;
+    }
+    if (!isObject(node)) return;
+    if (typeof node.elType === "string") nodes.push(node);
+    if (Array.isArray(node.elements)) node.elements.forEach(visit);
+    if (Array.isArray(node.content)) node.content.forEach(visit);
+  };
+  visit(value);
+  return nodes;
+}
+
+function isObject(value: unknown): value is NodeRecord {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 main().catch((error: unknown) => {

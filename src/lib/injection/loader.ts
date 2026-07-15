@@ -54,3 +54,17 @@ export function discoverThemeKeys(): string[] {
     .map((entry) => entry.name)
     .sort();
 }
+
+export function discoverThemePageFiles(theme: string): string[] {
+  const directory = join(TEMPLATES_ROOT, safeThemeKey(theme));
+  if (!existsSync(directory)) return [];
+  return readdirSync(directory, { withFileTypes: true })
+    .filter(
+      (entry) =>
+        entry.isFile() &&
+        entry.name.endsWith(".json") &&
+        !entry.name.startsWith("_"),
+    )
+    .map((entry) => entry.name.replace(/\.json$/, ""))
+    .sort();
+}

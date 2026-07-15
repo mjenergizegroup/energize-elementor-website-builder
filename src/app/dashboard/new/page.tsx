@@ -15,14 +15,14 @@ const buildTypes = [
     code: "LP",
     type: "Google Ads",
     title: "Landing Page Build",
-    desc: "Build one or more Google Ads landing pages, set the brand kit, and push draft pages to WordPress.",
+    desc: "Build one or more Atomic Google Ads landing pages, apply brand variables, and push drafts to WordPress.",
   },
   {
     key: "migrate",
     code: "MG",
     type: "Migration",
     title: "Migrate a Website",
-    desc: "Move an existing dental site into a WordPress theme workflow, starting with source page crawl.",
+    desc: "Move an existing dental site into the shared Elementor Atomic workflow, starting with source page crawl.",
     featured: true,
   },
   {
@@ -30,7 +30,7 @@ const buildTypes = [
     code: "NW",
     type: "New build",
     title: "New Website Build",
-    desc: "Build a new dental practice website from scratch with theme, content, brand, and WordPress setup.",
+    desc: "Build a new dental practice website from scratch with an Atomic preset, content, brand variables, and WordPress setup.",
   },
 ];
 
@@ -112,6 +112,24 @@ export default async function NewBuildPage({
                 </Link>
               </article>
             ))}
+          </div>
+          <div className="mt-6 border-t-2 border-[var(--color-black)] pt-4 text-[12px] text-[var(--color-muted)]">
+            Setting up the WP Engine default site?{" "}
+            <a
+              href="/downloads/energize-atomic-foundation.zip"
+              className="font-bold text-[var(--color-black)] underline underline-offset-4"
+              download
+            >
+              Download the Energize Atomic Foundation
+            </a>
+            {" · "}
+            <a
+              href="/downloads/energize-atomic-style-guide.json"
+              className="font-bold text-[var(--color-black)] underline underline-offset-4"
+              download
+            >
+              Download the Atomic Style Guide
+            </a>
           </div>
         </div>
       </section>

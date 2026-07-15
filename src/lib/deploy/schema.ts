@@ -67,7 +67,10 @@ export const deployBodySchema = z
       ),
       site: z.record(z.string(), z.string()).optional(),
     }),
-    elementorVersion: z.string().optional(),
+    elementorVersion: z
+      .string()
+      .regex(/^4\./, "Elementor V4 is required for Atomic builds.")
+      .optional(),
   })
   .superRefine((body, ctx) => {
     if (body.deployMode === "pages" && body.content.pages.length === 0) {

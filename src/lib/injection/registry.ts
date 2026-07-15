@@ -1,5 +1,9 @@
 import { BaseThemeInjector } from "./base";
-import { discoverThemeKeys, loadThemeMeta } from "./loader";
+import {
+  discoverThemeKeys,
+  discoverThemePageFiles,
+  loadThemeMeta,
+} from "./loader";
 import { ElevateInjector } from "./themes/elevate";
 import { SummitInjector } from "./themes/summit";
 import { LuxInjector } from "./themes/lux";
@@ -40,16 +44,29 @@ export interface ThemeSummary {
   pages: { key: string; label: string }[];
 }
 
-// Every theme discovered on disk, with readiness info for the UI.
+// Every visual preset is ready because V4 pages are generated from the shared
+// Atomic foundation. The old template metadata remains available as reference
+// for content coverage, but no longer controls deploy readiness.
 export function listThemes(): ThemeSummary[] {
   return discoverThemeKeys().map((key) => {
-    const injector = getInjector(key);
+    const meta = loadThemeMeta(key);
+    const pageKeys =
+      meta.pages.length > 0
+        ? meta.pages.map(({ key }) => key)
+        : discoverThemePageFiles(key);
     return {
       key,
-      label: injector.meta.label,
-      ready: injector.ready,
-      status: injector.meta.status ?? (injector.ready ? "ready" : "unknown"),
-      pages: injector.listPages().map((p) => ({ key: p.key, label: p.label })),
+      label: meta.label,
+      ready: true,
+      status: "atomic-ready",
+      pages: pageKeys.map((page) => ({ key: page, label: titleCase(page) })),
     };
   });
+}
+
+function titleCase(value: string): string {
+  return value
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }

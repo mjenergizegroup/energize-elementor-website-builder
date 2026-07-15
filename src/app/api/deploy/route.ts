@@ -128,6 +128,7 @@ export async function POST(req: NextRequest) {
           elementorVersion: body.elementorVersion,
         })) {
           if (event.status === "fail") anyFail = true;
+          if (event.type === "fatal") fatal = true;
           if (event.accessibilityReport) {
             accessibilityReport = event.accessibilityReport;
           }

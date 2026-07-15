@@ -40,11 +40,10 @@ export interface DeployRequest {
 }
 
 export type DeployStep =
+  | "atomic-foundation"
   | "page"
   | "accessibility-qa"
   | "site-identity"
-  | "brand-colors"
-  | "brand-fonts"
   | "logo"
   | "favicon"
   | "flush-css";
@@ -55,7 +54,7 @@ export interface DeployEvent {
   type: DeployEventType;
   step?: DeployStep;
   status: "start" | "ok" | "fail";
-  // Human label, e.g. "Creating homepage" / "Setting brand colors".
+  // Human label, e.g. "Creating homepage" / "Applying Atomic Foundation".
   label: string;
   message?: string;
   // For a finished page: the WP draft details.

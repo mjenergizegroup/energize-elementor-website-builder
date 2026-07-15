@@ -9,11 +9,6 @@ import {
 } from "@/lib/landing-pages/inject";
 import { prisma } from "@/lib/prisma";
 import { checkDeployRateLimit } from "@/lib/rate-limit";
-import {
-  toCustomColors,
-  toSystemColors,
-  toSystemTypography,
-} from "@/lib/wp/brand";
 import { WpClient } from "@/lib/wp/client";
 
 export const runtime = "nodejs";
@@ -83,7 +78,10 @@ const bodySchema = z.object({
       }),
     )
     .min(1),
-  elementorVersion: z.string().optional(),
+  elementorVersion: z
+    .string()
+    .regex(/^4\./, "Elementor V4 is required for Atomic builds.")
+    .optional(),
 });
 
 function ndjson(event: LandingPageDeployEvent): string {
@@ -240,6 +238,29 @@ export async function POST(req: NextRequest) {
           label: "WordPress connection OK",
         });
 
+        const foundationReady = await landingStep(
+          send,
+          "Validating and applying Atomic Foundation",
+          async () => {
+            await wp.syncAtomicFoundation(
+              client.wpUsername,
+              client.appPassword,
+              body.brandKit,
+            );
+          },
+        );
+        if (!foundationReady) {
+          fatal = true;
+          send({
+            type: "fatal",
+            status: "fail",
+            label: "Atomic Foundation is not ready",
+            message:
+              "Import the Energize Atomic Foundation into the default Elementor site before deploying.",
+          });
+          return;
+        }
+
         for (const page of body.pages) {
           assertLandingPageTemplateName(page.templateName);
           const label = `Creating ${page.pageTitle}`;
@@ -247,7 +268,6 @@ export async function POST(req: NextRequest) {
 
           try {
             const injected = injectLandingPage(page.templateName, page.contentJson, {
-              brandColors: body.brandKit.colors,
               practiceName: body.client.name,
             });
             const elementorData = Array.isArray(injected.data.content)
@@ -305,21 +325,6 @@ export async function POST(req: NextRequest) {
 
         if (!(await landingStep(send, "Setting site name", async () => {
           await wp.setSiteName(client.wpUsername, client.appPassword, client.name);
-        }))) {
-          anyFail = true;
-        }
-
-        if (!(await landingStep(send, "Setting brand colors", async () => {
-          await wp.setBrandColors(
-            toSystemColors(body.brandKit.colors),
-            toCustomColors(body.brandKit.colors),
-          );
-        }))) {
-          anyFail = true;
-        }
-
-        if (!(await landingStep(send, "Setting brand fonts", async () => {
-          await wp.setBrandFonts(toSystemTypography(body.brandKit.fonts));
         }))) {
           anyFail = true;
         }

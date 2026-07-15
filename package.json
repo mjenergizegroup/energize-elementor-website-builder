@@ -11,6 +11,8 @@
     "test:deploy-schema": "tsx src/lib/deploy/schema.test.ts",
     "typecheck": "tsc --noEmit",
     "verify:injection": "tsx scripts/verify-injection.ts",
+    "verify:atomic": "tsx src/lib/elementor/atomic/foundation.test.ts",
+    "build:atomic-foundation": "tsx scripts/build-atomic-foundation.ts",
     "verify:parser": "tsx src/lib/parser.test.ts",
     "db:generate": "prisma generate",
     "db:push": "dotenv -e .env.local -- prisma db push",

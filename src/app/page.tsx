@@ -25,8 +25,8 @@ export default async function Home() {
             Energize Website Builder.
           </h1>
           <p className="mt-4 max-w-md text-[13px] leading-6 text-[var(--color-muted)]">
-            Inject approved content and brand kits into theme templates, then
-            push WordPress draft pages for dental practice sites.
+            Build Elementor V4 pages from shared Atomic variables, classes, and
+            components, then push WordPress drafts for dental practice sites.
           </p>
           <div className="mt-8">
             <Link

@@ -149,8 +149,8 @@ const STEP_DETAILS: {
   },
   {
     title: "Theme",
-    rail: "Choose template",
-    description: "Choose the Elementor theme and confirm page coverage.",
+    rail: "Visual preset",
+    description: "Choose an Atomic visual preset and confirm page coverage.",
     icon: ClipboardList,
   },
   {
@@ -161,8 +161,8 @@ const STEP_DETAILS: {
   },
   {
     title: "Brand Kit",
-    rail: "Colors and assets",
-    description: "Capture colors, fonts, logo, and favicon for injection.",
+    rail: "Variables and assets",
+    description: "Map colors and fonts to Atomic variables, then add the logo and favicon.",
     icon: Palette,
   },
   {
@@ -838,7 +838,7 @@ export function BuildWizard({
       <div className="page-body">
         <PageHead
           title={title}
-          subline="The deploy stream reports every WordPress and brand-kit step."
+          subline="The deploy stream validates the Atomic Foundation before creating WordPress drafts."
           clientName={name || practiceMeta?.practiceName || "Untitled client"}
           themeLabel={selectedTheme?.label ?? theme}
           buildTypeLabel={buildTypeLabel}
@@ -850,8 +850,8 @@ export function BuildWizard({
             title="Deployment progress"
             description={
               deployMode === "branding-only"
-                ? "Site identity, brand kit, assets, and Elementor cache status."
-                : "Routes, page drafts, assets, and Elementor cache status."
+                ? "Atomic variables, components, site identity, assets, and cache status."
+                : "Atomic Foundation, page drafts, assets, and cache status."
             }
           />
           <div className="space-y-6 bg-[var(--color-surface)] p-6 sm:p-8">

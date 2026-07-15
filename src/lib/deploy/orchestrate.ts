@@ -1,23 +1,16 @@
 import "server-only";
-import { readFileSync } from "node:fs";
-import path from "node:path";
-import { buildElevatePage } from "@/lib/builders/elevate";
-import type { ElementorJSON } from "@/lib/builders/elevate/types";
 import {
   accessibilityReportToWarnings,
   createAccessibilityReport,
   repairElementorHeadingStructure,
   type AccessibilityPageInput,
 } from "@/lib/accessibility/audit";
-import { repairElementorTextContrast } from "@/lib/elementor/contrast";
-import { getInjector } from "@/lib/injection/registry";
+import {
+  buildAtomicPage,
+  type AtomicVisualPreset,
+} from "@/lib/elementor/atomic/page-builder";
 import { DEFAULT_WP_PAGE_TEMPLATE } from "@/lib/injection/base";
 import { WpClient } from "@/lib/wp/client";
-import {
-  toCustomColors,
-  toSystemColors,
-  toSystemTypography,
-} from "@/lib/wp/brand";
 import type {
   DeployedPageRecord,
   DeployEvent,
@@ -38,6 +31,36 @@ export async function* runDeploy(
   const accessibilityPages: AccessibilityPageInput[] = [];
   let accessibilityReport: ReturnType<typeof createAccessibilityReport> | undefined;
 
+  yield {
+    type: "step",
+    step: "atomic-foundation",
+    status: "start",
+    label: "Validating and applying Atomic Foundation",
+  };
+  try {
+    await wp.syncAtomicFoundation(
+      req.wpUsername,
+      req.wpAppPassword,
+      req.brandKit,
+    );
+    yield {
+      type: "step",
+      step: "atomic-foundation",
+      status: "ok",
+      label: "Validating and applying Atomic Foundation",
+    };
+  } catch (error) {
+    yield {
+      type: "fatal",
+      step: "atomic-foundation",
+      status: "fail",
+      label: "Atomic Foundation is not ready",
+      message:
+        error instanceof Error ? error.message : "Atomic Foundation check failed",
+    };
+    return;
+  }
+
   if (req.deployMode === "pages") {
     // 1. Pages (content.pages is the selected set; may contain several services)
     for (const pageContent of req.content.pages) {
@@ -47,7 +70,6 @@ export async function* runDeploy(
       try {
         const injected = buildPage(req, pageContent);
         repairElementorHeadingStructure(injected.elementorData);
-        repairElementorTextContrast(injected.elementorData, req.brandKit.colors);
         allBuildNotes.push(...injected.buildNotes);
         allWarnings.push(...injected.warnings);
         accessibilityPages.push({
@@ -131,20 +153,7 @@ export async function* runDeploy(
     await wp.setSiteName(req.wpUsername, req.wpAppPassword, req.siteName);
   });
 
-  // 3. Brand colors
-  yield* step("brand-colors", "Setting brand colors", async () => {
-    await wp.setBrandColors(
-      toSystemColors(req.brandKit.colors),
-      toCustomColors(req.brandKit.colors),
-    );
-  });
-
-  // 4. Brand fonts
-  yield* step("brand-fonts", "Setting brand fonts", async () => {
-    await wp.setBrandFonts(toSystemTypography(req.brandKit.fonts));
-  });
-
-  // 5. Site logo
+  // 3. Site logo
   if (req.brandKit.logo) {
     const logo = req.brandKit.logo;
     yield* step("logo", "Setting site logo", async () => {
@@ -152,7 +161,7 @@ export async function* runDeploy(
     });
   }
 
-  // 6. Site favicon
+  // 4. Site favicon
   if (req.brandKit.favicon) {
     const favicon = req.brandKit.favicon;
     yield* step("favicon", "Setting site favicon", async () => {
@@ -160,7 +169,7 @@ export async function* runDeploy(
     });
   }
 
-  // 7. Flush Elementor CSS
+  // 5. Flush Elementor CSS
   yield* step("flush-css", "Flushing Elementor CSS cache", async () => {
     await wp.flushCss();
   });
@@ -189,60 +198,37 @@ function buildPage(
   buildNotes: string[];
   warnings: string[];
 } {
-  if (
-    req.theme === "elevate" &&
-    req.content.site &&
-    pageContent.pageData &&
-    pageContent.builderPageType
-  ) {
-    const built = buildElevatePage({
-      pageType: pageContent.builderPageType,
-      slug: pageContent.serviceSlug,
-      site: req.content.site,
-      pageData: pageContent.pageData,
-      template: loadElevateTemplate(templateNameFor(pageContent.builderPageType)),
-    });
-    const templateVersion =
-      typeof built.json.version === "string" ? built.json.version : undefined;
-    return {
-      page: pageContent.page,
-      title: pageContent.wpTitle ?? titleFromPage(pageContent.page),
-      slug: pageContent.slug ?? pageContent.serviceSlug ?? pageContent.page,
-      wpPageTemplate: pageContent.wpPageTemplate ?? DEFAULT_WP_PAGE_TEMPLATE,
-      elementorVersion: req.elementorVersion ?? templateVersion,
-      elementorData: built.json.content,
-      buildNotes: [...(pageContent.buildNotes ?? []), ...built.buildNotes],
-      warnings: built.warnings,
-    };
-  }
-
-  const injector = getInjector(req.theme);
-  const injected = injector.injectPage(
-    pageContent.page,
-    {
-      page: pageContent.page,
-      wpTitle: pageContent.wpTitle,
-      slug: pageContent.slug,
-      wpPageTemplate: pageContent.wpPageTemplate,
-      slots: pageContent.slots ?? {},
-      buildNotes: pageContent.buildNotes,
-    },
-    {
-      practiceName: req.content.practiceName,
-      elementorVersion: req.elementorVersion,
-    },
-  );
-  return injected;
+  const title = pageContent.wpTitle ?? titleFromPage(pageContent.page);
+  const built = buildAtomicPage({
+    page: pageContent.page,
+    title,
+    practiceName: req.content.practiceName,
+    preset: toAtomicPreset(req.theme),
+    site: req.content.site,
+    pageData: pageContent.pageData,
+    slots: pageContent.slots,
+  });
+  return {
+    page: pageContent.page,
+    title,
+    slug: pageContent.slug ?? pageContent.serviceSlug ?? pageContent.page,
+    wpPageTemplate: pageContent.wpPageTemplate ?? DEFAULT_WP_PAGE_TEMPLATE,
+    elementorVersion: req.elementorVersion ?? built.elementorVersion,
+    elementorData: built.elementorData,
+    buildNotes: [
+      ...(pageContent.buildNotes ?? []),
+      ...built.legacyExceptions.map(
+        (field) =>
+          `[ATOMIC EXCEPTION] ${field} uses an isolated legacy embed widget.`,
+      ),
+    ],
+    warnings: built.warnings,
+  };
 }
 
-function loadElevateTemplate(name: string): ElementorJSON {
-  const file = path.join(process.cwd(), "theme-templates", "elevate", `${name}.json`);
-  return JSON.parse(readFileSync(file, "utf-8")) as ElementorJSON;
-}
-
-function templateNameFor(pageType: string): string {
-  if (pageType === "insurance-and-financing") return "insurance";
-  return pageType;
+function toAtomicPreset(theme: string): AtomicVisualPreset {
+  if (theme === "summit" || theme === "lux") return theme;
+  return "elevate";
 }
 
 function titleFromPage(page: string): string {

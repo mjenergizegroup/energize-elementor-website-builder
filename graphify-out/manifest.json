@@ -1,0 +1,737 @@
+{
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/.claude/settings.local.json": {
+    "mtime": 1783116080.0952084,
+    "ast_hash": "55b38131cce1caf93021d57c5f1dd605",
+    "semantic_hash": "55b38131cce1caf93021d57c5f1dd605"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/components.json": {
+    "mtime": 1780589174.9648614,
+    "ast_hash": "fc5c9e9a7b93eeb2f7b4e1ce0959e4a6",
+    "semantic_hash": "fc5c9e9a7b93eeb2f7b4e1ce0959e4a6"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-slots/fa_v1.json": {
+    "mtime": 1780950853.6227028,
+    "ast_hash": "331e6219e0bb6d8a3ea80d45da43600a",
+    "semantic_hash": "331e6219e0bb6d8a3ea80d45da43600a"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-slots/fa_v2.json": {
+    "mtime": 1780950895.8226032,
+    "ast_hash": "6aba8afbb2e91099668b6268829ab4bb",
+    "semantic_hash": "6aba8afbb2e91099668b6268829ab4bb"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-slots/inv_v1.json": {
+    "mtime": 1780951044.450326,
+    "ast_hash": "90ca8f39c09bdca6e47b8e92cbddbbb3",
+    "semantic_hash": "90ca8f39c09bdca6e47b8e92cbddbbb3"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-slots/inv_v2.json": {
+    "mtime": 1780951086.4483645,
+    "ast_hash": "5de3c2bc52c1f888041773f3ab33c8db",
+    "semantic_hash": "5de3c2bc52c1f888041773f3ab33c8db"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-slots/std_v1.json": {
+    "mtime": 1780951146.8467028,
+    "ast_hash": "541bfc3ccb7167fb98ef18263075bc86",
+    "semantic_hash": "541bfc3ccb7167fb98ef18263075bc86"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-slots/std_v2.json": {
+    "mtime": 1780951176.592428,
+    "ast_hash": "855bef0acc46672ddd40666eb3039bfe",
+    "semantic_hash": "855bef0acc46672ddd40666eb3039bfe"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-slots/thank_you.json": {
+    "mtime": 1780951200.8599503,
+    "ast_hash": "0045d2e23cf31a7953099e60e4ba4d73",
+    "semantic_hash": "0045d2e23cf31a7953099e60e4ba4d73"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-templates/fa_v1.json": {
+    "mtime": 1780951745.4175923,
+    "ast_hash": "98cd7d3004de9fca1dca4896ba0c5577",
+    "semantic_hash": "98cd7d3004de9fca1dca4896ba0c5577"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-templates/fa_v2.json": {
+    "mtime": 1780951737.2732596,
+    "ast_hash": "8536241433d1715905de926715519927",
+    "semantic_hash": "8536241433d1715905de926715519927"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-templates/inv_v1.json": {
+    "mtime": 1780951725.0041752,
+    "ast_hash": "980bf72d162c6a6ea45fd366560b64ad",
+    "semantic_hash": "980bf72d162c6a6ea45fd366560b64ad"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-templates/inv_v2.json": {
+    "mtime": 1780951847.8288267,
+    "ast_hash": "cd7398bd47a81ae705c29e2d8115ae3e",
+    "semantic_hash": "cd7398bd47a81ae705c29e2d8115ae3e"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-templates/std_v1.json": {
+    "mtime": 1780951709.6517231,
+    "ast_hash": "0628d08866fc65c4f8d1a32dfe599629",
+    "semantic_hash": "0628d08866fc65c4f8d1a32dfe599629"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-templates/std_v2.json": {
+    "mtime": 1780951677.4259753,
+    "ast_hash": "18dc02b040b443c7b057e1b7d759c867",
+    "semantic_hash": "18dc02b040b443c7b057e1b7d759c867"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/data/landing-page-templates/thank_you.json": {
+    "mtime": 1780951634.7704208,
+    "ast_hash": "8b715a3f7de4cb69e4682bebdb772ad9",
+    "semantic_hash": "8b715a3f7de4cb69e4682bebdb772ad9"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/eslint.config.mjs": {
+    "mtime": 1780590560.5213716,
+    "ast_hash": "9a5833d474f1bb17f6517c73c3e5e00d",
+    "semantic_hash": "9a5833d474f1bb17f6517c73c3e5e00d"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/next.config.ts": {
+    "mtime": 1780598981.995347,
+    "ast_hash": "024087d03945db189908ddd72cc372d0",
+    "semantic_hash": "024087d03945db189908ddd72cc372d0"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/package.json": {
+    "mtime": 1784051089.6963315,
+    "ast_hash": "7cb4ecb0c46de05939f36e9f7ab54757",
+    "semantic_hash": "7cb4ecb0c46de05939f36e9f7ab54757"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/postcss.config.mjs": {
+    "mtime": 1780589018.1962178,
+    "ast_hash": "239f3ebf717465dc636818a1a619398d",
+    "semantic_hash": "239f3ebf717465dc636818a1a619398d"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/scripts/verify-injection.ts": {
+    "mtime": 1780624465.468934,
+    "ast_hash": "dd67663a192a27a47fba24a9f4664c90",
+    "semantic_hash": "dd67663a192a27a47fba24a9f4664c90"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/api/crawl/[jobId]/export/route.ts": {
+    "mtime": 1780672958.6223404,
+    "ast_hash": "b690017b985ba18cf28adedcc8b5d09e",
+    "semantic_hash": "b690017b985ba18cf28adedcc8b5d09e"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/api/crawl/[jobId]/route.ts": {
+    "mtime": 1780672958.4500492,
+    "ast_hash": "04d528889c9412b46800dc5a73e34fc4",
+    "semantic_hash": "04d528889c9412b46800dc5a73e34fc4"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/api/crawl/route.ts": {
+    "mtime": 1780666543.310537,
+    "ast_hash": "0957f05acbf668f03ac74d7ed5e6aa69",
+    "semantic_hash": "0957f05acbf668f03ac74d7ed5e6aa69"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/api/deploy/route.ts": {
+    "mtime": 1784051089.4813087,
+    "ast_hash": "4794f93e48e60ccce49aa013ba82d501",
+    "semantic_hash": "4794f93e48e60ccce49aa013ba82d501"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/api/landing-pages/deploy/route.ts": {
+    "mtime": 1781058709.766039,
+    "ast_hash": "aa74238a479b91f6cd5e051369effba4",
+    "semantic_hash": "aa74238a479b91f6cd5e051369effba4"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/api/landing-pages/templates/route.ts": {
+    "mtime": 1780952051.0507038,
+    "ast_hash": "30754ae18f48b561aa34deae44f3d148",
+    "semantic_hash": "30754ae18f48b561aa34deae44f3d148"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/api/parse/route.ts": {
+    "mtime": 1780635487.114154,
+    "ast_hash": "8709bddc0a2ec83ac292b91cee03a8d1",
+    "semantic_hash": "8709bddc0a2ec83ac292b91cee03a8d1"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/dashboard/builds/[buildId]/page.tsx": {
+    "mtime": 1782510169.910874,
+    "ast_hash": "c5c3f89f086b685016310b448731fe58",
+    "semantic_hash": "c5c3f89f086b685016310b448731fe58"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/dashboard/builds/page.tsx": {
+    "mtime": 1780953465.977281,
+    "ast_hash": "960d36f64bd9b7c0f63b4a96363497fd",
+    "semantic_hash": "960d36f64bd9b7c0f63b4a96363497fd"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/dashboard/clients/page.tsx": {
+    "mtime": 1780956467.8699427,
+    "ast_hash": "c36a4740f33e76ccbadeb1aa5e9e0994",
+    "semantic_hash": "c36a4740f33e76ccbadeb1aa5e9e0994"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/dashboard/layout.tsx": {
+    "mtime": 1780947416.0852258,
+    "ast_hash": "e0ed36df26902ac8674469bfdba44edd",
+    "semantic_hash": "e0ed36df26902ac8674469bfdba44edd"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/dashboard/new/page.tsx": {
+    "mtime": 1780952280.708756,
+    "ast_hash": "fa9d34b62d15e011240e6d9102403663",
+    "semantic_hash": "fa9d34b62d15e011240e6d9102403663"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/dashboard/page.tsx": {
+    "mtime": 1780953455.444908,
+    "ast_hash": "db41f0550fd7106825506cef065faae8",
+    "semantic_hash": "db41f0550fd7106825506cef065faae8"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/layout.tsx": {
+    "mtime": 1780947196.225426,
+    "ast_hash": "4630f2a84386360be6fb65f1896a2e8a",
+    "semantic_hash": "4630f2a84386360be6fb65f1896a2e8a"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/page.tsx": {
+    "mtime": 1780947757.7652223,
+    "ast_hash": "9adf6cbd74748003c36a0e61b9b5893b",
+    "semantic_hash": "9adf6cbd74748003c36a0e61b9b5893b"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/sign-in/[[...sign-in]]/page.tsx": {
+    "mtime": 1780947757.9249692,
+    "ast_hash": "d5fad08cf675e504cad7a5e7b00656a9",
+    "semantic_hash": "d5fad08cf675e504cad7a5e7b00656a9"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/sign-up/[[...sign-up]]/page.tsx": {
+    "mtime": 1780947758.0802748,
+    "ast_hash": "810a99f2f4cfad9ec37aa0a5e6e656e7",
+    "semantic_hash": "810a99f2f4cfad9ec37aa0a5e6e656e7"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/app-shell.tsx": {
+    "mtime": 1781099323.298587,
+    "ast_hash": "7a6eea48884c4c738926c92c8346acf3",
+    "semantic_hash": "7a6eea48884c4c738926c92c8346acf3"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/build-wizard.tsx": {
+    "mtime": 1784050926.691462,
+    "ast_hash": "277ebb6d5d7f16247803c37c78f0c271",
+    "semantic_hash": "277ebb6d5d7f16247803c37c78f0c271"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/landing-page-wizard.tsx": {
+    "mtime": 1781099478.49612,
+    "ast_hash": "dbb56749d787be819af49e2da72e88da",
+    "semantic_hash": "dbb56749d787be819af49e2da72e88da"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/badge.tsx": {
+    "mtime": 1780947393.388504,
+    "ast_hash": "a9a864580b6de6b30bbb77ae9d87be8d",
+    "semantic_hash": "a9a864580b6de6b30bbb77ae9d87be8d"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/button.tsx": {
+    "mtime": 1780947393.227889,
+    "ast_hash": "c728d24e43166c00632c62b5addb8957",
+    "semantic_hash": "c728d24e43166c00632c62b5addb8957"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/card.tsx": {
+    "mtime": 1780947393.548938,
+    "ast_hash": "7aa06917d7acb547ba52d1ce9753dcff",
+    "semantic_hash": "7aa06917d7acb547ba52d1ce9753dcff"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/combobox.tsx": {
+    "mtime": 1781058854.4777853,
+    "ast_hash": "d754e3fe0570c49b3fae55085b520085",
+    "semantic_hash": "d754e3fe0570c49b3fae55085b520085"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/input.tsx": {
+    "mtime": 1780947393.7053866,
+    "ast_hash": "72b4e5303ba2935dc82f79ab09f8f51b",
+    "semantic_hash": "72b4e5303ba2935dc82f79ab09f8f51b"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/label.tsx": {
+    "mtime": 1780947394.0222402,
+    "ast_hash": "9ac6ae3963ec08eba0c4f9d978e29e54",
+    "semantic_hash": "9ac6ae3963ec08eba0c4f9d978e29e54"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/progress.tsx": {
+    "mtime": 1780948357.0839403,
+    "ast_hash": "7ee8f5d48a588f41f89c9de5da4f68cd",
+    "semantic_hash": "7ee8f5d48a588f41f89c9de5da4f68cd"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/select.tsx": {
+    "mtime": 1780947394.1760566,
+    "ast_hash": "9dff621094b137ddd4024fc5541af6da",
+    "semantic_hash": "9dff621094b137ddd4024fc5541af6da"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/separator.tsx": {
+    "mtime": 1780589198.6044781,
+    "ast_hash": "3de2dca3e47ab29c4b1f632671545628",
+    "semantic_hash": "3de2dca3e47ab29c4b1f632671545628"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/sonner.tsx": {
+    "mtime": 1780589198.6475341,
+    "ast_hash": "f46214bc2a6a5153a6e04fad523d5587",
+    "semantic_hash": "f46214bc2a6a5153a6e04fad523d5587"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/tabs.tsx": {
+    "mtime": 1780948381.1282403,
+    "ast_hash": "c8386227ea8a720bcc07d261e0d66e1e",
+    "semantic_hash": "c8386227ea8a720bcc07d261e0d66e1e"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/components/ui/textarea.tsx": {
+    "mtime": 1780947393.8660402,
+    "ast_hash": "37b9a0d290603bd5967fded41de8f7ba",
+    "semantic_hash": "37b9a0d290603bd5967fded41de8f7ba"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/__fixtures__/sample-output.json": {
+    "mtime": 1780649476.0,
+    "ast_hash": "79e7e55b22deeafcedd60d9ba2c9314c",
+    "semantic_hash": "79e7e55b22deeafcedd60d9ba2c9314c"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/accessibility/audit.test.ts": {
+    "mtime": 1782762722.0955167,
+    "ast_hash": "7c7226d66dcc0f8b8d22a9379b59ba60",
+    "semantic_hash": "7c7226d66dcc0f8b8d22a9379b59ba60"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/accessibility/audit.ts": {
+    "mtime": 1782762690.5634656,
+    "ast_hash": "a0ec27f3f7acbd08030a4758c8db1304",
+    "semantic_hash": "a0ec27f3f7acbd08030a4758c8db1304"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/audit.ts": {
+    "mtime": 1780590105.6350703,
+    "ast_hash": "0df67eb0cbdbe9d8311b12326fb9ee03",
+    "semantic_hash": "0df67eb0cbdbe9d8311b12326fb9ee03"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/builders/elevate/__fixtures__/build-output-summary.json": {
+    "mtime": 1780638965.994548,
+    "ast_hash": "a7b3a7452bb8149e703ec6bf8dd3e778",
+    "semantic_hash": "a7b3a7452bb8149e703ec6bf8dd3e778"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/builders/elevate/__fixtures__/homepage-built.json": {
+    "mtime": 1780638965.9962535,
+    "ast_hash": "d8a3aee2c009b0731739b0c18e65ce7e",
+    "semantic_hash": "d8a3aee2c009b0731739b0c18e65ce7e"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/builders/elevate/elevate.test.ts": {
+    "mtime": 1780694506.493794,
+    "ast_hash": "c64848e8cee28345b869e7d5e11ee0f6",
+    "semantic_hash": "c64848e8cee28345b869e7d5e11ee0f6"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/builders/elevate/generate-sample-output.ts": {
+    "mtime": 1780638332.5368674,
+    "ast_hash": "6759d0bd457abde9ecb43d69fd142311",
+    "semantic_hash": "6759d0bd457abde9ecb43d69fd142311"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/builders/elevate/index.ts": {
+    "mtime": 1780694960.9940991,
+    "ast_hash": "70991302fa56a0d91af947941aef1723",
+    "semantic_hash": "70991302fa56a0d91af947941aef1723"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/builders/elevate/injectors.ts": {
+    "mtime": 1780694373.5041373,
+    "ast_hash": "7a9cf967388efd8f11feec22e8a0fe9b",
+    "semantic_hash": "7a9cf967388efd8f11feec22e8a0fe9b"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/builders/elevate/node-maps.ts": {
+    "mtime": 1780638404.8429918,
+    "ast_hash": "d4e47ac322d8ed33ad21deff4b0dc186",
+    "semantic_hash": "d4e47ac322d8ed33ad21deff4b0dc186"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/builders/elevate/types.ts": {
+    "mtime": 1780638731.626657,
+    "ast_hash": "980e61827af753087407fe9aa2c4b9b0",
+    "semantic_hash": "980e61827af753087407fe9aa2c4b9b0"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/clients.ts": {
+    "mtime": 1780590118.8353975,
+    "ast_hash": "39046e3dfc36b4c2de57f096683f083b",
+    "semantic_hash": "39046e3dfc36b4c2de57f096683f083b"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/crypto.ts": {
+    "mtime": 1780589260.8185172,
+    "ast_hash": "f6d97211e20dd08b7b15dafe1f90d8fa",
+    "semantic_hash": "f6d97211e20dd08b7b15dafe1f90d8fa"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/deploy/orchestrate.ts": {
+    "mtime": 1784050926.536752,
+    "ast_hash": "c40df454d2f1dedfdd8d5cb63f8c84bf",
+    "semantic_hash": "c40df454d2f1dedfdd8d5cb63f8c84bf"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/deploy/types.ts": {
+    "mtime": 1784050926.2149277,
+    "ast_hash": "26942570a246c1ea2f1273ebca154289",
+    "semantic_hash": "26942570a246c1ea2f1273ebca154289"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/elementor/contrast.test.ts": {
+    "mtime": 1781017282.794297,
+    "ast_hash": "19497afb346890e543a5fe7b67db1c73",
+    "semantic_hash": "19497afb346890e543a5fe7b67db1c73"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/elementor/contrast.ts": {
+    "mtime": 1781544181.619594,
+    "ast_hash": "c97a2d24a9eb5f5ef9931f6c1fc48b81",
+    "semantic_hash": "c97a2d24a9eb5f5ef9931f6c1fc48b81"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/env.ts": {
+    "mtime": 1780666496.3729315,
+    "ast_hash": "347ebee40dd311c005edfb6ccfed20cf",
+    "semantic_hash": "347ebee40dd311c005edfb6ccfed20cf"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/firecrawl/client.ts": {
+    "mtime": 1780667376.863134,
+    "ast_hash": "29bd8cb74cdb4672ca09bd92daa08562",
+    "semantic_hash": "29bd8cb74cdb4672ca09bd92daa08562"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/firecrawl/export.ts": {
+    "mtime": 1780666497.4078746,
+    "ast_hash": "926eb1c3ecd2e339a08c0f7b198ffa32",
+    "semantic_hash": "926eb1c3ecd2e339a08c0f7b198ffa32"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/firecrawl/filter.ts": {
+    "mtime": 1780666497.0949945,
+    "ast_hash": "f1d1f3abeb3685814aebbdee80f1e9f6",
+    "semantic_hash": "f1d1f3abeb3685814aebbdee80f1e9f6"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/firecrawl/store.ts": {
+    "mtime": 1780666497.2520118,
+    "ast_hash": "870fb8feff6996fdbfb233097dd2edb2",
+    "semantic_hash": "870fb8feff6996fdbfb233097dd2edb2"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/firecrawl/types.ts": {
+    "mtime": 1780666496.7835457,
+    "ast_hash": "618842353526d0d80cbd98b3cee3e7d3",
+    "semantic_hash": "618842353526d0d80cbd98b3cee3e7d3"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/google-fonts.ts": {
+    "mtime": 1783056345.814466,
+    "ast_hash": "b69beb5d0cee536bb40fc1459611b5a3",
+    "semantic_hash": "b69beb5d0cee536bb40fc1459611b5a3"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/injection/base.ts": {
+    "mtime": 1780624426.8299713,
+    "ast_hash": "b47c1194d7aa4ad8dafa37e91433ee51",
+    "semantic_hash": "b47c1194d7aa4ad8dafa37e91433ee51"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/injection/elementor.ts": {
+    "mtime": 1780589675.1350923,
+    "ast_hash": "10666a4aa8554e15a86e78b8b47085a4",
+    "semantic_hash": "10666a4aa8554e15a86e78b8b47085a4"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/injection/loader.ts": {
+    "mtime": 1780589722.722697,
+    "ast_hash": "a64762cbcd03cc5a1f0477027ac5b810",
+    "semantic_hash": "a64762cbcd03cc5a1f0477027ac5b810"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/injection/registry.ts": {
+    "mtime": 1780589774.081811,
+    "ast_hash": "2dafc07f35f1085965f47412cafe0aea",
+    "semantic_hash": "2dafc07f35f1085965f47412cafe0aea"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/injection/themes/elevate.ts": {
+    "mtime": 1780589748.215838,
+    "ast_hash": "d00d45e617d6d0357ef5700b45961772",
+    "semantic_hash": "d00d45e617d6d0357ef5700b45961772"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/injection/themes/lux.ts": {
+    "mtime": 1780589758.2129793,
+    "ast_hash": "96b30da03c8e83f4c840ce52a6f511fc",
+    "semantic_hash": "96b30da03c8e83f4c840ce52a6f511fc"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/injection/themes/summit.ts": {
+    "mtime": 1780589753.1170142,
+    "ast_hash": "59e92d094352153d88b4609343ec960b",
+    "semantic_hash": "59e92d094352153d88b4609343ec960b"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/injection/types.ts": {
+    "mtime": 1780624417.707805,
+    "ast_hash": "2d51023159bc1148c1ffa49d3e1debfd",
+    "semantic_hash": "2d51023159bc1148c1ffa49d3e1debfd"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/landing-pages/inject.test.ts": {
+    "mtime": 1781544272.768089,
+    "ast_hash": "fbcee5822978e1ad1c6382037d26e901",
+    "semantic_hash": "fbcee5822978e1ad1c6382037d26e901"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/landing-pages/inject.ts": {
+    "mtime": 1781544311.2470696,
+    "ast_hash": "12e32ffbf82a08ccbf59a432b517f30e",
+    "semantic_hash": "12e32ffbf82a08ccbf59a432b517f30e"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/parser.test.ts": {
+    "mtime": 1780635672.6393487,
+    "ast_hash": "ef5b51ff97bab810b9a4dab3e8b1d947",
+    "semantic_hash": "ef5b51ff97bab810b9a4dab3e8b1d947"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/parser.ts": {
+    "mtime": 1780635487.3136613,
+    "ast_hash": "197829bf745ddf0c73efad0d2e609831",
+    "semantic_hash": "197829bf745ddf0c73efad0d2e609831"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/prisma.ts": {
+    "mtime": 1780589248.939676,
+    "ast_hash": "1bbf426979f7f056f8f0d0079287491b",
+    "semantic_hash": "1bbf426979f7f056f8f0d0079287491b"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/rate-limit.ts": {
+    "mtime": 1780590100.562813,
+    "ast_hash": "b9b7cde6471114c2fada4e8e88de2961",
+    "semantic_hash": "b9b7cde6471114c2fada4e8e88de2961"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/types.ts": {
+    "mtime": 1781058707.877063,
+    "ast_hash": "20e4893111998e99b6627593262587da",
+    "semantic_hash": "20e4893111998e99b6627593262587da"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/utils.ts": {
+    "mtime": 1780589182.264046,
+    "ast_hash": "5a6fd53fdcf2be529e9cc0b718fde352",
+    "semantic_hash": "5a6fd53fdcf2be529e9cc0b718fde352"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/wp/brand.ts": {
+    "mtime": 1781058714.2580805,
+    "ast_hash": "fb1528c1184d597e4977be25c55b82b1",
+    "semantic_hash": "fb1528c1184d597e4977be25c55b82b1"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/wp/client.ts": {
+    "mtime": 1780631967.139996,
+    "ast_hash": "65e3c9f9a258b5388895d574ae76facd",
+    "semantic_hash": "65e3c9f9a258b5388895d574ae76facd"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/middleware.ts": {
+    "mtime": 1780599036.858588,
+    "ast_hash": "bdde000da360816e2eae2e981a5699a7",
+    "semantic_hash": "bdde000da360816e2eae2e981a5699a7"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/tailwind.config.ts": {
+    "mtime": 1780947307.2474709,
+    "ast_hash": "375a19e37d556911b4574d075a694cda",
+    "semantic_hash": "375a19e37d556911b4574d075a694cda"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/elevate/_meta.json": {
+    "mtime": 1780624454.8546588,
+    "ast_hash": "671c1f64001be84e59886e422b38f210",
+    "semantic_hash": "671c1f64001be84e59886e422b38f210"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/elevate/_widget-library.json": {
+    "mtime": 1780589574.8609366,
+    "ast_hash": "14e695c06990388f8783c2b8b852068a",
+    "semantic_hash": "14e695c06990388f8783c2b8b852068a"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/elevate/about.json": {
+    "mtime": 1780646248.0,
+    "ast_hash": "cadf222026ff0627b0e59e735aaea09d",
+    "semantic_hash": "cadf222026ff0627b0e59e735aaea09d"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/elevate/amenities.json": {
+    "mtime": 1780589435.5503178,
+    "ast_hash": "2ae6543a4bc07bc312f908874cb65c15",
+    "semantic_hash": "2ae6543a4bc07bc312f908874cb65c15"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/elevate/contact.json": {
+    "mtime": 1780646248.0,
+    "ast_hash": "293340f8245335428eca2bc486cba898",
+    "semantic_hash": "293340f8245335428eca2bc486cba898"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/elevate/first-visit.json": {
+    "mtime": 1780589435.547512,
+    "ast_hash": "92cc06f0c8e25ba125695c8a342f41da",
+    "semantic_hash": "92cc06f0c8e25ba125695c8a342f41da"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/elevate/homepage.json": {
+    "mtime": 1780646248.0,
+    "ast_hash": "fd0f0f135147adfedf44d8266779bdfa",
+    "semantic_hash": "fd0f0f135147adfedf44d8266779bdfa"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/elevate/insurance.json": {
+    "mtime": 1780589435.5533082,
+    "ast_hash": "0c3494565c93fce4e80a430288d6ea4a",
+    "semantic_hash": "0c3494565c93fce4e80a430288d6ea4a"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/elevate/service-page.json": {
+    "mtime": 1780694580.112568,
+    "ast_hash": "f888b8a04a71578906df0c7f1e784624",
+    "semantic_hash": "f888b8a04a71578906df0c7f1e784624"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/elevate/thank-you.json": {
+    "mtime": 1780589567.100898,
+    "ast_hash": "1f70038b94c98e6f1d7cdd0197ffce81",
+    "semantic_hash": "1f70038b94c98e6f1d7cdd0197ffce81"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/lux/_meta.json": {
+    "mtime": 1780589590.0360582,
+    "ast_hash": "e61bdc7fe4f127f9a7acc5d348cac2b1",
+    "semantic_hash": "e61bdc7fe4f127f9a7acc5d348cac2b1"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/lux/_widget-library.json": {
+    "mtime": 1780589574.8673513,
+    "ast_hash": "44c2fdbb1a18e3ebc30a9d4b737ebf73",
+    "semantic_hash": "44c2fdbb1a18e3ebc30a9d4b737ebf73"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/lux/about.json": {
+    "mtime": 1780589435.5769305,
+    "ast_hash": "c96c24118769724e3d11efe4fd53a731",
+    "semantic_hash": "c96c24118769724e3d11efe4fd53a731"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/lux/contact.json": {
+    "mtime": 1780589435.586805,
+    "ast_hash": "623fdfafede3cbf3f9389302bd2e44c4",
+    "semantic_hash": "623fdfafede3cbf3f9389302bd2e44c4"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/lux/homepage.json": {
+    "mtime": 1780589435.5742888,
+    "ast_hash": "cad6276fa7e70b8110b847d29ac4f889",
+    "semantic_hash": "cad6276fa7e70b8110b847d29ac4f889"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/lux/membership.json": {
+    "mtime": 1780589435.581891,
+    "ast_hash": "ce8fd8fa967be725ac04a257f365b437",
+    "semantic_hash": "ce8fd8fa967be725ac04a257f365b437"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/lux/payments.json": {
+    "mtime": 1780589435.5842254,
+    "ast_hash": "8df2b44f2aa0f8dc56cb51273119bb24",
+    "semantic_hash": "8df2b44f2aa0f8dc56cb51273119bb24"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/lux/services.json": {
+    "mtime": 1780589435.5793374,
+    "ast_hash": "daaee371bb7b540a6dc7353dd8a068ed",
+    "semantic_hash": "daaee371bb7b540a6dc7353dd8a068ed"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/summit/_meta.json": {
+    "mtime": 1780589590.0325131,
+    "ast_hash": "a8899512c09403b980e77eab03bd9060",
+    "semantic_hash": "a8899512c09403b980e77eab03bd9060"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/summit/_widget-library.json": {
+    "mtime": 1780589574.864341,
+    "ast_hash": "cf121cfb529b0d434c6c25c0ae2f5636",
+    "semantic_hash": "cf121cfb529b0d434c6c25c0ae2f5636"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/summit/about.json": {
+    "mtime": 1780589435.5613368,
+    "ast_hash": "3381db1bebf974d448bb027f7a42ba83",
+    "semantic_hash": "3381db1bebf974d448bb027f7a42ba83"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/summit/contact.json": {
+    "mtime": 1780589435.5715742,
+    "ast_hash": "1db19cdd59ab62d5cbd9fcc0cc050f2d",
+    "semantic_hash": "1db19cdd59ab62d5cbd9fcc0cc050f2d"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/summit/homepage.json": {
+    "mtime": 1780589435.5587225,
+    "ast_hash": "e2ce8061f1fa9991baf582f63216ecaa",
+    "semantic_hash": "e2ce8061f1fa9991baf582f63216ecaa"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/summit/membership.json": {
+    "mtime": 1780589435.5665703,
+    "ast_hash": "d43ec878410a74bf96e0f694d329a949",
+    "semantic_hash": "d43ec878410a74bf96e0f694d329a949"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/summit/payment.json": {
+    "mtime": 1780589435.5691953,
+    "ast_hash": "4eae28208d07c65a3a5536dfb0678f2f",
+    "semantic_hash": "4eae28208d07c65a3a5536dfb0678f2f"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/theme-templates/summit/services.json": {
+    "mtime": 1780589435.5638323,
+    "ast_hash": "e05763bc3dc5fa931a1620c746aff64d",
+    "semantic_hash": "e05763bc3dc5fa931a1620c746aff64d"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/tsconfig.json": {
+    "mtime": 1780590537.2301922,
+    "ast_hash": "4c20b373a3a6e74bd9825bb4e97fe052",
+    "semantic_hash": "4c20b373a3a6e74bd9825bb4e97fe052"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/wordpress-plugin/energize-build-tool.php": {
+    "mtime": 1780631990.7884612,
+    "ast_hash": "07812c4245815b385a9501b2b4e2a73a",
+    "semantic_hash": "07812c4245815b385a9501b2b4e2a73a"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/AGENTS.md": {
+    "mtime": 1780623492.1227,
+    "ast_hash": "e94095871dd07b501874477edf9f8c4f",
+    "semantic_hash": "e94095871dd07b501874477edf9f8c4f"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/BUILDER_SPEC.md": {
+    "mtime": 1780638731.462293,
+    "ast_hash": "a9a594182cd09f7b2035bd62e2c09ae4",
+    "semantic_hash": "a9a594182cd09f7b2035bd62e2c09ae4"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/BUILD_BRIEF.md": {
+    "mtime": 1780624498.0093439,
+    "ast_hash": "1a7dddc36c680904cb05a60990f011be",
+    "semantic_hash": "1a7dddc36c680904cb05a60990f011be"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/CLAUDE.md": {
+    "mtime": 1780589056.8421252,
+    "ast_hash": "5c27369b226fcf2be8a6cfe52224e767",
+    "semantic_hash": "5c27369b226fcf2be8a6cfe52224e767"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/CONTENT_SCHEMA.md": {
+    "mtime": 1780649476.0,
+    "ast_hash": "1aa5ea1c8c88041f6063f512d32067d3",
+    "semantic_hash": "1aa5ea1c8c88041f6063f512d32067d3"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/CRAWL_STEP.md": {
+    "mtime": 1780666708.9813623,
+    "ast_hash": "71259aa805a120bf74b91261e36f16de",
+    "semantic_hash": "71259aa805a120bf74b91261e36f16de"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/DESIGN.md": {
+    "mtime": 1780946752.5110083,
+    "ast_hash": "2c8e9aef14be96ca10049d6164fb01c5",
+    "semantic_hash": "2c8e9aef14be96ca10049d6164fb01c5"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/HANDOFF.md": {
+    "mtime": 1780623492.89466,
+    "ast_hash": "0845487e7b1f3efbb104f6222d800a3b",
+    "semantic_hash": "0845487e7b1f3efbb104f6222d800a3b"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/PARSER_SPEC.md": {
+    "mtime": 1780649476.0,
+    "ast_hash": "34a1112f59efc084fa42f4191a63830e",
+    "semantic_hash": "34a1112f59efc084fa42f4191a63830e"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/README.md": {
+    "mtime": 1780624477.045365,
+    "ast_hash": "3abf64523d80182deb760e11c3206ca5",
+    "semantic_hash": "3abf64523d80182deb760e11c3206ca5"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/SETUP.md": {
+    "mtime": 1780623491.966245,
+    "ast_hash": "c538cd121ebe44dad0df968e96ca1b33",
+    "semantic_hash": "c538cd121ebe44dad0df968e96ca1b33"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/energize-builder-mockup-v2.html": {
+    "mtime": 1780946925.546656,
+    "ast_hash": "34ff826ebe3fd5d93be355fad77dbb11",
+    "semantic_hash": "34ff826ebe3fd5d93be355fad77dbb11"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/reference-skills/anchor-periodontics-elevate-content.md": {
+    "mtime": 1780592559.6396894,
+    "ast_hash": "787996a7f463e41027551500dcc4094e",
+    "semantic_hash": "787996a7f463e41027551500dcc4094e"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/__fixtures__/sample-input.md": {
+    "mtime": 1780649476.0,
+    "ast_hash": "739d0c795f0ba39d82adfebe417d6ec0",
+    "semantic_hash": "739d0c795f0ba39d82adfebe417d6ec0"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/lib/builders/elevate/__fixtures__/sample-content.md": {
+    "mtime": 1780652036.0,
+    "ast_hash": "371c00976de6c8984d4aa864cb449a28",
+    "semantic_hash": "371c00976de6c8984d4aa864cb449a28"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/public/file.svg": {
+    "mtime": 1780589018.1968434,
+    "ast_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71",
+    "semantic_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/public/globe.svg": {
+    "mtime": 1780589018.1976862,
+    "ast_hash": "2aaafa6a49b6563925fe440891e32717",
+    "semantic_hash": "2aaafa6a49b6563925fe440891e32717"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/public/next.svg": {
+    "mtime": 1780589018.1967876,
+    "ast_hash": "8e061864f388b47f33a1c3780831193e",
+    "semantic_hash": "8e061864f388b47f33a1c3780831193e"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/public/vercel.svg": {
+    "mtime": 1780589018.1971252,
+    "ast_hash": "c0af2f507b369b085b35ef4bbe3bcf1e",
+    "semantic_hash": "c0af2f507b369b085b35ef4bbe3bcf1e"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/public/window.svg": {
+    "mtime": 1780589018.1972551,
+    "ast_hash": "a2760511c65806022ad20adf74370ff3",
+    "semantic_hash": "a2760511c65806022ad20adf74370ff3"
+  },
+  "/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder/src/app/icon.png": {
+    "mtime": 1782763397.189686,
+    "ast_hash": "0c5852b88a9ae00d54c330e312cdbc23",
+    "semantic_hash": "0c5852b88a9ae00d54c330e312cdbc23"
+  }
+}

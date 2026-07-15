@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Energize Website Builder
- * Description: REST endpoints used by the Energize Website Builder to create Elementor pages and set brand styling on client sites. Must-use plugin, copied with full site duplication.
- * Version: 1.0.0
+ * Description: REST endpoints used by the Energize Website Builder to create Elementor V4 Atomic pages and manage site assets. Must-use plugin, copied with full site duplication.
+ * Version: 2.0.0
  * Author: Energize Group
  *
  * Install: place at /wp-content/mu-plugins/energize-build-tool.php on the blank
@@ -113,12 +113,6 @@ add_action('rest_api_init', function () {
     register_rest_route('energize/v1', '/page', array_merge($args, array(
         'callback' => 'energize_build_create_page',
     )));
-    register_rest_route('energize/v1', '/brand-colors', array_merge($args, array(
-        'callback' => 'energize_build_set_brand_colors',
-    )));
-    register_rest_route('energize/v1', '/brand-fonts', array_merge($args, array(
-        'callback' => 'energize_build_set_brand_fonts',
-    )));
     register_rest_route('energize/v1', '/logo', array_merge($args, array(
         'callback' => 'energize_build_set_logo',
     )));
@@ -133,7 +127,7 @@ add_action('rest_api_init', function () {
 /**
  * POST /page
  * Body: { title, slug?, template?, elementor_data (JSON string or array),
- *         elementor_version?, status? }
+ *         status? }
  * Writes the Elementor data and all related meta server-side.
  */
 function energize_build_create_page(WP_REST_Request $request) {
@@ -142,10 +136,9 @@ function energize_build_create_page(WP_REST_Request $request) {
         return new WP_Error('energize_bad_input', 'title is required.', array('status' => 400));
     }
 
-    $slug             = sanitize_title((string) $request->get_param('slug'));
-    $template         = sanitize_text_field((string) $request->get_param('template'));
-    $elementor_version = sanitize_text_field((string) $request->get_param('elementor_version'));
-    $status           = (string) $request->get_param('status');
+    $slug     = sanitize_title((string) $request->get_param('slug'));
+    $template = sanitize_text_field((string) $request->get_param('template'));
+    $status   = (string) $request->get_param('status');
     $status           = in_array($status, array('draft', 'pending', 'private'), true) ? $status : 'draft';
 
     // Accept the Elementor data either as an already-stringified JSON or as a
@@ -167,6 +160,19 @@ function energize_build_create_page(WP_REST_Request $request) {
         return new WP_Error('energize_bad_input', 'elementor_data must be an array of elements.', array('status' => 400));
     }
 
+    if (!defined('ELEMENTOR_VERSION') || version_compare(ELEMENTOR_VERSION, '4.1.1', '<')) {
+        return new WP_Error(
+            'energize_elementor_v4_required',
+            'Elementor 4.1.1 or newer is required for Energize Atomic pages.',
+            array('status' => 409)
+        );
+    }
+
+    $validation = energize_build_validate_atomic_data($data_array);
+    if (is_wp_error($validation)) {
+        return $validation;
+    }
+
     $postarr = array(
         'post_title'  => $title,
         'post_status' => $status,
@@ -186,12 +192,12 @@ function energize_build_create_page(WP_REST_Request $request) {
     update_post_meta($post_id, '_elementor_data', wp_slash($json));
     update_post_meta($post_id, '_elementor_edit_mode', 'builder');
     update_post_meta($post_id, '_elementor_template_type', 'wp-page');
-    if ($elementor_version !== '') {
-        update_post_meta($post_id, '_elementor_version', $elementor_version);
-    }
+    update_post_meta($post_id, '_elementor_version', ELEMENTOR_VERSION);
     if ($template !== '') {
         update_post_meta($post_id, '_wp_page_template', $template);
     }
+
+    energize_build_register_global_class_relations($post_id, $data_array);
 
     return new WP_REST_Response(array(
         'ok'       => true,
@@ -204,148 +210,93 @@ function energize_build_create_page(WP_REST_Request $request) {
 }
 
 /**
- * Load the active Elementor kit post ID, or WP_Error if none.
+ * Validate that layout and content are Atomic. The only classic widgets allowed
+ * are isolated embeds for forms, reviews, maps, and shortcodes.
  */
-function energize_build_active_kit_id() {
-    $kit_id = (int) get_option('elementor_active_kit');
-    if ($kit_id <= 0 || get_post_status($kit_id) === false) {
-        return new WP_Error('energize_no_kit', 'No active Elementor kit found on this site.', array('status' => 500));
-    }
-    return $kit_id;
-}
+function energize_build_validate_atomic_data(array $elements) {
+    $atomic_count = 0;
+    $legacy_exceptions = array('html', 'shortcode', 'google_maps');
+    $walk = function (array $nodes) use (&$walk, &$atomic_count, $legacy_exceptions) {
+        foreach ($nodes as $node) {
+            if (!is_array($node)) {
+                return new WP_Error('energize_bad_input', 'Every Elementor element must be an object.', array('status' => 400));
+            }
+            $element_type = isset($node['elType']) ? (string) $node['elType'] : '';
+            $widget_type = isset($node['widgetType']) ? (string) $node['widgetType'] : '';
+            $is_atomic_layout = in_array($element_type, array('e-flexbox', 'e-div-block', 'e-grid'), true);
+            $is_atomic_widget = $element_type === 'widget' && strpos($widget_type, 'e-') === 0;
+            $is_legacy_exception = $element_type === 'widget' && in_array($widget_type, $legacy_exceptions, true);
 
-/**
- * Merge keys into the active kit page settings and save.
- */
-function energize_build_update_kit_settings(array $changes) {
-    $kit_id = energize_build_active_kit_id();
-    if (is_wp_error($kit_id)) {
-        return $kit_id;
-    }
-    $settings = get_post_meta($kit_id, '_elementor_page_settings', true);
-    if (!is_array($settings)) {
-        $settings = array();
-    }
-    foreach ($changes as $key => $value) {
-        $settings[$key] = $value;
-    }
-    update_post_meta($kit_id, '_elementor_page_settings', $settings);
-    return $kit_id;
-}
-
-/**
- * Sanitize an incoming color list into Elementor's expected shape.
- */
-function energize_build_sanitize_colors($list) {
-    $out = array();
-    if (!is_array($list)) {
-        return $out;
-    }
-    foreach ($list as $item) {
-        if (!is_array($item)) {
-            continue;
-        }
-        $entry = array(
-            '_id'   => isset($item['_id']) ? sanitize_text_field((string) $item['_id']) : substr(md5(wp_json_encode($item) . wp_rand()), 0, 7),
-            'title' => isset($item['title']) ? sanitize_text_field((string) $item['title']) : '',
-            'color' => isset($item['color']) ? sanitize_hex_color((string) $item['color']) : '',
-        );
-        if ($entry['color']) {
-            $out[] = $entry;
-        }
-    }
-    return $out;
-}
-
-/**
- * POST /brand-colors
- * Body: { system_colors: [...], custom_colors?: [...] }
- */
-function energize_build_set_brand_colors(WP_REST_Request $request) {
-    $system = energize_build_sanitize_colors($request->get_param('system_colors'));
-    $custom = energize_build_sanitize_colors($request->get_param('custom_colors'));
-
-    if (empty($system) && empty($custom)) {
-        return new WP_Error('energize_bad_input', 'Provide system_colors and/or custom_colors.', array('status' => 400));
-    }
-
-    $changes = array();
-    if (!empty($system)) {
-        $changes['system_colors'] = $system;
-    }
-    if (!empty($custom)) {
-        $changes['custom_colors'] = $custom;
-    }
-
-    $result = energize_build_update_kit_settings($changes);
-    if (is_wp_error($result)) {
-        return $result;
-    }
-
-    return new WP_REST_Response(array(
-        'ok'             => true,
-        'system_colors'  => count($system),
-        'custom_colors'  => count($custom),
-    ), 200);
-}
-
-/**
- * Sanitize a typography list. Each entry keeps its _id, title and any
- * typography_* keys (font family, weight, etc.).
- */
-function energize_build_sanitize_typography($list) {
-    $out = array();
-    if (!is_array($list)) {
-        return $out;
-    }
-    foreach ($list as $item) {
-        if (!is_array($item)) {
-            continue;
-        }
-        $entry = array(
-            '_id'   => isset($item['_id']) ? sanitize_text_field((string) $item['_id']) : substr(md5(wp_json_encode($item) . wp_rand()), 0, 7),
-            'title' => isset($item['title']) ? sanitize_text_field((string) $item['title']) : '',
-        );
-        foreach ($item as $key => $value) {
-            if (strpos((string) $key, 'typography_') === 0) {
-                $entry[$key] = sanitize_text_field((string) $value);
+            if (!$is_atomic_layout && !$is_atomic_widget && !$is_legacy_exception) {
+                return new WP_Error(
+                    'energize_non_atomic_element',
+                    'Non-Atomic element rejected: ' . sanitize_text_field($element_type . '/' . $widget_type),
+                    array('status' => 400)
+                );
+            }
+            if ($is_atomic_layout || $is_atomic_widget) {
+                $atomic_count++;
+            }
+            if (isset($node['elements']) && is_array($node['elements'])) {
+                $result = $walk($node['elements']);
+                if (is_wp_error($result)) {
+                    return $result;
+                }
             }
         }
-        $out[] = $entry;
-    }
-    return $out;
-}
+        return true;
+    };
 
-/**
- * POST /brand-fonts
- * Body: { system_typography: [...], custom_typography?: [...] }
- */
-function energize_build_set_brand_fonts(WP_REST_Request $request) {
-    $system = energize_build_sanitize_typography($request->get_param('system_typography'));
-    $custom = energize_build_sanitize_typography($request->get_param('custom_typography'));
-
-    if (empty($system) && empty($custom)) {
-        return new WP_Error('energize_bad_input', 'Provide system_typography and/or custom_typography.', array('status' => 400));
-    }
-
-    $changes = array();
-    if (!empty($system)) {
-        $changes['system_typography'] = $system;
-    }
-    if (!empty($custom)) {
-        $changes['custom_typography'] = $custom;
-    }
-
-    $result = energize_build_update_kit_settings($changes);
+    $result = $walk($elements);
     if (is_wp_error($result)) {
         return $result;
     }
+    if ($atomic_count === 0) {
+        return new WP_Error('energize_atomic_required', 'At least one Atomic element is required.', array('status' => 400));
+    }
+    return true;
+}
 
-    return new WP_REST_Response(array(
-        'ok'                  => true,
-        'system_typography'   => count($system),
-        'custom_typography'   => count($custom),
-    ), 200);
+/**
+ * Register the global class IDs used by a newly created Atomic document.
+ */
+function energize_build_register_global_class_relations($post_id, array $elements) {
+    $class_ids = array();
+    $walk = function (array $nodes) use (&$walk, &$class_ids) {
+        foreach ($nodes as $node) {
+            if (!is_array($node)) {
+                continue;
+            }
+            $settings = isset($node['settings']) && is_array($node['settings']) ? $node['settings'] : array();
+            if (
+                isset($settings['classes']['value']) &&
+                is_array($settings['classes']['value'])
+            ) {
+                foreach ($settings['classes']['value'] as $class_id) {
+                    if (is_string($class_id) && preg_match('/^[a-z][a-z0-9_-]*$/i', $class_id)) {
+                        $class_ids[] = $class_id;
+                    }
+                }
+            }
+            if (isset($node['elements']) && is_array($node['elements'])) {
+                $walk($node['elements']);
+            }
+        }
+    };
+    $walk($elements);
+    $class_ids = array_values(array_unique($class_ids));
+
+    if (class_exists('\\Elementor\\Modules\\GlobalClasses\\Global_Classes_Relations')) {
+        $relations = new \Elementor\Modules\GlobalClasses\Global_Classes_Relations();
+        $relations->set_preview(false)->set_styles_for_post((int) $post_id, $class_ids);
+        $relations->set_preview(true)->set_styles_for_post((int) $post_id, $class_ids);
+        return;
+    }
+
+    foreach ($class_ids as $class_id) {
+        add_post_meta($post_id, '_elementor_used_global_class', $class_id);
+        add_post_meta($post_id, '_elementor_used_global_class_preview', $class_id);
+    }
 }
 
 /**

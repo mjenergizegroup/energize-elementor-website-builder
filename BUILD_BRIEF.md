@@ -36,7 +36,7 @@ We have 50 legacy dental sites to migrate from Netlify/Sanity/Astro to WordPress
    - Pushes each page to WP as draft via REST API
    - Defaults each page to the `elementor_header_footer` template unless the page explicitly requests canvas
    - Updates the WP site name via core settings
-   - Calls Energize endpoints to set brand colors, fonts, primary/secondary/accent tints, logo, favicon on the Elementor global kit and site identity
+   - Verifies the Energize Atomic Foundation, updates semantic V4 color and font variables, seeds components, and sets logo, favicon, and site identity
    - Flushes Elementor CSS cache
 6. Success screen shows links to each draft page in WP admin + audit log entry
 
@@ -107,11 +107,11 @@ Templates live in the repo at `/theme-templates/{theme}/`. Only Elevate, Summit,
 
 **Element ID regeneration:** Every element ID in injected JSON must be regenerated (8-char hex) to avoid widget conflicts. Logic already exists in the theme skills -- port it directly.
 
-**Elementor meta keys to set on each page:**
+**Elementor V4 meta keys to set on each page:**
 - `_elementor_data` (JSON as string)
 - `_elementor_edit_mode` = `builder`
 - `_elementor_template_type` = `wp-page`
-- `_elementor_version` (match target site, default `3.21.0`)
+- `_elementor_version` (match the active target version, minimum `4.1.1`)
 - `_wp_page_template` (defaults to `elementor_header_footer`; canvas only for explicit standalone pages)
 
 **WP REST endpoint:** `POST /wp-json/wp/v2/pages` with `status: draft`. Auth via Application Passwords (Basic Auth: `username:app_password` base64-encoded). Elementor meta must be writable via REST -- the mu-plugin handles this reliably.
@@ -127,8 +127,6 @@ A custom WordPress must-use plugin baked into the team's blank WP template insta
 | Endpoint | Purpose |
 |---|---|
 | `POST /page` | Create page with title, slug, template, and Elementor data in one call (writes `_elementor_data` and all related meta server-side, bypassing unreliable standard REST meta exposure for Elementor keys) |
-| `POST /brand-colors` | Update Elementor global kit `system_colors` + `custom_colors` |
-| `POST /brand-fonts` | Update Elementor global kit `system_typography` + `custom_typography` |
 | `POST /logo` | Accept logo file (base64), upload to media library, set `custom_logo` theme option |
 | `POST /favicon` | Accept favicon file (base64), upload to media library, set `site_icon` option |
 | `POST /flush-css` | Trigger Elementor CSS regeneration (equivalent to `wp elementor flush_css`) |
@@ -186,7 +184,7 @@ AuditLog {
 - Color pickers with hex input fallback
 - Logo and favicon upload with image preview
 - Font dropdowns populated from a cached Google Fonts list (not a live API call)
-- Deployment progress UI showing each step as it completes ("Creating homepage... done. Creating about... done. Setting brand colors... done.")
+- Deployment progress UI showing each step as it completes ("Validating Atomic Foundation... done. Creating homepage... done.")
 - Dashboard shows recent builds with status badges and quick links to WP admin draft pages
 - Saved client records are reusable so WP credentials do not need to be re-entered on rebuild
 
@@ -204,7 +202,7 @@ AuditLog {
 
 - Logged-in team member can complete the form for any of the 3 v1 themes (Elevate, Summit, Lux), upload markdown, and click deploy
 - All pages for the selected theme appear as drafts on the target WP site within 60 seconds
-- Site name, brand colors, fonts, logo, and favicon are set on the WP site
+- Site name, Atomic brand variables, component library, logo, and favicon are set on the WP site
 - Elementor CSS cache is flushed so pages render styled when opened in WP admin
 - Element IDs are unique per page with no widget conflicts in the Elementor editor
 - WP credentials and plugin secret are encrypted and never exposed to the browser

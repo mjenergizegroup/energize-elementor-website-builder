@@ -1,9 +1,10 @@
 import "server-only";
 import { serverEnv } from "@/lib/env";
-import type {
-  KitColor,
-  KitTypography,
-} from "@/lib/wp/brand";
+import {
+  createAtomicFoundation,
+  createBrandedVariableValues,
+} from "@/lib/elementor/atomic/foundation";
+import type { BrandKit } from "@/lib/types";
 
 // Server-side WordPress client. Talks to the Energize REST endpoints
 // with shared-secret auth, and to the standard WP REST API with
@@ -26,6 +27,12 @@ export interface CreatePageResult {
   status: string;
   editUrl: string;
   viewUrl: string;
+}
+
+export interface AtomicFoundationSyncResult {
+  variablesUpdated: number;
+  classesVerified: number;
+  componentsCreated: number;
 }
 
 function normalizeBaseUrl(siteUrl: string): string {
@@ -56,6 +63,10 @@ export class WpClient {
 
   private wpUrl(path: string): string {
     return `${this.base}/wp-json/wp/v2${path}`;
+  }
+
+  private elementorUrl(path: string): string {
+    return `${this.base}/wp-json/elementor/v1${path}`;
   }
 
   private basicAuth(username: string, appPassword: string): string {
@@ -202,6 +213,42 @@ export class WpClient {
     }
   }
 
+  private async requestElementor<T>(
+    path: string,
+    method: "GET" | "POST" | "PUT",
+    username: string,
+    appPassword: string,
+    body?: Record<string, unknown>,
+    timeoutMs = DEFAULT_TIMEOUT_MS,
+  ): Promise<T> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(this.elementorUrl(path), {
+        method,
+        headers: {
+          Authorization: `Basic ${this.basicAuth(username, appPassword)}`,
+          ...(body ? { "Content-Type": "application/json" } : {}),
+        },
+        ...(body ? { body: JSON.stringify(body) } : {}),
+        signal: controller.signal,
+        cache: "no-store",
+      });
+      return await this.parseResponse<T>(res, `elementor/v1${path}`);
+    } catch (e) {
+      if (e instanceof WpApiError) throw e;
+      if (e instanceof Error && e.name === "AbortError") {
+        throw new WpApiError(`Request to Elementor ${path} timed out`, 408);
+      }
+      throw new WpApiError(
+        e instanceof Error ? e.message : `Request to Elementor ${path} failed`,
+        0,
+      );
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   // Pre-flight: confirm the site URL and Application Password are valid before
   // a deploy. Uses standard WP REST Basic Auth.
   async checkConnection(
@@ -270,20 +317,105 @@ export class WpClient {
     };
   }
 
-  async setBrandColors(
-    systemColors: KitColor[],
-    customColors: KitColor[],
-  ): Promise<void> {
-    await this.postPlugin("/brand-colors", {
-      system_colors: systemColors,
-      custom_colors: customColors,
-    });
-  }
+  async syncAtomicFoundation(
+    username: string,
+    appPassword: string,
+    brandKit: BrandKit,
+  ): Promise<AtomicFoundationSyncResult> {
+    const foundation = createAtomicFoundation();
+    const variableResponse = await this.requestElementor<{
+      success: boolean;
+      data: {
+        variables: Record<
+          string,
+          { type: string; label: string; value: string; order: number }
+        >;
+      };
+    }>("/variables/list", "GET", username, appPassword);
+    const existingVariables = variableResponse.data?.variables ?? {};
+    const missingVariables = foundation.variables.filter(
+      (variable) => !existingVariables[variable.id],
+    );
+    if (missingVariables.length > 0) {
+      throw new WpApiError(
+        `Energize Atomic Foundation is missing ${missingVariables.length} variable(s). Import artifacts/energize-atomic-foundation.zip into the default Elementor site before deploying.`,
+        409,
+        "energize_atomic_foundation_missing",
+      );
+    }
 
-  async setBrandFonts(systemTypography: KitTypography[]): Promise<void> {
-    await this.postPlugin("/brand-fonts", {
-      system_typography: systemTypography,
-    });
+    const brandedValues = createBrandedVariableValues(
+      brandKit.colors,
+      brandKit.fonts,
+    );
+    let variablesUpdated = 0;
+    for (const [label, value] of Object.entries(brandedValues)) {
+      const foundationVariable = foundation.variables.find(
+        (variable) => variable.label === label,
+      );
+      if (!foundationVariable) continue;
+      const current = existingVariables[foundationVariable.id];
+      if (current?.value === value) continue;
+      await this.requestElementor(
+        "/variables/update",
+        "PUT",
+        username,
+        appPassword,
+        {
+          id: foundationVariable.id,
+          type: foundationVariable.type,
+          label: foundationVariable.label,
+          value,
+          order: foundationVariable.order,
+        },
+      );
+      variablesUpdated += 1;
+    }
+
+    const classResponse = await this.requestElementor<{
+      data: Array<{ id: string; label: string }>;
+    }>("/global-classes", "GET", username, appPassword);
+    const existingClassIds = new Set(
+      (classResponse.data ?? []).map(({ id }) => id),
+    );
+    const missingClasses = foundation.classes.filter(
+      (globalClass) => !existingClassIds.has(globalClass.id),
+    );
+    if (missingClasses.length > 0) {
+      throw new WpApiError(
+        `Energize Atomic Foundation is missing ${missingClasses.length} global class(es). Re-import the Atomic Foundation with classes enabled.`,
+        409,
+        "energize_atomic_classes_missing",
+      );
+    }
+
+    const componentResponse = await this.requestElementor<{
+      data: Array<{ id: number; name: string; uid: string; isArchived: boolean }>;
+    }>("/components", "GET", username, appPassword);
+    const componentUids = new Set(
+      (componentResponse.data ?? [])
+        .filter((component) => !component.isArchived)
+        .map(({ uid }) => uid),
+    );
+    const missingComponents = foundation.components.filter(
+      (component) => !componentUids.has(component.uid),
+    );
+    if (missingComponents.length > 0) {
+      await this.requestElementor(
+        "/components",
+        "POST",
+        username,
+        appPassword,
+        { status: "publish", items: missingComponents },
+        60_000,
+      );
+    }
+
+    return {
+      variablesUpdated,
+      classesVerified: foundation.classes.length,
+      componentsCreated: missingComponents.length,
+    };
   }
 
   async setLogo(filename: string, dataBase64: string): Promise<void> {
