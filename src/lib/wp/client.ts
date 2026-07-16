@@ -279,9 +279,34 @@ export class WpClient {
       try {
         await this.postPlugin<{ ok: boolean; version: string }>("/health", {});
       } catch (error) {
+        // Bridge 2.0.0 predates the dedicated health route. Its flush-css
+        // endpoint uses the same shared-secret permission callback and is safe
+        // to call during pre-flight, so use it as a compatibility check.
+        if (
+          error instanceof WpApiError &&
+          error.status === 404 &&
+          error.code === "rest_no_route"
+        ) {
+          try {
+            await this.postPlugin("/flush-css", {});
+            return {
+              ok: true,
+              detail: "Credentials valid. Legacy Energize bridge verified.",
+            };
+          } catch (legacyError) {
+            return {
+              ok: false,
+              detail: `WordPress credentials are valid, but the legacy Energize bridge failed its secret check: ${
+                legacyError instanceof Error
+                  ? legacyError.message
+                  : "Unknown bridge error"
+              }`,
+            };
+          }
+        }
         return {
           ok: false,
-          detail: `WordPress credentials are valid, but the Energize bridge snippet failed its secret check: ${
+          detail: `WordPress credentials are valid, but the Energize bridge health check failed: ${
             error instanceof Error ? error.message : "Unknown bridge error"
           }`,
         };
