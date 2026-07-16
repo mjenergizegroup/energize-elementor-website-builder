@@ -59,6 +59,9 @@ export class WpApiError extends Error {
 const BRIDGE_SECRET_SETUP_DETAIL =
   "WordPress credentials are valid, but the WPCode Bridge secret is not configured. In WordPress, open WPCode > Code Snippets > Bridge Tool, replace the active code with the v2.2.0 WPCode Bridge download, replace PASTE_YOUR_EXISTING_SECRET_HERE with the existing shared secret in the live configuration near the top, choose Run Everywhere, then save and activate it.";
 
+const WORDPRESS_ADMIN_PERMISSION_DETAIL =
+  "The Application Password is valid, but WordPress is not granting its user the Administrator permission required by the Atomic API. In WordPress, open Users > All Users and confirm the exact username saved in this build is an Administrator. Then create a new Application Password while logged into that same Administrator account and update the client's WP Target. If the role already shows Administrator, check whether a security or role-management plugin is restricting REST API permissions for that user. Activating an Elementor Pro license is not required for this permission check.";
+
 function bridgeFailureDetail(error: unknown, legacy: boolean): string {
   if (
     error instanceof WpApiError &&
@@ -261,7 +264,16 @@ export class WpClient {
       });
       return await this.parseResponse<T>(res, `elementor/v1${path}`);
     } catch (e) {
-      if (e instanceof WpApiError) throw e;
+      if (e instanceof WpApiError) {
+        if (e.status === 401 || e.status === 403) {
+          throw new WpApiError(
+            `Elementor rejected ${method} ${path}. ${WORDPRESS_ADMIN_PERMISSION_DETAIL}`,
+            e.status,
+            e.code,
+          );
+        }
+        throw e;
+      }
       if (e instanceof Error && e.name === "AbortError") {
         throw new WpApiError(`Request to Elementor ${path} timed out`, 408);
       }
@@ -295,6 +307,25 @@ export class WpClient {
       if (!res.ok) {
         return { ok: false, detail: `WordPress returned status ${res.status}.` };
       }
+
+      const settingsRes = await fetch(
+        `${this.base}/wp-json/wp/v2/settings?_fields=title`,
+        {
+          headers: { Authorization: `Basic ${auth}` },
+          signal: controller.signal,
+          cache: "no-store",
+        },
+      );
+      if (settingsRes.status === 401 || settingsRes.status === 403) {
+        return { ok: false, detail: WORDPRESS_ADMIN_PERMISSION_DETAIL };
+      }
+      if (!settingsRes.ok) {
+        return {
+          ok: false,
+          detail: `Could not verify WordPress Administrator permissions. WordPress returned status ${settingsRes.status}.`,
+        };
+      }
+
       try {
         await this.postPlugin<{ ok: boolean; version: string }>("/health", {});
       } catch (error) {

@@ -38,6 +38,7 @@ async function main() {
   try {
     const legacySuccess = await checkWithResponses([
       { status: 200, body: { id: 1 } },
+      { status: 200, body: { title: "Example" } },
       {
         status: 404,
         body: {
@@ -58,6 +59,7 @@ async function main() {
       ]),
       [
         ["/wp-json/wp/v2/users/me", "GET"],
+        ["/wp-json/wp/v2/settings", "GET"],
         ["/wp-json/energize/v1/health", "POST"],
         ["/wp-json/energize/v1/flush-css", "POST"],
       ],
@@ -65,6 +67,7 @@ async function main() {
 
     const currentSecretFailure = await checkWithResponses([
       { status: 200, body: { id: 1 } },
+      { status: 200, body: { title: "Example" } },
       {
         status: 401,
         body: {
@@ -75,10 +78,11 @@ async function main() {
     ]);
     assert.equal(currentSecretFailure.result.ok, false);
     assert.match(currentSecretFailure.result.detail, /health check failed/);
-    assert.equal(currentSecretFailure.calls.length, 2);
+    assert.equal(currentSecretFailure.calls.length, 3);
 
     const legacySecretFailure = await checkWithResponses([
       { status: 200, body: { id: 1 } },
+      { status: 200, body: { title: "Example" } },
       {
         status: 404,
         body: {
@@ -100,6 +104,7 @@ async function main() {
 
     const legacyMissingSecret = await checkWithResponses([
       { status: 200, body: { id: 1 } },
+      { status: 200, body: { title: "Example" } },
       {
         status: 404,
         body: {
@@ -121,6 +126,7 @@ async function main() {
 
     const currentMissingSecret = await checkWithResponses([
       { status: 200, body: { id: 1 } },
+      { status: 200, body: { title: "Example" } },
       {
         status: 500,
         body: {
@@ -132,6 +138,36 @@ async function main() {
     assert.equal(currentMissingSecret.result.ok, false);
     assert.match(currentMissingSecret.result.detail, /v2\.2\.0 WPCode Bridge/);
     assert.match(currentMissingSecret.result.detail, /live configuration/);
+
+    const administratorPermissionFailure = await checkWithResponses([
+      { status: 200, body: { id: 1 } },
+      {
+        status: 403,
+        body: {
+          code: "rest_cannot_view",
+          message: "Sorry, you are not allowed to manage options on this site.",
+        },
+      },
+    ]);
+    assert.equal(administratorPermissionFailure.result.ok, false);
+    assert.match(
+      administratorPermissionFailure.result.detail,
+      /not granting its user the Administrator permission/,
+    );
+    assert.match(
+      administratorPermissionFailure.result.detail,
+      /Elementor Pro license is not required/,
+    );
+    assert.deepEqual(
+      administratorPermissionFailure.calls.map(({ url, method }) => [
+        new URL(url).pathname,
+        method,
+      ]),
+      [
+        ["/wp-json/wp/v2/users/me", "GET"],
+        ["/wp-json/wp/v2/settings", "GET"],
+      ],
+    );
 
     console.log("WordPress client connection checks passed");
   } finally {
