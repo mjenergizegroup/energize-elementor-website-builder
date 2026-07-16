@@ -50,6 +50,7 @@ export class WpApiError extends Error {
     message: string,
     readonly status: number,
     readonly code?: string,
+    readonly meta?: Record<string, unknown>,
   ) {
     super(message);
     this.name = "WpApiError";
@@ -60,7 +61,17 @@ const BRIDGE_SECRET_SETUP_DETAIL =
   "WordPress credentials are valid, but the WPCode Bridge secret is not configured. In WordPress, open WPCode > Code Snippets > Bridge Tool, replace the active code with the v2.2.0 WPCode Bridge download, replace PASTE_YOUR_EXISTING_SECRET_HERE with the existing shared secret in the live configuration near the top, choose Run Everywhere, then save and activate it.";
 
 const WORDPRESS_ADMIN_PERMISSION_DETAIL =
-  "The Application Password is valid, but WordPress is not granting its user the Administrator permission required by the Atomic API. In WordPress, open Users > All Users and confirm the exact username saved in this build is an Administrator. Then create a new Application Password while logged into that same Administrator account and update the client's WP Target. If the role already shows Administrator, check whether a security or role-management plugin is restricting REST API permissions for that user. Activating an Elementor Pro license is not required for this permission check.";
+  "The Application Password is valid, but WordPress is not granting its user the Administrator permission required by the Atomic API. In WordPress, open Users > All Users and confirm the exact username saved in this build is an Administrator. Then create a new Application Password while logged into that same Administrator account and update the client's WP Target. If the role already shows Administrator, check whether a security or role-management plugin is restricting REST API permissions for that user.";
+
+function elementorComponentPermissionDetail(error: WpApiError): string {
+  const tier = error.meta?.tier;
+
+  if (tier === "expired") {
+    return "Elementor Components cannot be created because this site's Elementor Pro license is expired. Renew the subscription, reconnect the license under Elementor > License, and then rerun the build.";
+  }
+
+  return "Elementor Components cannot be created because Elementor does not see an active Pro license for this domain. In WordPress, open Elementor > License and use Reactivate License. If Elementor shows License Mismatch, disconnect the copied domain and reconnect this site's current domain, then rerun the build.";
+}
 
 function bridgeFailureDetail(error: unknown, legacy: boolean): string {
   if (
@@ -178,11 +189,16 @@ export class WpClient {
       );
     }
     if (!res.ok) {
-      const err = json as { message?: string; code?: string };
+      const err = json as {
+        message?: string;
+        code?: string;
+        data?: { meta?: Record<string, unknown> };
+      };
       throw new WpApiError(
         err.message ?? `Request to ${path} failed`,
         res.status,
         err.code,
+        err.data?.meta,
       );
     }
     return json as T;
@@ -219,11 +235,16 @@ export class WpClient {
         );
       }
       if (!res.ok) {
-        const err = json as { message?: string; code?: string };
+        const err = json as {
+          message?: string;
+          code?: string;
+          data?: { meta?: Record<string, unknown> };
+        };
         throw new WpApiError(
           err.message ?? `Request to ${path} failed`,
           res.status,
           err.code,
+          err.data?.meta,
         );
       }
       return json as T;
@@ -265,11 +286,24 @@ export class WpClient {
       return await this.parseResponse<T>(res, `elementor/v1${path}`);
     } catch (e) {
       if (e instanceof WpApiError) {
+        if (
+          e.status === 403 &&
+          e.code === "insufficient_permissions" &&
+          path.startsWith("/components")
+        ) {
+          throw new WpApiError(
+            elementorComponentPermissionDetail(e),
+            e.status,
+            e.code,
+            e.meta,
+          );
+        }
         if (e.status === 401 || e.status === 403) {
           throw new WpApiError(
             `Elementor rejected ${method} ${path}. ${WORDPRESS_ADMIN_PERMISSION_DETAIL}`,
             e.status,
             e.code,
+            e.meta,
           );
         }
         throw e;

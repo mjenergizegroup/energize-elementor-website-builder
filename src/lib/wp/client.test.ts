@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { WpClient } from "./client";
+import { WpApiError, WpClient } from "./client";
 
 type StubResponse = {
   status: number;
@@ -32,6 +32,53 @@ async function checkWithResponses(responses: StubResponse[]) {
   );
   assert.equal(queue.length, 0, "Not all stub responses were used");
   return { calls, result };
+}
+
+type ElementorRequester = {
+  requestElementor<T>(
+    path: string,
+    method: "GET" | "POST" | "PUT",
+    username: string,
+    appPassword: string,
+    body?: Record<string, unknown>,
+  ): Promise<T>;
+};
+
+async function expectComponentLicenseFailure(
+  tier: "core" | "expired",
+  expectedMessage: RegExp,
+) {
+  globalThis.fetch = async () =>
+    new Response(
+      JSON.stringify({
+        code: "insufficient_permissions",
+        message: "You do not have permission to perform this action.",
+        data: { status: 403, meta: { action: "create", tier } },
+      }),
+      { status: 403, headers: { "Content-Type": "application/json" } },
+    );
+
+  const client = new WpClient(
+    "https://example.test",
+  ) as unknown as ElementorRequester;
+
+  await assert.rejects(
+    () =>
+      client.requestElementor(
+        "/components",
+        "POST",
+        "website-team",
+        "application-password",
+        { status: "publish", items: [] },
+      ),
+    (error: unknown) => {
+      assert.ok(error instanceof WpApiError);
+      assert.equal(error.code, "insufficient_permissions");
+      assert.equal(error.meta?.tier, tier);
+      assert.match(error.message, expectedMessage);
+      return true;
+    },
+  );
 }
 
 async function main() {
@@ -154,10 +201,6 @@ async function main() {
       administratorPermissionFailure.result.detail,
       /not granting its user the Administrator permission/,
     );
-    assert.match(
-      administratorPermissionFailure.result.detail,
-      /Elementor Pro license is not required/,
-    );
     assert.deepEqual(
       administratorPermissionFailure.calls.map(({ url, method }) => [
         new URL(url).pathname,
@@ -167,6 +210,15 @@ async function main() {
         ["/wp-json/wp/v2/users/me", "GET"],
         ["/wp-json/wp/v2/settings", "GET"],
       ],
+    );
+
+    await expectComponentLicenseFailure(
+      "core",
+      /does not see an active Pro license for this domain/,
+    );
+    await expectComponentLicenseFailure(
+      "expired",
+      /Elementor Pro license is expired/,
     );
 
     console.log("WordPress client connection checks passed");

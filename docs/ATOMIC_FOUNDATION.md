@@ -7,23 +7,26 @@ variables, global classes, Atomic elements, and reusable components.
 
 ## Default-theme workflow
 
-1. Install Elementor 4.1.1 or newer on the blank WP Engine default site.
-2. Enable the Atomic Editor, Global Classes, Variables, and Components features.
-3. Download `artifacts/energize-build-tool-wpcode-snippet.txt` and paste its
+1. Install Elementor 4.1.1 or newer and Elementor Pro on the blank WP Engine
+   default site.
+2. Connect an active Elementor Pro license to the site's current domain.
+   Elementor requires the Pro access tier to create and insert Components.
+3. Enable the Atomic Editor, Global Classes, Variables, and Components features.
+4. Download `artifacts/energize-build-tool-wpcode-snippet.txt` and paste its
    complete contents into a WPCode PHP snippet. Set it to Run Everywhere,
    replace `PASTE_YOUR_EXISTING_SECRET_HERE` in the live configuration line,
    save it, and activate it. The value must match `ENERGIZE_PLUGIN_SECRET` in
    the website builder.
-4. In Elementor, open Website Templates, then Import / Export, then Import.
-5. Import `artifacts/energize-atomic-foundation.zip`, choose the Design System
+5. In Elementor, open Website Templates, then Import / Export, then Import.
+6. Import `artifacts/energize-atomic-foundation.zip`, choose the Design System
    options for variables and classes, and use **Override all** on the blank
    default site. This preserves the deterministic IDs used by generated pages.
-6. Run one branding-only build against the default site. The builder validates
+7. Run one branding-only build against the default site. The builder validates
    the foundation, repairs any class that Elementor skipped during import,
    seeds the 12 Energize components, and applies the default brand values.
-7. Import `artifacts/energize-atomic-style-guide.json` as an Elementor page
+8. Import `artifacts/energize-atomic-style-guide.json` as an Elementor page
    template, create the `/style-guide` page, and set it to noindex.
-8. Duplicate that site for each client. The cloned variables, class IDs, and
+9. Duplicate that site for each client. The cloned variables, class IDs, and
    component post IDs become the stable base for future builds.
 
 The builder preflight checks both the WordPress Application Password and the
