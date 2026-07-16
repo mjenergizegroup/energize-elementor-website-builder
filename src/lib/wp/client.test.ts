@@ -98,6 +98,41 @@ async function main() {
     assert.match(legacySecretFailure.result.detail, /legacy Energize bridge/);
     assert.match(legacySecretFailure.result.detail, /Invalid or missing/);
 
+    const legacyMissingSecret = await checkWithResponses([
+      { status: 200, body: { id: 1 } },
+      {
+        status: 404,
+        body: {
+          code: "rest_no_route",
+          message: "No route was found matching the URL and request method.",
+        },
+      },
+      {
+        status: 500,
+        body: {
+          code: "energize_secret_missing",
+          message: "Server is not configured with ENERGIZE_BUILD_SECRET.",
+        },
+      },
+    ]);
+    assert.equal(legacyMissingSecret.result.ok, false);
+    assert.match(legacyMissingSecret.result.detail, /v2\.2\.0 WPCode Bridge/);
+    assert.match(legacyMissingSecret.result.detail, /Run Everywhere/);
+
+    const currentMissingSecret = await checkWithResponses([
+      { status: 200, body: { id: 1 } },
+      {
+        status: 500,
+        body: {
+          code: "energize_secret_missing",
+          message: "Server is not configured with ENERGIZE_BUILD_SECRET.",
+        },
+      },
+    ]);
+    assert.equal(currentMissingSecret.result.ok, false);
+    assert.match(currentMissingSecret.result.detail, /v2\.2\.0 WPCode Bridge/);
+    assert.match(currentMissingSecret.result.detail, /live configuration/);
+
     console.log("WordPress client connection checks passed");
   } finally {
     globalThis.fetch = originalFetch;

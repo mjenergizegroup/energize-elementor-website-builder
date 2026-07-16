@@ -144,10 +144,39 @@
   }
 
   .app-shell {
+    display: flex;
+    flex-direction: column;
     min-height: calc(100vh - 56px);
     overflow: hidden;
     background: var(--color-canvas);
     border: 2px solid var(--color-black);
+  }
+
+  .app-shell > main {
+    width: 100%;
+    flex: 1 0 auto;
+  }
+
+  .app-version {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: auto;
+    padding: 13px 20px;
+    background: var(--color-black);
+    border-top: 2px solid var(--color-black);
+    color: #9a9a9a;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .app-version-value {
+    color: var(--color-on-black);
   }
 
   .topnav {

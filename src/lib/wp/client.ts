@@ -56,6 +56,25 @@ export class WpApiError extends Error {
   }
 }
 
+const BRIDGE_SECRET_SETUP_DETAIL =
+  "WordPress credentials are valid, but the WPCode Bridge secret is not configured. In WordPress, open WPCode > Code Snippets > Bridge Tool, replace the active code with the v2.2.0 WPCode Bridge download, replace PASTE_YOUR_EXISTING_SECRET_HERE with the existing shared secret in the live configuration near the top, choose Run Everywhere, then save and activate it.";
+
+function bridgeFailureDetail(error: unknown, legacy: boolean): string {
+  if (
+    error instanceof WpApiError &&
+    error.code === "energize_secret_missing"
+  ) {
+    return BRIDGE_SECRET_SETUP_DETAIL;
+  }
+
+  const checkName = legacy
+    ? "legacy Energize bridge secret check"
+    : "Energize bridge health check";
+  return `WordPress credentials are valid, but the ${checkName} failed: ${
+    error instanceof Error ? error.message : "Unknown bridge error"
+  }`;
+}
+
 export class WpClient {
   private readonly base: string;
 
@@ -296,19 +315,13 @@ export class WpClient {
           } catch (legacyError) {
             return {
               ok: false,
-              detail: `WordPress credentials are valid, but the legacy Energize bridge failed its secret check: ${
-                legacyError instanceof Error
-                  ? legacyError.message
-                  : "Unknown bridge error"
-              }`,
+              detail: bridgeFailureDetail(legacyError, true),
             };
           }
         }
         return {
           ok: false,
-          detail: `WordPress credentials are valid, but the Energize bridge health check failed: ${
-            error instanceof Error ? error.message : "Unknown bridge error"
-          }`,
+          detail: bridgeFailureDetail(error, false),
         };
       }
       return { ok: true, detail: "Credentials valid." };

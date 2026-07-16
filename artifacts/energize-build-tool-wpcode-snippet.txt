@@ -1,7 +1,7 @@
 /**
  * Plugin Name: Energize Website Builder
  * Description: WPCode-compatible REST bridge used by the Energize Website Builder to create Elementor V4 Atomic pages and manage site assets.
- * Version: 2.1.0
+ * Version: 2.2.0
  * Author: Energize Group
  *
  * WPCode setup: create a PHP snippet, paste this file, choose Run Everywhere,
@@ -23,7 +23,7 @@ if (!defined('ENERGIZE_BUILD_SECRET')) {
 }
 
 if (!defined('ENERGIZE_BUILD_TOOL_VERSION')) {
-    define('ENERGIZE_BUILD_TOOL_VERSION', '2.1.0');
+    define('ENERGIZE_BUILD_TOOL_VERSION', '2.2.0');
 }
 
 if (!defined('ENERGIZE_BUILD_TABLE_VERSION')) {
@@ -95,7 +95,7 @@ function energize_build_check_secret(WP_REST_Request $request) {
         energize_build_log_auth_failure($route, 'secret_not_configured');
         return new WP_Error(
             'energize_secret_missing',
-            'Server is not configured with ENERGIZE_BUILD_SECRET.',
+            'The WPCode Bridge secret is not configured. Replace PASTE_YOUR_EXISTING_SECRET_HERE in the live configuration near the top of the active snippet.',
             array('status' => 500)
         );
     }

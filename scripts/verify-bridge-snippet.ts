@@ -6,6 +6,18 @@ const source = readFileSync(
   resolve(process.cwd(), "wordpress-plugin/energize-build-tool.php"),
   "utf8",
 );
+const expectedSnippet = source.replace(/^<\?php\s*\n/, "");
+const artifactSnippet = readFileSync(
+  resolve(process.cwd(), "artifacts/energize-build-tool-wpcode-snippet.txt"),
+  "utf8",
+);
+const publicSnippet = readFileSync(
+  resolve(
+    process.cwd(),
+    "public/downloads/energize-build-tool-wpcode-snippet.txt",
+  ),
+  "utf8",
+);
 const openingCommentEnd = source.indexOf("*/");
 const liveSource = source.slice(openingCommentEnd + 2);
 
@@ -22,7 +34,13 @@ assert.equal(
   true,
 );
 assert.equal(source.includes("function energize_build_health()"), true);
-assert.equal(source.includes("ENERGIZE_BUILD_TOOL_VERSION', '2.1.0'"), true);
+assert.equal(source.includes("ENERGIZE_BUILD_TOOL_VERSION', '2.2.0'"), true);
+assert.equal(
+  source.includes("The WPCode Bridge secret is not configured."),
+  true,
+);
+assert.equal(artifactSnippet, expectedSnippet);
+assert.equal(publicSnippet, expectedSnippet);
 assert.equal(source.includes("/brand-colors"), false);
 assert.equal(source.includes("/brand-fonts"), false);
 assert.equal(source.includes(String.fromCodePoint(0x2014)), false);

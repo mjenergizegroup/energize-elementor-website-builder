@@ -10,7 +10,15 @@ const navItems = [
   { href: "/dashboard/clients", label: "Clients" },
 ];
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({
+  children,
+  version,
+  buildId,
+}: {
+  children: React.ReactNode;
+  version: string;
+  buildId: string;
+}) {
   const pathname = usePathname();
 
   return (
@@ -61,6 +69,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         {children}
+        <footer
+          className="app-version"
+          aria-label="Application version"
+          data-app-version={version}
+          data-build-id={buildId}
+        >
+          <span className="app-version-label">System release</span>
+          <span className="app-version-value">
+            Builder v{version} / Build {buildId}
+          </span>
+        </footer>
       </div>
     </div>
   );
