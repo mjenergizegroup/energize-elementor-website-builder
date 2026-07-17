@@ -7,6 +7,7 @@ import {
   getCrawlRecord,
   updateCrawlRecord,
 } from "@/lib/firecrawl/store";
+import { getMigrationProjectByCrawlJob } from "@/lib/migration/projects";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -21,7 +22,14 @@ export async function GET(
   }
 
   const { jobId } = await context.params;
+  const project = await getMigrationProjectByCrawlJob(userId, jobId);
+  if (!project) {
+    return Response.json({ error: "Crawl not found." }, { status: 404 });
+  }
   const record = getCrawlRecord(jobId);
+  if (record && record.userId !== userId) {
+    return Response.json({ error: "Crawl not found." }, { status: 404 });
+  }
 
   try {
     const status = await getCrawlStatus(jobId);
@@ -34,7 +42,13 @@ export async function GET(
         pages: status.data,
         error: status.error,
       });
-    const fallback = makeFallbackRecord(jobId, status);
+    const fallback = makeFallbackRecord(
+      jobId,
+      status,
+      userId,
+      project.id,
+      project.sourceUrl ?? "",
+    );
     const current = next || fallback;
 
     if (record && crawlTimedOut(current) && current.status === "scraping") {
@@ -71,7 +85,9 @@ export async function GET(
           failed ??
             record ?? {
               jobId,
-              sourceUrl: "",
+              userId,
+              projectId: project.id,
+              sourceUrl: project.sourceUrl ?? "",
               startedAt: Date.now(),
               status: "failed",
               completed: 0,
@@ -96,7 +112,9 @@ export async function GET(
         failed ??
           record ?? {
             jobId,
-            sourceUrl: "",
+            userId,
+            projectId: project.id,
+            sourceUrl: project.sourceUrl ?? "",
             startedAt: Date.now(),
             status: "failed",
             completed: 0,
@@ -114,10 +132,15 @@ export async function GET(
 function makeFallbackRecord(
   jobId: string,
   status: Awaited<ReturnType<typeof getCrawlStatus>>,
+  userId: string,
+  projectId: string,
+  sourceUrl: string,
 ): CrawlRecord {
   return {
     jobId,
-    sourceUrl: status.data[0]?.url ?? "",
+    userId,
+    projectId,
+    sourceUrl: sourceUrl || status.data[0]?.url || "",
     startedAt: Date.now(),
     status: status.status,
     completed: status.completed,
@@ -148,6 +171,7 @@ function crawlPayload(record: CrawlRecord) {
         ]
       : null;
   return {
+    projectId: record.projectId,
     status: record.status,
     progress,
     pages,

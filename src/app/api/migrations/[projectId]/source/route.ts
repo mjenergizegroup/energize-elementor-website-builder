@@ -1,6 +1,11 @@
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { ingestMigrationSource } from "@/lib/migration/projects";
+import { getCrawlStatus } from "@/lib/firecrawl/client";
+import { filterPages, selectFilteredPages } from "@/lib/firecrawl/filter";
+import {
+  getMigrationProject,
+  ingestMigrationSource,
+} from "@/lib/migration/projects";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -11,7 +16,7 @@ const pageSchema = z.object({
   metadata: z.record(z.string(), z.unknown()).default({}),
 });
 
-const sourceSchema = z
+const uploadedSourceSchema = z
   .object({
     pages: z.array(pageSchema).min(1).max(1000),
   })
@@ -28,6 +33,13 @@ const sourceSchema = z
       });
     }
   });
+
+const crawlSourceSchema = z.object({
+  crawlJobId: z.string().trim().min(1).max(200),
+  selectedUrls: z.array(z.string().url()).min(1).max(1000),
+});
+
+const sourceSchema = z.union([uploadedSourceSchema, crawlSourceSchema]);
 
 export async function POST(
   req: Request,
@@ -46,7 +58,15 @@ export async function POST(
 
   try {
     const { projectId } = await context.params;
-    const result = await ingestMigrationSource(userId, projectId, parsed.data.pages);
+    const pages = "pages" in parsed.data
+      ? parsed.data.pages
+      : await selectedCrawlPages(
+          userId,
+          projectId,
+          parsed.data.crawlJobId,
+          parsed.data.selectedUrls,
+        );
+    const result = await ingestMigrationSource(userId, projectId, pages);
     return Response.json(result);
   } catch (error) {
     const message =
@@ -54,4 +74,22 @@ export async function POST(
     const status = message === "Migration project not found." ? 404 : 400;
     return Response.json({ error: message }, { status });
   }
+}
+
+async function selectedCrawlPages(
+  userId: string,
+  projectId: string,
+  crawlJobId: string,
+  selectedUrls: string[],
+) {
+  const project = await getMigrationProject(userId, projectId);
+  if (project.crawlJobId !== crawlJobId) {
+    throw new Error("The crawl does not belong to this migration project.");
+  }
+  const status = await getCrawlStatus(crawlJobId);
+  const pages = selectFilteredPages(filterPages(status.data), selectedUrls);
+  if (pages.length === 0) {
+    throw new Error("No selected pages were found for this crawl.");
+  }
+  return pages;
 }

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { cleanAndClassifyPages, cleanMarkdown } from "./cleanup";
+import { filterPages, selectFilteredPages } from "../firecrawl/filter";
 
 const duplicateForm = `# Contact
 
@@ -77,5 +78,23 @@ assert.equal(
   datedPost.blogPosts[0].classificationReason,
   "published date in source content",
 );
+
+const filtered = filterPages([
+  {
+    url: "https://example.com/",
+    markdown: "# Homepage",
+    metadata: { title: "Homepage" },
+  },
+  {
+    url: "https://example.com/privacy-policy/",
+    markdown: "# Privacy",
+    metadata: { title: "Privacy" },
+  },
+]);
+const selected = selectFilteredPages(filtered, [
+  "https://example.com/privacy-policy/#details",
+]);
+assert.equal(selected.length, 1);
+assert.equal(selected[0].title, "Privacy");
 
 console.log("migration cleanup checks passed");

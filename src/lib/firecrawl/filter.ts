@@ -36,6 +36,16 @@ export function filterPages(pages: FirecrawlPage[]): FilteredPages {
   return { keep, skip };
 }
 
+export function selectFilteredPages(
+  filtered: FilteredPages,
+  selectedUrls: string[],
+): PageEntry[] {
+  const selected = new Set(selectedUrls.map(normalizePageUrl).filter(Boolean));
+  return [...filtered.keep, ...filtered.skip].filter((page) =>
+    selected.has(normalizePageUrl(page.url)),
+  );
+}
+
 export function normalizePageUrl(value: string): string {
   try {
     const url = new URL(value);

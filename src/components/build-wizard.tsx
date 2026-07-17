@@ -35,7 +35,11 @@ import type {
   TemplateCompileBundle,
   TemplateMappingManifest,
 } from "@/lib/template-import/types";
-import type { MigrationResolution } from "@/lib/migration/types";
+import type {
+  MigrationCleanupReport,
+  MigrationResolution,
+  MigrationSourcePage,
+} from "@/lib/migration/types";
 import { migrationReadiness } from "@/lib/migration/dependencies";
 import {
   contentMappingsToSourcePages,
@@ -253,6 +257,10 @@ export function BuildWizard({
   const [selectedCrawlUrls, setSelectedCrawlUrls] = useState<string[]>([]);
   const [crawlError, setCrawlError] = useState("");
   const [exportingCrawl, setExportingCrawl] = useState(false);
+  const [savingCrawl, setSavingCrawl] = useState(false);
+  const [sourceSaved, setSourceSaved] = useState(false);
+  const [sourceReport, setSourceReport] = useState<MigrationCleanupReport | null>(null);
+  const [migrationSourcePages, setMigrationSourcePages] = useState<MigrationSourcePage[]>([]);
 
   const [name, setName] = useState(initialClient?.name ?? "");
   const [slug, setSlug] = useState(initialClient?.slug ?? "");
@@ -362,12 +370,19 @@ export function BuildWizard({
     setCrawlSkip([]);
     setSelectedCrawlUrls([]);
     setCrawlError("");
+    setSourceSaved(false);
+    setSourceReport(null);
+    setMigrationSourcePages([]);
 
     try {
       const res = await fetch("/api/crawl", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: normalizedUrl }),
+        body: JSON.stringify({
+          url: normalizedUrl,
+          ...(initialClient?.id ? { clientId: initialClient.id } : {}),
+          ...(name.trim() ? { projectName: `${name.trim()} migration` } : {}),
+        }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -376,6 +391,7 @@ export function BuildWizard({
         return;
       }
       setCrawlJobId(json.jobId);
+      setMigrationProjectId(json.projectId);
       toast.success("Crawl started.");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Could not start crawl.");
@@ -399,6 +415,7 @@ export function BuildWizard({
       }
 
       setCrawlStatus(json.status);
+      if (json.projectId) setMigrationProjectId(json.projectId);
       setCrawlProgress(json.progress ?? { completed: 0, total: 0 });
       setCrawlError(json.error ?? "");
       if (json.keep) {
@@ -420,6 +437,7 @@ export function BuildWizard({
   }
 
   function toggleCrawlUrl(url: string, checked: boolean) {
+    setSourceSaved(false);
     setSelectedCrawlUrls((prev) =>
       checked ? Array.from(new Set([...prev, url])) : prev.filter((item) => item !== url),
     );
@@ -431,6 +449,51 @@ export function BuildWizard({
     setCrawlSkip((prev) => prev.filter((item) => item.url !== url));
     setCrawlKeep((prev) => [...prev, { ...page, recommended: true, skipReason: undefined }]);
     toggleCrawlUrl(url, true);
+  }
+
+  async function saveSelectedCrawlPages(): Promise<boolean> {
+    if (!migrationProjectId || !crawlJobId) {
+      toast.error("Start the crawl again so this migration can be saved.");
+      return false;
+    }
+    if (selectedCrawlUrls.length === 0) {
+      toast.error("Select at least one source page.");
+      return false;
+    }
+    setSavingCrawl(true);
+    try {
+      const response = await fetch(
+        `/api/migrations/${migrationProjectId}/source`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            crawlJobId,
+            selectedUrls: selectedCrawlUrls,
+          }),
+        },
+      );
+      const json = await response.json();
+      if (!response.ok) {
+        throw new Error(json.error ?? "Could not save the selected source pages.");
+      }
+      setSourceSaved(true);
+      setSourceReport(json.report as MigrationCleanupReport);
+      setMigrationSourcePages(
+        Array.isArray(json.project?.sourcePages) ? json.project.sourcePages : [],
+      );
+      toast.success(`${json.report.unique} source pages saved to this migration.`);
+      return true;
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Could not save the selected source pages.",
+      );
+      return false;
+    } finally {
+      setSavingCrawl(false);
+    }
   }
 
   async function exportCrawlMarkdown() {
@@ -589,6 +652,14 @@ export function BuildWizard({
       case 0:
         if (siteKind === "existing" && crawlStatus === "scraping")
           return "Wait for the crawl to finish or switch to a new website.";
+        if (buildType === "migrate" && siteKind === "existing") {
+          if (crawlStatus !== "completed" && !sourceSaved) {
+            return "Complete a crawl before continuing this migration.";
+          }
+          if (selectedCrawlUrls.length === 0) {
+            return "Select at least one source page for this migration.";
+          }
+        }
         return null;
       case 1:
         if (!name.trim()) return "Practice name is required.";
@@ -637,11 +708,20 @@ export function BuildWizard({
     }
   }
 
-  function next() {
+  async function next() {
     const error = validateStep(step);
     if (error) {
       toast.error(error);
       return;
+    }
+    if (
+      step === 0 &&
+      buildType === "migrate" &&
+      siteKind === "existing" &&
+      !sourceSaved
+    ) {
+      const saved = await saveSelectedCrawlPages();
+      if (!saved) return;
     }
     setStep((s) => Math.min(s + 1, STEPS.length - 1));
   }
@@ -675,7 +755,7 @@ export function BuildWizard({
     });
   }
 
-  async function deployMigration() {
+  async function deployMigration(retryFailedOnly = false) {
     if (!templateCompileBundle) {
       throw new Error("Compile the selected templates before deployment.");
     }
@@ -691,7 +771,6 @@ export function BuildWizard({
       crawlUrl || siteUrl,
     );
     let projectId = migrationProjectId;
-    const retryFailedOnly = Boolean(projectId);
     if (!projectId) {
       upsertEvent("Preparing migration project", "start");
       const projectResponse = await fetch("/api/migrations", {
@@ -710,6 +789,7 @@ export function BuildWizard({
         throw new Error(projectJson.error ?? "Could not create migration project.");
       }
       projectId = projectJson.project.id as string;
+      setMigrationProjectId(projectId);
       upsertEvent("Preparing migration project", "ok");
       upsertEvent("Saving approved source content", "start");
       const sourceResponse = await fetch(
@@ -730,6 +810,9 @@ export function BuildWizard({
         throw new Error(sourceJson.error ?? "Could not save migration content.");
       }
       upsertEvent("Saving approved source content", "ok");
+    }
+
+    if (!retryFailedOnly) {
       upsertEvent("Building full-resolution media inventory", "start");
       const inventoryResponse = await fetch(
         `/api/migrations/${projectId}/media`,
@@ -947,7 +1030,7 @@ export function BuildWizard({
     );
   }
 
-  async function deploy() {
+  async function deploy(retryFailedOnly = false) {
     const error = [1, 2, 3, 4].map(validateStep).find(Boolean);
     if (error) {
       toast.error(error);
@@ -973,7 +1056,7 @@ export function BuildWizard({
 
     if (buildType === "migrate" && deployMode === "pages") {
       try {
-        await deployMigration();
+        await deployMigration(retryFailedOnly);
       } catch (e) {
         const message =
           e instanceof Error ? e.message : "Migration deployment failed.";
@@ -1305,7 +1388,7 @@ export function BuildWizard({
                   variant="outline"
                   onClick={() => {
                     if (buildType === "migrate" && migrationProjectId) {
-                      void deploy();
+                      void deploy(true);
                     } else {
                       setFinished(null);
                       setStep(4);
@@ -1495,15 +1578,26 @@ export function BuildWizard({
 
                   {crawlKeep.length > 0 && (
                     <div className="flex flex-wrap items-center justify-between gap-3 border border-[var(--line)] bg-[var(--paper-2)] p-4">
-                      <p className="text-sm font-medium text-[var(--muted)]">
-                        Upload this file to the Claude.ai cleanup Project, then bring the cleaned output back here for the Content step.
-                      </p>
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold text-[var(--ink)]">
+                          Selected pages stay inside this migration.
+                        </p>
+                        <p className="text-sm font-medium text-[var(--muted)]">
+                          Continuing saves the raw crawl and deterministic cleanup. Download is optional.
+                        </p>
+                        {sourceSaved && sourceReport && (
+                          <p className="text-xs font-semibold text-[var(--good)]" role="status">
+                            Saved {migrationSourcePages.length} pages, including {sourceReport.corePages} core pages and {sourceReport.blogPosts} blog posts.
+                          </p>
+                        )}
+                      </div>
                       <Button
                         type="button"
+                        variant="outline"
                         onClick={exportCrawlMarkdown}
                         disabled={exportingCrawl}
                       >
-                        {exportingCrawl ? "Exporting" : "Export Combined File"}
+                        {exportingCrawl ? "Preparing backup" : "Download source backup"}
                       </Button>
                     </div>
                   )}
@@ -1910,12 +2004,12 @@ export function BuildWizard({
               <span>{name ? `Draft saved for ${name}` : "Draft saved in this session"}</span>
             </div>
             {step < STEPS.length - 1 ? (
-              <Button onClick={next}>
-                Next
+              <Button onClick={() => void next()} disabled={savingCrawl}>
+                {savingCrawl ? "Saving source" : "Next"}
                 <ArrowRight data-icon="inline-end" />
               </Button>
             ) : (
-              <Button onClick={deploy}>
+              <Button onClick={() => void deploy()}>
                 {deployMode === "branding-only"
                   ? "Deploy brand kit"
                   : buildType === "migrate"

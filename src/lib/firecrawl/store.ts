@@ -4,6 +4,8 @@ import type { CrawlStatus, FilteredPages, FirecrawlPage } from "./types";
 
 export interface CrawlRecord {
   jobId: string;
+  userId: string;
+  projectId: string;
   sourceUrl: string;
   startedAt: number;
   status: CrawlStatus;
@@ -21,9 +23,16 @@ const globalForCrawls = globalThis as typeof globalThis & {
 const crawlStore = globalForCrawls.__energizeCrawls ?? new Map<string, CrawlRecord>();
 globalForCrawls.__energizeCrawls = crawlStore;
 
-export function createCrawlRecord(jobId: string, sourceUrl: string): CrawlRecord {
+export function createCrawlRecord(
+  jobId: string,
+  sourceUrl: string,
+  userId: string,
+  projectId: string,
+): CrawlRecord {
   const record: CrawlRecord = {
     jobId,
+    userId,
+    projectId,
     sourceUrl,
     startedAt: Date.now(),
     status: "scraping",

@@ -13,8 +13,10 @@ template selections, mappings, and dependency resolutions between requests.
 - `createdBy` scopes every project query to the authenticated team member.
 - `clientId` is optional until a destination client is selected.
 
-The source ingest endpoint re-runs deterministic cleanup and classification on
-every request. It stores raw and cleaned markdown, stable content checksums, and
+An existing-site crawl creates its owned migration project immediately. The
+source ingest endpoint accepts the crawl job and selected URLs, retrieves the
+selected pages server-side, and re-runs deterministic cleanup and classification
+on every request. It stores raw and cleaned markdown, stable content checksums, and
 the reason for each classification. Blog detection uses metadata and content
 signals in addition to URL paths.
 

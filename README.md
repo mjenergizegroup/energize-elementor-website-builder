@@ -60,7 +60,9 @@ Migration project state and its authenticated API are documented in
 
 ## Site migration flow
 
-1. Crawl or ingest source content and review deterministic cleanup.
+1. Start an owned migration project with the crawl, select source pages, and
+   save raw and deterministically cleaned content directly to the project.
+   Source-file download remains an optional backup rather than a handoff step.
 2. Inventory full-resolution media, review metadata, and dry-run uploads.
 3. Upload up to 20 JSON templates, review analysis, select page roles, and
    compile portable artifacts.

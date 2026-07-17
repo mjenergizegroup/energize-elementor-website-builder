@@ -3,12 +3,15 @@ import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { crawlSite, FirecrawlError } from "@/lib/firecrawl/client";
 import { createCrawlRecord, pruneCrawlStore } from "@/lib/firecrawl/store";
+import { createMigrationProject } from "@/lib/migration/projects";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
 const bodySchema = z.object({
   url: z.string().url(),
+  clientId: z.string().min(1).optional(),
+  projectName: z.string().trim().min(1).max(160).optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -30,11 +33,22 @@ export async function POST(req: NextRequest) {
   try {
     pruneCrawlStore();
     const { jobId } = await crawlSite(body.url);
-    createCrawlRecord(jobId, body.url);
-    return Response.json({ jobId });
+    const project = await createMigrationProject(userId, {
+      name: body.projectName ?? defaultProjectName(body.url),
+      sourceUrl: body.url,
+      clientId: body.clientId,
+      crawlJobId: jobId,
+    });
+    createCrawlRecord(jobId, body.url, userId, project.id);
+    return Response.json({ jobId, projectId: project.id });
   } catch (e) {
     return firecrawlErrorResponse(e);
   }
+}
+
+function defaultProjectName(sourceUrl: string): string {
+  const hostname = new URL(sourceUrl).hostname.replace(/^www\./, "");
+  return `${hostname} migration`;
 }
 
 function firecrawlErrorResponse(e: unknown): Response {

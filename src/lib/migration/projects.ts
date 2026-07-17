@@ -20,10 +20,12 @@ export interface CreateMigrationProjectInput {
   name: string;
   sourceUrl?: string;
   clientId?: string;
+  crawlJobId?: string;
 }
 
 interface MigrationProjectRecord {
   id: string;
+  crawlJobId: string | null;
   clientId: string | null;
   name: string;
   sourceUrl: string | null;
@@ -48,6 +50,7 @@ interface MigrationProjectRecord {
 type MigrationProjectSummary = Pick<
   MigrationProjectRecord,
   | "id"
+  | "crawlJobId"
   | "clientId"
   | "name"
   | "sourceUrl"
@@ -91,6 +94,7 @@ export async function createMigrationProject(
       name: input.name,
       sourceUrl: input.sourceUrl,
       clientId: input.clientId,
+      crawlJobId: input.crawlJobId,
       schemaVersion: MIGRATION_PROJECT_SCHEMA_VERSION,
       createdBy: userId,
     },
@@ -108,6 +112,7 @@ export async function listMigrationProjects(userId: string) {
     orderBy: { updatedAt: "desc" },
     select: {
       id: true,
+      crawlJobId: true,
       clientId: true,
       name: true,
       sourceUrl: true,
@@ -118,6 +123,15 @@ export async function listMigrationProjects(userId: string) {
       createdAt: true,
       updatedAt: true,
     },
+  });
+}
+
+export async function getMigrationProjectByCrawlJob(
+  userId: string,
+  crawlJobId: string,
+) {
+  return migrationProjects.findFirst({
+    where: { crawlJobId, createdBy: userId },
   });
 }
 

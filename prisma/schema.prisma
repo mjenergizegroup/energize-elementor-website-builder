@@ -33,6 +33,7 @@ model Client {
 
 model MigrationProject {
   id                String   @id @default(cuid())
+  crawlJobId        String?  @unique
   clientId          String?
   client            Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
   name              String
