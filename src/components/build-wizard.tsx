@@ -25,6 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Combobox } from "@/components/ui/combobox";
 import { TemplateImporter } from "@/components/template-importer";
+import { DependencyResolver } from "@/components/dependency-resolver";
 import { GOOGLE_FONTS } from "@/lib/google-fonts";
 import { cn } from "@/lib/utils";
 import type { BrandKit, UploadedAsset } from "@/lib/types";
@@ -34,6 +35,8 @@ import type {
   TemplateCompileBundle,
   TemplateMappingManifest,
 } from "@/lib/template-import/types";
+import type { MigrationResolution } from "@/lib/migration/types";
+import { migrationReadiness } from "@/lib/migration/dependencies";
 import {
   BUILD_WIZARD_STEPS,
   type BuildWizardStep,
@@ -297,6 +300,8 @@ export function BuildWizard({
     useState<TemplateMappingManifest | null>(null);
   const [templateCompileBundle, setTemplateCompileBundle] =
     useState<TemplateCompileBundle | null>(null);
+  const [dependencyResolutions, setDependencyResolutions] =
+    useState<MigrationResolution[]>([]);
 
   const buildTypeLabel =
     buildType === "landing-page"
@@ -595,6 +600,13 @@ export function BuildWizard({
         return null;
       case 4:
         if (deployMode === "branding-only") return null;
+        if (
+          buildType === "migrate" &&
+          templateCompileBundle &&
+          !migrationReadiness(dependencyResolutions).ready
+        ) {
+          return "Resolve or explicitly accept every template dependency before review.";
+        }
         if (!markdownName) return "Upload the approved markdown content.";
         if (detectedPages.length === 0)
           return "No pages were detected. Check the uploaded markdown structure.";
@@ -1346,6 +1358,15 @@ export function BuildWizard({
                     onManifestChange={setTemplateManifest}
                     onCompileChange={setTemplateCompileBundle}
                   />
+                  {templateCompileBundle && (
+                    <>
+                      <SectionLabel>Dependency resolution</SectionLabel>
+                      <DependencyResolver
+                        bundle={templateCompileBundle}
+                        onChange={setDependencyResolutions}
+                      />
+                    </>
+                  )}
                 </>
               )}
               {deployMode === "branding-only" ? (
@@ -1521,6 +1542,17 @@ export function BuildWizard({
                 <Review
                   label="Portable compile"
                   value={`${templateCompileBundle.totals.compiled} artifacts, ${templateCompileBundle.totals.ready} ready, ${templateCompileBundle.totals.review} need review`}
+                  onEdit={() => setStep(4)}
+                />
+              )}
+              {buildType === "migrate" && dependencyResolutions.length > 0 && (
+                <Review
+                  label="Dependencies"
+                  value={
+                    migrationReadiness(dependencyResolutions).ready
+                      ? "All dependencies resolved"
+                      : `${migrationReadiness(dependencyResolutions).unresolved} unresolved, ${migrationReadiness(dependencyResolutions).blocked} blocked`
+                  }
                   onEdit={() => setStep(4)}
                 />
               )}

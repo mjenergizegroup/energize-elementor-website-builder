@@ -79,6 +79,7 @@ export interface MigrationResolution {
     | "widget"
     | "shortcode"
     | "dynamic-binding"
+    | "external-url"
     | "theme-builder-target";
   source: string;
   status: "unresolved" | "resolved" | "accepted" | "blocked";

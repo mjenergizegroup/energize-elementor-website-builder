@@ -52,6 +52,18 @@ classic sections, columns, containers, headings, text, buttons, and images into
 V4 Atomic elements. Legacy embeds and unsupported widgets remain explicit
 review items, so an incomplete conversion is never marked deployable.
 
+## Dependency resolution
+
+Compiled template artifacts produce a deterministic dependency ledger for
+images, internal pages, blog references, and external URLs. Duplicate
+dependencies share one stable ledger entry while retaining every source
+reference.
+
+Each entry must be marked `resolved`, explicitly `accepted`, or `blocked`.
+Unresolved and blocked entries keep the migration review gate closed. Accepted
+entries are intentional exceptions recorded in project state, not silently
+ignored dependencies.
+
 ## Database rollout
 
 The Prisma schema includes the `MigrationProject` model. Do not run
