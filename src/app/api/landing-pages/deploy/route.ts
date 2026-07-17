@@ -10,6 +10,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import { checkDeployRateLimit } from "@/lib/rate-limit";
 import { WpClient } from "@/lib/wp/client";
+import { validateBrandKitAssets } from "@/lib/security/uploads";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -138,6 +139,7 @@ export async function POST(req: NextRequest) {
   let body: z.infer<typeof bodySchema>;
   try {
     body = bodySchema.parse(await req.json());
+    validateBrandKitAssets(body.brandKit);
     for (const page of body.pages) {
       assertLandingPageTemplateName(page.templateName);
     }

@@ -52,6 +52,19 @@ classic sections, columns, containers, headings, text, buttons, and images into
 V4 Atomic elements. Legacy embeds and unsupported widgets remain explicit
 review items, so an incomplete conversion is never marked deployable.
 
+Approved structured content is matched to selected templates by exact slug and
+then page role. Heading, rich-text, image, and link slots replace compatible
+Atomic placeholders in document order. Unused source placeholders are removed,
+and approved content that exceeds the template slot count is appended in a
+standard Atomic section. Existing Atomic layout classes and local styles remain
+in place. Classic source layouts receive semantic Atomic Foundation classes
+during conversion.
+
+The wizard persists the normalized mapping, reconstructs reviewable source pages
+for media inventory, dry-runs media, uploads only after the explicit final
+action, and prepares the page artifacts again with destination media IDs and
+reviewed alt text before the no-write page dry run.
+
 ## Dependency resolution
 
 Compiled template artifacts produce a deterministic dependency ledger for

@@ -248,6 +248,7 @@ export function TemplateImporter({
         transition={reduceMotion ? { duration: 0 } : SPRING_LAYOUT}
         role="button"
         tabIndex={0}
+        aria-busy={busy}
         aria-label="Upload Elementor or other JSON template files"
         aria-disabled={busy}
         onClick={() => !busy && inputRef.current?.click()}
@@ -277,7 +278,7 @@ export function TemplateImporter({
             : { scale: dragging ? 1.008 : 1, backgroundColor: dragging ? "#f9ecec" : "#ffffff" }
         }
         className={cn(
-          "flex min-h-36 cursor-pointer items-center justify-between gap-6 border-2 border-dashed p-6 outline-none",
+          "flex min-h-36 cursor-pointer flex-col items-stretch justify-between gap-6 border-2 border-dashed p-6 outline-none sm:flex-row sm:items-center",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-red)]",
           dragging
             ? "border-[var(--color-red)]"
@@ -285,7 +286,7 @@ export function TemplateImporter({
           busy && "cursor-wait",
         )}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex min-w-0 items-center gap-4">
           <motion.div
             animate={
               analyzing && !reduceMotion
@@ -303,7 +304,7 @@ export function TemplateImporter({
           >
             {analyzing ? <LoaderCircle className="size-5" /> : <UploadCloud className="size-5" />}
           </motion.div>
-          <div>
+          <div className="min-w-0">
             <p className="text-[15px] font-bold text-[var(--color-black)]">
               {analyzing ? "Analyzing template batch" : "Drop JSON templates here"}
             </p>
@@ -556,6 +557,7 @@ function CompileSummary({
       transition={reduceMotion ? { duration: 0 } : { duration: 0.24, ease: EASE_OUT }}
       className="border-2 border-[var(--color-black)]"
       aria-label="Portable compile result"
+      aria-live="polite"
     >
       <div className="flex flex-wrap items-center justify-between gap-4 bg-[var(--color-black)] p-4 text-white">
         <div className="flex items-center gap-3">

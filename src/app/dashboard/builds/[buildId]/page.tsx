@@ -135,7 +135,7 @@ export default async function BuildDetailPage({
           <div className="mt-3 flex flex-wrap items-center gap-3 text-[12px] text-[var(--color-muted)]">
             <Badge variant={statusVariant(build.status)}>{build.status}</Badge>
             <span>{buildTypeLabel(landingPageBuild)}</span>
-            <span>{landingPageBuild ? "Google Ads" : `${build.client?.theme ?? "Pending"} theme`}</span>
+            <span>{landingPageBuild ? "Google Ads" : "Atomic website drafts"}</span>
             <span>{formatDate(build.deployedAt ?? build.createdAt)}</span>
             <span>Build ID: {build.id}</span>
           </div>
@@ -275,8 +275,8 @@ export default async function BuildDetailPage({
             <InfoRow label="Client" value={build.client?.name ?? "Unknown client"} />
             <InfoRow label="Build type" value={buildTypeLabel(landingPageBuild)} />
             <InfoRow
-              label={landingPageBuild ? "Campaign type" : "Theme"}
-              value={landingPageBuild ? "Google Ads" : build.client?.theme ?? "Pending"}
+              label="Workflow"
+              value={landingPageBuild ? "Google Ads" : "Atomic website"}
             />
             <InfoRow label="WP Target" value={build.client?.wpSiteUrl ?? "Pending"} />
             <InfoRow label="Status" value={<Badge variant={statusVariant(build.status)}>{build.status}</Badge>} />

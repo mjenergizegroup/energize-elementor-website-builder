@@ -14,6 +14,7 @@ import {
   type MigrationResolution,
 } from "./types";
 import type { MigrationDeploymentRecord } from "./deploy/types";
+import type { TemplateContentMapping } from "./content/types";
 
 export interface CreateMigrationProjectInput {
   name: string;
@@ -229,6 +230,7 @@ export async function saveMigrationDeploymentPlan(
   projectId: string,
   bundle: TemplateCompileBundle,
   resolutions: MigrationResolution[],
+  contentMappings: TemplateContentMapping[],
   deployment: MigrationDeploymentRecord,
   clientId?: string,
 ) {
@@ -240,6 +242,7 @@ export async function saveMigrationDeploymentPlan(
       status: deployment.status === "ready" ? "ready" : "active",
       stage: "deploy",
       selectedTemplates: toInputJson(bundle),
+      mappings: toInputJson(contentMappings),
       resolutions: toInputJson(resolutions),
       deployment: toInputJson(deployment),
       lastError:
@@ -307,6 +310,12 @@ export function parseMigrationResolutions(
   value: Prisma.JsonValue,
 ): MigrationResolution[] {
   return parseJsonArray<MigrationResolution>(value);
+}
+
+export function parseMigrationContentMappings(
+  value: Prisma.JsonValue,
+): TemplateContentMapping[] {
+  return parseJsonArray<TemplateContentMapping>(value);
 }
 
 export function parseMigrationDeployment(

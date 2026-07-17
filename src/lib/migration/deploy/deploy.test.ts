@@ -73,6 +73,24 @@ async function main() {
   const preflight = preflightMigrationDeployment(source, []);
   assert.equal(preflight.ready, true);
   assert.equal(preflight.pages.length, 2);
+  assert.equal(
+    (preflight.pages[0].elementorData[0] as { widgetType: string }).widgetType,
+    "e-heading",
+  );
+  assert.equal(preflight.pages[0].elementorVersion, "4.1.1");
+  const injectedPreflight = preflightMigrationDeployment(source, [], [
+    contentMapping("home", "Destination Home"),
+    contentMapping("about", "Destination About"),
+  ]);
+  assert.equal(injectedPreflight.ready, true);
+  assert.match(
+    JSON.stringify(injectedPreflight.pages[0].elementorData),
+    /Destination Home/,
+  );
+  assert.doesNotMatch(
+    JSON.stringify(injectedPreflight.pages[0].elementorData),
+    /"Home"/,
+  );
 
   const mediaBundle = bundle();
   mediaBundle.pages = [mediaBundle.pages[0]];
@@ -86,8 +104,10 @@ async function main() {
   mediaBundle.pages[0].status = "review";
   mediaBundle.pages[0].transformations.mediaIdsCleared = 1;
   const widget = mediaBundle.pages[0].artifact?.content as Array<{
+    widgetType: string;
     settings: Record<string, unknown>;
   }>;
+  widget[0].widgetType = "image";
   widget[0].settings.image = {
     url: "https://source.example.com/photo.jpg",
     id: "",
@@ -110,10 +130,13 @@ async function main() {
     },
   ]);
   assert.equal(mappedPreflight.ready, true);
-  assert.deepEqual(
-    (mappedPreflight.pages[0].elementorData[0] as { settings: { image: unknown } })
-      .settings.image,
-    { url: "https://wp.example.com/photo.jpg", id: 42 },
+  assert.match(
+    JSON.stringify(mappedPreflight.pages[0].elementorData),
+    /https:\/\/wp\.example\.com\/photo\.jpg/,
+  );
+  assert.doesNotMatch(
+    JSON.stringify(mappedPreflight.pages[0].elementorData),
+    /source\.example\.com/,
   );
 
   const prepared = prepareMigrationDeployment(
@@ -195,6 +218,26 @@ async function main() {
   );
 
   console.log("migration deployment checks passed");
+}
+
+function contentMapping(analysisId: string, text: string) {
+  return {
+    analysisId,
+    content: {
+      schemaVersion: "1" as const,
+      sourcePageId: `${analysisId}-content`,
+      title: text,
+      slug: analysisId,
+      slots: [
+        {
+          id: `${analysisId}-heading`,
+          kind: "heading" as const,
+          text,
+          level: 1 as const,
+        },
+      ],
+    },
+  };
 }
 
 void main();

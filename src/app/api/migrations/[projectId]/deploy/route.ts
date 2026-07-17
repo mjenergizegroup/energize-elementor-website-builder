@@ -9,6 +9,8 @@ import { reconcileDependencyLedger } from "@/lib/migration/dependencies";
 import {
   parseMigrationCompileBundle,
   parseMigrationDeployment,
+  parseMigrationContentMappings,
+  parseMigrationAssets,
   parseMigrationResolutions,
   getMigrationProject,
   saveMigrationDeploymentPlan,
@@ -21,12 +23,15 @@ import {
 import { preflightMigrationDeployment } from "@/lib/migration/deploy/preflight";
 import {
   migrationCompileBundleSchema,
+  migrationContentMappingsSchema,
   migrationDeployActionSchema,
 } from "@/lib/migration/deploy/schema";
 import type {
   MigrationDeploymentRecord,
   MigrationPageGateway,
 } from "@/lib/migration/deploy/types";
+import { validateBrandKitAssets } from "@/lib/security/uploads";
+import { remapContentMedia } from "@/lib/migration/content/media";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -66,6 +71,7 @@ export async function POST(
             { status: 409 },
           );
         }
+        validateBrandKitAssets(parsed.data.destination.brandKit);
         const client = await resolveClient(userId, undefined, {
           ...parsed.data.destination,
           theme: undefined,
@@ -76,15 +82,33 @@ export async function POST(
         parsed.data.bundle,
         parsed.data.resolutions,
       );
+      const contentMedia = remapContentMedia(
+        parsed.data.contentMappings,
+        parseMigrationAssets(project.assets),
+      );
       const deployment = prepareMigrationDeployment(
         parsed.data.bundle,
         reconciledResolutions,
+        new Date(),
+        contentMedia.mappings,
       );
+      if (contentMedia.blockers.length > 0) {
+        deployment.status = "prepared";
+        deployment.blockers = [
+          ...deployment.blockers,
+          ...contentMedia.blockers,
+        ];
+        deployment.items = deployment.items.map((item) => ({
+          ...item,
+          status: "pending",
+        }));
+      }
       await saveMigrationDeploymentPlan(
         userId,
         projectId,
         parsed.data.bundle,
         reconciledResolutions,
+        contentMedia.mappings,
         deployment,
         clientId,
       );
@@ -94,9 +118,27 @@ export async function POST(
     const storedBundle = parseMigrationCompileBundle(project.selectedTemplates);
     const bundle = migrationCompileBundleSchema.parse(storedBundle);
     const resolutions = parseMigrationResolutions(project.resolutions);
+    const storedContentMappings = migrationContentMappingsSchema.parse(
+      parseMigrationContentMappings(project.mappings),
+    );
+    const contentMedia = remapContentMedia(
+      storedContentMappings,
+      parseMigrationAssets(project.assets),
+    );
+    const contentMappings = contentMedia.mappings;
+    if (contentMedia.blockers.length > 0) {
+      return Response.json(
+        { error: contentMedia.blockers.join(" ") },
+        { status: 409 },
+      );
+    }
     if (parsed.data.action === "preflight") {
       return Response.json({
-        preflight: preflightMigrationDeployment(bundle, resolutions),
+        preflight: preflightMigrationDeployment(
+          bundle,
+          resolutions,
+          contentMappings,
+        ),
       });
     }
 
@@ -183,6 +225,7 @@ export async function POST(
         dryRun: parsed.data.dryRun,
         retryFailedOnly: parsed.data.retryFailedOnly,
         buildId,
+        contentMappings,
       },
     );
     if (buildId) await finalizeBuild(buildId, deployment);

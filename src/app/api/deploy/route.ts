@@ -10,6 +10,7 @@ import { runDeploy } from "@/lib/deploy/orchestrate";
 import { deployBodySchema } from "@/lib/deploy/schema";
 import type { DeployEvent, DeployedPageRecord } from "@/lib/deploy/types";
 import type { AccessibilityReport } from "@/lib/accessibility/audit";
+import { validateBrandKitAssets } from "@/lib/security/uploads";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
   let body: z.infer<typeof deployBodySchema>;
   try {
     body = deployBodySchema.parse(await req.json());
+    validateBrandKitAssets(body.brandKit);
   } catch (e) {
     return new Response(
       JSON.stringify({

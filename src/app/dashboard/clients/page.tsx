@@ -59,7 +59,7 @@ export default async function ClientsPage() {
         <div className="grid-head client-grid">
           <div>#</div>
           <div>Practice</div>
-          <div>Theme</div>
+          <div>Workflow</div>
           <div>WP Target</div>
           <div />
         </div>
@@ -75,7 +75,9 @@ export default async function ClientsPage() {
                   Last build: {formatDate(client.builds[0]?.deployedAt ?? client.builds[0]?.createdAt)}
                 </span>
               </div>
-              <div className="row-meta">{client.theme}</div>
+              <div className="row-meta">
+                {client.theme === "landing-page" ? "Google Ads" : "Atomic Website"}
+              </div>
               <div className="row-sub truncate">{client.wpSiteUrl}</div>
               <Link
                 href={`/dashboard/new?type=new-website&clientId=${client.id}`}

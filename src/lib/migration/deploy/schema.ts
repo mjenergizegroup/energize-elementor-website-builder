@@ -119,11 +119,64 @@ const destinationSchema = z.object({
   }),
 });
 
+const normalizedSlotSchema = z.discriminatedUnion("kind", [
+  z.object({
+    id: z.string().min(1).max(500),
+    kind: z.literal("heading"),
+    text: z.string().max(20_000),
+    level: z.union([
+      z.literal(1),
+      z.literal(2),
+      z.literal(3),
+      z.literal(4),
+      z.literal(5),
+      z.literal(6),
+    ]),
+  }),
+  z.object({
+    id: z.string().min(1).max(500),
+    kind: z.literal("rich-text"),
+    html: z.string().max(200_000),
+  }),
+  z.object({
+    id: z.string().min(1).max(500),
+    kind: z.literal("image"),
+    sourceUrl: z.string().regex(/^(?:https?:\/\/|\/)/).max(5_000),
+    altText: z.string().max(500),
+  }),
+  z.object({
+    id: z.string().min(1).max(500),
+    kind: z.literal("link"),
+    label: z.string().max(2_000),
+    href: z
+      .string()
+      .regex(/^(?:https?:\/\/|\/|#|mailto:|tel:)/i)
+      .max(5_000),
+  }),
+]);
+
+const contentMappingSchema = z.object({
+  analysisId: z.string().min(1).max(500),
+  content: z.object({
+    schemaVersion: z.literal("1"),
+    sourcePageId: z.string().min(1).max(500),
+    title: z.string().min(1).max(500),
+    slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(200),
+    slots: z.array(normalizedSlotSchema).min(1).max(2_000),
+  }),
+});
+
+export const migrationContentMappingsSchema = z
+  .array(contentMappingSchema)
+  .min(1)
+  .max(20);
+
 export const migrationDeployActionSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("prepare"),
     bundle: migrationCompileBundleSchema,
     resolutions: z.array(resolutionSchema).max(10_000),
+    contentMappings: migrationContentMappingsSchema,
     destination: destinationSchema.optional(),
   }),
   z.object({ action: z.literal("preflight") }),

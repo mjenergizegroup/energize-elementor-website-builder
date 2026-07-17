@@ -108,6 +108,25 @@ const sensitive = analyze("unsafe.json", {
 assert.equal(sensitive.status, "blocked");
 assert.deepEqual(sensitive.dependencies.sensitiveFieldNames, ["api_key"]);
 
+const unsafeKeys = analyze(
+  "prototype.json",
+  JSON.parse('{"title":"Unsafe","type":"page","version":"0.4","content":[],"__proto__":{"polluted":true}}'),
+);
+assert.equal(unsafeKeys.status, "blocked");
+assert.ok(unsafeKeys.warnings.some((item) => item.code === "unsafe-object-keys"));
+
+let deeplyNested: Record<string, unknown> = {};
+const deepRoot = deeplyNested;
+for (let index = 0; index < 105; index += 1) {
+  deeplyNested.child = {};
+  deeplyNested = deeplyNested.child as Record<string, unknown>;
+}
+const tooDeep = analyze("deep.json", deepRoot);
+assert.equal(tooDeep.status, "blocked");
+assert.ok(
+  tooDeep.warnings.some((item) => item.code === "template-complexity-limit"),
+);
+
 const invalid = invalidTemplateAnalysis({
   fileName: "broken.json",
   sizeBytes: 4,

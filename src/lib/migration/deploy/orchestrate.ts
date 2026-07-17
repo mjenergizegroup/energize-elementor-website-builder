@@ -1,5 +1,6 @@
 import type { TemplateCompileBundle } from "@/lib/template-import/types";
 import type { MigrationResolution } from "../types";
+import type { TemplateContentMapping } from "../content/types";
 import { preflightMigrationDeployment } from "./preflight";
 import type {
   MigrationDeploymentRecord,
@@ -10,8 +11,13 @@ export function prepareMigrationDeployment(
   bundle: TemplateCompileBundle,
   resolutions: MigrationResolution[],
   now = new Date(),
+  contentMappings: TemplateContentMapping[] = [],
 ): MigrationDeploymentRecord {
-  const preflight = preflightMigrationDeployment(bundle, resolutions);
+  const preflight = preflightMigrationDeployment(
+    bundle,
+    resolutions,
+    contentMappings,
+  );
   return {
     schemaVersion: 1,
     status: preflight.ready ? "ready" : "prepared",
@@ -44,9 +50,14 @@ export async function runMigrationDeployment(
     retryFailedOnly?: boolean;
     buildId?: string;
     now?: () => Date;
+    contentMappings?: TemplateContentMapping[];
   } = {},
 ): Promise<MigrationDeploymentRecord> {
-  const preflight = preflightMigrationDeployment(bundle, resolutions);
+  const preflight = preflightMigrationDeployment(
+    bundle,
+    resolutions,
+    options.contentMappings,
+  );
   const dryRun = options.dryRun ?? true;
   const now = options.now ?? (() => new Date());
   const startedAt = now().toISOString();

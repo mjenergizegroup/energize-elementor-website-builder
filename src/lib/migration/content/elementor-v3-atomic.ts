@@ -1,4 +1,5 @@
 import { button, flexbox, heading, image, legacyEmbed, paragraph } from "@/lib/elementor/atomic/elements";
+import { CLASS_IDS } from "@/lib/elementor/atomic/foundation";
 import type { AtomicElement } from "@/lib/elementor/atomic/types";
 import type { AtomicConversionResult, ConversionReviewItem, TemplateConversionAdapter } from "./types";
 
@@ -26,19 +27,34 @@ export const elementorV3AtomicAdapter: TemplateConversionAdapter = {
       }
       let result: AtomicElement | null = null;
       if (value.elType === "section" || value.elType === "column" || value.elType === "container") {
-        result = flexbox([], children, value.elType === "section" ? "section" : "div");
+        result = flexbox(
+          value.elType === "section"
+            ? [CLASS_IDS.section]
+            : value.elType === "column"
+              ? [CLASS_IDS.stack]
+              : [CLASS_IDS.container, CLASS_IDS.stack],
+          children,
+          value.elType === "section" ? "section" : "div",
+        );
       } else if (value.elType === "widget") {
         const widget = String(value.widgetType ?? "");
         if (widget === "heading") {
           const level = normalizeHeading(settings.header_size);
-          result = heading(String(settings.title ?? ""), level, []);
+          result = heading(String(settings.title ?? ""), level, [headingClass(level)]);
         } else if (widget === "text-editor") {
-          result = paragraph(String(settings.editor ?? ""), []);
+          result = paragraph(String(settings.editor ?? ""), [CLASS_IDS.body]);
         } else if (widget === "button") {
-          result = button(String(settings.text ?? ""), linkUrl(settings.link), []);
+          result = button(String(settings.text ?? ""), linkUrl(settings.link), [
+            CLASS_IDS.button,
+            CLASS_IDS.buttonPrimary,
+          ]);
         } else if (widget === "image") {
           const source = isRecord(settings.image) ? settings.image : {};
-          result = image(String(source.url ?? ""), String(settings.image_alt ?? settings.alt ?? ""), []);
+          result = image(
+            String(source.url ?? ""),
+            String(settings.image_alt ?? settings.alt ?? ""),
+            [CLASS_IDS.media],
+          );
         } else if (widget === "html" || widget === "shortcode" || widget === "google_maps") {
           result = legacyEmbed(widget, settings);
           reviewItems.push(review(widget === "shortcode" ? "shortcode" : "unsupported-widget", value, `${widget} is preserved as an explicit legacy embed.`));
@@ -53,6 +69,10 @@ export const elementorV3AtomicAdapter: TemplateConversionAdapter = {
     return { adapter: { id: this.id, version: this.version }, elementorData, converted, reviewItems, deployable: reviewItems.length === 0 } satisfies AtomicConversionResult;
   },
 };
+
+function headingClass(level: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"): string {
+  return CLASS_IDS[level];
+}
 
 function isRecord(value: unknown): value is JsonRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);

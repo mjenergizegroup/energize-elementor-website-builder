@@ -19,7 +19,8 @@ See [BUILD_BRIEF.md](BUILD_BRIEF.md) for the full product brief.
 ```bash
 npm install
 cp .env.example .env.local   # fill in real values
-npm run db:push              # create tables in Neon
+npm run db:generate
+# Review the target and schema first, then run db:push when approved.
 npm run dev
 ```
 
@@ -41,11 +42,12 @@ src/lib/elementor/atomic/ Shared V4 variables, classes, elements, components,
                           and the deterministic Atomic page builder
 src/lib/injection/        Visual preset discovery and historical template
                           compatibility layer
-src/lib/parser/           Markdown -> ParsedContent (per theme). PENDING, see below.
+src/lib/parser/           Approved markdown to structured page content
 src/lib/wp/               Server-side WordPress client + brand-kit mapping
 src/lib/deploy/           Deploy orchestration (yields progress events)
-src/lib/migration/        Resumable project state, source cleanup, and classification
+src/lib/migration/        Resumable cleanup, media, conversion, blogs, and deploy
 src/app/api/deploy/       Streaming NDJSON deploy route (auth, rate limit, audit)
+src/app/api/migrations/   Authenticated resumable migration routes
 src/app/api/parse/        Markdown parse route
 src/components/build-wizard.tsx   Multi-step form + live deploy progress
 theme-templates/{theme}/  Historical V3 references and preset page coverage
@@ -55,6 +57,24 @@ wordpress-plugin/         energize-build-tool.php (WPCode-compatible snippet)
 
 Migration project state and its authenticated API are documented in
 [docs/MIGRATION_PROJECTS.md](docs/MIGRATION_PROJECTS.md).
+
+## Site migration flow
+
+1. Crawl or ingest source content and review deterministic cleanup.
+2. Inventory full-resolution media, review metadata, and dry-run uploads.
+3. Upload up to 20 JSON templates, review analysis, select page roles, and
+   compile portable artifacts.
+4. Resolve or explicitly accept every regenerated dependency-ledger item.
+5. Convert supported classic structures through the versioned Atomic adapter.
+6. Prepare deployment, run the automatic no-write dry run, and use the explicit
+   final action to create WordPress drafts.
+7. Review saved progress and result links. Retry only failed drafts when needed.
+8. Prepare and dry-run Gutenberg blog drafts after their media has destination
+   IDs.
+
+The build wizard does not ask the user to choose a theme or visual preset.
+Historical preset metadata remains server-side for compatibility with existing
+new-site builds.
 
 ### Injection flow
 
@@ -77,6 +97,18 @@ embeds. Components are Atomic-only.
 npm run verify:injection
 npm run verify:bridge
 ```
+
+### Verify the complete application
+
+```bash
+npm test
+npm run typecheck
+npm run lint
+npm run build
+```
+
+The test suite uses synthetic inputs and mocked WordPress gateways. It does not
+download external media or modify a WordPress site.
 
 ## Adding an Atomic visual preset
 
@@ -112,6 +144,11 @@ The `/page` endpoint requires Elementor 4.1.1 or newer and rejects classic
 layout or content widgets. The only accepted classic widgets are the explicit
 embed exceptions.
 
+Theme Builder display-condition deployment is not exposed through this bridge.
+Migration preflight names those targets as blockers rather than creating an
+incorrect normal page. See [docs/MIGRATION_OPERATIONS.md](docs/MIGRATION_OPERATIONS.md)
+for staging and recovery procedures.
+
 ### Verify the Elevate parser
 
 Parses the real sample (`reference-skills/anchor-periodontics-elevate-content.md`)
@@ -128,4 +165,3 @@ installation workflow, WPCode bridge setup, naming contract, t-shirt scales,
 component catalog, and regeneration commands. The existing V3 JSON files remain
 as visual and content references only. New website and landing-page deploys do
 not load them.
-```

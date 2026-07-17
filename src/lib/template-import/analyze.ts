@@ -82,6 +82,8 @@ interface WalkState {
   externalHosts: Set<string>;
   sensitiveFieldNames: Set<string>;
   settingsKeyPrefixes: Set<string>;
+  unsafeObjectKeys: Set<string>;
+  traversalLimitExceeded: boolean;
 }
 
 function isRecord(value: unknown): value is JsonRecord {
@@ -106,14 +108,26 @@ function isEmptySetting(value: unknown): boolean {
 }
 
 function inspectGenericValues(document: unknown, state: WalkState) {
-  const stack: unknown[] = [document];
+  const stack: Array<{ value: unknown; depth: number }> = [
+    { value: document, depth: 0 },
+  ];
   const urlPattern = /https?:\/\/[^\s"'<>\\)]+/g;
   const sensitivePattern = /password|secret|token|api[_-]?key|private[_-]?key/i;
+  let visited = 0;
 
   while (stack.length > 0) {
-    const value = stack.pop();
+    const current = stack.pop();
+    if (!current) break;
+    const { value, depth } = current;
+    visited += 1;
+    if (visited > 50_000 || depth > 100) {
+      state.traversalLimitExceeded = true;
+      break;
+    }
     if (Array.isArray(value)) {
-      stack.push(...value);
+      stack.push(
+        ...value.map((child) => ({ value: child, depth: depth + 1 })),
+      );
       continue;
     }
     if (!isRecord(value)) continue;
@@ -126,6 +140,9 @@ function inspectGenericValues(document: unknown, state: WalkState) {
     }
 
     for (const [key, child] of Object.entries(value)) {
+      if (key === "__proto__" || key === "prototype" || key === "constructor") {
+        state.unsafeObjectKeys.add(key);
+      }
       if (sensitivePattern.test(key)) state.sensitiveFieldNames.add(key);
       if (typeof child === "string") {
         for (const match of child.match(urlPattern) ?? []) {
@@ -136,7 +153,7 @@ function inspectGenericValues(document: unknown, state: WalkState) {
           }
         }
       } else {
-        stack.push(child);
+        stack.push({ value: child, depth: depth + 1 });
       }
     }
   }
@@ -151,6 +168,10 @@ function inspectElementorElements(content: unknown[], state: WalkState) {
     const { node, depth } = current;
     state.nodeCount += 1;
     state.maxDepth = Math.max(state.maxDepth, depth);
+    if (state.nodeCount > 50_000 || depth > 100) {
+      state.traversalLimitExceeded = true;
+      break;
+    }
 
     const elementType = typeof node.elType === "string" ? node.elType : "unknown";
     increment(state.elementTypes, elementType);
@@ -213,6 +234,8 @@ function createWalkState(): WalkState {
     externalHosts: new Set(),
     sensitiveFieldNames: new Set(),
     settingsKeyPrefixes: new Set(),
+    unsafeObjectKeys: new Set(),
+    traversalLimitExceeded: false,
   };
 }
 
@@ -395,6 +418,29 @@ export function analyzeTemplateJson(input: AnalyzeTemplateInput): TemplateAnalys
     state.settingsKeyPrefixes,
   );
   const warnings: TemplateWarning[] = [];
+
+  if (state.traversalLimitExceeded) {
+    warnings.push(
+      warning(
+        "template-complexity-limit",
+        "blocker",
+        "Template complexity limit exceeded",
+        "The template exceeds the 50,000-node or 100-level traversal limit.",
+        "Reduce the template size or nesting depth before importing it.",
+      ),
+    );
+  }
+  if (state.unsafeObjectKeys.size > 0) {
+    warnings.push(
+      warning(
+        "unsafe-object-keys",
+        "blocker",
+        "Unsafe object keys detected",
+        "The template contains object keys that are unsafe to merge or transform.",
+        "Remove prototype-related keys before importing the template.",
+      ),
+    );
+  }
 
   if (!isElementor) {
     warnings.push(

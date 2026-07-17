@@ -131,7 +131,7 @@ export default async function DashboardPage() {
           <div>#</div>
           <div>Client</div>
           <div>Type</div>
-          <div>Theme</div>
+          <div>Workflow</div>
           <div>Status</div>
           <div />
         </div>
@@ -157,7 +157,7 @@ export default async function DashboardPage() {
                   {landingPageBuild ? "Landing Page" : "Website"}
                 </div>
                 <div className="row-meta">
-                  {landingPageBuild ? "Google Ads" : build.client?.theme ?? "Pending"}
+                  {landingPageBuild ? "Google Ads" : "Atomic Website"}
                 </div>
                 <div>
                   <Badge variant={statusVariant(build.status)}>{build.status}</Badge>
@@ -182,7 +182,7 @@ export default async function DashboardPage() {
         <div className="grid-head client-grid">
           <div>#</div>
           <div>Practice</div>
-          <div>Theme</div>
+          <div>Workflow</div>
           <div>WP Target</div>
           <div />
         </div>
@@ -193,7 +193,9 @@ export default async function DashboardPage() {
             <div key={client.id} className="grid-row client-grid">
               <div className="idx">{String(index + 1).padStart(2, "0")}</div>
               <div className="row-name truncate">{client.name}</div>
-              <div className="row-meta">{client.theme}</div>
+              <div className="row-meta">
+                {client.theme === "landing-page" ? "Google Ads" : "Atomic Website"}
+              </div>
               <div className="row-sub truncate">{client.wpSiteUrl}</div>
               <Link
                 href={`/dashboard/new?type=new-website&clientId=${client.id}`}

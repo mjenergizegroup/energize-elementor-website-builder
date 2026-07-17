@@ -36,6 +36,9 @@ assert.match(seoFilename("Smiling Dental Patient", inventory[0].originalUrl), /^
 assert.equal(isPrivateAddress("127.0.0.1"), true);
 assert.equal(isPrivateAddress("169.254.169.254"), true);
 assert.equal(isPrivateAddress("10.2.3.4"), true);
+assert.equal(isPrivateAddress("100.64.0.1"), true);
+assert.equal(isPrivateAddress("198.51.100.8"), true);
+assert.equal(isPrivateAddress("2001:db8::1"), true);
 assert.equal(isPrivateAddress("::1"), true);
 assert.equal(isPrivateAddress("8.8.8.8"), false);
 await assert.rejects(() => assertPublicImageUrl("http://localhost/image.jpg", async () => ["127.0.0.1"]), /private/);

@@ -14,6 +14,11 @@ export interface NormalizedPageContent {
   slots: NormalizedContentSlot[];
 }
 
+export interface TemplateContentMapping {
+  analysisId: string;
+  content: NormalizedPageContent;
+}
+
 export interface ConversionReviewItem {
   id: string;
   code: "unsupported-widget" | "dynamic-binding" | "shortcode" | "invalid-node";

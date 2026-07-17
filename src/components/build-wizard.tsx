@@ -38,6 +38,11 @@ import type {
 import type { MigrationResolution } from "@/lib/migration/types";
 import { migrationReadiness } from "@/lib/migration/dependencies";
 import {
+  contentMappingsToSourcePages,
+  mapStructuredPagesToTemplates,
+  resolveContentImageUrls,
+} from "@/lib/migration/content/structured";
+import {
   BUILD_WIZARD_STEPS,
   type BuildWizardStep,
 } from "@/lib/build-wizard/flow";
@@ -608,7 +613,18 @@ export function BuildWizard({
           if (!migrationReadiness(dependencyResolutions).ready) {
             return "Resolve or explicitly accept every template dependency before review.";
           }
-          return null;
+          if (!markdownName) return "Upload the approved markdown content.";
+          if (detectedPages.length === 0) {
+            return "No pages were detected. Check the uploaded markdown structure.";
+          }
+          if (!detectedPages.some((page) => page.selected)) {
+            return "Select at least one approved content page.";
+          }
+          const contentMap = mapStructuredPagesToTemplates(
+            templateCompileBundle,
+            detectedPages,
+          );
+          return contentMap.errors[0] ?? null;
         }
         if (!markdownName) return "Upload the approved markdown content.";
         if (detectedPages.length === 0)
@@ -663,9 +679,21 @@ export function BuildWizard({
     if (!templateCompileBundle) {
       throw new Error("Compile the selected templates before deployment.");
     }
+    const contentMap = mapStructuredPagesToTemplates(
+      templateCompileBundle,
+      detectedPages,
+    );
+    if (contentMap.errors.length > 0) {
+      throw new Error(contentMap.errors[0]);
+    }
+    const contentMappings = resolveContentImageUrls(
+      contentMap.mappings,
+      crawlUrl || siteUrl,
+    );
     let projectId = migrationProjectId;
     const retryFailedOnly = Boolean(projectId);
     if (!projectId) {
+      upsertEvent("Preparing migration project", "start");
       const projectResponse = await fetch("/api/migrations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -682,41 +710,143 @@ export function BuildWizard({
         throw new Error(projectJson.error ?? "Could not create migration project.");
       }
       projectId = projectJson.project.id as string;
-
-      const prepareResponse = await fetch(
-        `/api/migrations/${projectId}/deploy`,
+      upsertEvent("Preparing migration project", "ok");
+      upsertEvent("Saving approved source content", "start");
+      const sourceResponse = await fetch(
+        `/api/migrations/${projectId}/source`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            action: "prepare",
-            bundle: templateCompileBundle,
-            resolutions: dependencyResolutions,
-            ...(!initialClient
-              ? {
-                  destination: {
-                    name,
-                    slug,
-                    wpSiteUrl: siteUrl,
-                    wpUsername: username,
-                    wpAppPassword: appPassword,
-                    brandKit: buildBrandKit(),
-                  },
-                }
-              : {}),
+            pages: contentMappingsToSourcePages(
+              contentMappings,
+              crawlUrl || siteUrl,
+            ),
           }),
         },
       );
-      const prepareJson = await prepareResponse.json();
-      if (!prepareResponse.ok) {
+      const sourceJson = await sourceResponse.json();
+      if (!sourceResponse.ok) {
+        throw new Error(sourceJson.error ?? "Could not save migration content.");
+      }
+      upsertEvent("Saving approved source content", "ok");
+      upsertEvent("Building full-resolution media inventory", "start");
+      const inventoryResponse = await fetch(
+        `/api/migrations/${projectId}/media`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "inventory" }),
+        },
+      );
+      const inventoryJson = await inventoryResponse.json();
+      if (!inventoryResponse.ok) {
+        throw new Error(inventoryJson.error ?? "Could not inventory migration media.");
+      }
+      upsertEvent("Building full-resolution media inventory", "ok");
+
+      const prepare = async () => {
+        const prepareResponse = await fetch(
+          `/api/migrations/${projectId}/deploy`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "prepare",
+              bundle: templateCompileBundle,
+              resolutions: dependencyResolutions,
+              contentMappings,
+              ...(!initialClient
+                ? {
+                    destination: {
+                      name,
+                      slug,
+                      wpSiteUrl: siteUrl,
+                      wpUsername: username,
+                      wpAppPassword: appPassword,
+                      brandKit: buildBrandKit(),
+                    },
+                  }
+                : {}),
+            }),
+          },
+        );
+        const prepareJson = await prepareResponse.json();
+        if (!prepareResponse.ok) {
+          throw new Error(
+            prepareJson.error ?? "Could not prepare migration deployment.",
+          );
+        }
+        return prepareJson.deployment as {
+          status: string;
+          blockers: string[];
+        };
+      };
+
+      upsertEvent("Running server preflight", "start");
+      const initialPreparation = await prepare();
+      const nonMediaBlockers = initialPreparation.blockers.filter(
+        (blocker) => !blocker.includes("must be migrated before page deployment"),
+      );
+      if (nonMediaBlockers.length > 0) {
+        setEvents(
+          nonMediaBlockers.map((message, index) => ({
+            key: `preflight-${index}`,
+            label: "Migration preflight blocker",
+            status: "fail" as const,
+            message,
+          })),
+        );
+        setFinished("failed");
+        return;
+      }
+      upsertEvent("Running server preflight", "ok");
+
+      upsertEvent("Validating media migration", "start");
+      const mediaDryRunResponse = await fetch(
+        `/api/migrations/${projectId}/media`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "migrate", dryRun: true }),
+        },
+      );
+      const mediaDryRunJson = await mediaDryRunResponse.json();
+      if (!mediaDryRunResponse.ok) {
+        throw new Error(mediaDryRunJson.error ?? "Migration media dry run failed.");
+      }
+      const mediaNeedsReview = (
+        mediaDryRunJson.assets as Array<{ status: string; error?: string }>
+      ).find((asset) => asset.status === "review" || asset.status === "failed");
+      if (mediaNeedsReview) {
         throw new Error(
-          prepareJson.error ?? "Could not prepare migration deployment.",
+          mediaNeedsReview.error ?? "Review image alt text before migration.",
         );
       }
-      const prepared = prepareJson.deployment as {
-        status: string;
-        blockers: string[];
-      };
+      upsertEvent("Validating media migration", "ok");
+      upsertEvent("Uploading reviewed media", "start");
+      const mediaResponse = await fetch(
+        `/api/migrations/${projectId}/media`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "migrate", dryRun: false }),
+        },
+      );
+      const mediaJson = await mediaResponse.json();
+      if (!mediaResponse.ok) {
+        throw new Error(mediaJson.error ?? "Migration media upload failed.");
+      }
+      const mediaFailure = (
+        mediaJson.assets as Array<{ status: string; error?: string }>
+      ).find((asset) => asset.status === "failed");
+      if (mediaFailure) {
+        throw new Error(mediaFailure.error ?? "Migration media upload failed.");
+      }
+      upsertEvent("Uploading reviewed media", "ok");
+
+      upsertEvent("Revalidating mapped page content", "start");
+      const prepared = await prepare();
       if (prepared.status !== "ready") {
         setEvents(
           prepared.blockers.map((message, index) => ({
@@ -729,7 +859,9 @@ export function BuildWizard({
         setFinished("failed");
         return;
       }
+      upsertEvent("Revalidating mapped page content", "ok");
 
+      upsertEvent("Running no-write page dry run", "start");
       const dryRunResponse = await fetch(
         `/api/migrations/${projectId}/deploy`,
         {
@@ -742,6 +874,7 @@ export function BuildWizard({
       if (!dryRunResponse.ok) {
         throw new Error(dryRunJson.error ?? "Migration dry run failed.");
       }
+      upsertEvent("Running no-write page dry run", "ok");
       setMigrationProjectId(projectId);
     }
 
@@ -842,9 +975,10 @@ export function BuildWizard({
       try {
         await deployMigration();
       } catch (e) {
-        toast.error(
-          e instanceof Error ? e.message : "Migration deployment failed.",
-        );
+        const message =
+          e instanceof Error ? e.message : "Migration deployment failed.";
+        toast.error(message);
+        upsertEvent("Migration stopped", "fail", message);
         setFinished("failed");
       } finally {
         setDeploying(false);
@@ -1008,7 +1142,12 @@ export function BuildWizard({
             }
           />
           <div className="space-y-6 bg-[var(--color-surface)] p-6 sm:p-8">
-            <ul className="space-y-2 text-sm">
+            <ul
+              className="space-y-2 text-sm"
+              aria-live="polite"
+              aria-busy={deploying}
+              aria-label="Deployment progress"
+            >
               {events.map((e) => (
                 <li
                   key={e.key}
@@ -1165,11 +1304,17 @@ export function BuildWizard({
                 <Button
                   variant="outline"
                   onClick={() => {
-                    setFinished(null);
-                    setStep(4);
+                    if (buildType === "migrate" && migrationProjectId) {
+                      void deploy();
+                    } else {
+                      setFinished(null);
+                      setStep(4);
+                    }
                   }}
                 >
-                  Back to review
+                  {buildType === "migrate" && migrationProjectId
+                    ? "Retry failed drafts"
+                    : "Back to review"}
                 </Button>
               )}
             </div>
@@ -2048,6 +2193,7 @@ function StepperRail({
               <button
                 type="button"
                 disabled={i > step}
+                aria-current={active ? "step" : undefined}
                 onClick={() => i <= step && setStep(i)}
                 className={`relative flex w-full items-center gap-3 border-b border-[var(--color-black)] px-4 py-[14px] text-left transition-colors ${
                   active
@@ -2088,6 +2234,11 @@ function StepperRail({
       <div className="space-y-2 border-t-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4">
         <div className="h-1 overflow-hidden bg-[#E0DDD6]">
           <div
+            role="progressbar"
+            aria-label="Build setup progress"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={percent}
             className="h-full bg-[var(--color-red)] transition-all duration-200"
             style={{ width: `${percent}%` }}
           />

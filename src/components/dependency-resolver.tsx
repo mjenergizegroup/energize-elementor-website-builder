@@ -21,7 +21,7 @@ export function DependencyResolver({ bundle, onChange }: {
   }
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2" aria-live="polite">
         <Badge variant={readiness.ready ? "default" : "secondary"}>{readiness.ready ? "Deployment ready" : "Resolution required"}</Badge>
         <Badge variant="outline">{readiness.unresolved} unresolved</Badge>
         <Badge variant={readiness.blocked ? "destructive" : "outline"}>{readiness.blocked} blocked</Badge>
@@ -37,7 +37,7 @@ export function DependencyResolver({ bundle, onChange }: {
                 <p className="truncate text-sm font-semibold">{item.source}</p>
                 {item.note && <p className="text-xs text-[var(--color-muted)]">{item.note}</p>}
               </div>
-              <select aria-label={`Resolution for ${item.source}`} value={item.status} onChange={(event) => update(item.id, event.target.value as MigrationResolution["status"])} className="h-10 border-2 border-[var(--color-black)] bg-[var(--color-surface)] px-3 text-sm font-semibold">
+              <select aria-label={`Resolution for ${item.source}`} value={item.status} onChange={(event) => update(item.id, event.target.value as MigrationResolution["status"])} className="h-10 w-full border-2 border-[var(--color-black)] bg-[var(--color-surface)] px-3 text-sm font-semibold">
                 <option value="unresolved">Needs resolution</option>
                 <option value="resolved">Resolved with mapping</option>
                 <option value="accepted">Accepted exception</option>

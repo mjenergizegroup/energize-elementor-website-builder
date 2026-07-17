@@ -2,6 +2,9 @@ import type {
   CompiledTemplatePage,
   TemplateCompileBundle,
 } from "@/lib/template-import/types";
+import { convertTemplateToAtomic } from "../content/registry";
+import { injectNormalizedContent } from "../content/inject";
+import type { TemplateContentMapping } from "../content/types";
 import {
   migrationReadiness,
   reconcileDependencyLedger,
@@ -17,6 +20,7 @@ const SENSITIVE_KEY = /(?:password|passwd|secret|api[_-]?key|private[_-]?key|tok
 export function preflightMigrationDeployment(
   bundle: TemplateCompileBundle,
   resolutions: MigrationResolution[],
+  contentMappings: TemplateContentMapping[] = [],
 ): MigrationDeploymentPreflight {
   const blockers: string[] = [];
   const warnings: string[] = [];
@@ -63,7 +67,41 @@ export function preflightMigrationDeployment(
     }
 
     const artifact = materializeArtifact(page, reconciled);
-    const content = artifact.content;
+    const converted = deployableContent(artifact);
+    if (converted.errors.length > 0) {
+      blockers.push(
+        ...converted.errors.map((error) => `${page.mapping.title}: ${error}`),
+      );
+      continue;
+    }
+    warnings.push(
+      ...converted.warnings.map(
+        (warning) => `${page.mapping.title}: ${warning}`,
+      ),
+    );
+    const contentMapping = contentMappings.find(
+      (mapping) => mapping.analysisId === page.analysisId,
+    );
+    if (contentMappings.length > 0 && !contentMapping) {
+      blockers.push(`${page.mapping.title}: approved source content is not mapped.`);
+      continue;
+    }
+    const injection = contentMapping
+      ? injectNormalizedContent(converted.content, contentMapping.content)
+      : undefined;
+    if (injection) {
+      warnings.push(
+        `${page.mapping.title}: injected ${injection.replaced} template slot(s), appended ${injection.appended}, and removed ${injection.removedPlaceholders} unused placeholder(s).`,
+      );
+    }
+    const content = injection?.elementorData ?? converted.content;
+    const injectedErrors = validateArtifact({ content });
+    if (injectedErrors.length > 0) {
+      blockers.push(
+        ...injectedErrors.map((error) => `${page.mapping.title}: ${error}`),
+      );
+      continue;
+    }
     if (!Array.isArray(content)) {
       blockers.push(`${page.mapping.title}: compiled content is not an array.`);
       continue;
@@ -73,8 +111,7 @@ export function preflightMigrationDeployment(
       title: page.mapping.title,
       slug: page.mapping.slug,
       elementorData: content,
-      elementorVersion:
-        typeof artifact.version === "string" ? artifact.version : undefined,
+      elementorVersion: "4.1.1",
       pageTemplate: page.wordpress.pageTemplate,
     });
   }
@@ -85,6 +122,64 @@ export function preflightMigrationDeployment(
     warnings: unique(warnings),
     pages,
   };
+}
+
+function deployableContent(artifact: Record<string, unknown>): {
+  content: unknown[];
+  errors: string[];
+  warnings: string[];
+} {
+  if (!Array.isArray(artifact.content)) {
+    return { content: [], errors: ["compiled content is not an array."], warnings: [] };
+  }
+  if (isAtomicContent(artifact.content)) {
+    return { content: artifact.content, errors: [], warnings: [] };
+  }
+  try {
+    const conversion = convertTemplateToAtomic(artifact);
+    const convertedErrors = validateArtifact({ content: conversion.elementorData });
+    return {
+      content: conversion.elementorData,
+      errors: convertedErrors,
+      warnings: conversion.reviewItems.map((item) => item.message),
+    };
+  } catch (error) {
+    return {
+      content: [],
+      errors: [
+        error instanceof Error
+          ? `Atomic conversion failed: ${error.message}`
+          : "Atomic conversion failed.",
+      ],
+      warnings: [],
+    };
+  }
+}
+
+function isAtomicContent(content: unknown[]): boolean {
+  let count = 0;
+  const stack: unknown[] = [...content];
+  while (stack.length > 0) {
+    const value = stack.pop();
+    if (!isRecord(value)) return false;
+    const elementType = value.elType;
+    const widgetType = value.widgetType;
+    const atomicLayout =
+      elementType === "e-flexbox" ||
+      elementType === "e-div-block" ||
+      elementType === "e-grid";
+    const atomicWidget =
+      elementType === "widget" &&
+      typeof widgetType === "string" &&
+      (widgetType.startsWith("e-") ||
+        widgetType === "html" ||
+        widgetType === "shortcode" ||
+        widgetType === "google_maps");
+    if (!atomicLayout && !atomicWidget) return false;
+    count += 1;
+    if (Array.isArray(value.elements)) stack.push(...value.elements);
+  }
+  return count > 0;
 }
 
 export function validateArtifact(

@@ -102,7 +102,7 @@ export default async function BuildsPage({
           <div>#</div>
           <div>Client</div>
           <div>Type</div>
-          <div>Theme</div>
+          <div>Workflow</div>
           <div>Status</div>
           <div />
         </div>
@@ -128,7 +128,7 @@ export default async function BuildsPage({
                   {landingPageBuild ? "Landing Page" : "Website"}
                 </div>
                 <div className="row-meta">
-                  {landingPageBuild ? "Google Ads" : build.client?.theme ?? "Pending"}
+                  {landingPageBuild ? "Google Ads" : "Atomic Website"}
                 </div>
                 <div>
                   <Badge variant={statusVariant(build.status)}>{build.status}</Badge>
