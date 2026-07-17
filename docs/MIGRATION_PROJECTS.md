@@ -43,6 +43,15 @@ credentials, unusual ports, unsafe redirects, unsupported MIME types, invalid
 file signatures, and files over 15MB. Uploaded media records store their
 destination IDs and URLs so retries skip completed work.
 
+## Content conversion
+
+Cleaned pages normalize into versioned heading, rich-text, image, and link
+slots without depending on an Elementor sample shape. The additive conversion
+registry currently includes `elementor-v3-to-atomic` version 1. It translates
+classic sections, columns, containers, headings, text, buttons, and images into
+V4 Atomic elements. Legacy embeds and unsupported widgets remain explicit
+review items, so an incomplete conversion is never marked deployable.
+
 ## Database rollout
 
 The Prisma schema includes the `MigrationProject` model. Do not run
