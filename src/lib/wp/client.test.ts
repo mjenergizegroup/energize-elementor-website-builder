@@ -221,6 +221,82 @@ async function main() {
       /Elementor Pro license is expired/,
     );
 
+    const blogCalls: Array<{ url: string; body?: Record<string, unknown> }> = [];
+    globalThis.fetch = async (input, init) => {
+      blogCalls.push({
+        url: String(input),
+        body:
+          typeof init?.body === "string"
+            ? (JSON.parse(init.body) as Record<string, unknown>)
+            : undefined,
+      });
+      if (!init?.method) {
+        return Response.json([
+          {
+            id: 55,
+            slug: "healthy-habits",
+            status: "draft",
+            link: "https://example.test/?p=55",
+          },
+        ]);
+      }
+      return Response.json({
+        id: 55,
+        status: "draft",
+        link: "https://example.test/?p=55",
+      });
+    };
+    const reusedDraft = await new WpClient(
+      "https://example.test",
+    ).upsertBlogDraft(
+      {
+        title: "Healthy Habits",
+        slug: "healthy-habits",
+        content: "<!-- wp:paragraph --><p>Body</p><!-- /wp:paragraph -->",
+        featuredMediaId: 42,
+      },
+      "website-team",
+      "application-password",
+    );
+    assert.equal(reusedDraft.reused, true);
+    assert.equal(reusedDraft.status, "draft");
+    assert.match(blogCalls[0].url, /status=any/);
+    assert.match(blogCalls[1].url, /\/posts\/55$/);
+    assert.equal(blogCalls[1].body?.status, "draft");
+    assert.equal(blogCalls[1].body?.featured_media, 42);
+
+    let conflictCalls = 0;
+    globalThis.fetch = async () => {
+      conflictCalls += 1;
+      return Response.json([
+        {
+          id: 56,
+          slug: "published-post",
+          status: "publish",
+          link: "https://example.test/published-post/",
+        },
+      ]);
+    };
+    await assert.rejects(
+      () =>
+        new WpClient("https://example.test").upsertBlogDraft(
+          {
+            title: "Published post",
+            slug: "published-post",
+            content: "Content",
+          },
+          "website-team",
+          "application-password",
+        ),
+      (error: unknown) => {
+        assert.ok(error instanceof WpApiError);
+        assert.equal(error.status, 409);
+        assert.equal(error.code, "energize_blog_slug_conflict");
+        return true;
+      },
+    );
+    assert.equal(conflictCalls, 1, "a published post must never be overwritten");
+
     console.log("WordPress client connection checks passed");
   } finally {
     globalThis.fetch = originalFetch;

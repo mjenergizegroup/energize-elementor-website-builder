@@ -1,6 +1,6 @@
 {
   "name": "energize-build-tool",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,6 +14,7 @@
     "test:migration-media": "node --conditions=react-server --import tsx src/lib/migration/media/media.test.ts",
     "test:migration-content": "tsx src/lib/migration/content/content.test.ts",
     "test:migration-dependencies": "tsx src/lib/migration/dependencies.test.ts",
+    "test:migration-blogs": "tsx src/lib/migration/blogs/blog.test.ts",
     "test:template-import": "tsx src/lib/template-import/analyze.test.ts",
     "test:template-compile": "tsx src/lib/template-import/compiler/compiler.test.ts",
     "test:wp-client": "node --conditions=react-server --import tsx src/lib/wp/client.test.ts",

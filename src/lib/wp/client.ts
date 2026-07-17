@@ -56,6 +56,23 @@ export interface UploadMediaResult {
   reused: boolean;
 }
 
+export interface UpsertBlogDraftInput {
+  title: string;
+  slug: string;
+  date?: string;
+  excerpt?: string;
+  content: string;
+  featuredMediaId?: number;
+}
+
+export interface UpsertBlogDraftResult {
+  id: number;
+  status: string;
+  url: string;
+  editUrl: string;
+  reused: boolean;
+}
+
 function normalizeBaseUrl(siteUrl: string): string {
   return siteUrl.replace(/\/+$/, "");
 }
@@ -270,6 +287,36 @@ export class WpClient {
       }
       throw new WpApiError(
         e instanceof Error ? e.message : `Request to ${path} failed`,
+        0,
+      );
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  private async getWp<T>(
+    path: string,
+    username: string,
+    appPassword: string,
+  ): Promise<T> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
+    try {
+      const response = await fetch(this.wpUrl(path), {
+        headers: {
+          Authorization: `Basic ${this.basicAuth(username, appPassword)}`,
+        },
+        signal: controller.signal,
+        cache: "no-store",
+      });
+      return await this.parseResponse<T>(response, path);
+    } catch (error) {
+      if (error instanceof WpApiError) throw error;
+      if (error instanceof Error && error.name === "AbortError") {
+        throw new WpApiError(`Request to ${path} timed out`, 408);
+      }
+      throw new WpApiError(
+        error instanceof Error ? error.message : `Request to ${path} failed`,
         0,
       );
     } finally {
@@ -630,6 +677,56 @@ export class WpClient {
       appPassword,
     );
     return { id: media.id, slug: media.slug, sourceUrl: media.source_url, reused: false };
+  }
+
+  async upsertBlogDraft(
+    input: UpsertBlogDraftInput,
+    username: string,
+    appPassword: string,
+  ): Promise<UpsertBlogDraftResult> {
+    const existing = await this.getWp<
+      Array<{ id: number; slug: string; status: string; link: string }>
+    >(
+      `/posts?slug=${encodeURIComponent(input.slug)}&status=any&_fields=id,slug,status,link`,
+      username,
+      appPassword,
+    );
+    const match = existing[0];
+    if (match && match.status !== "draft") {
+      throw new WpApiError(
+        `A non-draft WordPress post already uses the slug "${input.slug}".`,
+        409,
+        "energize_blog_slug_conflict",
+      );
+    }
+    const payload = {
+      title: input.title,
+      slug: input.slug,
+      content: input.content,
+      status: "draft",
+      ...(input.date ? { date: input.date } : {}),
+      ...(input.excerpt ? { excerpt: input.excerpt } : {}),
+      ...(input.featuredMediaId
+        ? { featured_media: input.featuredMediaId }
+        : {}),
+    };
+    const post = await this.postWp<{
+      id: number;
+      status: string;
+      link: string;
+    }>(
+      match ? `/posts/${match.id}` : "/posts",
+      payload,
+      username,
+      appPassword,
+    );
+    return {
+      id: post.id,
+      status: post.status,
+      url: post.link,
+      editUrl: `${this.base}/wp-admin/post.php?post=${post.id}&action=edit`,
+      reused: Boolean(match),
+    };
   }
 
   async flushCss(): Promise<void> {

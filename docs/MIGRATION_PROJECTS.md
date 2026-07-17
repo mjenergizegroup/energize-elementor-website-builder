@@ -64,8 +64,24 @@ Unresolved and blocked entries keep the migration review gate closed. Accepted
 entries are intentional exceptions recorded in project state, not silently
 ignored dependencies.
 
+## Blog drafts
+
+`POST /api/migrations/{projectId}/blogs` supports `prepare` and `migrate`
+actions. Preparation parses front matter and source metadata, promotes short
+standalone bold labels to headings, and produces Gutenberg heading, paragraph,
+list, quote, code, and image blocks. Dates, titles, slugs, excerpts, inline
+images, reviewed alt text, and featured-image relationships remain explicit in
+the resumable project record.
+
+Migration defaults to a dry run and a three-post batch, with a hard maximum of
+20 posts per request. A post is blocked until all of its images have destination
+media IDs. Execute mode only creates or updates WordPress drafts. Exact-slug
+drafts are reused on retry, while a matching non-draft post is treated as a
+conflict and is never overwritten.
+
 ## Database rollout
 
-The Prisma schema includes the `MigrationProject` model. Do not run
+The Prisma schema includes the `MigrationProject` model and its blog-draft
+state. Do not run
 `npm run db:push` against Neon until the database change is explicitly approved
 for that environment. Local Prisma client generation does not modify Neon.

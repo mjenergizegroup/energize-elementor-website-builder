@@ -70,6 +70,28 @@ export interface MigrationAsset {
   error?: string;
 }
 
+export interface MigrationBlogDraft {
+  id: string;
+  sourcePageId: string;
+  title: string;
+  slug: string;
+  date?: string;
+  excerpt?: string;
+  gutenbergContent: string;
+  sourceImageUrls: string[];
+  imageAssetIds: string[];
+  unresolvedImageUrls: string[];
+  featuredImageUrl?: string;
+  featuredAssetId?: string;
+  featuredMediaId?: number;
+  status: "pending" | "ready" | "migrated" | "failed";
+  attemptCount: number;
+  destinationPostId?: number;
+  destinationUrl?: string;
+  editUrl?: string;
+  error?: string;
+}
+
 export interface MigrationResolution {
   id: string;
   kind:
@@ -92,6 +114,7 @@ export interface MigrationProjectState {
   sourcePages: MigrationSourcePage[];
   cleanedPages: MigrationSourcePage[];
   blogPosts: MigrationSourcePage[];
+  blogDrafts: MigrationBlogDraft[];
   assets: MigrationAsset[];
   templateManifest?: TemplateMappingManifest;
   compileBundle?: TemplateCompileBundle;

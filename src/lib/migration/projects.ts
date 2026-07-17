@@ -8,6 +8,7 @@ import { buildMediaInventory } from "./media/inventory";
 import {
   MIGRATION_PROJECT_SCHEMA_VERSION,
   type MigrationAsset,
+  type MigrationBlogDraft,
   type MigrationSourcePage,
 } from "./types";
 
@@ -28,6 +29,7 @@ interface MigrationProjectRecord {
   sourcePages: Prisma.JsonValue;
   cleanedPages: Prisma.JsonValue;
   blogPosts: Prisma.JsonValue;
+  blogDrafts: Prisma.JsonValue;
   assets: Prisma.JsonValue;
   selectedTemplates: Prisma.JsonValue;
   mappings: Prisma.JsonValue;
@@ -184,6 +186,38 @@ export async function saveMigrationAssets(
 
 export function parseMigrationAssets(value: Prisma.JsonValue): MigrationAsset[] {
   return parseJsonArray<MigrationAsset>(value);
+}
+
+export function parseMigrationBlogDrafts(
+  value: Prisma.JsonValue,
+): MigrationBlogDraft[] {
+  return parseJsonArray<MigrationBlogDraft>(value);
+}
+
+export function parseMigrationSourcePages(
+  value: Prisma.JsonValue,
+): MigrationSourcePage[] {
+  return parseJsonArray<MigrationSourcePage>(value);
+}
+
+export async function saveMigrationBlogDrafts(
+  userId: string,
+  projectId: string,
+  drafts: MigrationBlogDraft[],
+  action = "migration.blogs.prepare",
+) {
+  const existing = await getMigrationProject(userId, projectId);
+  const project = await migrationProjects.update({
+    where: { id: existing.id },
+    data: { stage: "blogs", blogDrafts: toInputJson(drafts), lastError: null },
+  });
+  await audit(userId, action, existing.clientId, {
+    migrationProjectId: existing.id,
+    posts: drafts.length,
+    migrated: drafts.filter((draft) => draft.status === "migrated").length,
+    failed: drafts.filter((draft) => draft.status === "failed").length,
+  });
+  return project;
 }
 
 function toInputJson(value: unknown): Prisma.InputJsonValue {

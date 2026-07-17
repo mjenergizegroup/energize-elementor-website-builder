@@ -45,6 +45,7 @@ model MigrationProject {
   sourcePages       Json     @default("[]")
   cleanedPages      Json     @default("[]")
   blogPosts         Json     @default("[]")
+  blogDrafts        Json     @default("[]")
   assets            Json     @default("[]")
   selectedTemplates Json     @default("[]")
   mappings          Json     @default("[]")
