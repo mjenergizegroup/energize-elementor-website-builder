@@ -10,6 +10,22 @@ import type { MigrationAsset, MigrationSourcePage } from "../types";
 
 const imageUrl = "https://cdn.example.com/healthy-smile.jpg";
 const destinationImageUrl = "https://wp.example.com/healthy-smile.jpg";
+const blogMarkdown = [
+  "---",
+  'title: "Healthy Habits"',
+  "date: 2025-03-04",
+  "slug: better-healthy-habits",
+  `featured_image: ${imageUrl}`,
+  "excerpt: A practical guide.",
+  "---",
+  "# Healthy Habits",
+  "",
+  "**Daily care**",
+  "",
+  "Brush **twice** every day.",
+  "",
+  `![A healthy smile](${imageUrl})`,
+].join("\n");
 
 const page: MigrationSourcePage = {
   id: "post-1",
@@ -18,22 +34,9 @@ const page: MigrationSourcePage = {
   title: "Fallback title",
   sourceChecksum: "checksum",
   rawMarkdown: "",
-  cleanedMarkdown: [
-    "---",
-    'title: "Healthy Habits"',
-    "date: 2025-03-04",
-    "slug: better-healthy-habits",
-    `featured_image: ${imageUrl}`,
-    "excerpt: A practical guide.",
-    "---",
-    "# Healthy Habits",
-    "",
-    "**Daily care**",
-    "",
-    "Brush **twice** every day.",
-    "",
-    `![A healthy smile](${imageUrl})`,
-  ].join("\n"),
+  cleanedMarkdown: blogMarkdown,
+  approvedMarkdown: blogMarkdown,
+  contentRevision: 1,
   classification: "blog-post",
   classificationReason: "article metadata",
   included: true,

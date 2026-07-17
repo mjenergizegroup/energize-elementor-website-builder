@@ -19,6 +19,13 @@ const page: MigrationSourcePage = {
     '<img src="/team.webp" alt="Our dental team">',
     "![Icon](https://example.com/icon-arrow.png)",
   ].join("\n"),
+  approvedMarkdown: [
+    "![Smiling dental patient](https://cdn.sanity.io/images/a/b/photo.jpg?w=800&q=80)",
+    "![Smiling dental patient](https://cdn.sanity.io/images/a/b/photo.jpg?w=400)",
+    '<img src="/team.webp" alt="Our dental team">',
+    "![Icon](https://example.com/icon-arrow.png)",
+  ].join("\n"),
+  contentRevision: 1,
   classification: "core-page",
   classificationReason: "site content page",
   included: true,

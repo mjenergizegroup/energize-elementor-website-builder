@@ -3,7 +3,7 @@ import type {
   TemplateMappingManifest,
 } from "@/lib/template-import/types";
 
-export const MIGRATION_PROJECT_SCHEMA_VERSION = 1 as const;
+export const MIGRATION_PROJECT_SCHEMA_VERSION = 2 as const;
 
 export type MigrationProjectStatus =
   | "draft"
@@ -37,6 +37,10 @@ export interface MigrationSourcePage {
   sourceChecksum: string;
   rawMarkdown: string;
   cleanedMarkdown: string;
+  approvedMarkdown: string;
+  contentRevision: number;
+  approvedChecksum?: string;
+  approvedAt?: string;
   classification: SourcePageClassification;
   classificationReason: string;
   included: boolean;

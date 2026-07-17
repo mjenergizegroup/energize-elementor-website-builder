@@ -94,6 +94,8 @@ export function cleanAndClassifyPages(
       sourceChecksum: checksum,
       rawMarkdown,
       cleanedMarkdown: cleaned.markdown,
+      approvedMarkdown: cleaned.markdown,
+      contentRevision: 1,
       classification: classification.kind,
       classificationReason: classification.reason,
       included: classification.kind !== "skipped",

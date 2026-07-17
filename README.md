@@ -63,15 +63,17 @@ Migration project state and its authenticated API are documented in
 1. Start an owned migration project with the crawl, select source pages, and
    save raw and deterministically cleaned content directly to the project.
    Source-file download remains an optional backup rather than a handoff step.
-2. Inventory full-resolution media, review metadata, and dry-run uploads.
-3. Upload up to 20 JSON templates, review analysis, select page roles, and
+2. Review raw, cleaned, and editable approved content inside the builder.
+   Approval is revisioned and is removed automatically when content changes.
+3. Inventory full-resolution media, review metadata, and dry-run uploads.
+4. Upload up to 20 JSON templates, review analysis, select page roles, and
    compile portable artifacts.
-4. Resolve or explicitly accept every regenerated dependency-ledger item.
-5. Convert supported classic structures through the versioned Atomic adapter.
-6. Prepare deployment, run the automatic no-write dry run, and use the explicit
+5. Resolve or explicitly accept every regenerated dependency-ledger item.
+6. Convert supported classic structures through the versioned Atomic adapter.
+7. Prepare deployment, run the automatic no-write dry run, and use the explicit
    final action to create WordPress drafts.
-7. Review saved progress and result links. Retry only failed drafts when needed.
-8. Prepare and dry-run Gutenberg blog drafts after their media has destination
+8. Review saved progress and result links. Retry only failed drafts when needed.
+9. Prepare and dry-run Gutenberg blog drafts after their media has destination
    IDs.
 
 The build wizard does not ask the user to choose a theme or visual preset.

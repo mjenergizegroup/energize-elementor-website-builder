@@ -20,6 +20,11 @@ on every request. It stores raw and cleaned markdown, stable content checksums, 
 the reason for each classification. Blog detection uses metadata and content
 signals in addition to URL paths.
 
+Each stored page also has an editable approved draft, a content revision, and an
+approval checksum and timestamp. Raw and cleaned text remain immutable during
+review. Editing the approved draft or destination title increments the revision
+and removes approval until an authenticated reviewer approves it again.
+
 ## API
 
 - `GET /api/migrations` lists projects owned by the current user.
@@ -27,6 +32,9 @@ signals in addition to URL paths.
 - `GET /api/migrations/{projectId}` resumes a project.
 - `POST /api/migrations/{projectId}/source` validates, cleans, classifies, and
   stores a source-page batch.
+- `GET /api/migrations/{projectId}/source` returns normalized source review state.
+- `PATCH /api/migrations/{projectId}/source` saves inclusion, edits, revisions,
+  and approval state.
 
 Source ingest accepts up to 1,000 pages, 2MB per page, and 20MB per request.
 Every route requires Clerk authentication. Project creation and source ingest

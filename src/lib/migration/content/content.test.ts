@@ -15,6 +15,8 @@ const page: MigrationSourcePage = {
   id: "source-page", sourceUrl: "https://example.com/about", normalizedUrl: "https://example.com/about",
   title: "About", sourceChecksum: "checksum", rawMarkdown: "",
   cleanedMarkdown: "# About Us\n\nFriendly dental care.\n\n[Book](https://example.com/book)",
+  approvedMarkdown: "# About Us\n\nFriendly dental care.\n\n[Book](https://example.com/book)",
+  contentRevision: 1,
   classification: "core-page", classificationReason: "site content page", included: true, reviewed: false, metadata: {},
 };
 const normalized = normalizePageContent(page);

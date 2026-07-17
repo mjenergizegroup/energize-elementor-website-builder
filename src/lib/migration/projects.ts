@@ -15,6 +15,11 @@ import {
 } from "./types";
 import type { MigrationDeploymentRecord } from "./deploy/types";
 import type { TemplateContentMapping } from "./content/types";
+import {
+  applyMigrationSourceUpdates,
+  normalizeMigrationSourcePages,
+  type MigrationSourcePageUpdate,
+} from "./content/review";
 
 export interface CreateMigrationProjectInput {
   name: string;
@@ -216,7 +221,40 @@ export function parseMigrationBlogDrafts(
 export function parseMigrationSourcePages(
   value: Prisma.JsonValue,
 ): MigrationSourcePage[] {
-  return parseJsonArray<MigrationSourcePage>(value);
+  return normalizeMigrationSourcePages(parseJsonArray<MigrationSourcePage>(value));
+}
+
+export async function saveMigrationSourceReview(
+  userId: string,
+  projectId: string,
+  updates: MigrationSourcePageUpdate[],
+) {
+  const existing = await getMigrationProject(userId, projectId);
+  const pages = applyMigrationSourceUpdates(
+    parseMigrationSourcePages(existing.sourcePages),
+    updates,
+  );
+  const cleanedPages = pages.filter(
+    (page) =>
+      page.classification === "core-page" ||
+      page.classification === "blog-index",
+  );
+  const blogPosts = pages.filter((page) => page.classification === "blog-post");
+  const project = await migrationProjects.update({
+    where: { id: existing.id },
+    data: {
+      sourcePages: toInputJson(pages),
+      cleanedPages: toInputJson(cleanedPages),
+      blogPosts: toInputJson(blogPosts),
+      lastError: null,
+    },
+  });
+  await audit(userId, "migration.source.review", existing.clientId, {
+    migrationProjectId: existing.id,
+    updatedPages: updates.length,
+    approvedPages: pages.filter((page) => page.included && page.reviewed).length,
+  });
+  return project;
 }
 
 export async function saveMigrationBlogDrafts(

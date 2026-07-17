@@ -26,6 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { Combobox } from "@/components/ui/combobox";
 import { TemplateImporter } from "@/components/template-importer";
 import { DependencyResolver } from "@/components/dependency-resolver";
+import { MigrationContentWorkspace } from "@/components/migration-content-workspace";
 import { GOOGLE_FONTS } from "@/lib/google-fonts";
 import { cn } from "@/lib/utils";
 import type { BrandKit, UploadedAsset } from "@/lib/types";
@@ -40,6 +41,7 @@ import type {
   MigrationResolution,
   MigrationSourcePage,
 } from "@/lib/migration/types";
+import type { MigrationSourcePageUpdate } from "@/lib/migration/content/review";
 import { migrationReadiness } from "@/lib/migration/dependencies";
 import {
   contentMappingsToSourcePages,
@@ -261,6 +263,7 @@ export function BuildWizard({
   const [sourceSaved, setSourceSaved] = useState(false);
   const [sourceReport, setSourceReport] = useState<MigrationCleanupReport | null>(null);
   const [migrationSourcePages, setMigrationSourcePages] = useState<MigrationSourcePage[]>([]);
+  const [savingSourceReview, setSavingSourceReview] = useState(false);
 
   const [name, setName] = useState(initialClient?.name ?? "");
   const [slug, setSlug] = useState(initialClient?.slug ?? "");
@@ -493,6 +496,44 @@ export function BuildWizard({
       return false;
     } finally {
       setSavingCrawl(false);
+    }
+  }
+
+  async function saveMigrationSourceUpdates(
+    updates: MigrationSourcePageUpdate[],
+  ): Promise<void> {
+    if (!migrationProjectId) {
+      toast.error("This migration project has not been created yet.");
+      return;
+    }
+    if (updates.length === 0) {
+      toast.error("No included pages have content to approve.");
+      return;
+    }
+    setSavingSourceReview(true);
+    try {
+      const response = await fetch(
+        `/api/migrations/${migrationProjectId}/source`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ updates }),
+        },
+      );
+      const json = await response.json();
+      if (!response.ok) {
+        throw new Error(json.error ?? "Could not save the content review.");
+      }
+      setMigrationSourcePages(Array.isArray(json.pages) ? json.pages : []);
+      toast.success(
+        `${json.summary.approved} of ${json.summary.included} included pages approved.`,
+      );
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Could not save the content review.",
+      );
+    } finally {
+      setSavingSourceReview(false);
     }
   }
 
@@ -1646,7 +1687,7 @@ export function BuildWizard({
                 />
               </Field>
               <p className="text-[12px] font-medium text-[var(--muted)]">
-                Doctor names, bios, and services come from the uploaded content document, so there is nothing to fill out for those here.
+                Doctor names, bios, and services come from the stored source content, so there is nothing to fill out for those here.
               </p>
               <SectionLabel>Production notes</SectionLabel>
               <Field label="Social URLs" hint="One per line.">
@@ -1765,6 +1806,16 @@ export function BuildWizard({
               </div>
               {buildType === "migrate" && deployMode !== "branding-only" && (
                 <>
+                  <SectionLabel>Source content review</SectionLabel>
+                  <p className="text-[12px] font-medium leading-5 text-[var(--color-muted)]">
+                    Review the deterministic cleanup, edit only the approved draft, and approve the pages that can be mapped into templates.
+                  </p>
+                  <MigrationContentWorkspace
+                    pages={migrationSourcePages}
+                    saving={savingSourceReview}
+                    onChange={setMigrationSourcePages}
+                    onSave={saveMigrationSourceUpdates}
+                  />
                   <SectionLabel>Template JSON mapping</SectionLabel>
                   <p className="text-[12px] font-medium leading-5 text-[var(--color-muted)]">
                     Analyze Elementor or other JSON templates, confirm their page roles, and compile a portable deployment bundle. The reviewed artifacts are used directly for migration drafts.
