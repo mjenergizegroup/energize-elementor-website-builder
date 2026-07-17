@@ -25,6 +25,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Combobox } from "@/components/ui/combobox";
+import { TemplateImporter } from "@/components/template-importer";
 import {
   Select,
   SelectContent,
@@ -37,6 +38,7 @@ import { cn } from "@/lib/utils";
 import type { BrandKit, UploadedAsset } from "@/lib/types";
 import type { PageContent } from "@/lib/injection/types";
 import type { ElevatePageType } from "@/lib/builders/elevate/types";
+import type { TemplateMappingManifest } from "@/lib/template-import/types";
 
 export interface ThemeSummary {
   key: string;
@@ -324,6 +326,8 @@ export function BuildWizard({
     doctorName?: string;
   } | null>(null);
   const [detectedPages, setDetectedPages] = useState<DetectedPage[]>([]);
+  const [templateManifest, setTemplateManifest] =
+    useState<TemplateMappingManifest | null>(null);
 
   const selectedTheme = themes.find((t) => t.key === theme);
   const buildTypeLabel =
@@ -1412,6 +1416,15 @@ export function BuildWizard({
                   </span>
                 </button>
               </div>
+              {buildType === "migrate" && deployMode !== "branding-only" && (
+                <>
+                  <SectionLabel>Template JSON mapping</SectionLabel>
+                  <p className="text-[12px] font-medium leading-5 text-[var(--color-muted)]">
+                    Analyze Elementor or other JSON templates, confirm their page roles, and export a reusable mapping manifest. This source mapping is kept separate from the current Atomic deployment payload.
+                  </p>
+                  <TemplateImporter onManifestChange={setTemplateManifest} />
+                </>
+              )}
               {deployMode === "branding-only" ? (
                 <div className="border border-[var(--line)] bg-[var(--paper-2)] p-4 text-sm leading-6 text-[var(--ink)]">
                   No content file is needed and no WordPress pages will be created.
@@ -1574,6 +1587,13 @@ export function BuildWizard({
                     onEdit={() => setStep(5)}
                   />
                 </>
+              )}
+              {buildType === "migrate" && templateManifest && (
+                <Review
+                  label="Template mappings"
+                  value={`${templateManifest.mappings.filter((item) => item.selected).length} included of ${templateManifest.mappings.length} analyzed`}
+                  onEdit={() => setStep(5)}
+                />
               )}
               <Review
                 label="Pages"
