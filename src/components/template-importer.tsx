@@ -7,6 +7,7 @@ import {
   Download,
   FileJson,
   LoaderCircle,
+  PackageCheck,
   Plus,
   ShieldAlert,
   Trash2,
@@ -29,6 +30,7 @@ import {
 import { EASE_OUT, SPRING_LAYOUT } from "@/lib/ease";
 import {
   TEMPLATE_PAGE_ROLES,
+  type TemplateCompileBundle,
   type TemplateAnalysis,
   type TemplateMappingManifest,
   type TemplateMappingSelection,
@@ -38,17 +40,23 @@ import {
 import { cn } from "@/lib/utils";
 
 export function TemplateImporter({
+  onCompileChange,
   onManifestChange,
 }: {
+  onCompileChange?: (bundle: TemplateCompileBundle | null) => void;
   onManifestChange?: (manifest: TemplateMappingManifest | null) => void;
 }) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
+  const filesByChecksumRef = useRef<Map<string, File>>(new Map());
   const reduceMotion = useReducedMotion();
   const [dragging, setDragging] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+  const [compiling, setCompiling] = useState(false);
   const [analyses, setAnalyses] = useState<TemplateAnalysis[]>([]);
   const [mappings, setMappings] = useState<TemplateMappingSelection[]>([]);
+  const [compileBundle, setCompileBundle] =
+    useState<TemplateCompileBundle | null>(null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   const manifest = useMemo<TemplateMappingManifest | null>(() => {
@@ -64,12 +72,17 @@ export function TemplateImporter({
     onManifestChange?.(manifest);
   }, [manifest, onManifestChange]);
 
+  useEffect(() => {
+    onCompileChange?.(compileBundle);
+  }, [compileBundle, onCompileChange]);
+
   const selectable = mappings.filter((item) => item.status !== "blocked");
   const selectedCount = selectable.filter((item) => item.selected).length;
   const reviewCount = analyses.filter((item) => item.status === "review").length;
   const blockedCount = analyses.filter((item) => item.status === "blocked").length;
   const allSelected = selectable.length > 0 && selectedCount === selectable.length;
   const partiallySelected = selectedCount > 0 && !allSelected;
+  const busy = analyzing || compiling;
 
   async function analyzeFiles(fileList: FileList | File[]) {
     const files = Array.from(fileList);
@@ -96,6 +109,13 @@ export function TemplateImporter({
         throw new Error(payload.error ?? "Template analysis failed.");
       }
 
+      payload.analyses.forEach((analysis, index) => {
+        const file = files[index];
+        if (file && !filesByChecksumRef.current.has(analysis.file.checksum)) {
+          filesByChecksumRef.current.set(analysis.file.checksum, file);
+        }
+      });
+
       setAnalyses((previous) => mergeAnalyses(previous, payload.analyses!));
       setMappings((previous) =>
         mergeMappings(
@@ -103,6 +123,7 @@ export function TemplateImporter({
           payload.analyses!.map(toMapping),
         ),
       );
+      setCompileBundle(null);
       toast.success(
         `${payload.analyses.length} JSON ${payload.analyses.length === 1 ? "file" : "files"} analyzed.`,
       );
@@ -115,6 +136,7 @@ export function TemplateImporter({
   }
 
   function updateMapping(analysisId: string, patch: Partial<TemplateMappingSelection>) {
+    setCompileBundle(null);
     setMappings((previous) =>
       previous.map((item) =>
         item.analysisId === analysisId ? { ...item, ...patch } : item,
@@ -123,6 +145,9 @@ export function TemplateImporter({
   }
 
   function removeAnalysis(analysisId: string) {
+    const analysis = analyses.find((item) => item.id === analysisId);
+    if (analysis) filesByChecksumRef.current.delete(analysis.file.checksum);
+    setCompileBundle(null);
     setAnalyses((previous) => previous.filter((item) => item.id !== analysisId));
     setMappings((previous) => previous.filter((item) => item.analysisId !== analysisId));
     setExpanded((previous) => {
@@ -142,6 +167,7 @@ export function TemplateImporter({
   }
 
   function toggleAll(nextSelected: boolean) {
+    setCompileBundle(null);
     setMappings((previous) =>
       previous.map((item) =>
         item.status === "blocked" ? item : { ...item, selected: nextSelected },
@@ -151,16 +177,57 @@ export function TemplateImporter({
 
   function exportManifest() {
     if (!manifest) return;
-    const blob = new Blob([JSON.stringify(manifest, null, 2)], {
-      type: "application/json;charset=utf-8",
-    });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = "energize-template-mapping.json";
-    anchor.click();
-    URL.revokeObjectURL(url);
+    downloadJson("energize-template-mapping.json", manifest);
     toast.success("Template mapping exported.");
+  }
+
+  async function compileSelected() {
+    if (!manifest) return;
+    const selectedMappings = manifest.mappings.filter((item) => item.selected);
+    if (selectedMappings.length === 0) {
+      toast.error("Select at least one template to compile.");
+      return;
+    }
+
+    const selectedFiles = selectedMappings.map((mapping) =>
+      filesByChecksumRef.current.get(mapping.checksum),
+    );
+    if (selectedFiles.some((file) => !file)) {
+      toast.error("One or more source files are missing. Add the batch again before compiling.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("manifest", JSON.stringify(manifest));
+    for (const file of selectedFiles) formData.append("files", file!);
+
+    setCompiling(true);
+    try {
+      const response = await fetch("/api/template-import/compile", {
+        method: "POST",
+        body: formData,
+      });
+      const payload = (await response.json()) as TemplateCompileBundle & {
+        error?: string;
+      };
+      if (!response.ok || payload.schemaVersion !== "1") {
+        throw new Error(payload.error ?? "Template compilation failed.");
+      }
+      setCompileBundle(payload);
+      toast.success(
+        `${payload.totals.compiled} portable ${payload.totals.compiled === 1 ? "artifact" : "artifacts"} compiled.`,
+      );
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Template compilation failed.");
+    } finally {
+      setCompiling(false);
+    }
+  }
+
+  function exportCompileBundle() {
+    if (!compileBundle) return;
+    downloadJson("energize-template-compile-bundle.json", compileBundle);
+    toast.success("Portable compile bundle exported.");
   }
 
   return (
@@ -171,6 +238,7 @@ export function TemplateImporter({
         type="file"
         accept=".json,application/json"
         multiple
+        disabled={busy}
         className="sr-only"
         onChange={(event) => void analyzeFiles(event.target.files ?? [])}
       />
@@ -181,16 +249,17 @@ export function TemplateImporter({
         role="button"
         tabIndex={0}
         aria-label="Upload Elementor or other JSON template files"
-        onClick={() => !analyzing && inputRef.current?.click()}
+        aria-disabled={busy}
+        onClick={() => !busy && inputRef.current?.click()}
         onKeyDown={(event) => {
-          if ((event.key === "Enter" || event.key === " ") && !analyzing) {
+          if ((event.key === "Enter" || event.key === " ") && !busy) {
             event.preventDefault();
             inputRef.current?.click();
           }
         }}
         onDragEnter={(event) => {
           event.preventDefault();
-          if (!analyzing) setDragging(true);
+          if (!busy) setDragging(true);
         }}
         onDragOver={(event) => event.preventDefault()}
         onDragLeave={(event) => {
@@ -200,7 +269,7 @@ export function TemplateImporter({
         onDrop={(event) => {
           event.preventDefault();
           setDragging(false);
-          if (!analyzing) void analyzeFiles(event.dataTransfer.files);
+          if (!busy) void analyzeFiles(event.dataTransfer.files);
         }}
         animate={
           reduceMotion
@@ -213,7 +282,7 @@ export function TemplateImporter({
           dragging
             ? "border-[var(--color-red)]"
             : "border-[var(--color-black)] bg-[var(--color-surface)]",
-          analyzing && "cursor-wait",
+          busy && "cursor-wait",
         )}
       >
         <div className="flex items-center gap-4">
@@ -243,7 +312,7 @@ export function TemplateImporter({
             </p>
           </div>
         </div>
-        {!analyzing && (
+        {!busy && (
           <span className="hidden items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-red)] sm:flex">
             <Plus className="size-4" />
             Choose files
@@ -272,19 +341,45 @@ export function TemplateImporter({
                 checked={allSelected}
                 indeterminate={partiallySelected}
                 onCheckedChange={toggleAll}
+                disabled={busy}
                 label={`${selectedCount} of ${selectable.length} templates included`}
               />
               <div className="flex flex-wrap gap-2">
-                <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => inputRef.current?.click()}
+                  disabled={busy}
+                >
                   <Plus />
                   Add files
                 </Button>
-                <Button type="button" size="sm" onClick={exportManifest} disabled={!manifest}>
+                <Button type="button" variant="outline" size="sm" onClick={exportManifest} disabled={!manifest}>
                   <Download />
                   Export mapping
                 </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => void compileSelected()}
+                  disabled={!manifest || selectedCount === 0 || compiling}
+                >
+                  {compiling ? <LoaderCircle className="animate-spin" /> : <PackageCheck />}
+                  {compiling ? "Compiling" : "Compile selected"}
+                </Button>
               </div>
             </div>
+
+            <AnimatePresence initial={false}>
+              {compileBundle ? (
+                <CompileSummary
+                  bundle={compileBundle}
+                  reduceMotion={Boolean(reduceMotion)}
+                  onExport={exportCompileBundle}
+                />
+              ) : null}
+            </AnimatePresence>
 
             <motion.div layout className="space-y-3">
               <AnimatePresence initial={false}>
@@ -316,7 +411,7 @@ export function TemplateImporter({
                         <div className="flex min-w-0 gap-3">
                           <MotionCheckbox
                             checked={mapping.selected}
-                            disabled={analysis.status === "blocked"}
+                            disabled={analysis.status === "blocked" || compiling}
                             onCheckedChange={(selected) => updateMapping(analysis.id, { selected })}
                             aria-label={`Include ${analysis.file.name}`}
                             className="mt-1"
@@ -351,7 +446,7 @@ export function TemplateImporter({
                                 role: value as TemplatePageRole,
                               })
                             }
-                            disabled={analysis.status === "blocked"}
+                            disabled={analysis.status === "blocked" || compiling}
                           >
                             <SelectTrigger size="sm">
                               <SelectValue placeholder="Select page role" />
@@ -374,7 +469,7 @@ export function TemplateImporter({
                             value={mapping.title}
                             onChange={(event) => updateMapping(analysis.id, { title: event.target.value })}
                             placeholder="WordPress title"
-                            disabled={analysis.status === "blocked"}
+                            disabled={analysis.status === "blocked" || compiling}
                             className="h-9 text-[12px]"
                             aria-label={`WordPress title for ${analysis.file.name}`}
                           />
@@ -384,7 +479,7 @@ export function TemplateImporter({
                               updateMapping(analysis.id, { slug: slugify(event.target.value) })
                             }
                             placeholder="page-slug"
-                            disabled={analysis.status === "blocked"}
+                            disabled={analysis.status === "blocked" || compiling}
                             className="h-9 font-mono text-[11px]"
                             aria-label={`WordPress slug for ${analysis.file.name}`}
                           />
@@ -411,6 +506,7 @@ export function TemplateImporter({
                             variant="ghost"
                             size="icon-sm"
                             onClick={() => removeAnalysis(analysis.id)}
+                            disabled={compiling}
                             aria-label={`Remove ${analysis.file.name}`}
                           >
                             <Trash2 className="size-4" />
@@ -439,6 +535,83 @@ export function TemplateImporter({
           </motion.div>
         ) : null}
       </AnimatePresence>
+    </div>
+  );
+}
+
+function CompileSummary({
+  bundle,
+  onExport,
+  reduceMotion,
+}: {
+  bundle: TemplateCompileBundle;
+  onExport: () => void;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.section
+      initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+      transition={reduceMotion ? { duration: 0 } : { duration: 0.24, ease: EASE_OUT }}
+      className="border-2 border-[var(--color-black)]"
+      aria-label="Portable compile result"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-[var(--color-black)] p-4 text-white">
+        <div className="flex items-center gap-3">
+          <PackageCheck className="size-5 text-[var(--color-red)]" />
+          <div>
+            <h3 className="text-[14px] font-bold">Portable compile result</h3>
+            <p className="mt-1 text-[10px] font-medium text-[#b5b5b5]">
+              Nothing has been sent to WordPress.
+            </p>
+          </div>
+        </div>
+        <Button type="button" variant="secondary" size="sm" onClick={onExport}>
+          <Download />
+          Export bundle
+        </Button>
+      </div>
+
+      <div className="grid border-b border-[var(--color-black)] sm:grid-cols-4">
+        <CompileMetric label="Artifacts" value={bundle.totals.compiled} />
+        <CompileMetric label="Ready" value={bundle.totals.ready} />
+        <CompileMetric label="Need review" value={bundle.totals.review} />
+        <CompileMetric label="Blocked" value={bundle.totals.blocked} />
+      </div>
+
+      <div className="divide-y divide-[var(--color-black)] bg-[var(--color-surface)]">
+        {bundle.pages.map((page) => (
+          <div
+            key={page.analysisId}
+            className="grid gap-3 p-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center"
+          >
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="truncate text-[13px] font-bold">{page.mapping.title}</p>
+                <StatusBadge status={page.status} />
+              </div>
+              <p className="mt-1 text-[10px] font-medium leading-5 text-[var(--color-muted)]">
+                {page.compiler.id} · {page.transformations.elementIdsRegenerated} IDs regenerated · {page.transformations.mediaIdsCleared} media IDs cleared
+              </p>
+            </div>
+            <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+              {page.targetKind === "wp-page" ? "WordPress page" : "Theme Builder template"}
+            </span>
+          </div>
+        ))}
+      </div>
+    </motion.section>
+  );
+}
+
+function CompileMetric({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="border-b border-[var(--color-black)] p-3 last:border-b-0 sm:border-r sm:border-b-0 sm:last:border-r-0">
+      <span className="text-[18px] font-black">{value}</span>
+      <span className="ml-2 text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        {label}
+      </span>
     </div>
   );
 }
@@ -565,7 +738,9 @@ function toMapping(analysis: TemplateAnalysis): TemplateMappingSelection {
 
 function mergeAnalyses(previous: TemplateAnalysis[], incoming: TemplateAnalysis[]) {
   const next = new Map(previous.map((item) => [item.file.checksum, item]));
-  for (const item of incoming) next.set(item.file.checksum, item);
+  for (const item of incoming) {
+    if (!next.has(item.file.checksum)) next.set(item.file.checksum, item);
+  }
   return [...next.values()];
 }
 
@@ -591,4 +766,16 @@ function slugify(value: string): string {
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+function downloadJson(fileName: string, value: unknown) {
+  const blob = new Blob([JSON.stringify(value, null, 2)], {
+    type: "application/json;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = fileName;
+  anchor.click();
+  URL.revokeObjectURL(url);
 }

@@ -88,3 +88,59 @@ export interface TemplateMappingManifest {
   createdAt: string;
   mappings: TemplateMappingSelection[];
 }
+
+export type TemplateCompileTargetKind = "wp-page" | "elementor-theme-template";
+
+export interface TemplateCompileTransformations {
+  elementIdsRegenerated: number;
+  duplicateIdsResolved: number;
+  mediaIdsCleared: number;
+  globalReferencesPreserved: number;
+  dynamicBindingsPreserved: number;
+  unsupportedWidgetsPreserved: number;
+}
+
+export interface CompiledTemplatePage {
+  analysisId: string;
+  fileName: string;
+  checksum: string;
+  status: TemplateAnalysisStatus;
+  deployable: boolean;
+  targetKind: TemplateCompileTargetKind;
+  mapping: Pick<
+    TemplateMappingSelection,
+    "role" | "title" | "slug" | "selected"
+  >;
+  compiler: {
+    id: string;
+    version: string;
+  };
+  transformations: TemplateCompileTransformations;
+  pending: {
+    externalHosts: string[];
+    customGlobalIds: string[];
+    plugins: string[];
+    unsupportedWidgets: string[];
+    shortcodes: string[];
+  };
+  warnings: TemplateWarning[];
+  wordpress: {
+    status: "draft";
+    pageTemplate: "elementor_header_footer";
+  };
+  artifact?: Record<string, unknown>;
+}
+
+export interface TemplateCompileBundle {
+  schemaVersion: "1";
+  compiledAt: string;
+  sourceManifestCreatedAt: string;
+  totals: {
+    selected: number;
+    compiled: number;
+    ready: number;
+    review: number;
+    blocked: number;
+  };
+  pages: CompiledTemplatePage[];
+}

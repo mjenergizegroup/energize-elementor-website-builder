@@ -422,10 +422,10 @@ export function analyzeTemplateJson(input: AnalyzeTemplateInput): TemplateAnalys
     warnings.push(
       warning(
         "duplicate-element-ids",
-        "blocker",
+        "warning",
         "Duplicate Elementor IDs",
         `${duplicateElementIds.length} element ID(s) are reused in this file.`,
-        "Regenerate the duplicated IDs before deployment.",
+        "The portable compiler will regenerate every Elementor element ID.",
       ),
     );
   }

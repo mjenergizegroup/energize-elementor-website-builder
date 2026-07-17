@@ -97,7 +97,7 @@ const duplicate = analyze("duplicate.json", {
   ],
 });
 
-assert.equal(duplicate.status, "blocked");
+assert.equal(duplicate.status, "review");
 assert.deepEqual(duplicate.structure.duplicateElementIds, ["same"]);
 
 const sensitive = analyze("unsafe.json", {

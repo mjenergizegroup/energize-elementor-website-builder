@@ -38,7 +38,10 @@ import { cn } from "@/lib/utils";
 import type { BrandKit, UploadedAsset } from "@/lib/types";
 import type { PageContent } from "@/lib/injection/types";
 import type { ElevatePageType } from "@/lib/builders/elevate/types";
-import type { TemplateMappingManifest } from "@/lib/template-import/types";
+import type {
+  TemplateCompileBundle,
+  TemplateMappingManifest,
+} from "@/lib/template-import/types";
 
 export interface ThemeSummary {
   key: string;
@@ -328,6 +331,8 @@ export function BuildWizard({
   const [detectedPages, setDetectedPages] = useState<DetectedPage[]>([]);
   const [templateManifest, setTemplateManifest] =
     useState<TemplateMappingManifest | null>(null);
+  const [templateCompileBundle, setTemplateCompileBundle] =
+    useState<TemplateCompileBundle | null>(null);
 
   const selectedTheme = themes.find((t) => t.key === theme);
   const buildTypeLabel =
@@ -1420,9 +1425,12 @@ export function BuildWizard({
                 <>
                   <SectionLabel>Template JSON mapping</SectionLabel>
                   <p className="text-[12px] font-medium leading-5 text-[var(--color-muted)]">
-                    Analyze Elementor or other JSON templates, confirm their page roles, and export a reusable mapping manifest. This source mapping is kept separate from the current Atomic deployment payload.
+                    Analyze Elementor or other JSON templates, confirm their page roles, and compile a portable review bundle. This source mapping is kept separate from the current Atomic deployment payload.
                   </p>
-                  <TemplateImporter onManifestChange={setTemplateManifest} />
+                  <TemplateImporter
+                    onManifestChange={setTemplateManifest}
+                    onCompileChange={setTemplateCompileBundle}
+                  />
                 </>
               )}
               {deployMode === "branding-only" ? (
@@ -1592,6 +1600,13 @@ export function BuildWizard({
                 <Review
                   label="Template mappings"
                   value={`${templateManifest.mappings.filter((item) => item.selected).length} included of ${templateManifest.mappings.length} analyzed`}
+                  onEdit={() => setStep(5)}
+                />
+              )}
+              {buildType === "migrate" && templateCompileBundle && (
+                <Review
+                  label="Portable compile"
+                  value={`${templateCompileBundle.totals.compiled} artifacts, ${templateCompileBundle.totals.ready} ready, ${templateCompileBundle.totals.review} need review`}
                   onEdit={() => setStep(5)}
                 />
               )}

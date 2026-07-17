@@ -1,6 +1,6 @@
 {
   "name": "energize-build-tool",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,6 +10,7 @@
     "test:parser": "tsx src/lib/parser.test.ts",
     "test:deploy-schema": "tsx src/lib/deploy/schema.test.ts",
     "test:template-import": "tsx src/lib/template-import/analyze.test.ts",
+    "test:template-compile": "tsx src/lib/template-import/compiler/compiler.test.ts",
     "test:wp-client": "node --conditions=react-server --import tsx src/lib/wp/client.test.ts",
     "typecheck": "tsc --noEmit",
     "verify:injection": "tsx scripts/verify-injection.ts",
