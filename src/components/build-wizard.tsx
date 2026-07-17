@@ -40,6 +40,7 @@ import type {
   MigrationCleanupReport,
   MigrationResolution,
   MigrationSourcePage,
+  MigrationWizardWorkspace,
 } from "@/lib/migration/types";
 import type { MigrationSourcePageUpdate } from "@/lib/migration/content/review";
 import { migrationReadiness } from "@/lib/migration/dependencies";
@@ -61,6 +62,19 @@ export interface InitialClient {
   wpSiteUrl: string;
   wpUsername: string;
   brandKit: BrandKit;
+}
+
+export interface InitialMigrationProject {
+  id: string;
+  crawlJobId?: string;
+  name: string;
+  sourceUrl?: string;
+  status: string;
+  stage: string;
+  sourcePages: MigrationSourcePage[];
+  compileBundle?: TemplateCompileBundle;
+  resolutions: MigrationResolution[];
+  workspace?: MigrationWizardWorkspace;
 }
 
 type Asset = UploadedAsset & { previewUrl: string };
@@ -130,6 +144,33 @@ interface CrawlPageEntry {
   metadata: Record<string, unknown>;
   recommended: boolean;
   skipReason?: string;
+}
+
+function sourcePageToCrawlEntry(page: MigrationSourcePage): CrawlPageEntry {
+  return {
+    url: page.sourceUrl,
+    title: page.title,
+    markdown: page.rawMarkdown,
+    metadata: page.metadata,
+    recommended: page.included,
+    skipReason: page.included ? undefined : page.classificationReason,
+  };
+}
+
+function sourceReportFromPages(
+  pages: MigrationSourcePage[],
+): MigrationCleanupReport {
+  return {
+    input: pages.length,
+    unique: pages.length,
+    duplicates: 0,
+    corePages: pages.filter((page) => page.classification === "core-page").length,
+    blogPosts: pages.filter((page) => page.classification === "blog-post").length,
+    blogIndexes: pages.filter((page) => page.classification === "blog-index").length,
+    skipped: pages.filter((page) => page.classification === "skipped").length,
+    removedNoiseLines: 0,
+    removedDuplicateSections: 0,
+  };
 }
 
 const STEPS = BUILD_WIZARD_STEPS;
@@ -240,69 +281,102 @@ function builderPageTypeFor(pageKey: string): ElevatePageType | undefined {
 
 export function BuildWizard({
   initialClient,
+  initialMigrationProject,
   buildType = "new-website",
 }: {
   initialClient?: InitialClient;
+  initialMigrationProject?: InitialMigrationProject;
   buildType?: string;
 }) {
   const router = useRouter();
-  const [step, setStep] = useState(0);
+  const initialWorkspace = initialMigrationProject?.workspace;
+  const resumedSourcePages = initialMigrationProject?.sourcePages ?? [];
+  const [step, setStep] = useState(
+    initialWorkspace?.step ?? (resumedSourcePages.length > 0 ? 4 : 0),
+  );
 
-  const [siteKind, setSiteKind] = useState<"existing" | "new">("existing");
-  const [crawlUrl, setCrawlUrl] = useState(initialClient?.wpSiteUrl ?? "");
-  const [crawlJobId, setCrawlJobId] = useState("");
+  const [siteKind, setSiteKind] = useState<"existing" | "new">(
+    initialWorkspace?.siteKind ?? "existing",
+  );
+  const [crawlUrl, setCrawlUrl] = useState(
+    initialMigrationProject?.sourceUrl ?? initialClient?.wpSiteUrl ?? "",
+  );
+  const [crawlJobId, setCrawlJobId] = useState(
+    initialMigrationProject?.crawlJobId ?? "",
+  );
   const [crawlStatus, setCrawlStatus] = useState<
     "idle" | "scraping" | "completed" | "failed"
-  >("idle");
+  >(resumedSourcePages.length > 0 ? "completed" : "idle");
   const [crawlProgress, setCrawlProgress] = useState({ completed: 0, total: 0 });
-  const [crawlKeep, setCrawlKeep] = useState<CrawlPageEntry[]>([]);
-  const [crawlSkip, setCrawlSkip] = useState<CrawlPageEntry[]>([]);
-  const [selectedCrawlUrls, setSelectedCrawlUrls] = useState<string[]>([]);
+  const [crawlKeep, setCrawlKeep] = useState<CrawlPageEntry[]>(() =>
+    resumedSourcePages
+      .filter((page) => page.included)
+      .map(sourcePageToCrawlEntry),
+  );
+  const [crawlSkip, setCrawlSkip] = useState<CrawlPageEntry[]>(() =>
+    resumedSourcePages
+      .filter((page) => !page.included)
+      .map(sourcePageToCrawlEntry),
+  );
+  const [selectedCrawlUrls, setSelectedCrawlUrls] = useState<string[]>(() =>
+    resumedSourcePages.filter((page) => page.included).map((page) => page.sourceUrl),
+  );
   const [crawlError, setCrawlError] = useState("");
   const [exportingCrawl, setExportingCrawl] = useState(false);
   const [savingCrawl, setSavingCrawl] = useState(false);
-  const [sourceSaved, setSourceSaved] = useState(false);
-  const [sourceReport, setSourceReport] = useState<MigrationCleanupReport | null>(null);
-  const [migrationSourcePages, setMigrationSourcePages] = useState<MigrationSourcePage[]>([]);
+  const [sourceSaved, setSourceSaved] = useState(resumedSourcePages.length > 0);
+  const [sourceReport, setSourceReport] = useState<MigrationCleanupReport | null>(
+    resumedSourcePages.length > 0 ? sourceReportFromPages(resumedSourcePages) : null,
+  );
+  const [migrationSourcePages, setMigrationSourcePages] =
+    useState<MigrationSourcePage[]>(resumedSourcePages);
   const [savingSourceReview, setSavingSourceReview] = useState(false);
 
-  const [name, setName] = useState(initialClient?.name ?? "");
-  const [slug, setSlug] = useState(initialClient?.slug ?? "");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [hours, setHours] = useState("");
-  const [bookingLink, setBookingLink] = useState("");
-  const [social, setSocial] = useState("");
+  const [name, setName] = useState(
+    initialClient?.name ?? initialWorkspace?.name ?? initialMigrationProject?.name.replace(/\s+migration$/i, "") ?? "",
+  );
+  const [slug, setSlug] = useState(
+    initialClient?.slug ?? initialWorkspace?.slug ?? slugify(initialMigrationProject?.name.replace(/\s+migration$/i, "") ?? ""),
+  );
+  const [address, setAddress] = useState(initialWorkspace?.address ?? "");
+  const [phone, setPhone] = useState(initialWorkspace?.phone ?? "");
+  const [email, setEmail] = useState(initialWorkspace?.email ?? "");
+  const [hours, setHours] = useState(initialWorkspace?.hours ?? "");
+  const [bookingLink, setBookingLink] = useState(initialWorkspace?.bookingLink ?? "");
+  const [social, setSocial] = useState(initialWorkspace?.social ?? "");
 
   const [colors, setColors] = useState(
-    initialClient?.brandKit.colors ?? DEFAULT_COLORS,
+    initialClient?.brandKit.colors ?? initialWorkspace?.colors ?? DEFAULT_COLORS,
   );
   const [fontHeading, setFontHeading] = useState(
-    initialClient?.brandKit.fonts.heading ?? "Poppins",
+    initialClient?.brandKit.fonts.heading ?? initialWorkspace?.fonts.heading ?? "Poppins",
   );
   const [fontBody, setFontBody] = useState(
-    initialClient?.brandKit.fonts.body ?? "Inter",
+    initialClient?.brandKit.fonts.body ?? initialWorkspace?.fonts.body ?? "Inter",
   );
   const [logo, setLogo] = useState<Asset | null>(() => {
-    const asset = initialClient?.brandKit.logo;
+    const asset = initialClient?.brandKit.logo ?? initialWorkspace?.logo;
     const previewUrl = previewUrlFromAsset(asset);
     return asset && previewUrl ? { ...asset, previewUrl } : null;
   });
   const [favicon, setFavicon] = useState<Asset | null>(() => {
-    const asset = initialClient?.brandKit.favicon;
+    const asset = initialClient?.brandKit.favicon ?? initialWorkspace?.favicon;
     const previewUrl = previewUrlFromAsset(asset);
     return asset && previewUrl ? { ...asset, previewUrl } : null;
   });
 
-  const [siteUrl, setSiteUrl] = useState(initialClient?.wpSiteUrl ?? "");
+  const [siteUrl, setSiteUrl] = useState(
+    initialClient?.wpSiteUrl ?? initialWorkspace?.siteUrl ?? "",
+  );
   const [username, setUsername] = useState(
-    initialClient?.wpUsername || "websites@energize-group.com",
+    initialClient?.wpUsername || initialWorkspace?.username || "websites@energize-group.com",
   );
   const [appPassword, setAppPassword] = useState("");
 
   const [markdownName, setMarkdownName] = useState("");
-  const [deployMode, setDeployMode] = useState<"pages" | "branding-only">("pages");
+  const [deployMode, setDeployMode] = useState<"pages" | "branding-only">(
+    initialWorkspace?.deployMode ?? "pages",
+  );
   const [parsing, setParsing] = useState(false);
   const [structuredResult, setStructuredResult] =
     useState<StructuredParseResult | null>(null);
@@ -316,10 +390,14 @@ export function BuildWizard({
   const [templateManifest, setTemplateManifest] =
     useState<TemplateMappingManifest | null>(null);
   const [templateCompileBundle, setTemplateCompileBundle] =
-    useState<TemplateCompileBundle | null>(null);
+    useState<TemplateCompileBundle | null>(
+      initialMigrationProject?.compileBundle ?? null,
+    );
   const [dependencyResolutions, setDependencyResolutions] =
-    useState<MigrationResolution[]>([]);
-  const [migrationProjectId, setMigrationProjectId] = useState("");
+    useState<MigrationResolution[]>(initialMigrationProject?.resolutions ?? []);
+  const [migrationProjectId, setMigrationProjectId] = useState(
+    initialMigrationProject?.id ?? "",
+  );
   const hasStoredMigrationContent =
     buildType === "migrate" && migrationSourcePages.length > 0;
   const approvedMigrationPages = migrationSourcePages.filter(
@@ -358,6 +436,84 @@ export function BuildWizard({
     }, 3000);
     return () => window.clearInterval(timer);
   }, [crawlJobId, crawlStatus]);
+
+  useEffect(() => {
+    if (!migrationProjectId) return;
+    const workspace: MigrationWizardWorkspace = {
+      schemaVersion: 1,
+      step,
+      siteKind,
+      deployMode,
+      name,
+      slug,
+      address,
+      phone,
+      email,
+      hours,
+      bookingLink,
+      social,
+      siteUrl,
+      username,
+      colors,
+      fonts: { heading: fontHeading, body: fontBody },
+      ...(logo
+        ? { logo: { filename: logo.filename, dataBase64: logo.dataBase64 } }
+        : {}),
+      ...(favicon
+        ? { favicon: { filename: favicon.filename, dataBase64: favicon.dataBase64 } }
+        : {}),
+    };
+    const timer = window.setTimeout(() => {
+      void fetch(`/api/migrations/${migrationProjectId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...(templateCompileBundle
+            ? {
+                bundle: templateCompileBundle,
+                resolutions: dependencyResolutions,
+              }
+            : {}),
+          workspace,
+        }),
+      })
+        .then(async (response) => {
+          if (response.ok) return;
+          const json = await response.json().catch(() => ({}));
+          throw new Error(json.error ?? "Could not save the migration workspace.");
+        })
+        .catch((error) => {
+          toast.error(
+            error instanceof Error
+              ? error.message
+              : "Could not save the migration workspace.",
+          );
+        });
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [
+    address,
+    bookingLink,
+    colors,
+    dependencyResolutions,
+    deployMode,
+    email,
+    favicon,
+    fontBody,
+    fontHeading,
+    hours,
+    logo,
+    migrationProjectId,
+    name,
+    phone,
+    siteKind,
+    siteUrl,
+    slug,
+    social,
+    step,
+    templateCompileBundle,
+    username,
+  ]);
 
   async function startCrawl() {
     let normalizedUrl: string;
@@ -530,7 +686,14 @@ export function BuildWizard({
       if (!response.ok) {
         throw new Error(json.error ?? "Could not save the content review.");
       }
-      setMigrationSourcePages(Array.isArray(json.pages) ? json.pages : []);
+      const savedPages = Array.isArray(json.pages)
+        ? (json.pages as MigrationSourcePage[])
+        : [];
+      setMigrationSourcePages(savedPages);
+      setSelectedCrawlUrls(
+        savedPages.filter((page) => page.included).map((page) => page.sourceUrl),
+      );
+      setSourceReport(sourceReportFromPages(savedPages));
       toast.success(
         `${json.summary.approved} of ${json.summary.included} included pages approved.`,
       );
@@ -1522,7 +1685,7 @@ export function BuildWizard({
                     Existing website
                   </span>
                   <span className="mt-1 block text-xs font-medium leading-5 text-[var(--muted)]">
-                    Crawl source pages and export raw markdown for cleanup.
+                    Crawl source pages and store raw, cleaned, and approved content in the project.
                   </span>
                 </button>
                 <button
@@ -1551,15 +1714,20 @@ export function BuildWizard({
                         placeholder="https://example.com"
                         value={crawlUrl}
                         onChange={(e) => setCrawlUrl(e.target.value)}
+                        readOnly={Boolean(initialMigrationProject)}
                       />
                     </Field>
                     <div className="flex items-end">
                       <Button
                         type="button"
                         onClick={startCrawl}
-                        disabled={crawlStatus === "scraping"}
+                        disabled={Boolean(initialMigrationProject) || crawlStatus === "scraping"}
                       >
-                        {crawlStatus === "scraping" ? "Crawling" : "Start Crawl"}
+                        {initialMigrationProject
+                          ? "Source saved"
+                          : crawlStatus === "scraping"
+                            ? "Crawling"
+                            : "Start Crawl"}
                       </Button>
                     </div>
                   </div>
@@ -1593,6 +1761,7 @@ export function BuildWizard({
                                 type="checkbox"
                                 checked={selectedCrawlUrls.includes(page.url)}
                                 onChange={(e) => toggleCrawlUrl(page.url, e.target.checked)}
+                                disabled={Boolean(initialMigrationProject)}
                               />
                               <span className="min-w-0">
                                 <span className="block truncate font-semibold text-[var(--ink)]">
@@ -1629,13 +1798,13 @@ export function BuildWizard({
                                     </span>
                                   )}
                                 </span>
-                                <button
+                                {!initialMigrationProject && <button
                                   type="button"
                                   onClick={() => moveSkippedPageToKeep(page.url)}
                                   className="shrink-0 text-xs font-semibold text-[var(--primary-deep)]"
                                 >
                                   Move to keep
-                                </button>
+                                </button>}
                               </div>
                             </div>
                           ))}
@@ -1652,6 +1821,9 @@ export function BuildWizard({
                         </p>
                         <p className="text-sm font-medium text-[var(--muted)]">
                           Continuing saves the raw crawl and deterministic cleanup. Download is optional.
+                          {initialMigrationProject
+                            ? " Change page inclusion in the Content step."
+                            : ""}
                         </p>
                         {sourceSaved && sourceReport && (
                           <p className="text-xs font-semibold text-[var(--good)]" role="status">
@@ -1659,14 +1831,14 @@ export function BuildWizard({
                           </p>
                         )}
                       </div>
-                      <Button
+                      {!initialMigrationProject && <Button
                         type="button"
                         variant="outline"
                         onClick={exportCrawlMarkdown}
                         disabled={exportingCrawl}
                       >
                         {exportingCrawl ? "Preparing backup" : "Download source backup"}
-                      </Button>
+                      </Button>}
                     </div>
                   )}
                 </div>
@@ -1848,6 +2020,7 @@ export function BuildWizard({
                     Analyze Elementor or other JSON templates, confirm their page roles, and compile a portable deployment bundle. The reviewed artifacts are used directly for migration drafts.
                   </p>
                   <TemplateImporter
+                    initialBundle={initialMigrationProject?.compileBundle}
                     onManifestChange={setTemplateManifest}
                     onCompileChange={setTemplateCompileBundle}
                   />
@@ -1856,6 +2029,7 @@ export function BuildWizard({
                       <SectionLabel>Dependency resolution</SectionLabel>
                       <DependencyResolver
                         bundle={templateCompileBundle}
+                        initialItems={initialMigrationProject?.resolutions}
                         onChange={setDependencyResolutions}
                       />
                     </>

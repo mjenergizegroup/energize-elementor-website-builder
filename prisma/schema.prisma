@@ -51,6 +51,7 @@ model MigrationProject {
   selectedTemplates Json     @default("[]")
   mappings          Json     @default("[]")
   resolutions       Json     @default("[]")
+  wizardWorkspace   Json     @default("{}")
   deployment        Json     @default("{}")
   lastError         String?
   createdBy         String

@@ -1,10 +1,23 @@
 import Link from "next/link";
 import { X } from "lucide-react";
+import { auth } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { BuildWizard, type InitialClient } from "@/components/build-wizard";
+import {
+  BuildWizard,
+  type InitialClient,
+  type InitialMigrationProject,
+} from "@/components/build-wizard";
 import { LandingPageWizard } from "@/components/landing-page-wizard";
 import { buttonVariants } from "@/components/ui/button";
 import type { BrandKit } from "@/lib/types";
+import {
+  getMigrationProject,
+  parseMigrationCompileBundle,
+  parseMigrationResolutions,
+  parseMigrationSourcePages,
+  parseMigrationWizardWorkspace,
+} from "@/lib/migration/projects";
 
 export const dynamic = "force-dynamic";
 
@@ -36,12 +49,38 @@ const buildTypes = [
 export default async function NewBuildPage({
   searchParams,
 }: {
-  searchParams: Promise<{ clientId?: string; type?: string }>;
+  searchParams: Promise<{ clientId?: string; projectId?: string; type?: string }>;
 }) {
-  const { clientId, type } = await searchParams;
+  const { userId } = await auth();
+  if (!userId) notFound();
+  const { clientId: requestedClientId, projectId, type } = await searchParams;
+  let initialMigrationProject: InitialMigrationProject | undefined;
+  let clientId = requestedClientId;
+  if (projectId) {
+    try {
+      const project = await getMigrationProject(userId, projectId);
+      clientId = project.clientId ?? clientId;
+      initialMigrationProject = {
+        id: project.id,
+        crawlJobId: project.crawlJobId ?? undefined,
+        name: project.name,
+        sourceUrl: project.sourceUrl ?? undefined,
+        status: project.status,
+        stage: project.stage,
+        sourcePages: parseMigrationSourcePages(project.sourcePages),
+        compileBundle: parseMigrationCompileBundle(project.selectedTemplates),
+        resolutions: parseMigrationResolutions(project.resolutions),
+        workspace: parseMigrationWizardWorkspace(project.wizardWorkspace),
+      };
+    } catch {
+      notFound();
+    }
+  }
   let initialClient: InitialClient | undefined;
   if (clientId) {
-    const client = await prisma.client.findUnique({ where: { id: clientId } });
+    const client = await prisma.client.findFirst({
+      where: { id: clientId, createdBy: userId },
+    });
     if (client) {
       initialClient = {
         id: client.id,
@@ -54,12 +93,19 @@ export default async function NewBuildPage({
     }
   }
 
-  if (type) {
-    if (type === "landing-page") {
+  const selectedType = projectId ? "migrate" : type;
+  if (selectedType) {
+    if (selectedType === "landing-page") {
       return <LandingPageWizard initialClient={initialClient} />;
     }
 
-    return <BuildWizard initialClient={initialClient} buildType={type} />;
+    return (
+      <BuildWizard
+        initialClient={initialClient}
+        initialMigrationProject={initialMigrationProject}
+        buildType={selectedType}
+      />
+    );
   }
 
   return (

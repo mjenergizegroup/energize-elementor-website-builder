@@ -12,6 +12,7 @@ import {
   parseMigrationContentMappings,
   parseMigrationAssets,
   parseMigrationResolutions,
+  parseMigrationSourcePages,
   getMigrationProject,
   saveMigrationDeploymentPlan,
   saveMigrationDeploymentRecord,
@@ -32,6 +33,7 @@ import type {
 } from "@/lib/migration/deploy/types";
 import { validateBrandKitAssets } from "@/lib/security/uploads";
 import { remapContentMedia } from "@/lib/migration/content/media";
+import { validateCurrentApprovedContent } from "@/lib/migration/content/approval";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -63,6 +65,16 @@ export async function POST(
   try {
     const project = await getMigrationProject(userId, projectId);
     if (parsed.data.action === "prepare") {
+      const approvalErrors = validateCurrentApprovedContent(
+        parseMigrationSourcePages(project.sourcePages),
+        parsed.data.contentMappings,
+      );
+      if (approvalErrors.length > 0) {
+        return Response.json(
+          { error: approvalErrors.join(" ") },
+          { status: 409 },
+        );
+      }
       let clientId = project.clientId ?? undefined;
       if (!clientId) {
         if (!parsed.data.destination) {
@@ -121,6 +133,16 @@ export async function POST(
     const storedContentMappings = migrationContentMappingsSchema.parse(
       parseMigrationContentMappings(project.mappings),
     );
+    const approvalErrors = validateCurrentApprovedContent(
+      parseMigrationSourcePages(project.sourcePages),
+      storedContentMappings,
+    );
+    if (approvalErrors.length > 0) {
+      return Response.json(
+        { error: approvalErrors.join(" ") },
+        { status: 409 },
+      );
+    }
     const contentMedia = remapContentMedia(
       storedContentMappings,
       parseMigrationAssets(project.assets),

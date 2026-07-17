@@ -3,14 +3,23 @@
 import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import type { TemplateCompileBundle } from "@/lib/template-import/types";
-import { buildDependencyLedger, migrationReadiness } from "@/lib/migration/dependencies";
+import {
+  migrationReadiness,
+  reconcileDependencyLedger,
+} from "@/lib/migration/dependencies";
 import type { MigrationResolution } from "@/lib/migration/types";
 
-export function DependencyResolver({ bundle, onChange }: {
+const EMPTY_RESOLUTIONS: MigrationResolution[] = [];
+
+export function DependencyResolver({ bundle, initialItems, onChange }: {
   bundle: TemplateCompileBundle;
+  initialItems?: MigrationResolution[];
   onChange?: (items: MigrationResolution[]) => void;
 }) {
-  const seed = useMemo(() => buildDependencyLedger(bundle), [bundle]);
+  const seed = useMemo(
+    () => reconcileDependencyLedger(bundle, initialItems ?? EMPTY_RESOLUTIONS),
+    [bundle, initialItems],
+  );
   const [items, setItems] = useState(seed);
   useEffect(() => { setItems(seed); onChange?.(seed); }, [seed, onChange]);
   const readiness = migrationReadiness(items);

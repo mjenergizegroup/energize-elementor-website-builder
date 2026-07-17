@@ -3,7 +3,7 @@ import type {
   TemplateMappingManifest,
 } from "@/lib/template-import/types";
 
-export const MIGRATION_PROJECT_SCHEMA_VERSION = 2 as const;
+export const MIGRATION_PROJECT_SCHEMA_VERSION = 3 as const;
 
 export type MigrationProjectStatus =
   | "draft"
@@ -123,6 +123,33 @@ export interface MigrationProjectState {
   templateManifest?: TemplateMappingManifest;
   compileBundle?: TemplateCompileBundle;
   resolutions: MigrationResolution[];
+}
+
+export interface MigrationWizardWorkspace {
+  schemaVersion: 1;
+  step: number;
+  siteKind: "existing" | "new";
+  deployMode: "pages" | "branding-only";
+  name: string;
+  slug: string;
+  address: string;
+  phone: string;
+  email: string;
+  hours: string;
+  bookingLink: string;
+  social: string;
+  siteUrl: string;
+  username: string;
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    text: string;
+    background: string;
+  };
+  fonts: { heading: string; body: string };
+  logo?: { filename: string; dataBase64: string };
+  favicon?: { filename: string; dataBase64: string };
 }
 
 export interface MigrationCleanupReport {

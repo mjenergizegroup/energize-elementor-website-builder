@@ -82,6 +82,12 @@ Crawl-backed migrations do not require an exported or re-uploaded content file.
 The prepared-content import remains a compatibility option for projects that do
 not have stored source pages.
 
+The dashboard lists owned migration projects for resume. Source review, current
+wizard step, non-secret practice and brand fields, compiled templates, and
+dependency decisions are restored. WordPress application passwords are excluded
+from the wizard snapshot and remain protected by the existing saved-client
+encryption path.
+
 The build wizard does not ask the user to choose a theme or visual preset.
 Historical preset metadata remains server-side for compatibility with existing
 new-site builds.

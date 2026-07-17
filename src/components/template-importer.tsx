@@ -40,9 +40,11 @@ import {
 import { cn } from "@/lib/utils";
 
 export function TemplateImporter({
+  initialBundle,
   onCompileChange,
   onManifestChange,
 }: {
+  initialBundle?: TemplateCompileBundle;
   onCompileChange?: (bundle: TemplateCompileBundle | null) => void;
   onManifestChange?: (manifest: TemplateMappingManifest | null) => void;
 }) {
@@ -56,7 +58,7 @@ export function TemplateImporter({
   const [analyses, setAnalyses] = useState<TemplateAnalysis[]>([]);
   const [mappings, setMappings] = useState<TemplateMappingSelection[]>([]);
   const [compileBundle, setCompileBundle] =
-    useState<TemplateCompileBundle | null>(null);
+    useState<TemplateCompileBundle | null>(initialBundle ?? null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   const manifest = useMemo<TemplateMappingManifest | null>(() => {
@@ -320,6 +322,19 @@ export function TemplateImporter({
           </span>
         )}
       </motion.div>
+
+      {analyses.length === 0 && compileBundle ? (
+        <div className="space-y-3">
+          <div className="border border-[var(--line)] bg-[var(--paper-2)] p-4 text-sm leading-6 text-[var(--ink)]">
+            This project has a saved portable template bundle. Add the JSON files again only if you want to replace or edit its template mappings.
+          </div>
+          <CompileSummary
+            bundle={compileBundle}
+            reduceMotion={Boolean(reduceMotion)}
+            onExport={exportCompileBundle}
+          />
+        </div>
+      ) : null}
 
       <AnimatePresence initial={false}>
         {analyses.length > 0 ? (

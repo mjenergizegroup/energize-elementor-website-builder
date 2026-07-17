@@ -12,6 +12,7 @@ import {
   type MigrationBlogDraft,
   type MigrationSourcePage,
   type MigrationResolution,
+  type MigrationWizardWorkspace,
 } from "./types";
 import type { MigrationDeploymentRecord } from "./deploy/types";
 import type { TemplateContentMapping } from "./content/types";
@@ -45,6 +46,7 @@ interface MigrationProjectRecord {
   selectedTemplates: Prisma.JsonValue;
   mappings: Prisma.JsonValue;
   resolutions: Prisma.JsonValue;
+  wizardWorkspace: Prisma.JsonValue;
   deployment: Prisma.JsonValue;
   lastError: string | null;
   createdBy: string;
@@ -312,6 +314,48 @@ export async function saveMigrationDeploymentPlan(
   return project;
 }
 
+export async function saveMigrationTemplateWorkspace(
+  userId: string,
+  projectId: string,
+  bundle: TemplateCompileBundle | undefined,
+  resolutions: MigrationResolution[],
+  workspace: MigrationWizardWorkspace,
+) {
+  const existing = await getMigrationProject(userId, projectId);
+  const ready = Boolean(bundle) && resolutions.every(
+    (item) => item.status === "resolved" || item.status === "accepted",
+  );
+  const project = await migrationProjects.update({
+    where: { id: existing.id },
+    data: {
+      status: existing.status === "complete" ? "complete" : "active",
+      stage:
+        existing.status === "complete"
+          ? existing.stage
+          : bundle
+            ? ready
+              ? "resolution"
+              : "templates"
+            : existing.stage,
+      ...(bundle
+        ? {
+            selectedTemplates: toInputJson(bundle),
+            resolutions: toInputJson(resolutions),
+          }
+        : {}),
+      wizardWorkspace: toInputJson(workspace),
+      lastError: null,
+    },
+  });
+  await audit(userId, "migration.templates.save", existing.clientId, {
+    migrationProjectId: existing.id,
+    templates: bundle?.pages.filter((page) => page.mapping.selected).length ?? 0,
+    resolutions: resolutions.length,
+    ready,
+  });
+  return project;
+}
+
 export async function saveMigrationDeploymentRecord(
   userId: string,
   projectId: string,
@@ -375,6 +419,14 @@ export function parseMigrationDeployment(
 ): MigrationDeploymentRecord | undefined {
   return isJsonObject(value)
     ? (value as unknown as MigrationDeploymentRecord)
+    : undefined;
+}
+
+export function parseMigrationWizardWorkspace(
+  value: Prisma.JsonValue,
+): MigrationWizardWorkspace | undefined {
+  return isJsonObject(value)
+    ? (value as unknown as MigrationWizardWorkspace)
     : undefined;
 }
 

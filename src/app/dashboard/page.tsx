@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { Plus, RotateCw } from "lucide-react";
+import { auth } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { listMigrationProjects } from "@/lib/migration/projects";
 
 export const dynamic = "force-dynamic";
 
@@ -36,8 +39,11 @@ function isLandingPageBuild(theme: string | null | undefined) {
 }
 
 export default async function DashboardPage() {
-  const [builds, clients, buildCount30d, successCount30d] = await Promise.all([
+  const { userId } = await auth();
+  if (!userId) notFound();
+  const [builds, clients, buildCount30d, successCount30d, migrationProjects] = await Promise.all([
     prisma.build.findMany({
+      where: { deployedBy: userId },
       orderBy: { createdAt: "desc" },
       take: 6,
       select: {
@@ -56,9 +62,14 @@ export default async function DashboardPage() {
         },
       },
     }),
-    prisma.client.findMany({ orderBy: { updatedAt: "desc" }, take: 3 }),
+    prisma.client.findMany({
+      where: { createdBy: userId },
+      orderBy: { updatedAt: "desc" },
+      take: 3,
+    }),
     prisma.build.count({
       where: {
+        deployedBy: userId,
         createdAt: {
           gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
         },
@@ -66,12 +77,14 @@ export default async function DashboardPage() {
     }),
     prisma.build.count({
       where: {
+        deployedBy: userId,
         status: "success",
         createdAt: {
           gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
         },
       },
     }),
+    listMigrationProjects(userId),
   ]);
 
   const successRate =
@@ -117,6 +130,46 @@ export default async function DashboardPage() {
           <div className="stat-value">{builds.length}</div>
           <div className="stat-delta">↑ Latest activity</div>
         </div>
+      </section>
+
+      <section className="table-block">
+        <div className="block-head">
+          <h2>Migration projects</h2>
+          <span className="block-note">{migrationProjects.length} saved</span>
+        </div>
+        <div className="grid-head client-grid">
+          <div>#</div>
+          <div>Project</div>
+          <div>Stage</div>
+          <div>Last saved</div>
+          <div />
+        </div>
+        {migrationProjects.length === 0 ? (
+          <p className="grid-row">No saved migration projects yet.</p>
+        ) : (
+          migrationProjects.slice(0, 8).map((project, index) => (
+            <div key={project.id} className="grid-row client-grid">
+              <div className="idx">{String(index + 1).padStart(2, "0")}</div>
+              <div className="min-w-0">
+                <div className="row-name truncate">{project.name}</div>
+                <span className="row-sub">
+                  <Badge variant={statusVariant(project.status)}>{project.status}</Badge>
+                </span>
+              </div>
+              <div className="row-meta capitalize">
+                {project.stage.replace(/-/g, " ")}
+              </div>
+              <div className="row-sub">{formatDate(project.updatedAt)}</div>
+              <Link
+                href={`/dashboard/new?type=migrate&projectId=${project.id}`}
+                className="row-action inline-flex items-center gap-1"
+              >
+                <RotateCw className="size-3" />
+                Resume
+              </Link>
+            </div>
+          ))
+        )}
       </section>
 
       <section className="table-block">

@@ -91,6 +91,43 @@ const resolutionSchema = z.object({
   note: z.string().max(5_000).optional(),
 });
 
+export const migrationResolutionsSchema = z.array(resolutionSchema).max(10_000);
+
+const workspaceAssetSchema = z.object({
+  filename: z.string().min(1).max(255),
+  dataBase64: z.string().min(1).max(4_000_000),
+});
+
+export const migrationWizardWorkspaceSchema = z.object({
+  schemaVersion: z.literal(1),
+  step: z.number().int().min(0).max(5),
+  siteKind: z.enum(["existing", "new"]),
+  deployMode: z.enum(["pages", "branding-only"]),
+  name: z.string().max(200),
+  slug: z.string().max(200),
+  address: z.string().max(2_000),
+  phone: z.string().max(200),
+  email: z.string().max(500),
+  hours: z.string().max(2_000),
+  bookingLink: z.string().max(5_000),
+  social: z.string().max(5_000),
+  siteUrl: z.string().max(5_000),
+  username: z.string().max(500),
+  colors: z.object({
+    primary: z.string().max(100),
+    secondary: z.string().max(100),
+    accent: z.string().max(100),
+    text: z.string().max(100),
+    background: z.string().max(100),
+  }),
+  fonts: z.object({
+    heading: z.string().max(200),
+    body: z.string().max(200),
+  }),
+  logo: workspaceAssetSchema.optional(),
+  favicon: workspaceAssetSchema.optional(),
+}).strict();
+
 const assetSchema = z.object({
   filename: z.string().min(1).max(255),
   dataBase64: z.string().min(1).max(4_000_000),
@@ -177,7 +214,7 @@ export const migrationDeployActionSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("prepare"),
     bundle: migrationCompileBundleSchema,
-    resolutions: z.array(resolutionSchema).max(10_000),
+    resolutions: migrationResolutionsSchema,
     contentMappings: migrationContentMappingsSchema,
     destination: destinationSchema.optional(),
   }),

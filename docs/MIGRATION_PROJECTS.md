@@ -1,8 +1,9 @@
 # Migration Projects
 
 Migration projects are resumable, versioned records for the site-migration
-pipeline. They retain source pages, cleaned core pages, blog posts, assets,
-template selections, mappings, and dependency resolutions between requests.
+pipeline. They retain source pages, approved revisions, wizard fields, brand
+assets, template selections, mappings, and dependency resolutions between
+requests.
 
 ## State model
 
@@ -12,6 +13,8 @@ template selections, mappings, and dependency resolutions between requests.
 - JSON collections preserve review state without assuming one template format.
 - `createdBy` scopes every project query to the authenticated team member.
 - `clientId` is optional until a destination client is selected.
+- `wizardWorkspace` stores non-secret form state and the current step. WordPress
+  application passwords are never stored in this snapshot.
 
 An existing-site crawl creates its owned migration project immediately. The
 source ingest endpoint accepts the crawl job and selected URLs, retrieves the
@@ -30,6 +33,8 @@ and removes approval until an authenticated reviewer approves it again.
 - `GET /api/migrations` lists projects owned by the current user.
 - `POST /api/migrations` creates a project.
 - `GET /api/migrations/{projectId}` resumes a project.
+- `PATCH /api/migrations/{projectId}` saves the non-secret wizard snapshot,
+  compiled template bundle, and reconciled dependency decisions.
 - `POST /api/migrations/{projectId}/source` validates, cleans, classifies, and
   stores a source-page batch.
 - `GET /api/migrations/{projectId}/source` returns normalized source review state.
@@ -55,7 +60,7 @@ destination IDs and URLs so retries skip completed work.
 
 ## Content conversion
 
-Cleaned pages normalize into versioned heading, rich-text, image, and link
+Approved pages normalize into versioned heading, rich-text, image, and link
 slots without depending on an Elementor sample shape. The additive conversion
 registry currently includes `elementor-v3-to-atomic` version 1. It translates
 classic sections, columns, containers, headings, text, buttons, and images into
@@ -70,10 +75,11 @@ standard Atomic section. Existing Atomic layout classes and local styles remain
 in place. Classic source layouts receive semantic Atomic Foundation classes
 during conversion.
 
-The wizard persists the normalized mapping, reconstructs reviewable source pages
-for media inventory, dry-runs media, uploads only after the explicit final
-action, and prepares the page artifacts again with destination media IDs and
-reviewed alt text before the no-write page dry run.
+The wizard persists the template workspace as it changes. The dashboard lists
+owned migration projects and resumes their source review, form state, template
+bundle, and dependency decisions. It dry-runs media, uploads only after the
+explicit final action, and prepares the page artifacts again with destination
+media IDs and reviewed alt text before the no-write page dry run.
 
 ## Dependency resolution
 
@@ -109,6 +115,9 @@ executes a saved compile bundle. The server regenerates the expected dependency
 ledger from the bundle on every state change, so a caller cannot omit a blocker.
 It also revalidates artifact size, depth, node count, Elementor IDs, unsafe
 object keys, and credential-like fields before using compiled content.
+Revisioned mappings include the source revision and approval checksum. Prepare,
+preflight, dry run, and execution reject a saved mapping if the approved source
+has since changed, been excluded, or lost approval.
 
 The build wizard runs a dry run before its explicit create-drafts action.
 Execute mode checks the saved WordPress connection, applies reviewed media and
@@ -124,7 +133,7 @@ also creates a standard build-history record and audit entries.
 
 ## Database rollout
 
-The Prisma schema includes the `MigrationProject` model and its blog-draft
-state. Do not run
+The Prisma schema includes the owned crawl reference and non-secret wizard
+workspace fields on `MigrationProject`. Do not run
 `npm run db:push` against Neon until the database change is explicitly approved
 for that environment. Local Prisma client generation does not modify Neon.

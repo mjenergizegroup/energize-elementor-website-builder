@@ -54,6 +54,7 @@ The resumable `MigrationProject` state contains:
 - media inventory and source-to-destination media mappings;
 - compiled template bundle and selected page roles;
 - dependency decisions;
+- non-secret wizard fields and the current step;
 - prepared Gutenberg blog drafts;
 - page deployment attempts, events, errors, and WordPress result links.
 
@@ -65,6 +66,11 @@ Crawl-backed migrations keep content inside the project from selection through
 deployment. Export is an optional backup, and no content-file re-upload is
 required. A compatibility import remains available for projects without stored
 source pages.
+
+Owned projects appear on the dashboard and resume in the build wizard. Template
+bundles and dependency decisions save as they change. Revision and approval
+checks run again on the server before preparation and deployment, so stale
+content mappings cannot create drafts.
 
 Media migration preserves original source URLs, removes known resize parameters,
 requires reviewed alt text, generates readable filenames, and stores destination
@@ -114,6 +120,7 @@ enabling this target.
 - Deploy requests are rate-limited and audited.
 - Secrets must never be printed, sent to the browser, committed, or placed in
   audit metadata.
+- The resumable wizard snapshot excludes WordPress application passwords.
 
 ## Definition of done
 
