@@ -1,10 +1,10 @@
-import { createHash } from "node:crypto";
 import type { MigrationSourcePage } from "../types";
 import type { NormalizedContentSlot, NormalizedPageContent } from "./types";
 
 export function normalizePageContent(page: MigrationSourcePage): NormalizedPageContent {
   const slots: NormalizedContentSlot[] = [];
-  const blocks = page.cleanedMarkdown.split(/\n{2,}/).map((item) => item.trim()).filter(Boolean);
+  const approvedMarkdown = page.approvedMarkdown || page.cleanedMarkdown;
+  const blocks = approvedMarkdown.split(/\n{2,}/).map((item) => item.trim()).filter(Boolean);
   for (const block of blocks) {
     const heading = block.match(/^(#{1,6})\s+([\s\S]+)$/);
     if (heading) {
@@ -41,5 +41,5 @@ function escapeHtml(value: string): string {
 }
 
 function slotId(pageId: string, index: number): string {
-  return createHash("sha256").update(`${pageId}:${index}`).digest("hex").slice(0, 16);
+  return `${pageId}-${index}`;
 }

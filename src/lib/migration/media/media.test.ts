@@ -18,6 +18,7 @@ const page: MigrationSourcePage = {
     "![Smiling dental patient](https://cdn.sanity.io/images/a/b/photo.jpg?w=400)",
     '<img src="/team.webp" alt="Our dental team">',
     "![Icon](https://example.com/icon-arrow.png)",
+    "![Removed image](https://example.com/removed.jpg)",
   ].join("\n"),
   approvedMarkdown: [
     "![Smiling dental patient](https://cdn.sanity.io/images/a/b/photo.jpg?w=800&q=80)",
@@ -35,6 +36,10 @@ const page: MigrationSourcePage = {
 
 const inventory = buildMediaInventory([page]);
 assert.equal(inventory.length, 2);
+assert.equal(
+  inventory.some((asset) => asset.originalUrl.includes("removed.jpg")),
+  false,
+);
 assert.equal(inventory[0].sourcePageIds.length, 1);
 assert.equal(inventory.every((asset) => asset.status === "ready"), true);
 assert.equal(originalAssetUrl("https://cdn.sanity.io/images/a/b/photo.jpg?w=800&q=70"), "https://cdn.sanity.io/images/a/b/photo.jpg");

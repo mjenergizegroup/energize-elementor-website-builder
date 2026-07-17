@@ -30,7 +30,9 @@ export function buildMediaInventory(
   const assets = new Map<string, MigrationAsset>();
 
   for (const page of pages.filter((item) => item.included)) {
-    for (const reference of extractImageReferences(page.cleanedMarkdown)) {
+    for (const reference of extractImageReferences(
+      page.approvedMarkdown || page.cleanedMarkdown,
+    )) {
       const sourceUrl = resolveImageUrl(reference.url, page.normalizedUrl);
       if (!sourceUrl) continue;
       const originalUrl = originalAssetUrl(sourceUrl);

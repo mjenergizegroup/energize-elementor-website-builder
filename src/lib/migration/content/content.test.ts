@@ -4,6 +4,7 @@ import { convertTemplateToAtomic } from "./registry";
 import { injectNormalizedContent } from "./inject";
 import {
   contentMappingsToSourcePages,
+  mapMigrationPagesToTemplates,
   mapStructuredPagesToTemplates,
   resolveContentImageUrls,
 } from "./structured";
@@ -22,6 +23,74 @@ const page: MigrationSourcePage = {
 const normalized = normalizePageContent(page);
 assert.deepEqual(normalized.slots.map((slot) => slot.kind), ["heading", "rich-text", "link"]);
 assert.equal(new Set(normalized.slots.map((slot) => slot.id)).size, 3);
+
+const approvedPage: MigrationSourcePage = {
+  ...page,
+  reviewed: true,
+  approvedMarkdown: "# Approved About\n\nApproved source copy.",
+  approvedChecksum: "approved-checksum",
+  contentRevision: 3,
+};
+const directMapped = mapMigrationPagesToTemplates(
+  {
+    pages: [
+      {
+        analysisId: "about-direct-template",
+        targetKind: "wp-page",
+        mapping: {
+          selected: true,
+          role: "about",
+          title: "About Template",
+          slug: "about",
+        },
+      },
+      {
+        analysisId: "single-post-template",
+        targetKind: "elementor-theme-template",
+        mapping: {
+          selected: true,
+          role: "blog-single",
+          title: "Single Post",
+          slug: "single-post",
+        },
+      },
+    ],
+  } as unknown as TemplateCompileBundle,
+  [approvedPage],
+);
+assert.deepEqual(directMapped.errors, []);
+assert.equal(directMapped.mappings.length, 1);
+assert.equal(directMapped.mappings[0].analysisId, "about-direct-template");
+assert.equal(directMapped.mappings[0].sourceRevision, 3);
+assert.equal(directMapped.mappings[0].sourceChecksum, "approved-checksum");
+assert.match(
+  JSON.stringify(directMapped.mappings[0].content.slots),
+  /Approved source copy/,
+);
+assert.doesNotMatch(
+  JSON.stringify(directMapped.mappings[0].content.slots),
+  /Friendly dental care/,
+);
+
+const unapprovedMapping = mapMigrationPagesToTemplates(
+  {
+    pages: [
+      {
+        analysisId: "about-unapproved-template",
+        targetKind: "wp-page",
+        mapping: {
+          selected: true,
+          role: "about",
+          title: "About",
+          slug: "about",
+        },
+      },
+    ],
+  } as unknown as TemplateCompileBundle,
+  [page],
+);
+assert.equal(unapprovedMapping.mappings.length, 0);
+assert.match(unapprovedMapping.errors[0], /No approved stored content page/);
 
 const converted = convertTemplateToAtomic({ content: [{
   id: "section-1", elType: "section", settings: {}, elements: [

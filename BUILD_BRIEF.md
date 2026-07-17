@@ -31,9 +31,11 @@ theme or preset is selected in the build wizard.
 3. Review the brand kit and validated logo and favicon files.
 4. Select or create a saved WordPress destination.
 5. For migration builds:
+   - Review the stored raw, cleaned, and editable approved content revisions.
    - Upload up to 20 JSON templates per batch.
    - Review format, page-role suggestions, dependencies, and blockers.
-   - Select destination pages and edit WordPress titles and slugs.
+   - Match approved stored pages to destination templates by slug and
+     theme-neutral page role.
    - Compile portable artifacts and regenerate Elementor IDs.
    - Resolve or explicitly accept every dependency.
    - Run deterministic preflight and an automatic no-write dry run.
@@ -47,7 +49,7 @@ theme or preset is selected in the build wizard.
 
 The resumable `MigrationProject` state contains:
 
-- raw and cleaned source pages;
+- raw, cleaned, and revisioned approved source pages;
 - classified core pages, blog indexes, and blog posts;
 - media inventory and source-to-destination media mappings;
 - compiled template bundle and selected page roles;
@@ -58,6 +60,11 @@ The resumable `MigrationProject` state contains:
 Source cleanup is deterministic. It removes crawl noise, reports duplicate
 sections, and classifies posts using URL, metadata, listing, and published-date
 signals rather than relying only on a `/blog/` path.
+
+Crawl-backed migrations keep content inside the project from selection through
+deployment. Export is an optional backup, and no content-file re-upload is
+required. A compatibility import remains available for projects without stored
+source pages.
 
 Media migration preserves original source URLs, removes known resize parameters,
 requires reviewed alt text, generates readable filenames, and stores destination

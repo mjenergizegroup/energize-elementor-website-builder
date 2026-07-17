@@ -42,7 +42,7 @@ src/lib/elementor/atomic/ Shared V4 variables, classes, elements, components,
                           and the deterministic Atomic page builder
 src/lib/injection/        Visual preset discovery and historical template
                           compatibility layer
-src/lib/parser/           Approved markdown to structured page content
+src/lib/parser/           Compatibility import to structured page content
 src/lib/wp/               Server-side WordPress client + brand-kit mapping
 src/lib/deploy/           Deploy orchestration (yields progress events)
 src/lib/migration/        Resumable cleanup, media, conversion, blogs, and deploy
@@ -65,9 +65,11 @@ Migration project state and its authenticated API are documented in
    Source-file download remains an optional backup rather than a handoff step.
 2. Review raw, cleaned, and editable approved content inside the builder.
    Approval is revisioned and is removed automatically when content changes.
-3. Inventory full-resolution media, review metadata, and dry-run uploads.
-4. Upload up to 20 JSON templates, review analysis, select page roles, and
-   compile portable artifacts.
+3. Upload up to 20 JSON templates, review analysis, select page roles, and
+   compile portable artifacts. The builder matches each page template to one
+   approved stored page by slug and theme-neutral page role.
+4. Inventory full-resolution media from approved content, review metadata, and
+   dry-run uploads.
 5. Resolve or explicitly accept every regenerated dependency-ledger item.
 6. Convert supported classic structures through the versioned Atomic adapter.
 7. Prepare deployment, run the automatic no-write dry run, and use the explicit
@@ -75,6 +77,10 @@ Migration project state and its authenticated API are documented in
 8. Review saved progress and result links. Retry only failed drafts when needed.
 9. Prepare and dry-run Gutenberg blog drafts after their media has destination
    IDs.
+
+Crawl-backed migrations do not require an exported or re-uploaded content file.
+The prepared-content import remains a compatibility option for projects that do
+not have stored source pages.
 
 The build wizard does not ask the user to choose a theme or visual preset.
 Historical preset metadata remains server-side for compatibility with existing

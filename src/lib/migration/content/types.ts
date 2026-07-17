@@ -17,6 +17,8 @@ export interface NormalizedPageContent {
 export interface TemplateContentMapping {
   analysisId: string;
   content: NormalizedPageContent;
+  sourceRevision?: number;
+  sourceChecksum?: string;
 }
 
 export interface ConversionReviewItem {

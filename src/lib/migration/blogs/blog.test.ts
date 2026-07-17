@@ -34,7 +34,7 @@ const page: MigrationSourcePage = {
   title: "Fallback title",
   sourceChecksum: "checksum",
   rawMarkdown: "",
-  cleanedMarkdown: blogMarkdown,
+  cleanedMarkdown: blogMarkdown.replaceAll("Healthy Habits", "Unapproved Draft"),
   approvedMarkdown: blogMarkdown,
   contentRevision: 1,
   classification: "blog-post",
@@ -62,7 +62,7 @@ const asset: MigrationAsset = {
 };
 
 async function main() {
-  const frontMatter = parseFrontMatter(page.cleanedMarkdown);
+  const frontMatter = parseFrontMatter(blogMarkdown);
   assert.equal(frontMatter.values.title, "Healthy Habits");
   assert.match(frontMatter.body, /^# Healthy Habits/);
   assert.match(

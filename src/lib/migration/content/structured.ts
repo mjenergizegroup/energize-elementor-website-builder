@@ -4,6 +4,8 @@ import type {
   TemplateContentMapping,
 } from "./types";
 import type { FirecrawlPage } from "@/lib/firecrawl/types";
+import type { MigrationSourcePage } from "@/lib/migration/types";
+import { normalizePageContent } from "./normalize";
 
 export interface StructuredMigrationPage {
   page: string;
@@ -23,7 +25,7 @@ export function mapStructuredPagesToTemplates(
   const mappings: TemplateContentMapping[] = [];
   const errors: string[] = [];
 
-  for (const template of bundle.pages.filter((page) => page.mapping.selected)) {
+  for (const template of selectedPageTemplates(bundle)) {
     const match = bestPageMatch(template.mapping.role, template.mapping.slug, available, used);
     if (!match) {
       errors.push(`No approved content page matches ${template.mapping.title}.`);
@@ -35,6 +37,52 @@ export function mapStructuredPagesToTemplates(
       content: normalizeStructuredPage(match, template.mapping.title, template.mapping.slug),
     });
   }
+  return { mappings, errors };
+}
+
+export function mapMigrationPagesToTemplates(
+  bundle: TemplateCompileBundle,
+  pages: MigrationSourcePage[],
+): { mappings: TemplateContentMapping[]; errors: string[] } {
+  const available = pages.filter(
+    (page) =>
+      page.included &&
+      page.reviewed &&
+      Boolean((page.approvedMarkdown || page.cleanedMarkdown).trim()) &&
+      page.classification !== "blog-post" &&
+      page.classification !== "skipped",
+  );
+  const used = new Set<string>();
+  const mappings: TemplateContentMapping[] = [];
+  const errors: string[] = [];
+
+  for (const template of selectedPageTemplates(bundle)) {
+    const match = bestMigrationPageMatch(
+      template.mapping.role,
+      template.mapping.slug,
+      available,
+      used,
+    );
+    if (!match) {
+      errors.push(
+        `No approved stored content page matches ${template.mapping.title}. Review and approve a matching page, or change the template role or slug.`,
+      );
+      continue;
+    }
+    used.add(match.id);
+    const content = normalizePageContent(match);
+    mappings.push({
+      analysisId: template.analysisId,
+      content: {
+        ...content,
+        title: match.title || template.mapping.title,
+        slug: template.mapping.slug || content.slug,
+      },
+      sourceRevision: match.contentRevision,
+      sourceChecksum: match.approvedChecksum,
+    });
+  }
+
   return { mappings, errors };
 }
 
@@ -96,6 +144,81 @@ function bestPageMatch(
   if (roleMatch) return roleMatch;
   if (role === "custom" && unused.length === 1) return unused[0];
   return undefined;
+}
+
+function selectedPageTemplates(bundle: TemplateCompileBundle) {
+  return bundle.pages.filter(
+    (page) =>
+      page.mapping.selected && page.targetKind !== "elementor-theme-template",
+  );
+}
+
+function bestMigrationPageMatch(
+  role: TemplatePageRole,
+  templateSlug: string,
+  pages: MigrationSourcePage[],
+  used: Set<string>,
+): MigrationSourcePage | undefined {
+  const unused = pages.filter((page) => !used.has(page.id));
+  const normalizedTemplateSlug = normalizeSlug(templateSlug);
+  const exact = unused.find(
+    (page) => migrationPageSlug(page) === normalizedTemplateSlug,
+  );
+  if (exact) return exact;
+
+  const scored = unused
+    .map((page) => ({ page, score: migrationRoleScore(role, page) }))
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score || a.page.title.localeCompare(b.page.title));
+  if (scored[0]) return scored[0].page;
+  if (role === "custom" && unused.length === 1) return unused[0];
+  return undefined;
+}
+
+function migrationRoleScore(
+  role: TemplatePageRole,
+  page: MigrationSourcePage,
+): number {
+  const slug = migrationPageSlug(page);
+  const path = safePathname(page.normalizedUrl);
+  const haystack = `${path} ${slug} ${page.title}`.toLowerCase();
+  const rootPage = path === "/" || path === "";
+  if (role === "homepage") return rootPage || /^(?:home|homepage)$/.test(slug) ? 100 : 0;
+  if (role === "about") return /\b(?:about|team|doctor|dentist|practice)\b/.test(haystack) ? 80 : 0;
+  if (role === "contact") return /\b(?:contact|location|directions|find-us)\b/.test(haystack) ? 80 : 0;
+  if (role === "first-visit") return /\b(?:first-visit|new-patient|patient-info|patient-resources)\b/.test(haystack) ? 80 : 0;
+  if (role === "membership") return /\b(?:membership|dental-plan|savings-plan|insurance)\b/.test(haystack) ? 80 : 0;
+  if (role === "amenities") return /\b(?:amenities|office-tour|comfort|our-office)\b/.test(haystack) ? 80 : 0;
+  if (role === "technology") return /\b(?:technology|technologies|tech|equipment)\b/.test(haystack) ? 80 : 0;
+  if (role === "blog-archive") return page.classification === "blog-index" || /\b(?:blog|articles|news)\b/.test(haystack) ? 90 : 0;
+  if (role === "service-page") {
+    if (/\b(?:service|services|treatment|treatments|procedure|procedures|dentistry|dental|implant|implants|invisalign|whitening|veneer|veneers|crown|crowns|dentures|orthodontics)\b/.test(haystack)) return 70;
+    return 0;
+  }
+  if (role === "custom") return 0;
+  return 0;
+}
+
+function migrationPageSlug(page: MigrationSourcePage): string {
+  const parts = safePathname(page.normalizedUrl).split("/").filter(Boolean);
+  return normalizeSlug(parts.at(-1) ?? "home");
+}
+
+function normalizeSlug(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/^\/+|\/+$/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "home";
+}
+
+function safePathname(value: string): string {
+  try {
+    return new URL(value).pathname;
+  } catch {
+    return value;
+  }
 }
 
 function roleMatches(

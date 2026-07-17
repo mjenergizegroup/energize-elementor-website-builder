@@ -45,6 +45,7 @@ import type { MigrationSourcePageUpdate } from "@/lib/migration/content/review";
 import { migrationReadiness } from "@/lib/migration/dependencies";
 import {
   contentMappingsToSourcePages,
+  mapMigrationPagesToTemplates,
   mapStructuredPagesToTemplates,
   resolveContentImageUrls,
 } from "@/lib/migration/content/structured";
@@ -165,8 +166,8 @@ const STEP_DETAILS: {
   },
   {
     title: "Content",
-    rail: "Markdown source",
-    description: "Upload approved markdown and select generated pages.",
+    rail: "Content and templates",
+    description: "Review stored content and map it into portable JSON templates.",
     icon: FileText,
   },
   {
@@ -319,6 +320,11 @@ export function BuildWizard({
   const [dependencyResolutions, setDependencyResolutions] =
     useState<MigrationResolution[]>([]);
   const [migrationProjectId, setMigrationProjectId] = useState("");
+  const hasStoredMigrationContent =
+    buildType === "migrate" && migrationSourcePages.length > 0;
+  const approvedMigrationPages = migrationSourcePages.filter(
+    (page) => page.included && page.reviewed,
+  );
 
   const buildTypeLabel =
     buildType === "landing-page"
@@ -688,6 +694,22 @@ export function BuildWizard({
     }
   }
 
+  function buildMigrationContentMap() {
+    if (!templateCompileBundle) {
+      return { mappings: [], errors: ["Compile the selected templates first."] };
+    }
+    if (hasStoredMigrationContent) {
+      return mapMigrationPagesToTemplates(
+        templateCompileBundle,
+        migrationSourcePages,
+      );
+    }
+    return mapStructuredPagesToTemplates(
+      templateCompileBundle,
+      detectedPages,
+    );
+  }
+
   function validateStep(current: number): string | null {
     switch (current) {
       case 0:
@@ -725,20 +747,28 @@ export function BuildWizard({
           if (!migrationReadiness(dependencyResolutions).ready) {
             return "Resolve or explicitly accept every template dependency before review.";
           }
-          if (!markdownName) return "Upload the approved markdown content.";
-          if (detectedPages.length === 0) {
-            return "No pages were detected. Check the uploaded markdown structure.";
+          if (hasStoredMigrationContent) {
+            const included = migrationSourcePages.filter((page) => page.included);
+            if (included.length === 0) {
+              return "Include at least one stored source page.";
+            }
+            const unapproved = included.find((page) => !page.reviewed);
+            if (unapproved) {
+              return `Review and approve ${unapproved.title} before continuing.`;
+            }
+          } else {
+            if (!markdownName) return "Import a prepared content file.";
+            if (detectedPages.length === 0) {
+              return "No pages were detected. Check the imported content structure.";
+            }
+            if (!detectedPages.some((page) => page.selected)) {
+              return "Select at least one approved content page.";
+            }
           }
-          if (!detectedPages.some((page) => page.selected)) {
-            return "Select at least one approved content page.";
-          }
-          const contentMap = mapStructuredPagesToTemplates(
-            templateCompileBundle,
-            detectedPages,
-          );
+          const contentMap = buildMigrationContentMap();
           return contentMap.errors[0] ?? null;
         }
-        if (!markdownName) return "Upload the approved markdown content.";
+        if (!markdownName) return "Import a prepared content file.";
         if (detectedPages.length === 0)
           return "No pages were detected. Check the uploaded markdown structure.";
         if (!detectedPages.some((p) => p.selected))
@@ -800,10 +830,7 @@ export function BuildWizard({
     if (!templateCompileBundle) {
       throw new Error("Compile the selected templates before deployment.");
     }
-    const contentMap = mapStructuredPagesToTemplates(
-      templateCompileBundle,
-      detectedPages,
-    );
+    const contentMap = buildMigrationContentMap();
     if (contentMap.errors.length > 0) {
       throw new Error(contentMap.errors[0]);
     }
@@ -1839,12 +1866,16 @@ export function BuildWizard({
                 <div className="border border-[var(--line)] bg-[var(--paper-2)] p-4 text-sm leading-6 text-[var(--ink)]">
                   No content file is needed and no WordPress pages will be created.
                 </div>
+              ) : hasStoredMigrationContent ? (
+                <div className="border border-[var(--line)] bg-[var(--paper-2)] p-4 text-sm leading-6 text-[var(--ink)]">
+                  The migration will use the approved content stored in this project. No export or content-file upload is required.
+                </div>
               ) : (
                 <>
-              <SectionLabel>Markdown source</SectionLabel>
+              <SectionLabel>Prepared content import</SectionLabel>
               <FileField
-                label="Approved content markdown"
-                hint="Output from the dental-content-writer skill. Max 1MB."
+                label="Import prepared content file"
+                hint="Optional for crawled migrations. Use this theme-neutral import for projects without stored source pages. Max 1MB."
                 accept=".md,.markdown,.txt"
                 onFile={handleMarkdown}
               />
@@ -1980,7 +2011,13 @@ export function BuildWizard({
               />
               <Review
                 label="Content"
-                value={deployMode === "branding-only" ? "Not included" : markdownName || "none"}
+                value={
+                  deployMode === "branding-only"
+                    ? "Not included"
+                    : hasStoredMigrationContent
+                      ? `${approvedMigrationPages.length} approved stored pages`
+                      : markdownName || "none"
+                }
                 onEdit={() => setStep(4)}
               />
               {deployMode === "pages" && structuredResult && (
@@ -2028,6 +2065,20 @@ export function BuildWizard({
                 value={
                   deployMode === "branding-only" ? (
                     "No pages will be created"
+                  ) : hasStoredMigrationContent ? (
+                    <span className="flex flex-wrap gap-1">
+                      {approvedMigrationPages
+                        .filter(
+                          (page) =>
+                            page.classification === "core-page" ||
+                            page.classification === "blog-index",
+                        )
+                        .map((page) => (
+                          <Badge key={page.id} variant="secondary">
+                            {page.title}
+                          </Badge>
+                        ))}
+                    </span>
                   ) : (
                     <span className="flex flex-wrap gap-1">
                       {detectedPages

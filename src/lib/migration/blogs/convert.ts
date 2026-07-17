@@ -30,7 +30,9 @@ export function buildBlogDrafts(
   }
 
   return pages.map((page) => {
-    const frontMatter = parseFrontMatter(page.cleanedMarkdown);
+    const frontMatter = parseFrontMatter(
+      page.approvedMarkdown || page.cleanedMarkdown,
+    );
     const body = promoteStandaloneBoldHeadings(frontMatter.body);
     const images = extractImages(body);
     const sourceImageUrls = unique(images.map((image) => image.url));

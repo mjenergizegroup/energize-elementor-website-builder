@@ -157,6 +157,8 @@ const normalizedSlotSchema = z.discriminatedUnion("kind", [
 
 const contentMappingSchema = z.object({
   analysisId: z.string().min(1).max(500),
+  sourceRevision: z.number().int().positive().optional(),
+  sourceChecksum: z.string().regex(/^[a-f0-9]{64}$/).optional(),
   content: z.object({
     schemaVersion: z.literal("1"),
     sourcePageId: z.string().min(1).max(500),
