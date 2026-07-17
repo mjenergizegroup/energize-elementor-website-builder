@@ -126,6 +126,22 @@ npm run build
 The test suite uses synthetic inputs and mocked WordPress gateways. It does not
 download external media or modify a WordPress site.
 
+### Release verification
+
+Version 3.5.0 passes the complete automated suite, TypeScript checking, ESLint,
+migration security checks, Atomic and bridge checks, injection verification,
+and the optimized Next.js production build. Authenticated browser QA remains a
+manual rollout check because the local in-app browser proxy could not reach the
+loopback development server.
+
+Before pushing this schema-bearing release, generate the Prisma client and sync
+the selected Neon database:
+
+```bash
+npm run db:generate
+npm run db:push
+```
+
 ## Adding an Atomic visual preset
 
 Visual presets share the same variables, global classes, and components. Add a

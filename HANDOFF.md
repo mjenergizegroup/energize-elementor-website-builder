@@ -4,6 +4,37 @@ This document carries the product decisions, implementation state, constraints,
 source references, and next objective from the previous Codex task. A new Codex
 task should read this file completely before making changes.
 
+## Completion update - July 17, 2026
+
+The autonomous migration-content objective documented below is complete at
+application version `3.5.0`.
+
+- The build wizard has no user-facing theme-selection step.
+- Selected crawl pages are stored directly in an owned migration project.
+- Raw and deterministic cleanup versions remain immutable during review.
+- Editable approved content is revisioned and loses approval when changed.
+- Approved project content maps directly into selected JSON page templates by
+  exact slug and theme-neutral page role.
+- Media inventory and blog drafts use the approved content revision.
+- Export is an optional source backup. Crawl-backed migrations do not require a
+  content-file re-upload or an external cleanup handoff.
+- The dashboard resumes owned projects, including non-secret wizard state,
+  approved source content, template bundles, and dependency decisions.
+- WordPress application passwords are excluded from resumable wizard state and
+  remain protected by the saved-client encryption path.
+- Server preparation and deployment reject stale, excluded, or unapproved
+  revisioned content mappings.
+- Full automated tests, type checks, lint, security verification, injection
+  verification, and the production build pass locally.
+- Authenticated browser QA remains manual because the local in-app browser proxy
+  could not reach either loopback URL. No authentication bypass was attempted.
+- No remote push, deployment, external WordPress write, or secret exposure was
+  performed.
+
+The Prisma schema now includes both `crawlJobId` and `wizardWorkspace` on
+`MigrationProject`. Run `npm run db:generate` and `npm run db:push` against the
+intended Neon environment before pushing the release for Vercel to build.
+
 ## Start here
 
 Read these files in this order:
