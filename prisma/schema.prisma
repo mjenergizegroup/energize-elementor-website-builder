@@ -26,8 +26,38 @@ model Client {
   createdBy              String
 
   builds Build[]
+  migrationProjects MigrationProject[]
 
   @@index([createdBy])
+}
+
+model MigrationProject {
+  id                String   @id @default(cuid())
+  clientId          String?
+  client            Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  name              String
+  sourceUrl         String?
+  // draft | active | ready | deploying | complete | failed
+  status            String   @default("draft")
+  // source | cleanup | media | templates | resolution | blogs | deploy | complete
+  stage             String   @default("source")
+  schemaVersion     Int      @default(1)
+  sourcePages       Json     @default("[]")
+  cleanedPages      Json     @default("[]")
+  blogPosts         Json     @default("[]")
+  assets            Json     @default("[]")
+  selectedTemplates Json     @default("[]")
+  mappings          Json     @default("[]")
+  resolutions       Json     @default("[]")
+  lastError         String?
+  createdBy         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([clientId])
+  @@index([createdBy])
+  @@index([status])
+  @@index([updatedAt])
 }
 
 model Build {

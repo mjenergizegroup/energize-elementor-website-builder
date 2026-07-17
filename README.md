@@ -44,6 +44,7 @@ src/lib/injection/        Visual preset discovery and historical template
 src/lib/parser/           Markdown -> ParsedContent (per theme). PENDING, see below.
 src/lib/wp/               Server-side WordPress client + brand-kit mapping
 src/lib/deploy/           Deploy orchestration (yields progress events)
+src/lib/migration/        Resumable project state, source cleanup, and classification
 src/app/api/deploy/       Streaming NDJSON deploy route (auth, rate limit, audit)
 src/app/api/parse/        Markdown parse route
 src/components/build-wizard.tsx   Multi-step form + live deploy progress
@@ -51,6 +52,9 @@ theme-templates/{theme}/  Historical V3 references and preset page coverage
 artifacts/                Generated Elementor Design System import ZIP
 wordpress-plugin/         energize-build-tool.php (WPCode-compatible snippet)
 ```
+
+Migration project state and its authenticated API are documented in
+[docs/MIGRATION_PROJECTS.md](docs/MIGRATION_PROJECTS.md).
 
 ### Injection flow
 
