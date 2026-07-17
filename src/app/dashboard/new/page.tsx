@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { X } from "lucide-react";
-import { listThemes } from "@/lib/injection/registry";
 import { prisma } from "@/lib/prisma";
 import { BuildWizard, type InitialClient } from "@/components/build-wizard";
 import { LandingPageWizard } from "@/components/landing-page-wizard";
@@ -30,7 +29,7 @@ const buildTypes = [
     code: "NW",
     type: "New build",
     title: "New Website Build",
-    desc: "Build a new dental practice website from scratch with an Atomic preset, content, brand variables, and WordPress setup.",
+    desc: "Build a new dental practice website from scratch with selected page layouts, content, brand variables, and WordPress setup.",
   },
 ];
 
@@ -40,8 +39,6 @@ export default async function NewBuildPage({
   searchParams: Promise<{ clientId?: string; type?: string }>;
 }) {
   const { clientId, type } = await searchParams;
-  const themes = listThemes();
-
   let initialClient: InitialClient | undefined;
   if (clientId) {
     const client = await prisma.client.findUnique({ where: { id: clientId } });
@@ -50,7 +47,6 @@ export default async function NewBuildPage({
         id: client.id,
         name: client.name,
         slug: client.slug,
-        theme: client.theme,
         wpSiteUrl: client.wpSiteUrl,
         wpUsername: client.wpUsername,
         brandKit: client.brandKit as unknown as BrandKit,
@@ -63,13 +59,7 @@ export default async function NewBuildPage({
       return <LandingPageWizard initialClient={initialClient} />;
     }
 
-    return (
-      <BuildWizard
-        themes={themes}
-        initialClient={initialClient}
-        buildType={type}
-      />
-    );
+    return <BuildWizard initialClient={initialClient} buildType={type} />;
   }
 
   return (

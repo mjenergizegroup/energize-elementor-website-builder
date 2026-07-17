@@ -85,7 +85,9 @@ new preset without forking the design system:
 3. Add only the visual composition differences to the Atomic page builder.
 4. Reuse existing global class IDs and semantic variables.
 
-The theme then appears automatically (themes are discovered from disk).
+The preset then becomes available to the server-side compatibility layer
+(presets are discovered from disk). The build wizard does not expose preset
+selection.
 
 ## The WPCode bridge snippet
 

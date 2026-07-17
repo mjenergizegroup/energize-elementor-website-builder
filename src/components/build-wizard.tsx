@@ -8,7 +8,6 @@ import {
   ArrowRight,
   Check,
   CheckCircle2,
-  ClipboardList,
   FileText,
   Globe2,
   ListChecks,
@@ -26,13 +25,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Combobox } from "@/components/ui/combobox";
 import { TemplateImporter } from "@/components/template-importer";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { GOOGLE_FONTS } from "@/lib/google-fonts";
 import { cn } from "@/lib/utils";
 import type { BrandKit, UploadedAsset } from "@/lib/types";
@@ -42,20 +34,15 @@ import type {
   TemplateCompileBundle,
   TemplateMappingManifest,
 } from "@/lib/template-import/types";
-
-export interface ThemeSummary {
-  key: string;
-  label: string;
-  ready: boolean;
-  status: string;
-  pages: { key: string; label: string }[];
-}
+import {
+  BUILD_WIZARD_STEPS,
+  type BuildWizardStep,
+} from "@/lib/build-wizard/flow";
 
 export interface InitialClient {
   id: string;
   name: string;
   slug: string;
-  theme: string;
   wpSiteUrl: string;
   wpUsername: string;
   brandKit: BrandKit;
@@ -130,18 +117,10 @@ interface CrawlPageEntry {
   skipReason?: string;
 }
 
-const STEPS = [
-  "Crawl",
-  "Theme",
-  "Practice Info",
-  "Brand Kit",
-  "WP Target",
-  "Content",
-  "Review",
-] as const;
+const STEPS = BUILD_WIZARD_STEPS;
 
 const STEP_DETAILS: {
-  title: (typeof STEPS)[number];
+  title: BuildWizardStep;
   rail: string;
   description: string;
   icon: LucideIcon;
@@ -151,12 +130,6 @@ const STEP_DETAILS: {
     rail: "Source pages",
     description: "Collect source pages for cleanup when this is an existing website.",
     icon: Globe2,
-  },
-  {
-    title: "Theme",
-    rail: "Visual preset",
-    description: "Choose an Atomic visual preset and confirm page coverage.",
-    icon: ClipboardList,
   },
   {
     title: "Practice Info",
@@ -251,11 +224,9 @@ function builderPageTypeFor(pageKey: string): ElevatePageType | undefined {
 }
 
 export function BuildWizard({
-  themes,
   initialClient,
   buildType = "new-website",
 }: {
-  themes: ThemeSummary[];
   initialClient?: InitialClient;
   buildType?: string;
 }) {
@@ -274,13 +245,6 @@ export function BuildWizard({
   const [selectedCrawlUrls, setSelectedCrawlUrls] = useState<string[]>([]);
   const [crawlError, setCrawlError] = useState("");
   const [exportingCrawl, setExportingCrawl] = useState(false);
-
-  const [theme, setTheme] = useState<string>(
-    initialClient?.theme ??
-      themes.find((t) => t.ready)?.key ??
-      themes[0]?.key ??
-      "",
-  );
 
   const [name, setName] = useState(initialClient?.name ?? "");
   const [slug, setSlug] = useState(initialClient?.slug ?? "");
@@ -334,7 +298,6 @@ export function BuildWizard({
   const [templateCompileBundle, setTemplateCompileBundle] =
     useState<TemplateCompileBundle | null>(null);
 
-  const selectedTheme = themes.find((t) => t.key === theme);
   const buildTypeLabel =
     buildType === "landing-page"
       ? "Landing Page"
@@ -549,7 +512,7 @@ export function BuildWizard({
       const res = await fetch("/api/parse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ theme, markdown: text }),
+        body: JSON.stringify({ markdown: text }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -617,29 +580,24 @@ export function BuildWizard({
           return "Wait for the crawl to finish or switch to a new website.";
         return null;
       case 1:
-        if (!theme) return "Choose a theme.";
-        if (selectedTheme && !selectedTheme.ready)
-          return `The ${selectedTheme.label} theme is not ready yet (${selectedTheme.status}).`;
-        return null;
-      case 2:
         if (!name.trim()) return "Practice name is required.";
         if (!slug.trim()) return "Slug is required.";
         return null;
-      case 3:
+      case 2:
         if (!logo?.dataBase64) return "Site logo is required.";
         if (!favicon?.dataBase64) return "Site favicon is required.";
         return null;
-      case 4:
+      case 3:
         if (!siteUrl.trim()) return "WordPress site URL is required.";
         if (!username.trim()) return "WordPress username is required.";
         if (!initialClient && !appPassword.trim())
           return "Application password is required for a new client.";
         return null;
-      case 5:
+      case 4:
         if (deployMode === "branding-only") return null;
         if (!markdownName) return "Upload the approved markdown content.";
         if (detectedPages.length === 0)
-          return "No pages were detected. Check that the markdown matches the selected theme.";
+          return "No pages were detected. Check the uploaded markdown structure.";
         if (!detectedPages.some((p) => p.selected))
           return "Select at least one page to build.";
         return null;
@@ -687,7 +645,7 @@ export function BuildWizard({
   }
 
   async function deploy() {
-    const error = [1, 2, 3, 4, 5].map(validateStep).find(Boolean);
+    const error = [1, 2, 3, 4].map(validateStep).find(Boolean);
     if (error) {
       toast.error(error);
       return;
@@ -759,7 +717,6 @@ export function BuildWizard({
           client: {
             name,
             slug,
-            theme,
             wpSiteUrl: siteUrl,
             wpUsername: username,
             wpAppPassword: appPassword || undefined,
@@ -849,7 +806,6 @@ export function BuildWizard({
           title={title}
           subline="The deploy stream validates the Atomic Foundation before creating WordPress drafts."
           clientName={name || practiceMeta?.practiceName || "Untitled client"}
-          themeLabel={selectedTheme?.label ?? theme}
           buildTypeLabel={buildTypeLabel}
         />
 
@@ -1022,7 +978,7 @@ export function BuildWizard({
                   variant="outline"
                   onClick={() => {
                     setFinished(null);
-                    setStep(5);
+                    setStep(4);
                   }}
                 >
                   Back to review
@@ -1040,9 +996,8 @@ export function BuildWizard({
     <main className="page-body">
       <PageHead
         title="New Build"
-        subline="Run one client through theme, brand, WordPress, content, and review."
+        subline="Prepare one client through source, brand, WordPress, content, and review."
         clientName={name || practiceMeta?.practiceName || "Untitled client"}
-        themeLabel={selectedTheme?.label ?? theme}
         buildTypeLabel={buildTypeLabel}
       >
         <Link
@@ -1225,46 +1180,6 @@ export function BuildWizard({
           )}
 
           {step === 1 && (
-            <div className="space-y-5">
-              <SectionLabel>Theme setup</SectionLabel>
-              <div className="space-y-2">
-                <Label>Theme</Label>
-                <Select value={theme} onValueChange={(v) => v && setTheme(v)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a theme" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {themes.map((t) => (
-                      <SelectItem key={t.key} value={t.key} disabled={!t.ready}>
-                        {t.label}
-                        {t.ready ? "" : ` (${t.status})`}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              {selectedTheme && (
-                <div className="space-y-3 border border-[var(--line)] bg-[var(--paper-2)] p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[var(--muted)]">
-                    Pages produced
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedTheme.pages.length > 0 ? (
-                      selectedTheme.pages.map((p) => (
-                        <Badge key={p.key} variant="secondary">
-                          {p.label}
-                        </Badge>
-                      ))
-                    ) : (
-                      <span className="text-sm text-[var(--muted)]">none</span>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {step === 2 && (
             <div className="space-y-7">
               <SectionLabel>Practice details</SectionLabel>
               <Field label="Practice name">
@@ -1313,7 +1228,7 @@ export function BuildWizard({
             </div>
           )}
 
-          {step === 3 && (
+          {step === 2 && (
             <div className="space-y-6">
               <SectionLabel>Color palette</SectionLabel>
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -1353,7 +1268,7 @@ export function BuildWizard({
             </div>
           )}
 
-          {step === 4 && (
+          {step === 3 && (
             <div className="space-y-5">
               <SectionLabel>WordPress destination</SectionLabel>
               <Field label="WordPress site URL">
@@ -1384,7 +1299,7 @@ export function BuildWizard({
             </div>
           )}
 
-          {step === 5 && (
+          {step === 4 && (
             <div className="space-y-5">
               <SectionLabel>Deployment scope</SectionLabel>
               <div className="grid gap-3 md:grid-cols-2">
@@ -1541,7 +1456,7 @@ export function BuildWizard({
             </div>
           )}
 
-          {step === 6 && (
+          {step === 5 && (
             <div className="space-y-4 text-sm">
               <SectionLabel>Build summary</SectionLabel>
               <Review
@@ -1549,13 +1464,12 @@ export function BuildWizard({
                 value={siteKind === "existing" ? "Existing website" : "New website"}
                 onEdit={() => setStep(0)}
               />
-              <Review label="Theme" value={selectedTheme?.label ?? theme} onEdit={() => setStep(1)} />
-              <Review label="Site name" value={name} onEdit={() => setStep(2)} />
-              <Review label="Practice slug" value={slug} onEdit={() => setStep(2)} />
-              <Review label="WP site" value={siteUrl} onEdit={() => setStep(4)} />
+              <Review label="Site name" value={name} onEdit={() => setStep(1)} />
+              <Review label="Practice slug" value={slug} onEdit={() => setStep(1)} />
+              <Review label="WP site" value={siteUrl} onEdit={() => setStep(3)} />
               <Review
                 label="Brand colors"
-                onEdit={() => setStep(3)}
+                onEdit={() => setStep(2)}
                 value={
                   <span className="flex gap-1">
                     {Object.values(colors).map((c, i) => (
@@ -1569,30 +1483,30 @@ export function BuildWizard({
                   </span>
                 }
               />
-              <Review label="Fonts" value={`${fontHeading} / ${fontBody}`} onEdit={() => setStep(3)} />
-              <Review label="Site logo" value={logo ? logo.filename : "none"} onEdit={() => setStep(3)} />
-              <Review label="Site favicon" value={favicon ? favicon.filename : "none"} onEdit={() => setStep(3)} />
+              <Review label="Fonts" value={`${fontHeading} / ${fontBody}`} onEdit={() => setStep(2)} />
+              <Review label="Site logo" value={logo ? logo.filename : "none"} onEdit={() => setStep(2)} />
+              <Review label="Site favicon" value={favicon ? favicon.filename : "none"} onEdit={() => setStep(2)} />
               <Review
                 label="Deploy scope"
                 value={deployMode === "branding-only" ? "Brand kit only" : "Brand kit and pages"}
-                onEdit={() => setStep(5)}
+                onEdit={() => setStep(4)}
               />
               <Review
                 label="Content"
                 value={deployMode === "branding-only" ? "Not included" : markdownName || "none"}
-                onEdit={() => setStep(5)}
+                onEdit={() => setStep(4)}
               />
               {deployMode === "pages" && structuredResult && (
                 <>
                   <Review
                     label="Parser result"
                     value={`${Object.keys(structuredResult.pages).length} pages, ${Object.keys(structuredResult.service_pages).length} service pages`}
-                    onEdit={() => setStep(5)}
+                    onEdit={() => setStep(4)}
                   />
                   <Review
                     label="Builder"
                     value="Elevate builder connected"
-                    onEdit={() => setStep(5)}
+                    onEdit={() => setStep(4)}
                   />
                 </>
               )}
@@ -1600,19 +1514,19 @@ export function BuildWizard({
                 <Review
                   label="Template mappings"
                   value={`${templateManifest.mappings.filter((item) => item.selected).length} included of ${templateManifest.mappings.length} analyzed`}
-                  onEdit={() => setStep(5)}
+                  onEdit={() => setStep(4)}
                 />
               )}
               {buildType === "migrate" && templateCompileBundle && (
                 <Review
                   label="Portable compile"
                   value={`${templateCompileBundle.totals.compiled} artifacts, ${templateCompileBundle.totals.ready} ready, ${templateCompileBundle.totals.review} need review`}
-                  onEdit={() => setStep(5)}
+                  onEdit={() => setStep(4)}
                 />
               )}
               <Review
                 label="Pages"
-                onEdit={() => setStep(5)}
+                onEdit={() => setStep(4)}
                 value={
                   deployMode === "branding-only" ? (
                     "No pages will be created"
@@ -1869,14 +1783,12 @@ function PageHead({
   title,
   subline,
   clientName,
-  themeLabel,
   buildTypeLabel,
   children,
 }: {
   title: string;
   subline: string;
   clientName: string;
-  themeLabel: string;
   buildTypeLabel: string;
   children?: React.ReactNode;
 }) {
@@ -1893,9 +1805,6 @@ function PageHead({
         </div>
         <div className="-ml-0.5 border-2 border-[var(--color-black)] bg-[var(--color-surface)] px-4 py-3 text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--color-black)]">
           {clientName}
-          <span className="ml-3 text-[var(--color-muted)]">
-            {themeLabel || "Theme pending"}
-          </span>
         </div>
         {children}
       </div>

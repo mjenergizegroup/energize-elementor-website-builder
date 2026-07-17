@@ -34,6 +34,16 @@ const brandingOnly = deployBodySchema.safeParse({
 });
 assert.equal(brandingOnly.success, true);
 
+const requestWithoutThemeSelection = deployBodySchema.safeParse({
+  ...baseRequest,
+  client: {
+    ...baseRequest.client,
+    theme: undefined,
+  },
+  deployMode: "branding-only",
+});
+assert.equal(requestWithoutThemeSelection.success, true);
+
 const pagesWithoutSelection = deployBodySchema.safeParse({
   ...baseRequest,
   deployMode: "pages",

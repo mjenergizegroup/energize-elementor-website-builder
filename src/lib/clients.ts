@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { decrypt, encrypt } from "@/lib/crypto";
 import type { BrandKit } from "@/lib/types";
 
+const DEFAULT_COMPATIBILITY_THEME = "elevate";
+
 export interface ResolvedClient {
   id: string;
   name: string;
@@ -17,7 +19,7 @@ export interface ResolvedClient {
 export interface ClientInput {
   name: string;
   slug: string;
-  theme: string;
+  theme?: string;
   wpSiteUrl: string;
   wpUsername: string;
   wpAppPassword?: string; // required when creating; optional on rebuild
@@ -25,8 +27,8 @@ export interface ClientInput {
 }
 
 // Load an existing client (decrypting its stored app password) or create one.
-// On rebuild (clientId provided) the brand kit and theme are refreshed and the
-// app password is only re-encrypted if a new one was supplied.
+// On rebuild (clientId provided) the brand kit is refreshed and legacy theme
+// metadata is preserved unless an older caller explicitly supplies it.
 export async function resolveClient(
   userId: string,
   clientId: string | undefined,
@@ -43,7 +45,7 @@ export async function resolveClient(
         name: input.name,
         wpSiteUrl: input.wpSiteUrl,
         wpUsername: input.wpUsername,
-        theme: input.theme,
+        ...(input.theme ? { theme: input.theme } : {}),
         brandKit: input.brandKit as unknown as object,
         ...(input.wpAppPassword
           ? { wpAppPasswordEncrypted: encrypt(input.wpAppPassword) }
@@ -72,7 +74,7 @@ export async function resolveClient(
       name: input.name,
       wpSiteUrl: input.wpSiteUrl,
       wpUsername: input.wpUsername,
-      theme: input.theme,
+      theme: input.theme ?? DEFAULT_COMPATIBILITY_THEME,
       brandKit: input.brandKit as unknown as object,
       wpAppPasswordEncrypted: encrypt(input.wpAppPassword),
     },
@@ -81,7 +83,7 @@ export async function resolveClient(
       slug: input.slug,
       wpSiteUrl: input.wpSiteUrl,
       wpUsername: input.wpUsername,
-      theme: input.theme,
+      theme: input.theme ?? DEFAULT_COMPATIBILITY_THEME,
       brandKit: input.brandKit as unknown as object,
       wpAppPasswordEncrypted: encrypt(input.wpAppPassword),
       createdBy: userId,

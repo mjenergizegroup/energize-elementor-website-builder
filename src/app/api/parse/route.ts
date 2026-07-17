@@ -6,7 +6,6 @@ import { parse, ParseError } from "@/lib/parser";
 export const runtime = "nodejs";
 
 const bodySchema = z.object({
-  theme: z.string().min(1).optional(),
   markdown: z.string().min(1).max(1_048_576), // 1MB cap per brief
   pages: z.array(z.string()).optional(),
 });

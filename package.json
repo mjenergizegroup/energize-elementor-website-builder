@@ -1,6 +1,6 @@
 {
   "name": "energize-build-tool",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test:parser": "tsx src/lib/parser.test.ts",
     "test:deploy-schema": "tsx src/lib/deploy/schema.test.ts",
+    "test:build-wizard": "tsx src/lib/build-wizard/flow.test.ts",
     "test:template-import": "tsx src/lib/template-import/analyze.test.ts",
     "test:template-compile": "tsx src/lib/template-import/compiler/compiler.test.ts",
     "test:wp-client": "node --conditions=react-server --import tsx src/lib/wp/client.test.ts",

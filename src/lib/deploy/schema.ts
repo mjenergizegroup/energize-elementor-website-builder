@@ -21,7 +21,7 @@ export const deployBodySchema = z
         .string()
         .min(1)
         .regex(/^[a-z0-9-]+$/, "slug must be lowercase letters, numbers, and dashes"),
-      theme: z.string().min(1),
+      theme: z.string().min(1).optional(),
       wpSiteUrl: z.string().url(),
       wpUsername: z.string().min(1),
       wpAppPassword: z.string().optional(),
