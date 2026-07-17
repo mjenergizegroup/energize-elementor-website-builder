@@ -35,6 +35,29 @@ export function buildDependencyLedger(bundle: TemplateCompileBundle): MigrationR
   return [...items.values()];
 }
 
+export function reconcileDependencyLedger(
+  bundle: TemplateCompileBundle,
+  submitted: MigrationResolution[],
+): MigrationResolution[] {
+  const byId = new Map(submitted.map((item) => [item.id, item]));
+  return buildDependencyLedger(bundle).map((expected) => {
+    const candidate = byId.get(expected.id);
+    if (
+      !candidate ||
+      candidate.kind !== expected.kind ||
+      candidate.source !== expected.source
+    ) {
+      return expected;
+    }
+    return {
+      ...expected,
+      status: candidate.status,
+      resolution: candidate.resolution,
+      note: candidate.note ?? expected.note,
+    };
+  });
+}
+
 function stableId(value: string): string {
   let hash = 2166136261;
   for (let index = 0; index < value.length; index += 1) {
@@ -45,11 +68,31 @@ function stableId(value: string): string {
 }
 
 export function migrationReadiness(items: MigrationResolution[]): MigrationReadiness {
-  const unresolved = items.filter((item) => item.status === "unresolved").length;
+  const incomplete = items.filter(
+    (item) => item.status === "resolved" && !hasResolutionDetails(item),
+  );
+  const unresolved =
+    items.filter((item) => item.status === "unresolved").length +
+    incomplete.length;
   const blocked = items.filter((item) => item.status === "blocked").length;
   const resolved = items.length - unresolved - blocked;
   const reasons = items
-    .filter((item) => item.status === "unresolved" || item.status === "blocked")
+    .filter(
+      (item) =>
+        item.status === "unresolved" ||
+        item.status === "blocked" ||
+        (item.status === "resolved" && !hasResolutionDetails(item)),
+    )
     .map((item) => `${item.kind}: ${item.source}`);
   return { ready: unresolved === 0 && blocked === 0, unresolved, blocked, resolved, reasons };
+}
+
+function hasResolutionDetails(item: MigrationResolution): boolean {
+  if (item.kind === "media") {
+    return Array.isArray(item.resolution?.mappings) && item.resolution.mappings.length > 0;
+  }
+  if (item.kind === "global-style") {
+    return typeof item.resolution?.destinationId === "string";
+  }
+  return true;
 }

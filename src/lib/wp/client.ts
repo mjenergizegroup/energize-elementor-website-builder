@@ -34,6 +34,18 @@ export interface CreatePageResult {
   viewUrl: string;
 }
 
+export interface UpsertCompiledDraftInput {
+  title: string;
+  slug: string;
+  pageTemplate: "elementor_header_footer";
+  elementorData: unknown[];
+  elementorVersion?: string;
+}
+
+export interface UpsertCompiledDraftResult extends CreatePageResult {
+  reused: boolean;
+}
+
 export interface AtomicFoundationSyncResult {
   variablesUpdated: number;
   classesVerified: number;
@@ -496,6 +508,47 @@ export class WpClient {
       editUrl: res.edit_url,
       viewUrl: res.view_url,
     };
+  }
+
+  async upsertCompiledDraft(
+    input: UpsertCompiledDraftInput,
+    username: string,
+    appPassword: string,
+  ): Promise<UpsertCompiledDraftResult> {
+    const existing = await this.getWp<
+      Array<{ id: number; slug: string; status: string; link: string }>
+    >(
+      `/pages?slug=${encodeURIComponent(input.slug)}&status=any&_fields=id,slug,status,link`,
+      username,
+      appPassword,
+    );
+    const match = existing[0];
+    if (match && match.status !== "draft") {
+      throw new WpApiError(
+        `A non-draft WordPress page already uses the slug "${input.slug}".`,
+        409,
+        "energize_page_slug_conflict",
+      );
+    }
+    if (match) {
+      return {
+        id: match.id,
+        slug: match.slug,
+        status: match.status,
+        editUrl: `${this.base}/wp-admin/post.php?post=${match.id}&action=elementor`,
+        viewUrl: match.link,
+        reused: true,
+      };
+    }
+    const created = await this.createPage({
+      title: input.title,
+      slug: input.slug,
+      template: input.pageTemplate,
+      elementorData: input.elementorData,
+      elementorVersion: input.elementorVersion,
+      status: "draft",
+    });
+    return { ...created, reused: false };
   }
 
   async syncAtomicFoundation(

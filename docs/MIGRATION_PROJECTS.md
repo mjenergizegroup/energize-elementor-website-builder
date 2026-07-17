@@ -79,6 +79,26 @@ media IDs. Execute mode only creates or updates WordPress drafts. Exact-slug
 drafts are reused on retry, while a matching non-draft post is treated as a
 conflict and is never overwritten.
 
+## Draft page deployment
+
+`POST /api/migrations/{projectId}/deploy` prepares, preflights, dry-runs, and
+executes a saved compile bundle. The server regenerates the expected dependency
+ledger from the bundle on every state change, so a caller cannot omit a blocker.
+It also revalidates artifact size, depth, node count, Elementor IDs, unsafe
+object keys, and credential-like fields before using compiled content.
+
+The build wizard runs a dry run before its explicit create-drafts action.
+Execute mode checks the saved WordPress connection, applies reviewed media and
+global mappings, and sends only normal page targets to the existing server-side
+WordPress bridge. Theme Builder targets remain a named preflight blocker until
+a compatible bridge adapter is available.
+
+Each page retains attempts, errors, draft IDs, edit links, and preview links.
+Successful drafts are skipped on retry. If WordPress created a draft before a
+network interruption, an exact-slug retry recovers that draft instead of making
+a duplicate. Matching non-draft pages are never overwritten. Every real attempt
+also creates a standard build-history record and audit entries.
+
 ## Database rollout
 
 The Prisma schema includes the `MigrationProject` model and its blog-draft

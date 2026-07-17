@@ -297,6 +297,68 @@ async function main() {
     );
     assert.equal(conflictCalls, 1, "a published post must never be overwritten");
 
+    let pageRecoveryCalls = 0;
+    globalThis.fetch = async () => {
+      pageRecoveryCalls += 1;
+      return Response.json([
+        {
+          id: 77,
+          slug: "about",
+          status: "draft",
+          link: "https://example.test/?page_id=77",
+        },
+      ]);
+    };
+    const recoveredPage = await new WpClient(
+      "https://example.test",
+    ).upsertCompiledDraft(
+      {
+        title: "About",
+        slug: "about",
+        pageTemplate: "elementor_header_footer",
+        elementorData: [],
+        elementorVersion: "0.4",
+      },
+      "website-team",
+      "application-password",
+    );
+    assert.equal(recoveredPage.reused, true);
+    assert.equal(recoveredPage.status, "draft");
+    assert.equal(pageRecoveryCalls, 1, "a recovered draft must not be recreated");
+    assert.match(recoveredPage.editUrl, /action=elementor/);
+
+    let pageConflictCalls = 0;
+    globalThis.fetch = async () => {
+      pageConflictCalls += 1;
+      return Response.json([
+        {
+          id: 78,
+          slug: "contact",
+          status: "publish",
+          link: "https://example.test/contact/",
+        },
+      ]);
+    };
+    await assert.rejects(
+      () =>
+        new WpClient("https://example.test").upsertCompiledDraft(
+          {
+            title: "Contact",
+            slug: "contact",
+            pageTemplate: "elementor_header_footer",
+            elementorData: [],
+          },
+          "website-team",
+          "application-password",
+        ),
+      (error: unknown) => {
+        assert.ok(error instanceof WpApiError);
+        assert.equal(error.code, "energize_page_slug_conflict");
+        return true;
+      },
+    );
+    assert.equal(pageConflictCalls, 1, "a published page must never be overwritten");
+
     console.log("WordPress client connection checks passed");
   } finally {
     globalThis.fetch = originalFetch;

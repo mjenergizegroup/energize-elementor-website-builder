@@ -302,6 +302,7 @@ export function BuildWizard({
     useState<TemplateCompileBundle | null>(null);
   const [dependencyResolutions, setDependencyResolutions] =
     useState<MigrationResolution[]>([]);
+  const [migrationProjectId, setMigrationProjectId] = useState("");
 
   const buildTypeLabel =
     buildType === "landing-page"
@@ -600,12 +601,14 @@ export function BuildWizard({
         return null;
       case 4:
         if (deployMode === "branding-only") return null;
-        if (
-          buildType === "migrate" &&
-          templateCompileBundle &&
-          !migrationReadiness(dependencyResolutions).ready
-        ) {
-          return "Resolve or explicitly accept every template dependency before review.";
+        if (buildType === "migrate") {
+          if (!templateCompileBundle) {
+            return "Upload, map, and compile at least one template.";
+          }
+          if (!migrationReadiness(dependencyResolutions).ready) {
+            return "Resolve or explicitly accept every template dependency before review.";
+          }
+          return null;
         }
         if (!markdownName) return "Upload the approved markdown content.";
         if (detectedPages.length === 0)
@@ -656,6 +659,161 @@ export function BuildWizard({
     });
   }
 
+  async function deployMigration() {
+    if (!templateCompileBundle) {
+      throw new Error("Compile the selected templates before deployment.");
+    }
+    let projectId = migrationProjectId;
+    const retryFailedOnly = Boolean(projectId);
+    if (!projectId) {
+      const projectResponse = await fetch("/api/migrations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: `${name} migration`,
+          ...(siteKind === "existing" && crawlUrl
+            ? { sourceUrl: crawlUrl }
+            : {}),
+          ...(initialClient?.id ? { clientId: initialClient.id } : {}),
+        }),
+      });
+      const projectJson = await projectResponse.json();
+      if (!projectResponse.ok) {
+        throw new Error(projectJson.error ?? "Could not create migration project.");
+      }
+      projectId = projectJson.project.id as string;
+
+      const prepareResponse = await fetch(
+        `/api/migrations/${projectId}/deploy`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "prepare",
+            bundle: templateCompileBundle,
+            resolutions: dependencyResolutions,
+            ...(!initialClient
+              ? {
+                  destination: {
+                    name,
+                    slug,
+                    wpSiteUrl: siteUrl,
+                    wpUsername: username,
+                    wpAppPassword: appPassword,
+                    brandKit: buildBrandKit(),
+                  },
+                }
+              : {}),
+          }),
+        },
+      );
+      const prepareJson = await prepareResponse.json();
+      if (!prepareResponse.ok) {
+        throw new Error(
+          prepareJson.error ?? "Could not prepare migration deployment.",
+        );
+      }
+      const prepared = prepareJson.deployment as {
+        status: string;
+        blockers: string[];
+      };
+      if (prepared.status !== "ready") {
+        setEvents(
+          prepared.blockers.map((message, index) => ({
+            key: `preflight-${index}`,
+            label: "Migration preflight blocker",
+            status: "fail" as const,
+            message,
+          })),
+        );
+        setFinished("failed");
+        return;
+      }
+
+      const dryRunResponse = await fetch(
+        `/api/migrations/${projectId}/deploy`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "deploy", dryRun: true }),
+        },
+      );
+      const dryRunJson = await dryRunResponse.json();
+      if (!dryRunResponse.ok) {
+        throw new Error(dryRunJson.error ?? "Migration dry run failed.");
+      }
+      setMigrationProjectId(projectId);
+    }
+
+    const response = await fetch(`/api/migrations/${projectId}/deploy`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "deploy",
+        dryRun: false,
+        retryFailedOnly,
+      }),
+    });
+    const json = await response.json();
+    const deployment = json.deployment as
+      | {
+          status: "complete" | "partial" | "failed" | "ready";
+          warnings: string[];
+          events: Array<{
+            at: string;
+            status: StepEvent["status"];
+            label: string;
+            message?: string;
+          }>;
+          items: Array<{
+            status: string;
+            wpPageId?: number;
+            title: string;
+            editUrl?: string;
+            viewUrl?: string;
+          }>;
+        }
+      | undefined;
+    if (!response.ok && !deployment) {
+      throw new Error(json.error ?? "Migration deployment failed.");
+    }
+    if (!deployment) throw new Error("Migration deployment returned no state.");
+    setEvents(
+      deployment.events.map((event, index) => ({
+        key: `${event.at}-${index}`,
+        label: event.label,
+        status: event.status,
+        message: event.message,
+      })),
+    );
+    setWarnings(deployment.warnings);
+    setDeployedLinks(
+      deployment.items.flatMap((item) =>
+        item.status === "draft" &&
+        item.wpPageId &&
+        item.editUrl &&
+        item.viewUrl
+          ? [
+              {
+                wpPageId: item.wpPageId,
+                title: item.title,
+                editUrl: item.editUrl,
+                viewUrl: item.viewUrl,
+                kind: "content" as const,
+              },
+            ]
+          : [],
+      ),
+    );
+    setFinished(
+      deployment.status === "complete"
+        ? "success"
+        : deployment.status === "partial"
+          ? "partial"
+          : "failed",
+    );
+  }
+
   async function deploy() {
     const error = [1, 2, 3, 4].map(validateStep).find(Boolean);
     if (error) {
@@ -677,6 +835,20 @@ export function BuildWizard({
     if (favicon && !favicon.dataBase64) {
       toast.error("Favicon file data is missing. Upload the favicon again.");
       setDeploying(false);
+      return;
+    }
+
+    if (buildType === "migrate" && deployMode === "pages") {
+      try {
+        await deployMigration();
+      } catch (e) {
+        toast.error(
+          e instanceof Error ? e.message : "Migration deployment failed.",
+        );
+        setFinished("failed");
+      } finally {
+        setDeploying(false);
+      }
       return;
     }
 
@@ -816,7 +988,11 @@ export function BuildWizard({
       <div className="page-body">
         <PageHead
           title={title}
-          subline="The deploy stream validates the Atomic Foundation before creating WordPress drafts."
+          subline={
+            buildType === "migrate"
+              ? "Validated portable templates are created as recoverable WordPress drafts."
+              : "The deploy stream validates the Atomic Foundation before creating WordPress drafts."
+          }
           clientName={name || practiceMeta?.practiceName || "Untitled client"}
           buildTypeLabel={buildTypeLabel}
         />
@@ -1352,7 +1528,7 @@ export function BuildWizard({
                 <>
                   <SectionLabel>Template JSON mapping</SectionLabel>
                   <p className="text-[12px] font-medium leading-5 text-[var(--color-muted)]">
-                    Analyze Elementor or other JSON templates, confirm their page roles, and compile a portable review bundle. This source mapping is kept separate from the current Atomic deployment payload.
+                    Analyze Elementor or other JSON templates, confirm their page roles, and compile a portable deployment bundle. The reviewed artifacts are used directly for migration drafts.
                   </p>
                   <TemplateImporter
                     onManifestChange={setTemplateManifest}
@@ -1595,7 +1771,11 @@ export function BuildWizard({
               </Button>
             ) : (
               <Button onClick={deploy}>
-                {deployMode === "branding-only" ? "Deploy brand kit" : "Deploy"}
+                {deployMode === "branding-only"
+                  ? "Deploy brand kit"
+                  : buildType === "migrate"
+                    ? "Create WordPress drafts"
+                    : "Deploy"}
                 <Rocket data-icon="inline-end" />
               </Button>
             )}

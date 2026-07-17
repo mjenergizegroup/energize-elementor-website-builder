@@ -39,7 +39,7 @@ export function DependencyResolver({ bundle, onChange }: {
               </div>
               <select aria-label={`Resolution for ${item.source}`} value={item.status} onChange={(event) => update(item.id, event.target.value as MigrationResolution["status"])} className="h-10 border-2 border-[var(--color-black)] bg-[var(--color-surface)] px-3 text-sm font-semibold">
                 <option value="unresolved">Needs resolution</option>
-                <option value="resolved">Resolved</option>
+                <option value="resolved">Resolved with mapping</option>
                 <option value="accepted">Accepted exception</option>
                 <option value="blocked">Blocked</option>
               </select>

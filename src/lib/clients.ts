@@ -36,7 +36,7 @@ export async function resolveClient(
 ): Promise<ResolvedClient> {
   if (clientId) {
     const existing = await prisma.client.findUnique({ where: { id: clientId } });
-    if (!existing) {
+    if (!existing || existing.createdBy !== userId) {
       throw new Error(`Client ${clientId} not found`);
     }
     const updated = await prisma.client.update({
@@ -68,27 +68,36 @@ export async function resolveClient(
     throw new Error("An application password is required to create a client.");
   }
 
-  const created = await prisma.client.upsert({
+  const slugMatch = await prisma.client.findUnique({
     where: { slug: input.slug },
-    update: {
-      name: input.name,
-      wpSiteUrl: input.wpSiteUrl,
-      wpUsername: input.wpUsername,
-      theme: input.theme ?? DEFAULT_COMPATIBILITY_THEME,
-      brandKit: input.brandKit as unknown as object,
-      wpAppPasswordEncrypted: encrypt(input.wpAppPassword),
-    },
-    create: {
-      name: input.name,
-      slug: input.slug,
-      wpSiteUrl: input.wpSiteUrl,
-      wpUsername: input.wpUsername,
-      theme: input.theme ?? DEFAULT_COMPATIBILITY_THEME,
-      brandKit: input.brandKit as unknown as object,
-      wpAppPasswordEncrypted: encrypt(input.wpAppPassword),
-      createdBy: userId,
-    },
   });
+  if (slugMatch && slugMatch.createdBy !== userId) {
+    throw new Error("That client slug is already in use.");
+  }
+  const created = slugMatch
+    ? await prisma.client.update({
+        where: { id: slugMatch.id },
+        data: {
+          name: input.name,
+          wpSiteUrl: input.wpSiteUrl,
+          wpUsername: input.wpUsername,
+          theme: input.theme ?? slugMatch.theme,
+          brandKit: input.brandKit as unknown as object,
+          wpAppPasswordEncrypted: encrypt(input.wpAppPassword),
+        },
+      })
+    : await prisma.client.create({
+        data: {
+          name: input.name,
+          slug: input.slug,
+          wpSiteUrl: input.wpSiteUrl,
+          wpUsername: input.wpUsername,
+          theme: input.theme ?? DEFAULT_COMPATIBILITY_THEME,
+          brandKit: input.brandKit as unknown as object,
+          wpAppPasswordEncrypted: encrypt(input.wpAppPassword),
+          createdBy: userId,
+        },
+      });
 
   return {
     id: created.id,

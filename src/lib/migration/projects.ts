@@ -3,6 +3,7 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { audit } from "@/lib/audit";
 import type { FirecrawlPage } from "@/lib/firecrawl/types";
+import type { TemplateCompileBundle } from "@/lib/template-import/types";
 import { cleanAndClassifyPages } from "./cleanup";
 import { buildMediaInventory } from "./media/inventory";
 import {
@@ -10,7 +11,9 @@ import {
   type MigrationAsset,
   type MigrationBlogDraft,
   type MigrationSourcePage,
+  type MigrationResolution,
 } from "./types";
+import type { MigrationDeploymentRecord } from "./deploy/types";
 
 export interface CreateMigrationProjectInput {
   name: string;
@@ -34,6 +37,7 @@ interface MigrationProjectRecord {
   selectedTemplates: Prisma.JsonValue;
   mappings: Prisma.JsonValue;
   resolutions: Prisma.JsonValue;
+  deployment: Prisma.JsonValue;
   lastError: string | null;
   createdBy: string;
   createdAt: Date;
@@ -220,10 +224,107 @@ export async function saveMigrationBlogDrafts(
   return project;
 }
 
+export async function saveMigrationDeploymentPlan(
+  userId: string,
+  projectId: string,
+  bundle: TemplateCompileBundle,
+  resolutions: MigrationResolution[],
+  deployment: MigrationDeploymentRecord,
+  clientId?: string,
+) {
+  const existing = await getMigrationProject(userId, projectId);
+  const project = await migrationProjects.update({
+    where: { id: existing.id },
+    data: {
+      ...(clientId ? { clientId } : {}),
+      status: deployment.status === "ready" ? "ready" : "active",
+      stage: "deploy",
+      selectedTemplates: toInputJson(bundle),
+      resolutions: toInputJson(resolutions),
+      deployment: toInputJson(deployment),
+      lastError:
+        deployment.blockers.length > 0
+          ? deployment.blockers.join(" ").slice(0, 10_000)
+          : null,
+    },
+  });
+  await audit(userId, "migration.deploy.prepare", clientId ?? existing.clientId, {
+    migrationProjectId: existing.id,
+    pages: deployment.items.length,
+    ready: deployment.status === "ready",
+    blockers: deployment.blockers.length,
+  });
+  return project;
+}
+
+export async function saveMigrationDeploymentRecord(
+  userId: string,
+  projectId: string,
+  deployment: MigrationDeploymentRecord,
+  action: string,
+) {
+  const existing = await getMigrationProject(userId, projectId);
+  const projectStatus =
+    deployment.status === "complete"
+      ? "complete"
+      : deployment.status === "failed"
+        ? "failed"
+        : deployment.status === "ready"
+          ? "ready"
+          : "deploying";
+  const project = await migrationProjects.update({
+    where: { id: existing.id },
+    data: {
+      status: projectStatus,
+      stage: deployment.status === "complete" ? "complete" : "deploy",
+      deployment: toInputJson(deployment),
+      lastError:
+        deployment.status === "failed" || deployment.status === "partial"
+          ? deployment.items
+              .flatMap((item) => (item.error ? [item.error] : []))
+              .join(" ")
+              .slice(0, 10_000) || null
+          : null,
+    },
+  });
+  await audit(userId, action, existing.clientId, {
+    migrationProjectId: existing.id,
+    buildId: deployment.buildId,
+    status: deployment.status,
+    drafts: deployment.items.filter((item) => item.status === "draft").length,
+    failed: deployment.items.filter((item) => item.status === "failed").length,
+  });
+  return project;
+}
+
+export function parseMigrationCompileBundle(
+  value: Prisma.JsonValue,
+): TemplateCompileBundle | undefined {
+  return isJsonObject(value) ? (value as unknown as TemplateCompileBundle) : undefined;
+}
+
+export function parseMigrationResolutions(
+  value: Prisma.JsonValue,
+): MigrationResolution[] {
+  return parseJsonArray<MigrationResolution>(value);
+}
+
+export function parseMigrationDeployment(
+  value: Prisma.JsonValue,
+): MigrationDeploymentRecord | undefined {
+  return isJsonObject(value)
+    ? (value as unknown as MigrationDeploymentRecord)
+    : undefined;
+}
+
 function toInputJson(value: unknown): Prisma.InputJsonValue {
   return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 }
 
 function parseJsonArray<T>(value: Prisma.JsonValue): T[] {
   return Array.isArray(value) ? (value as unknown as T[]) : [];
+}
+
+function isJsonObject(value: Prisma.JsonValue): value is Prisma.JsonObject {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
