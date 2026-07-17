@@ -47,10 +47,24 @@ export interface MigrationSourcePage {
 export interface MigrationAsset {
   id: string;
   sourceUrl: string;
+  originalUrl: string;
   sourcePageIds: string[];
-  status: "pending" | "review" | "ready" | "uploaded" | "failed";
+  status:
+    | "pending"
+    | "review"
+    | "ready"
+    | "uploading"
+    | "uploaded"
+    | "skipped"
+    | "failed";
+  included: boolean;
+  discoveredAltText: string;
   altText: string;
+  title: string;
   filename: string;
+  mimeType?: string;
+  checksum?: string;
+  attemptCount: number;
   destinationMediaId?: number;
   destinationUrl?: string;
   error?: string;

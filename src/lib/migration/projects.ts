@@ -4,7 +4,12 @@ import { prisma } from "@/lib/prisma";
 import { audit } from "@/lib/audit";
 import type { FirecrawlPage } from "@/lib/firecrawl/types";
 import { cleanAndClassifyPages } from "./cleanup";
-import { MIGRATION_PROJECT_SCHEMA_VERSION } from "./types";
+import { buildMediaInventory } from "./media/inventory";
+import {
+  MIGRATION_PROJECT_SCHEMA_VERSION,
+  type MigrationAsset,
+  type MigrationSourcePage,
+} from "./types";
 
 export interface CreateMigrationProjectInput {
   name: string;
@@ -142,6 +147,49 @@ export async function ingestMigrationSource(
   return { project, report: result.report };
 }
 
+export async function inventoryMigrationMedia(userId: string, projectId: string) {
+  const existing = await getMigrationProject(userId, projectId);
+  const pages = parseJsonArray<MigrationSourcePage>(existing.sourcePages);
+  const assets = buildMediaInventory(pages);
+  const project = await migrationProjects.update({
+    where: { id: existing.id },
+    data: { stage: "media", assets: toInputJson(assets), lastError: null },
+  });
+  await audit(userId, "migration.media.inventory", existing.clientId, {
+    migrationProjectId: existing.id,
+    assets: assets.length,
+    needsReview: assets.filter((asset) => asset.status === "review").length,
+  });
+  return { project, assets };
+}
+
+export async function saveMigrationAssets(
+  userId: string,
+  projectId: string,
+  assets: MigrationAsset[],
+  action = "migration.media.review",
+) {
+  const existing = await getMigrationProject(userId, projectId);
+  const project = await migrationProjects.update({
+    where: { id: existing.id },
+    data: { stage: "media", assets: toInputJson(assets) },
+  });
+  await audit(userId, action, existing.clientId, {
+    migrationProjectId: existing.id,
+    assets: assets.length,
+    uploaded: assets.filter((asset) => asset.status === "uploaded").length,
+  });
+  return project;
+}
+
+export function parseMigrationAssets(value: Prisma.JsonValue): MigrationAsset[] {
+  return parseJsonArray<MigrationAsset>(value);
+}
+
 function toInputJson(value: unknown): Prisma.InputJsonValue {
   return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
+}
+
+function parseJsonArray<T>(value: Prisma.JsonValue): T[] {
+  return Array.isArray(value) ? (value as unknown as T[]) : [];
 }

@@ -30,6 +30,19 @@ Source ingest accepts up to 1,000 pages, 2MB per page, and 20MB per request.
 Every route requires Clerk authentication. Project creation and source ingest
 write audit records.
 
+## Media workflow
+
+`POST /api/migrations/{projectId}/media` supports `inventory`, `review`, and
+`migrate` actions. Migration defaults to a dry run. Execute mode requires a
+saved destination client and keeps WordPress credentials server-only.
+
+The inventory deduplicates source URLs, strips known Sanity resize parameters,
+keeps stable source-to-page references, and generates readable filenames with a
+short deterministic suffix. Remote downloads reject private networks,
+credentials, unusual ports, unsafe redirects, unsupported MIME types, invalid
+file signatures, and files over 15MB. Uploaded media records store their
+destination IDs and URLs so retries skip completed work.
+
 ## Database rollout
 
 The Prisma schema includes the `MigrationProject` model. Do not run

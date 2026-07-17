@@ -41,6 +41,21 @@ export interface AtomicFoundationSyncResult {
   componentsCreated: number;
 }
 
+export interface UploadMediaInput {
+  filename: string;
+  mimeType: string;
+  bytes: Uint8Array;
+  title: string;
+  altText: string;
+}
+
+export interface UploadMediaResult {
+  id: number;
+  slug: string;
+  sourceUrl: string;
+  reused: boolean;
+}
+
 function normalizeBaseUrl(siteUrl: string): string {
   return siteUrl.replace(/\/+$/, "");
 }
@@ -578,6 +593,43 @@ export class WpClient {
 
   async setFavicon(filename: string, dataBase64: string): Promise<void> {
     await this.uploadAsset("/favicon", filename, dataBase64);
+  }
+
+  async uploadMedia(
+    input: UploadMediaInput,
+    username: string,
+    appPassword: string,
+  ): Promise<UploadMediaResult> {
+    const slug = input.filename.replace(/\.[^.]+$/, "").toLowerCase();
+    const auth = `Basic ${this.basicAuth(username, appPassword)}`;
+    const existing = await fetch(
+      this.wpUrl(`/media?slug=${encodeURIComponent(slug)}&_fields=id,slug,source_url`),
+      { headers: { Authorization: auth }, cache: "no-store" },
+    );
+    if (!existing.ok) throw new WpApiError("Could not check the media library.", existing.status);
+    const matches = (await existing.json()) as Array<{ id: number; slug: string; source_url: string }>;
+    if (matches[0]) {
+      return { id: matches[0].id, slug: matches[0].slug, sourceUrl: matches[0].source_url, reused: true };
+    }
+
+    const uploaded = await fetch(this.wpUrl("/media"), {
+      method: "POST",
+      headers: {
+        Authorization: auth,
+        "Content-Type": input.mimeType,
+        "Content-Disposition": `attachment; filename="${input.filename.replace(/["\\]/g, "")}"`,
+      },
+      body: Buffer.from(input.bytes),
+      cache: "no-store",
+    });
+    const media = await this.parseResponse<{ id: number; slug: string; source_url: string }>(uploaded, "media");
+    await this.postWp(
+      `/media/${media.id}`,
+      { title: input.title, alt_text: input.altText },
+      username,
+      appPassword,
+    );
+    return { id: media.id, slug: media.slug, sourceUrl: media.source_url, reused: false };
   }
 
   async flushCss(): Promise<void> {
