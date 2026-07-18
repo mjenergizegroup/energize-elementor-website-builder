@@ -13,6 +13,7 @@ const routeFiles = [
   "src/app/api/migrations/[projectId]/page-plan/route.ts",
   "src/app/api/migrations/[projectId]/content-matches/route.ts",
   "src/app/api/migrations/[projectId]/prepared-drafts/route.ts",
+  "src/app/api/migrations/[projectId]/build/route.ts",
 ];
 
 for (const file of routeFiles) {
@@ -32,6 +33,7 @@ for (const file of [
   "src/lib/page-plan/repository.ts",
   "src/lib/content-matches/repository.ts",
   "src/lib/prepared-drafts/repository.ts",
+  "src/lib/website-builds/repository.ts",
 ]) {
   assert.match(read(file), /^import "server-only";/, `${file} must remain server-only`);
 }
@@ -55,6 +57,12 @@ assert.match(
   read("src/lib/migration/deploy/schema.ts"),
   /dryRun: z\.boolean\(\)\.default\(true\)/,
 );
+const preparedBuild = read(
+  "src/app/api/migrations/[projectId]/build/route.ts",
+);
+assert.match(preparedBuild, /checkDeployRateLimit/);
+assert.match(preparedBuild, /action === "dry-run"/);
+assert.doesNotMatch(preparedBuild, /wpAppPassword[^\n]*Response\.json/);
 
 console.log("migration security boundaries verified");
 

@@ -7,11 +7,11 @@ Energize Group website team. It moves legacy dental-practice content and design
 references into WordPress and Elementor while keeping publishing a manual team
 decision.
 
-The primary workflow is site migration. A team member can crawl or upload source
-content, import multiple Elementor JSON references, select a different source
-layout for each destination page, resolve dependencies, convert supported
-classic structures to Elementor V4 Atomic elements, and create recoverable
-WordPress drafts.
+The primary workflow is site migration. A team member chooses reusable sanitized
+layouts, creates the destination Page Plan, imports source content, confirms only
+ambiguous matches, and creates recoverable WordPress drafts. Technical template
+analysis, source content cleanup, and dependency handling stay outside the daily
+builder experience.
 
 The application also retains the existing new-website and landing-page builders.
 Internal visual-preset metadata remains for backward compatibility, but no
@@ -28,14 +28,16 @@ of pages, and removes raw content review and dependency resolution from the
 daily builder experience. Landing-page workflow changes and content rewriting
 are outside its current scope.
 
-Milestones 1 through 4 are implemented through version 3.9.0. The builder now has a
-reusable Template Library, revisioned sanitized layout artifacts, semantic
+All five website milestones are implemented through version 4.0.0. The builder
+has a reusable Template Library, revisioned sanitized layout artifacts, semantic
 slots, residue scanning, and a persistent Page Plan with individual and bulk
 page creation. The crawl follows the plan and stores deterministic automatic
 content matches, with only ambiguous choices exposed. Matched content is fitted
 into sanitized layouts, extra content enters a standard section, internal links
 use Page Plan destinations, reviewed media is mapped, and residue checks gate
-revisioned prepared drafts. Simplified dry run and build review remain next.
+revisioned prepared drafts. Review & Build now performs an automatic no-write
+check, pins immutable build inputs, requires an explicit final action, preserves
+successful drafts during partial failure, and retries only failed pages.
 
 ## Users and access
 

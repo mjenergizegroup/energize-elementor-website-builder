@@ -11,16 +11,18 @@ Mark approved a simpler layout-first website workflow after testing version
 specification is in
 [`docs/WEBSITE_BUILDER_UX_SPEC.md`](docs/WEBSITE_BUILDER_UX_SPEC.md).
 
-Milestones 1 through 4 are complete through version `3.9.0`. The authenticated
+All five milestones are complete through version `4.0.0`. The authenticated
 Template Library owns reusable sanitized layouts, and the persistent Page Plan
 owns destination page names, URLs, title tags, order, and layout choices. The
 current-site import follows the Page Plan and stores automatic content matches,
 with only ambiguous choices shown. Revisioned prepared drafts now fit that
 content into sanitized layouts, rebuild links, map reviewed destination media,
 append overflow, remove empty placeholders, regenerate Atomic IDs, and block
-source residue. The next implementation milestone completes simplified review,
-automatic dry run, draft creation, partial failure, and retry. Do not start with
-landing pages or AI rewriting.
+source residue. Review & Build now runs an automatic no-write check, pins the
+exact prepared inputs, and enables explicit WordPress draft creation only after
+the check passes. Completed drafts survive partial failure, exact draft slugs are
+recovered, and retry processes only failed pages. Landing pages and AI rewriting
+remain outside this completed website milestone.
 The daily builder must not expose raw content review, template metadata,
 filenames, plugins, external template domains, global IDs, or dependency-ledger
 decisions.
@@ -29,6 +31,10 @@ The destination Page Plan will own page names, URLs, title tags, and layout
 choices. Reusable Ready layouts will own safe structure only. The crawl will run
 after the Page Plan exists and will supply content only. One service layout must
 be reusable across any number of service pages.
+
+Version 4.0.0 adds immutable prepared build plans, stale-input rejection,
+automatic no-write checks, explicit draft creation, grouped progress, safe
+partial failure, and failed-only retry. No dry run contacts WordPress.
 
 Version 3.9.0 adds owned `PreparedDraft` revisions and the semantic preparation
 boundary. Page Plan identity wins, template copy never supplies fallback,

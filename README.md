@@ -50,6 +50,7 @@ src/lib/deploy/           Deploy orchestration (yields progress events)
 src/lib/migration/        Resumable cleanup, media, conversion, blogs, and deploy
 src/lib/layouts/          Reusable layout sanitation, residue scanning, and library
 src/lib/page-plan/        Destination page planning, validation, and persistence
+src/lib/website-builds/   Immutable build plans, no-write checks, and safe retries
 src/app/api/deploy/       Streaming NDJSON deploy route (auth, rate limit, audit)
 src/app/api/migrations/   Authenticated resumable migration routes
 src/app/api/parse/        Markdown parse route
@@ -64,13 +65,14 @@ Migration project state and its authenticated API are documented in
 
 ## Current site migration flow
 
-Version 3.9.0 uses the five-step layout-first workflow. The Page Plan is created
+Version 4.0.0 uses the complete five-step layout-first workflow. The Page Plan is created
 before the current website is imported, and deterministic matching shows only
 Matched, Check match, or No source content. Matched content is then fitted into
 semantic layout slots with safe overflow, rebuilt internal links, reviewed
-destination media, and a final source-residue check. The remaining milestone
-completes dry run, simplified Review & Build, and retry behavior. The approved
-end state is documented in
+destination media, and a final source-residue check. Review & Build automatically
+runs a no-write check, pins the exact prepared inputs, and enables the explicit
+Create WordPress drafts action only after that check passes. The approved end
+state is documented in
 [docs/WEBSITE_BUILDER_UX_SPEC.md](docs/WEBSITE_BUILDER_UX_SPEC.md).
 
 1. Add and sanitize reusable layouts in the authenticated Template Library.
@@ -81,8 +83,10 @@ end state is documented in
    an empty draft.
 4. Add brand and destination settings. The server prepares revisioned Atomic
    drafts from the sanitized layout and matched content.
-5. Review plain-language readiness while the final dry-run milestone is
-   completed.
+5. Review plain-language readiness. The builder automatically runs a no-write
+   check, then creates drafts only after the user selects the final action.
+   Successful drafts are preserved if another page fails, and retry processes
+   only the failed pages.
 
 Crawl-backed migrations do not require an exported or re-uploaded content file.
 The prepared-content import remains a compatibility option for projects that do
@@ -134,14 +138,18 @@ download external media or modify a WordPress site.
 
 ### Release verification
 
-Version 3.9.0 adds revisioned `PreparedDraft` records. Page Plan values replace
-source titles, internal links are rebuilt from destination paths, only uploaded
+Version 4.0.0 completes the Page Plan workflow. Revisioned `PreparedDraft`
+records replace source titles with Page Plan values, internal links are rebuilt
+from destination paths, only uploaded
 reviewed media can enter the artifact, extra content moves into one standard
 section, empty placeholders are removed, and source-template residue blocks
-readiness. The daily workflow shows only Ready or Needs attention and friendly
-notes.
+readiness. An immutable no-write build plan pins prepared revisions, content
+matches, Page Plan values, brand settings, and the destination before WordPress
+can be contacted. Draft creation preserves successful pages, recovers exact
+draft slugs, and retries only failed pages. The daily workflow shows only
+plain-language readiness and progress.
 
-Version 3.9.0 passes the complete automated suite, TypeScript checking, ESLint,
+Version 4.0.0 passes the complete automated suite, TypeScript checking, ESLint,
 migration security checks, Atomic and bridge checks, injection verification,
 and the optimized Next.js production build. Authenticated browser QA remains a
 manual rollout check because the local in-app browser proxy could not reach the

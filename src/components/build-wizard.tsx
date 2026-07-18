@@ -37,18 +37,13 @@ import type {
   MigrationWizardWorkspace,
 } from "@/lib/migration/types";
 import {
-  contentMappingsToSourcePages,
-  mapMigrationPagesToTemplates,
-  mapStructuredPagesToTemplates,
-  resolveContentImageUrls,
-} from "@/lib/migration/content/structured";
-import {
   BUILD_WIZARD_STEPS,
   type BuildWizardStep,
 } from "@/lib/build-wizard/flow";
 import type { LayoutLibraryItem } from "@/lib/layouts/types";
 import type { PersistedContentMatch } from "@/lib/content-matches/types";
 import type { PreparedDraftSummary } from "@/lib/prepared-drafts/types";
+import type { PreparedBuildPlanSummary } from "@/lib/website-builds/types";
 import {
   pagePath,
   validatePagePlan,
@@ -284,8 +279,7 @@ export function BuildWizard({
   const [savingCrawl, setSavingCrawl] = useState(false);
   const crawlIngestStartedRef = useRef(false);
   const [sourceSaved, setSourceSaved] = useState(resumedSourcePages.length > 0);
-  const [migrationSourcePages, setMigrationSourcePages] =
-    useState<MigrationSourcePage[]>(resumedSourcePages);
+  const [, setMigrationSourcePages] = useState<MigrationSourcePage[]>(resumedSourcePages);
 
   const [name, setName] = useState(
     initialClient?.name ?? initialWorkspace?.name ?? initialMigrationProject?.name.replace(/\s+migration$/i, "") ?? "",
@@ -355,6 +349,10 @@ export function BuildWizard({
     initialMigrationProject?.preparedDrafts ?? [],
   );
   const [preparingDrafts, setPreparingDrafts] = useState(false);
+  const [buildPlan, setBuildPlan] = useState<PreparedBuildPlanSummary | null>(null);
+  const [checkingBuild, setCheckingBuild] = useState(false);
+  const [buildCheckError, setBuildCheckError] = useState("");
+  const automaticBuildCheckRef = useRef("");
   const [pagePlanItems, setPagePlanItems] = useState<PagePlanItemInput[]>(() =>
     (initialMigrationProject?.pagePlan ?? []).map((item) => ({
       id: item.id,
@@ -372,9 +370,6 @@ export function BuildWizard({
     "idle" | "saving" | "saved" | "error"
   >(initialMigrationProject?.pagePlan.length ? "saved" : "idle");
   const pagePlanSaveRequestRef = useRef(0);
-  const hasStoredMigrationContent =
-    buildType === "migrate" && migrationSourcePages.length > 0;
-
   const buildTypeLabel =
     buildType === "landing-page"
       ? "Landing Page"
@@ -403,6 +398,34 @@ export function BuildWizard({
     // pollCrawl reads the latest render state and the status change stops this interval.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [crawlJobId, crawlStatus]);
+
+  useEffect(() => {
+    if (
+      step !== 4 ||
+      buildType !== "migrate" ||
+      deployMode !== "pages" ||
+      !migrationProjectId
+    ) {
+      return;
+    }
+    const key = JSON.stringify({
+      migrationProjectId,
+      drafts: preparedDrafts.map((draft) => [draft.id, draft.contentChecksum]),
+      name,
+      slug,
+      siteUrl,
+      username,
+      colors,
+      fonts: [fontHeading, fontBody],
+      logo: logo ? [logo.filename, logo.dataBase64] : null,
+      favicon: favicon ? [favicon.filename, favicon.dataBase64] : null,
+    });
+    if (automaticBuildCheckRef.current === key) return;
+    automaticBuildCheckRef.current = key;
+    void runWebsiteDryRun();
+    // The final check is intentionally triggered when the user enters Review.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, migrationProjectId]);
 
   useEffect(() => {
     if (!migrationProjectId) return;
@@ -805,22 +828,6 @@ export function BuildWizard({
     toast.success(`${file.name} loaded for favicon.`);
   }
 
-  function buildMigrationContentMap() {
-    if (!templateCompileBundle) {
-      return { mappings: [], errors: ["Compile the selected templates first."] };
-    }
-    if (hasStoredMigrationContent) {
-      return mapMigrationPagesToTemplates(
-        templateCompileBundle,
-        migrationSourcePages,
-      );
-    }
-    return mapStructuredPagesToTemplates(
-      templateCompileBundle,
-      detectedPages,
-    );
-  }
-
   function validateStep(current: number): string | null {
     switch (current) {
       case 0:
@@ -912,273 +919,96 @@ export function BuildWizard({
     });
   }
 
-  async function deployMigration(retryFailedOnly = false) {
-    if (!templateCompileBundle) {
-      throw new Error("Compile the selected templates before deployment.");
-    }
-    const contentMap = buildMigrationContentMap();
-    if (contentMap.errors.length > 0) {
-      throw new Error(contentMap.errors[0]);
-    }
-    const contentMappings = resolveContentImageUrls(
-      contentMap.mappings,
-      crawlUrl || siteUrl,
-    );
-    let projectId = migrationProjectId;
-    if (!projectId) {
-      upsertEvent("Preparing migration project", "start");
-      const projectResponse = await fetch("/api/migrations", {
+  function buildWebsiteDestination(includePassword = false) {
+    return {
+      ...(initialClient?.id ? { clientId: initialClient.id } : {}),
+      name,
+      slug,
+      wpSiteUrl: siteUrl,
+      wpUsername: username,
+      ...(includePassword && appPassword ? { wpAppPassword: appPassword } : {}),
+      brandKit: buildBrandKit(),
+    };
+  }
+
+  async function runWebsiteDryRun() {
+    if (!migrationProjectId) return;
+    setCheckingBuild(true);
+    setBuildCheckError("");
+    try {
+      const response = await fetch(`/api/migrations/${migrationProjectId}/build`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: `${name} migration`,
-          ...(siteKind === "existing" && crawlUrl
-            ? { sourceUrl: crawlUrl }
-            : {}),
-          ...(initialClient?.id ? { clientId: initialClient.id } : {}),
+          action: "dry-run",
+          destination: buildWebsiteDestination(),
         }),
       });
-      const projectJson = await projectResponse.json();
-      if (!projectResponse.ok) {
-        throw new Error(projectJson.error ?? "Could not create migration project.");
+      const json = await response.json().catch(() => ({}));
+      const plan = json.plan as PreparedBuildPlanSummary | undefined;
+      if (plan) setBuildPlan(plan);
+      if (!response.ok || !plan || plan.status !== "ready") {
+        throw new Error(json.error ?? plan?.blockers[0] ?? "The automatic final check needs attention.");
       }
-      projectId = projectJson.project.id as string;
-      setMigrationProjectId(projectId);
-      upsertEvent("Preparing migration project", "ok");
-      upsertEvent("Saving approved source content", "start");
-      const sourceResponse = await fetch(
-        `/api/migrations/${projectId}/source`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            pages: contentMappingsToSourcePages(
-              contentMappings,
-              crawlUrl || siteUrl,
-            ),
-          }),
-        },
-      );
-      const sourceJson = await sourceResponse.json();
-      if (!sourceResponse.ok) {
-        throw new Error(sourceJson.error ?? "Could not save migration content.");
-      }
-      upsertEvent("Saving approved source content", "ok");
+    } catch (error) {
+      setBuildPlan(null);
+      setBuildCheckError(error instanceof Error ? error.message : "The automatic final check could not finish.");
+    } finally {
+      setCheckingBuild(false);
     }
+  }
 
-    if (!retryFailedOnly) {
-      upsertEvent("Building full-resolution media inventory", "start");
-      const inventoryResponse = await fetch(
-        `/api/migrations/${projectId}/media`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "inventory" }),
-        },
-      );
-      const inventoryJson = await inventoryResponse.json();
-      if (!inventoryResponse.ok) {
-        throw new Error(inventoryJson.error ?? "Could not inventory migration media.");
-      }
-      upsertEvent("Building full-resolution media inventory", "ok");
-
-      const prepare = async () => {
-        const prepareResponse = await fetch(
-          `/api/migrations/${projectId}/deploy`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              action: "prepare",
-              bundle: templateCompileBundle,
-              resolutions: dependencyResolutions,
-              contentMappings,
-              ...(!initialClient
-                ? {
-                    destination: {
-                      name,
-                      slug,
-                      wpSiteUrl: siteUrl,
-                      wpUsername: username,
-                      wpAppPassword: appPassword,
-                      brandKit: buildBrandKit(),
-                    },
-                  }
-                : {}),
-            }),
-          },
-        );
-        const prepareJson = await prepareResponse.json();
-        if (!prepareResponse.ok) {
-          throw new Error(
-            prepareJson.error ?? "Could not prepare migration deployment.",
-          );
-        }
-        return prepareJson.deployment as {
-          status: string;
-          blockers: string[];
-        };
-      };
-
-      upsertEvent("Running server preflight", "start");
-      const initialPreparation = await prepare();
-      const nonMediaBlockers = initialPreparation.blockers.filter(
-        (blocker) => !blocker.includes("must be migrated before page deployment"),
-      );
-      if (nonMediaBlockers.length > 0) {
-        setEvents(
-          nonMediaBlockers.map((message, index) => ({
-            key: `preflight-${index}`,
-            label: "Migration preflight blocker",
-            status: "fail" as const,
-            message,
-          })),
-        );
-        setFinished("failed");
-        return;
-      }
-      upsertEvent("Running server preflight", "ok");
-
-      upsertEvent("Validating media migration", "start");
-      const mediaDryRunResponse = await fetch(
-        `/api/migrations/${projectId}/media`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "migrate", dryRun: true }),
-        },
-      );
-      const mediaDryRunJson = await mediaDryRunResponse.json();
-      if (!mediaDryRunResponse.ok) {
-        throw new Error(mediaDryRunJson.error ?? "Migration media dry run failed.");
-      }
-      const mediaNeedsReview = (
-        mediaDryRunJson.assets as Array<{ status: string; error?: string }>
-      ).find((asset) => asset.status === "review" || asset.status === "failed");
-      if (mediaNeedsReview) {
-        throw new Error(
-          mediaNeedsReview.error ?? "Review image alt text before migration.",
-        );
-      }
-      upsertEvent("Validating media migration", "ok");
-      upsertEvent("Uploading reviewed media", "start");
-      const mediaResponse = await fetch(
-        `/api/migrations/${projectId}/media`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "migrate", dryRun: false }),
-        },
-      );
-      const mediaJson = await mediaResponse.json();
-      if (!mediaResponse.ok) {
-        throw new Error(mediaJson.error ?? "Migration media upload failed.");
-      }
-      const mediaFailure = (
-        mediaJson.assets as Array<{ status: string; error?: string }>
-      ).find((asset) => asset.status === "failed");
-      if (mediaFailure) {
-        throw new Error(mediaFailure.error ?? "Migration media upload failed.");
-      }
-      upsertEvent("Uploading reviewed media", "ok");
-
-      upsertEvent("Revalidating mapped page content", "start");
-      const prepared = await prepare();
-      if (prepared.status !== "ready") {
-        setEvents(
-          prepared.blockers.map((message, index) => ({
-            key: `preflight-${index}`,
-            label: "Migration preflight blocker",
-            status: "fail" as const,
-            message,
-          })),
-        );
-        setFinished("failed");
-        return;
-      }
-      upsertEvent("Revalidating mapped page content", "ok");
-
-      upsertEvent("Running no-write page dry run", "start");
-      const dryRunResponse = await fetch(
-        `/api/migrations/${projectId}/deploy`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "deploy", dryRun: true }),
-        },
-      );
-      const dryRunJson = await dryRunResponse.json();
-      if (!dryRunResponse.ok) {
-        throw new Error(dryRunJson.error ?? "Migration dry run failed.");
-      }
-      upsertEvent("Running no-write page dry run", "ok");
-      setMigrationProjectId(projectId);
+  async function deployMigration(retryFailedOnly = false) {
+    if (!migrationProjectId) throw new Error("The website project is not ready.");
+    if (!retryFailedOnly && buildPlan?.status !== "ready") {
+      throw new Error("Wait for the automatic final check before creating drafts.");
     }
-
-    const response = await fetch(`/api/migrations/${projectId}/deploy`, {
+    setEvents([
+      {
+        key: "preparing-destination",
+        label: "Preparing destination",
+        status: "start",
+      },
+    ]);
+    const response = await fetch(`/api/migrations/${migrationProjectId}/build`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        action: "deploy",
-        dryRun: false,
-        retryFailedOnly,
+        action: retryFailedOnly ? "retry" : "execute",
+        destination: buildWebsiteDestination(true),
       }),
     });
-    const json = await response.json();
-    const deployment = json.deployment as
-      | {
-          status: "complete" | "partial" | "failed" | "ready";
-          warnings: string[];
-          events: Array<{
-            at: string;
-            status: StepEvent["status"];
-            label: string;
-            message?: string;
-          }>;
-          items: Array<{
-            status: string;
-            wpPageId?: number;
-            title: string;
-            editUrl?: string;
-            viewUrl?: string;
-          }>;
-        }
-      | undefined;
-    if (!response.ok && !deployment) {
-      throw new Error(json.error ?? "Migration deployment failed.");
-    }
-    if (!deployment) throw new Error("Migration deployment returned no state.");
+    const json = await response.json().catch(() => ({}));
+    const plan = json.plan as PreparedBuildPlanSummary | undefined;
+    if (!response.ok && !plan) throw new Error(json.error ?? "WordPress draft creation failed.");
+    if (!plan) throw new Error("WordPress draft creation returned no result.");
+    setBuildPlan(plan);
     setEvents(
-      deployment.events.map((event, index) => ({
+      plan.events.map((event, index) => ({
         key: `${event.at}-${index}`,
         label: event.label,
         status: event.status,
         message: event.message,
       })),
     );
-    setWarnings(deployment.warnings);
+    setWarnings(plan.warnings);
     setDeployedLinks(
-      deployment.items.flatMap((item) =>
-        item.status === "draft" &&
-        item.wpPageId &&
-        item.editUrl &&
-        item.viewUrl
-          ? [
-              {
-                wpPageId: item.wpPageId,
-                title: item.title,
-                editUrl: item.editUrl,
-                viewUrl: item.viewUrl,
-                kind: "content" as const,
-              },
-            ]
+      plan.items.flatMap((item) =>
+        item.status === "draft" && item.wpPageId && item.editUrl && item.viewUrl
+          ? [{
+              wpPageId: item.wpPageId,
+              title: item.title,
+              editUrl: item.editUrl,
+              viewUrl: item.viewUrl,
+              kind: "content" as const,
+            }]
           : [],
       ),
     );
     setFinished(
-      deployment.status === "complete"
+      plan.status === "complete"
         ? "success"
-        : deployment.status === "partial"
+        : plan.status === "partial"
           ? "partial"
           : "failed",
     );
@@ -1347,13 +1177,21 @@ export function BuildWizard({
   // Deploy and result view.
   if (deploying || finished) {
     const title =
-      finished === "success"
-        ? "Deploy complete"
-        : finished === "partial"
-          ? "Deploy finished with issues"
-          : finished === "failed"
-            ? "Deploy failed"
-            : "Deploying";
+      buildType === "migrate"
+        ? finished === "success"
+          ? "Drafts ready"
+          : finished === "partial"
+            ? "Some drafts need another try"
+            : finished === "failed"
+              ? "Draft creation stopped"
+              : "Creating drafts"
+        : finished === "success"
+          ? "Deploy complete"
+          : finished === "partial"
+            ? "Deploy finished with issues"
+            : finished === "failed"
+              ? "Deploy failed"
+              : "Deploying";
 
     return (
       <div className="page-body">
@@ -1361,7 +1199,7 @@ export function BuildWizard({
           title={title}
           subline={
             buildType === "migrate"
-              ? "Validated portable templates are created as recoverable WordPress drafts."
+              ? "Prepared pages are saved as recoverable WordPress drafts and are never published automatically."
               : "The deploy stream validates the Atomic Foundation before creating WordPress drafts."
           }
           clientName={name || practiceMeta?.practiceName || "Untitled client"}
@@ -1371,9 +1209,11 @@ export function BuildWizard({
         <section className="wizard-frame">
           <PanelHead
             icon={Rocket}
-            title="Deployment progress"
+            title={buildType === "migrate" ? "Website draft progress" : "Deployment progress"}
             description={
-              deployMode === "branding-only"
+              buildType === "migrate"
+                ? "Preparing the destination, applying the brand, creating page drafts, and completing final checks."
+                : deployMode === "branding-only"
                 ? "Atomic variables, components, site identity, assets, and cache status."
                 : "Atomic Foundation, page drafts, assets, and cache status."
             }
@@ -1435,7 +1275,7 @@ export function BuildWizard({
                       rel="noreferrer"
                       className="border-2 border-[var(--color-black)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-red)]"
                     >
-                      Edit in WP
+                      Edit in WordPress
                     </a>
                     <a
                       href={l.viewUrl}
@@ -1448,6 +1288,24 @@ export function BuildWizard({
                   </li>
                 ))}
               </ul>
+              </div>
+            )}
+
+            {buildType === "migrate" && buildPlan?.items.some((item) => item.status === "failed") && (
+              <div className="space-y-3">
+                <SectionLabel>Drafts that need another try</SectionLabel>
+                <div className="border-2 border-[var(--color-red)] bg-[var(--color-red-light)]">
+                  {buildPlan.items
+                    .filter((item) => item.status === "failed")
+                    .map((item) => (
+                      <div key={item.preparedDraftId} className="border-b border-[var(--color-red)] p-4 last:border-b-0">
+                        <p className="font-bold text-[var(--color-black)]">{item.title}</p>
+                        <p className="mt-1 text-xs text-[var(--color-muted)]">
+                          {item.error ?? "WordPress could not create this draft."}
+                        </p>
+                      </div>
+                    ))}
+                </div>
               </div>
             )}
 
@@ -1753,6 +1611,42 @@ export function BuildWizard({
 
           {step === 4 && (
             <div className="space-y-4 text-sm">
+              <SectionLabel>Automatic final check</SectionLabel>
+              <div
+                className={`border-2 p-4 ${
+                  buildPlan?.status === "ready"
+                    ? "border-[var(--color-black)] bg-[var(--color-panel)]"
+                    : "border-[var(--color-red)] bg-[var(--color-red-light)]"
+                }`}
+                aria-live="polite"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="font-bold">
+                      {checkingBuild
+                        ? "Checking every prepared page"
+                        : buildPlan?.status === "ready"
+                          ? `Ready to create ${buildPlan.items.length} WordPress drafts`
+                          : "Final check needs attention"}
+                    </p>
+                    <p className="mt-1 text-xs text-[var(--color-muted)]">
+                      {checkingBuild
+                        ? "This check does not contact or change WordPress."
+                        : buildPlan?.status === "ready"
+                          ? "No source-layout residue or unsafe draft data was found."
+                          : buildCheckError || "Return to the highlighted step and correct the issue."}
+                    </p>
+                  </div>
+                  <Badge variant={buildPlan?.status === "ready" ? "secondary" : "destructive"}>
+                    {checkingBuild ? "Checking" : buildPlan?.status === "ready" ? "Passed" : "Action needed"}
+                  </Badge>
+                </div>
+                {!checkingBuild && buildPlan?.status !== "ready" && (
+                  <Button className="mt-3" variant="outline" onClick={() => void runWebsiteDryRun()}>
+                    Check again
+                  </Button>
+                )}
+              </div>
               <SectionLabel>Website build summary</SectionLabel>
               <Review label="Project" value={name} onEdit={() => setStep(0)} />
               <Review label="Source" value={siteKind === "existing" ? "Existing website imported" : "New website with empty drafts"} onEdit={() => setStep(2)} />
@@ -1829,11 +1723,22 @@ export function BuildWizard({
                 <ArrowRight data-icon="inline-end" />
               </Button>
             ) : (
-              <Button onClick={() => void deploy()}>
+              <Button
+                onClick={() => void deploy()}
+                disabled={
+                  buildType === "migrate" &&
+                  deployMode === "pages" &&
+                  (checkingBuild || buildPlan?.status !== "ready")
+                }
+              >
                 {deployMode === "branding-only"
                   ? "Deploy brand kit"
                   : buildType === "migrate"
-                    ? "Create WordPress drafts"
+                    ? checkingBuild
+                      ? "Checking build"
+                      : buildPlan?.status === "ready"
+                        ? "Create WordPress drafts"
+                        : "Fix issues first"
                     : "Deploy"}
                 <Rocket data-icon="inline-end" />
               </Button>
