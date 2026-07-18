@@ -5,6 +5,8 @@ pages from the shared Energize Atomic Foundation and pushes finished pages to
 client WordPress sites as drafts through a custom WPCode bridge snippet.
 
 See [BUILD_BRIEF.md](BUILD_BRIEF.md) for the full product brief.
+The approved Page Plan redesign and implementation milestones are documented in
+[docs/WEBSITE_BUILDER_UX_SPEC.md](docs/WEBSITE_BUILDER_UX_SPEC.md).
 
 ## Stack
 
@@ -58,7 +60,12 @@ wordpress-plugin/         energize-build-tool.php (WPCode-compatible snippet)
 Migration project state and its authenticated API are documented in
 [docs/MIGRATION_PROJECTS.md](docs/MIGRATION_PROJECTS.md).
 
-## Site migration flow
+## Current site migration flow
+
+The flow below describes the current version 3.5.0 application. The next website
+builder release will replace its user-facing content and dependency review with
+the simpler layout-first Page Plan workflow in
+[docs/WEBSITE_BUILDER_UX_SPEC.md](docs/WEBSITE_BUILDER_UX_SPEC.md).
 
 1. Start an owned migration project with the crawl, select source pages, and
    save raw and deterministically cleaned content directly to the project.

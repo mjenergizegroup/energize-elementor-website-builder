@@ -17,6 +17,18 @@ The application also retains the existing new-website and landing-page builders.
 Internal visual-preset metadata remains for backward compatibility, but no
 theme or preset is selected in the build wizard.
 
+## Approved next product direction
+
+The current migration flow below remains the implemented version 3.5.0 state.
+The approved next website-builder workflow is the layout-first Page Plan in
+[docs/WEBSITE_BUILDER_UX_SPEC.md](docs/WEBSITE_BUILDER_UX_SPEC.md).
+
+That redesign makes the destination Page Plan the source of truth, analyzes and
+sanitizes layouts before crawling content, allows one layout to serve any number
+of pages, and removes raw content review and dependency resolution from the
+daily builder experience. Landing-page workflow changes and content rewriting
+are outside its current scope.
+
 ## Users and access
 
 - Three internal Energize team members use Clerk authentication.

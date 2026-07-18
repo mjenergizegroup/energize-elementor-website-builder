@@ -4,6 +4,28 @@ This document carries the product decisions, implementation state, constraints,
 source references, and next objective from the previous Codex task. A new Codex
 task should read this file completely before making changes.
 
+## Approved next objective - Page Plan redesign
+
+Mark approved a simpler layout-first website workflow after testing version
+`3.5.0`. The complete product, UX, sanitation, data-model, test, and milestone
+specification is in
+[`docs/WEBSITE_BUILDER_UX_SPEC.md`](docs/WEBSITE_BUILDER_UX_SPEC.md).
+
+The next implementation milestone is the Layout Library and sanitation
+boundary. Do not start with landing pages or AI rewriting. The daily builder
+must stop exposing raw content review, template metadata, filenames, plugins,
+external template domains, global IDs, or dependency-ledger decisions.
+
+The destination Page Plan will own page names, URLs, title tags, and layout
+choices. Reusable Ready layouts will own safe structure only. The crawl will run
+after the Page Plan exists and will supply content only. One service layout must
+be reusable across any number of service pages.
+
+This documentation milestone does not change application behavior or version.
+Implementation has not started for the new specification. Each implementation
+milestone must update the version, pass appropriate verification, and receive
+its own local commit. Do not push, deploy, or modify an external WordPress site.
+
 ## Completion update - July 17, 2026
 
 The autonomous migration-content objective documented below is complete at
