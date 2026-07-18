@@ -24,26 +24,19 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Combobox } from "@/components/ui/combobox";
-import { TemplateImporter } from "@/components/template-importer";
-import { DependencyResolver } from "@/components/dependency-resolver";
-import { MigrationContentWorkspace } from "@/components/migration-content-workspace";
+import { PagePlanWorkspace } from "@/components/page-plan-workspace";
 import { GOOGLE_FONTS } from "@/lib/google-fonts";
 import { cn } from "@/lib/utils";
 import type { BrandKit, UploadedAsset } from "@/lib/types";
 import type { PageContent } from "@/lib/injection/types";
 import type { ElevatePageType } from "@/lib/builders/elevate/types";
-import type {
-  TemplateCompileBundle,
-  TemplateMappingManifest,
-} from "@/lib/template-import/types";
+import type { TemplateCompileBundle } from "@/lib/template-import/types";
 import type {
   MigrationCleanupReport,
   MigrationResolution,
   MigrationSourcePage,
   MigrationWizardWorkspace,
 } from "@/lib/migration/types";
-import type { MigrationSourcePageUpdate } from "@/lib/migration/content/review";
-import { migrationReadiness } from "@/lib/migration/dependencies";
 import {
   contentMappingsToSourcePages,
   mapMigrationPagesToTemplates,
@@ -54,6 +47,12 @@ import {
   BUILD_WIZARD_STEPS,
   type BuildWizardStep,
 } from "@/lib/build-wizard/flow";
+import type { LayoutLibraryItem } from "@/lib/layouts/types";
+import {
+  validatePagePlan,
+  type PagePlanItem,
+  type PagePlanItemInput,
+} from "@/lib/page-plan/types";
 
 export interface InitialClient {
   id: string;
@@ -75,6 +74,7 @@ export interface InitialMigrationProject {
   compileBundle?: TemplateCompileBundle;
   resolutions: MigrationResolution[];
   workspace?: MigrationWizardWorkspace;
+  pagePlan: PagePlanItem[];
 }
 
 type Asset = UploadedAsset & { previewUrl: string };
@@ -206,9 +206,9 @@ const STEP_DETAILS: {
     icon: Globe2,
   },
   {
-    title: "Content",
-    rail: "Content and templates",
-    description: "Review stored content and map it into portable JSON templates.",
+    title: "Plan Pages",
+    rail: "Pages and layouts",
+    description: "Name the destination pages and choose a reusable layout for each one.",
     icon: FileText,
   },
   {
@@ -264,28 +264,15 @@ function previewUrlFromAsset(asset?: UploadedAsset): string | undefined {
   return `data:${mimeFromFilename(asset.filename)};base64,${asset.dataBase64}`;
 }
 
-function builderPageTypeFor(pageKey: string): ElevatePageType | undefined {
-  if (pageKey === "insurance") return "insurance-and-financing";
-  if (
-    pageKey === "homepage" ||
-    pageKey === "about" ||
-    pageKey === "contact" ||
-    pageKey === "amenities" ||
-    pageKey === "first-visit" ||
-    pageKey === "insurance-and-financing"
-  ) {
-    return pageKey;
-  }
-  return undefined;
-}
-
 export function BuildWizard({
   initialClient,
   initialMigrationProject,
+  initialLayouts = [],
   buildType = "new-website",
 }: {
   initialClient?: InitialClient;
   initialMigrationProject?: InitialMigrationProject;
+  initialLayouts?: LayoutLibraryItem[];
   buildType?: string;
 }) {
   const router = useRouter();
@@ -330,7 +317,6 @@ export function BuildWizard({
   );
   const [migrationSourcePages, setMigrationSourcePages] =
     useState<MigrationSourcePage[]>(resumedSourcePages);
-  const [savingSourceReview, setSavingSourceReview] = useState(false);
 
   const [name, setName] = useState(
     initialClient?.name ?? initialWorkspace?.name ?? initialMigrationProject?.name.replace(/\s+migration$/i, "") ?? "",
@@ -373,36 +359,44 @@ export function BuildWizard({
   );
   const [appPassword, setAppPassword] = useState("");
 
-  const [markdownName, setMarkdownName] = useState("");
-  const [deployMode, setDeployMode] = useState<"pages" | "branding-only">(
+  const [deployMode] = useState<"pages" | "branding-only">(
     initialWorkspace?.deployMode ?? "pages",
   );
-  const [parsing, setParsing] = useState(false);
-  const [structuredResult, setStructuredResult] =
-    useState<StructuredParseResult | null>(null);
-  const [parserWarnings, setParserWarnings] = useState<string[]>([]);
-  const [practiceMeta, setPracticeMeta] = useState<{
+  const [structuredResult] = useState<StructuredParseResult | null>(null);
+  const [practiceMeta] = useState<{
     practiceName: string;
     city?: string;
     doctorName?: string;
   } | null>(null);
-  const [detectedPages, setDetectedPages] = useState<DetectedPage[]>([]);
-  const [templateManifest, setTemplateManifest] =
-    useState<TemplateMappingManifest | null>(null);
-  const [templateCompileBundle, setTemplateCompileBundle] =
+  const detectedPages: DetectedPage[] = [];
+  const [templateCompileBundle] =
     useState<TemplateCompileBundle | null>(
       initialMigrationProject?.compileBundle ?? null,
     );
-  const [dependencyResolutions, setDependencyResolutions] =
+  const [dependencyResolutions] =
     useState<MigrationResolution[]>(initialMigrationProject?.resolutions ?? []);
   const [migrationProjectId, setMigrationProjectId] = useState(
     initialMigrationProject?.id ?? "",
   );
+  const [pagePlanItems, setPagePlanItems] = useState<PagePlanItemInput[]>(() =>
+    (initialMigrationProject?.pagePlan ?? []).map((item) => ({
+      id: item.id,
+      position: item.position,
+      pageName: item.pageName,
+      slug: item.slug,
+      titleTag: item.titleTag,
+      pageType: item.pageType,
+      layoutRevisionId: item.layoutRevisionId,
+      emptyDraftAllowed: item.emptyDraftAllowed,
+      status: item.status,
+    })),
+  );
+  const [pagePlanSaveState, setPagePlanSaveState] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >(initialMigrationProject?.pagePlan.length ? "saved" : "idle");
+  const pagePlanSaveRequestRef = useRef(0);
   const hasStoredMigrationContent =
     buildType === "migrate" && migrationSourcePages.length > 0;
-  const approvedMigrationPages = migrationSourcePages.filter(
-    (page) => page.included && page.reviewed,
-  );
 
   const buildTypeLabel =
     buildType === "landing-page"
@@ -421,12 +415,6 @@ export function BuildWizard({
   const [finished, setFinished] = useState<null | "success" | "partial" | "failed">(
     null,
   );
-
-  function updatePage(index: number, patch: Partial<DetectedPage>) {
-    setDetectedPages((prev) =>
-      prev.map((p, i) => (i === index ? { ...p, ...patch } : p)),
-    );
-  }
 
   useEffect(() => {
     if (!crawlJobId || crawlStatus !== "scraping") return;
@@ -514,6 +502,40 @@ export function BuildWizard({
     templateCompileBundle,
     username,
   ]);
+
+  useEffect(() => {
+    if (!migrationProjectId) return;
+    const validation = validatePagePlan(pagePlanItems, initialLayouts);
+    if (pagePlanItems.length > 0 && !validation.valid) {
+      pagePlanSaveRequestRef.current += 1;
+      setPagePlanSaveState("idle");
+      return;
+    }
+    setPagePlanSaveState("saving");
+    const requestId = ++pagePlanSaveRequestRef.current;
+    const timer = window.setTimeout(() => {
+      void fetch(`/api/migrations/${migrationProjectId}/page-plan`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: pagePlanItems }),
+      })
+        .then(async (response) => {
+          const json = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(json.error ?? "Could not save the Page Plan.");
+          }
+          if (pagePlanSaveRequestRef.current === requestId) {
+            setPagePlanSaveState("saved");
+          }
+        })
+        .catch((error) => {
+          if (pagePlanSaveRequestRef.current !== requestId) return;
+          setPagePlanSaveState("error");
+          toast.error(error instanceof Error ? error.message : "Could not save the Page Plan.");
+        });
+    }, 700);
+    return () => window.clearTimeout(timer);
+  }, [initialLayouts, migrationProjectId, pagePlanItems]);
 
   async function startCrawl() {
     let normalizedUrl: string;
@@ -661,51 +683,6 @@ export function BuildWizard({
     }
   }
 
-  async function saveMigrationSourceUpdates(
-    updates: MigrationSourcePageUpdate[],
-  ): Promise<void> {
-    if (!migrationProjectId) {
-      toast.error("This migration project has not been created yet.");
-      return;
-    }
-    if (updates.length === 0) {
-      toast.error("No included pages have content to approve.");
-      return;
-    }
-    setSavingSourceReview(true);
-    try {
-      const response = await fetch(
-        `/api/migrations/${migrationProjectId}/source`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ updates }),
-        },
-      );
-      const json = await response.json();
-      if (!response.ok) {
-        throw new Error(json.error ?? "Could not save the content review.");
-      }
-      const savedPages = Array.isArray(json.pages)
-        ? (json.pages as MigrationSourcePage[])
-        : [];
-      setMigrationSourcePages(savedPages);
-      setSelectedCrawlUrls(
-        savedPages.filter((page) => page.included).map((page) => page.sourceUrl),
-      );
-      setSourceReport(sourceReportFromPages(savedPages));
-      toast.success(
-        `${json.summary.approved} of ${json.summary.included} included pages approved.`,
-      );
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Could not save the content review.",
-      );
-    } finally {
-      setSavingSourceReview(false);
-    }
-  }
-
   async function exportCrawlMarkdown() {
     if (!crawlJobId) {
       toast.error("Start a crawl before exporting.");
@@ -780,83 +757,6 @@ export function BuildWizard({
     toast.success(`${file.name} loaded for favicon.`);
   }
 
-  async function handleMarkdown(file: File) {
-    if (file.size > 1024 * 1024) {
-      toast.error("Markdown file must be 1MB or smaller.");
-      return;
-    }
-    const text = await file.text();
-    setMarkdownName(file.name);
-    setParsing(true);
-    setDetectedPages([]);
-    setPracticeMeta(null);
-    setStructuredResult(null);
-    setParserWarnings([]);
-    try {
-      const res = await fetch("/api/parse", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ markdown: text }),
-      });
-      const json = await res.json();
-      if (!res.ok) {
-        toast.error(json.error ?? "Could not parse the markdown.");
-        return;
-      }
-      const result = json.result as StructuredParseResult;
-      const normalPages = Object.entries(result.pages).map(([pageKey, pageData]) => {
-        const title =
-          (pageData.meta?.title as string | undefined) ??
-          (pageData.hero?.heading as string | undefined) ??
-          pageKey;
-        return {
-          page: pageKey,
-          wpTitle: title,
-          slug: slugify(pageKey),
-          wpPageTemplate: "elementor_header_footer",
-          slots: {},
-          buildNotes: [],
-          builderPageType: builderPageTypeFor(pageKey),
-          pageData,
-          selected: true,
-        } satisfies DetectedPage;
-      });
-      const servicePages = Object.entries(result.service_pages).map(([slugKey, pageData]) => {
-        const title =
-          (pageData.meta?.title as string | undefined) ??
-          (pageData.hero?.heading as string | undefined) ??
-          slugKey;
-        return {
-          page: `service-page-${slugKey}`,
-          wpTitle: title,
-          slug: slugify(slugKey),
-          wpPageTemplate: "elementor_header_footer",
-          slots: {},
-          buildNotes: [],
-          builderPageType: "service-page",
-          serviceSlug: slugKey,
-          pageData,
-          selected: true,
-        } satisfies DetectedPage;
-      });
-      setPracticeMeta({
-        practiceName: result.site.practice_name ?? result.site.site_name ?? name,
-        city: result.site.city,
-        doctorName: result.site.doctor_primary,
-      });
-      setStructuredResult(result);
-      setParserWarnings(result.warnings ?? []);
-      setDetectedPages([...normalPages, ...servicePages]);
-      toast.success(
-        `Parsed ${normalPages.length} pages and ${servicePages.length} service pages.`,
-      );
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Could not parse the markdown.");
-    } finally {
-      setParsing(false);
-    }
-  }
-
   function buildMigrationContentMap() {
     if (!templateCompileBundle) {
       return { mappings: [], errors: ["Compile the selected templates first."] };
@@ -903,40 +803,13 @@ export function BuildWizard({
         return null;
       case 4:
         if (deployMode === "branding-only") return null;
-        if (buildType === "migrate") {
-          if (!templateCompileBundle) {
-            return "Upload, map, and compile at least one template.";
-          }
-          if (!migrationReadiness(dependencyResolutions).ready) {
-            return "Resolve or explicitly accept every template dependency before review.";
-          }
-          if (hasStoredMigrationContent) {
-            const included = migrationSourcePages.filter((page) => page.included);
-            if (included.length === 0) {
-              return "Include at least one stored source page.";
-            }
-            const unapproved = included.find((page) => !page.reviewed);
-            if (unapproved) {
-              return `Review and approve ${unapproved.title} before continuing.`;
-            }
-          } else {
-            if (!markdownName) return "Import a prepared content file.";
-            if (detectedPages.length === 0) {
-              return "No pages were detected. Check the imported content structure.";
-            }
-            if (!detectedPages.some((page) => page.selected)) {
-              return "Select at least one approved content page.";
-            }
-          }
-          const contentMap = buildMigrationContentMap();
-          return contentMap.errors[0] ?? null;
+        if (migrationProjectId && pagePlanSaveState === "error") {
+          return "The Page Plan must be saved before review.";
         }
-        if (!markdownName) return "Import a prepared content file.";
-        if (detectedPages.length === 0)
-          return "No pages were detected. Check the uploaded markdown structure.";
-        if (!detectedPages.some((p) => p.selected))
-          return "Select at least one page to build.";
-        return null;
+        if (migrationProjectId && pagePlanSaveState === "saving") {
+          return "Wait for the Page Plan to finish saving.";
+        }
+        return validatePagePlan(pagePlanItems, initialLayouts).firstError ?? null;
       default:
         return null;
     }
@@ -1967,185 +1840,16 @@ export function BuildWizard({
           )}
 
           {step === 4 && (
-            <div className="space-y-5">
-              <SectionLabel>Deployment scope</SectionLabel>
-              <div className="grid gap-3 md:grid-cols-2">
-                <button
-                  type="button"
-                  onClick={() => setDeployMode("pages")}
-                  className={`border p-4 text-left transition ${
-                    deployMode === "pages"
-                      ? "border-[var(--primary)] bg-[var(--primary)]/10"
-                      : "border-[var(--line)] bg-[var(--paper-2)]"
-                  }`}
-                >
-                  <span className="block text-sm font-semibold text-[var(--ink)]">
-                    Brand kit and pages
-                  </span>
-                  <span className="mt-1 block text-xs font-medium leading-5 text-[var(--muted)]">
-                    Upload content, create selected draft pages, and apply the brand kit.
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setDeployMode("branding-only")}
-                  className={`border p-4 text-left transition ${
-                    deployMode === "branding-only"
-                      ? "border-[var(--primary)] bg-[var(--primary)]/10"
-                      : "border-[var(--line)] bg-[var(--paper-2)]"
-                  }`}
-                >
-                  <span className="block text-sm font-semibold text-[var(--ink)]">
-                    Brand kit only
-                  </span>
-                  <span className="mt-1 block text-xs font-medium leading-5 text-[var(--muted)]">
-                    Skip content and page creation. Apply the site name, colors, fonts, logo, and favicon.
-                  </span>
-                </button>
-              </div>
-              {buildType === "migrate" && deployMode !== "branding-only" && (
-                <>
-                  <SectionLabel>Source content review</SectionLabel>
-                  <p className="text-[12px] font-medium leading-5 text-[var(--color-muted)]">
-                    Review the deterministic cleanup, edit only the approved draft, and approve the pages that can be mapped into templates.
-                  </p>
-                  <MigrationContentWorkspace
-                    pages={migrationSourcePages}
-                    saving={savingSourceReview}
-                    onChange={setMigrationSourcePages}
-                    onSave={saveMigrationSourceUpdates}
-                  />
-                  <SectionLabel>Template JSON mapping</SectionLabel>
-                  <p className="text-[12px] font-medium leading-5 text-[var(--color-muted)]">
-                    Analyze Elementor or other JSON templates, confirm their page roles, and compile a portable deployment bundle. The reviewed artifacts are used directly for migration drafts.
-                  </p>
-                  <TemplateImporter
-                    initialBundle={initialMigrationProject?.compileBundle}
-                    onManifestChange={setTemplateManifest}
-                    onCompileChange={setTemplateCompileBundle}
-                  />
-                  {templateCompileBundle && (
-                    <>
-                      <SectionLabel>Dependency resolution</SectionLabel>
-                      <DependencyResolver
-                        bundle={templateCompileBundle}
-                        initialItems={initialMigrationProject?.resolutions}
-                        onChange={setDependencyResolutions}
-                      />
-                    </>
-                  )}
-                </>
-              )}
-              {deployMode === "branding-only" ? (
-                <div className="border border-[var(--line)] bg-[var(--paper-2)] p-4 text-sm leading-6 text-[var(--ink)]">
-                  No content file is needed and no WordPress pages will be created.
-                </div>
-              ) : hasStoredMigrationContent ? (
-                <div className="border border-[var(--line)] bg-[var(--paper-2)] p-4 text-sm leading-6 text-[var(--ink)]">
-                  The migration will use the approved content stored in this project. No export or content-file upload is required.
-                </div>
-              ) : (
-                <>
-              <SectionLabel>Prepared content import</SectionLabel>
-              <FileField
-                label="Import prepared content file"
-                hint="Optional for crawled migrations. Use this theme-neutral import for projects without stored source pages. Max 1MB."
-                accept=".md,.markdown,.txt"
-                onFile={handleMarkdown}
-              />
-              {parsing && (
-                <p className="text-sm font-medium text-[var(--muted)]">Parsing {markdownName}...</p>
-              )}
-              {!parsing && practiceMeta && (
-                <p className="font-mono text-xs font-medium text-[var(--muted)]">
-                  Parsed {markdownName}: {practiceMeta.practiceName}
-                  {practiceMeta.doctorName ? ` · ${practiceMeta.doctorName}` : ""}
-                  {practiceMeta.city ? ` · ${practiceMeta.city}` : ""}
-                </p>
-              )}
-              {parserWarnings.length > 0 && (
-                <div className="space-y-2 border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-                  <p className="font-semibold">Parser warnings</p>
-                  <ul className="list-inside list-disc space-y-1">
-                    {parserWarnings.map((warning, i) => (
-                      <li key={`parser-warning-${i}`}>{warning}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {structuredResult && (
-                <div className="space-y-4 border border-[var(--line)] bg-[var(--paper-2)] p-4">
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary">
-                      {Object.keys(structuredResult.pages).length} pages
-                    </Badge>
-                    <Badge variant="secondary">
-                      {Object.keys(structuredResult.service_pages).length} service pages
-                    </Badge>
-                    <Badge variant="outline">
-                      {parserWarnings.length} warnings
-                    </Badge>
-                  </div>
-                  <pre className="max-h-72 overflow-auto border border-[var(--line)] bg-[var(--card)] p-4 text-xs leading-5 text-[var(--ink)]">
-                    {JSON.stringify(
-                      {
-                        site: structuredResult.site,
-                        pages: structuredResult.pages,
-                        service_pages: structuredResult.service_pages,
-                      },
-                      null,
-                      2,
-                    )}
-                  </pre>
-                </div>
-              )}
-              {detectedPages.length > 0 && (
-                <>
-                  <SectionLabel>
-                    {structuredResult ? "Parsed pages" : "Detected pages to build"}
-                  </SectionLabel>
-                  <div className="space-y-3">
-                    {detectedPages.map((p, i) => {
-                      const slotCount = Object.keys(p.slots).length;
-                      return (
-                        <div key={`${p.page}-${i}`} className="space-y-3 border border-[var(--line)] bg-[var(--paper-2)] p-4">
-                          <label className="flex items-center gap-2 font-medium">
-                            <input
-                              type="checkbox"
-                              checked={p.selected}
-                              onChange={(e) => updatePage(i, { selected: e.target.checked })}
-                            />
-                            {p.page}
-                            <span className="text-xs font-normal text-muted-foreground">
-                              {structuredResult ? "ready for builder" : `${slotCount} fields`}
-                              {!structuredResult && p.buildNotes && p.buildNotes.length > 0
-                                ? ` · ${p.buildNotes.length} flags`
-                                : ""}
-                            </span>
-                          </label>
-                          {p.selected && (
-                            <div className="grid gap-3 md:grid-cols-2">
-                              <Input
-                                value={p.wpTitle ?? ""}
-                                onChange={(e) => updatePage(i, { wpTitle: e.target.value })}
-                                placeholder="WP page title"
-                              />
-                              <Input
-                                value={p.slug ?? ""}
-                                onChange={(e) => updatePage(i, { slug: slugify(e.target.value) })}
-                                placeholder="slug"
-                              />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
-                </>
-              )}
-            </div>
+            <PagePlanWorkspace
+              items={pagePlanItems}
+              layouts={initialLayouts}
+              practiceName={name}
+              saveState={pagePlanSaveState}
+              onChange={(items) => {
+                setPagePlanItems(items);
+                setPagePlanSaveState(migrationProjectId ? "saving" : "idle");
+              }}
+            />
           )}
 
           {step === 5 && (
@@ -2179,91 +1883,16 @@ export function BuildWizard({
               <Review label="Site logo" value={logo ? logo.filename : "none"} onEdit={() => setStep(2)} />
               <Review label="Site favicon" value={favicon ? favicon.filename : "none"} onEdit={() => setStep(2)} />
               <Review
-                label="Deploy scope"
-                value={deployMode === "branding-only" ? "Brand kit only" : "Brand kit and pages"}
-                onEdit={() => setStep(4)}
-              />
-              <Review
-                label="Content"
-                value={
-                  deployMode === "branding-only"
-                    ? "Not included"
-                    : hasStoredMigrationContent
-                      ? `${approvedMigrationPages.length} approved stored pages`
-                      : markdownName || "none"
-                }
-                onEdit={() => setStep(4)}
-              />
-              {deployMode === "pages" && structuredResult && (
-                <>
-                  <Review
-                    label="Parser result"
-                    value={`${Object.keys(structuredResult.pages).length} pages, ${Object.keys(structuredResult.service_pages).length} service pages`}
-                    onEdit={() => setStep(4)}
-                  />
-                  <Review
-                    label="Builder"
-                    value="Elevate builder connected"
-                    onEdit={() => setStep(4)}
-                  />
-                </>
-              )}
-              {buildType === "migrate" && templateManifest && (
-                <Review
-                  label="Template mappings"
-                  value={`${templateManifest.mappings.filter((item) => item.selected).length} included of ${templateManifest.mappings.length} analyzed`}
-                  onEdit={() => setStep(4)}
-                />
-              )}
-              {buildType === "migrate" && templateCompileBundle && (
-                <Review
-                  label="Portable compile"
-                  value={`${templateCompileBundle.totals.compiled} artifacts, ${templateCompileBundle.totals.ready} ready, ${templateCompileBundle.totals.review} need review`}
-                  onEdit={() => setStep(4)}
-                />
-              )}
-              {buildType === "migrate" && dependencyResolutions.length > 0 && (
-                <Review
-                  label="Dependencies"
-                  value={
-                    migrationReadiness(dependencyResolutions).ready
-                      ? "All dependencies resolved"
-                      : `${migrationReadiness(dependencyResolutions).unresolved} unresolved, ${migrationReadiness(dependencyResolutions).blocked} blocked`
-                  }
-                  onEdit={() => setStep(4)}
-                />
-              )}
-              <Review
-                label="Pages"
+                label="Page Plan"
                 onEdit={() => setStep(4)}
                 value={
-                  deployMode === "branding-only" ? (
-                    "No pages will be created"
-                  ) : hasStoredMigrationContent ? (
-                    <span className="flex flex-wrap gap-1">
-                      {approvedMigrationPages
-                        .filter(
-                          (page) =>
-                            page.classification === "core-page" ||
-                            page.classification === "blog-index",
-                        )
-                        .map((page) => (
+                  <span className="flex flex-wrap gap-1">
+                    {pagePlanItems.map((page) => (
                           <Badge key={page.id} variant="secondary">
-                            {page.title}
+                            {page.pageName}
                           </Badge>
-                        ))}
-                    </span>
-                  ) : (
-                    <span className="flex flex-wrap gap-1">
-                      {detectedPages
-                        .filter((p) => p.selected)
-                        .map((p, i) => (
-                          <Badge key={`${p.page}-${i}`} variant="secondary">
-                            {p.wpTitle || p.page}
-                          </Badge>
-                        ))}
-                    </span>
-                  )
+                      ))}
+                  </span>
                 }
               />
             </div>
@@ -2280,8 +1909,15 @@ export function BuildWizard({
               <span>{name ? `Draft saved for ${name}` : "Draft saved in this session"}</span>
             </div>
             {step < STEPS.length - 1 ? (
-              <Button onClick={() => void next()} disabled={savingCrawl}>
-                {savingCrawl ? "Saving source" : "Next"}
+              <Button
+                onClick={() => void next()}
+                disabled={savingCrawl || (step === 4 && pagePlanSaveState === "saving")}
+              >
+                {savingCrawl
+                  ? "Saving source"
+                  : step === 4 && pagePlanSaveState === "saving"
+                    ? "Saving Page Plan"
+                    : "Next"}
                 <ArrowRight data-icon="inline-end" />
               </Button>
             ) : (

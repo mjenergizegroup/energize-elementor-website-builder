@@ -3,7 +3,7 @@ export const BUILD_WIZARD_STEPS = [
   "Practice Info",
   "Brand Kit",
   "WP Target",
-  "Content",
+  "Plan Pages",
   "Review",
 ] as const;
 

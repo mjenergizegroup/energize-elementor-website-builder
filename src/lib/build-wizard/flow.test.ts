@@ -6,7 +6,7 @@ assert.deepEqual(BUILD_WIZARD_STEPS, [
   "Practice Info",
   "Brand Kit",
   "WP Target",
-  "Content",
+  "Plan Pages",
   "Review",
 ]);
 assert.equal(BUILD_WIZARD_STEPS.includes("Theme" as never), false);

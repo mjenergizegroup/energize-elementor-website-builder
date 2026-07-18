@@ -3,7 +3,7 @@ import type {
   TemplateMappingManifest,
 } from "@/lib/template-import/types";
 
-export const MIGRATION_PROJECT_SCHEMA_VERSION = 3 as const;
+export const MIGRATION_PROJECT_SCHEMA_VERSION = 4 as const;
 
 export type MigrationProjectStatus =
   | "draft"
@@ -16,6 +16,7 @@ export type MigrationProjectStatus =
 export type MigrationProjectStage =
   | "source"
   | "cleanup"
+  | "plan"
   | "media"
   | "templates"
   | "resolution"

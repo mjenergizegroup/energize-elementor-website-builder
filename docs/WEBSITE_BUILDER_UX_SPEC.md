@@ -4,11 +4,13 @@ Status: Approved product direction for implementation planning
 Scope: Website migrations only  
 Prepared: July 17, 2026
 
-Implementation status: Milestone 1 complete in version 3.6.0. Milestone 2 is
-next.
+Implementation status: Milestones 1 and 2 complete through version 3.7.0.
+Milestone 3 is next.
 
 Visual reference for the Template Library:
 [template-library-concept.png](design/template-library-concept.png).
+Visual reference for the Page Plan:
+[page-plan-concept.png](design/page-plan-concept.png).
 
 ## 1. Product decision
 

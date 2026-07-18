@@ -18,6 +18,8 @@ import {
   parseMigrationSourcePages,
   parseMigrationWizardWorkspace,
 } from "@/lib/migration/projects";
+import { listReadyLayouts } from "@/lib/layouts/repository";
+import { listPagePlan } from "@/lib/page-plan/repository";
 
 export const dynamic = "force-dynamic";
 
@@ -71,6 +73,7 @@ export default async function NewBuildPage({
         compileBundle: parseMigrationCompileBundle(project.selectedTemplates),
         resolutions: parseMigrationResolutions(project.resolutions),
         workspace: parseMigrationWizardWorkspace(project.wizardWorkspace),
+        pagePlan: await listPagePlan(userId, project.id),
       };
     } catch {
       notFound();
@@ -103,6 +106,7 @@ export default async function NewBuildPage({
       <BuildWizard
         initialClient={initialClient}
         initialMigrationProject={initialMigrationProject}
+        initialLayouts={await listReadyLayouts(userId)}
         buildType={selectedType}
       />
     );

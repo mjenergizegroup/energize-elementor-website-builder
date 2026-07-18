@@ -49,6 +49,7 @@ src/lib/wp/               Server-side WordPress client + brand-kit mapping
 src/lib/deploy/           Deploy orchestration (yields progress events)
 src/lib/migration/        Resumable cleanup, media, conversion, blogs, and deploy
 src/lib/layouts/          Reusable layout sanitation, residue scanning, and library
+src/lib/page-plan/        Destination page planning, validation, and persistence
 src/app/api/deploy/       Streaming NDJSON deploy route (auth, rate limit, audit)
 src/app/api/migrations/   Authenticated resumable migration routes
 src/app/api/parse/        Markdown parse route
@@ -63,28 +64,18 @@ Migration project state and its authenticated API are documented in
 
 ## Current site migration flow
 
-The flow below describes the current version 3.6.0 wizard. The next website
-builder milestones will replace its user-facing content and dependency review with
-the simpler layout-first Page Plan workflow in
+Version 3.7.0 introduces the layout-first Page Plan while preserving the
+existing preparation and draft-deployment engine behind the simplified daily
+workflow. The remaining milestones will move the crawl after the plan, fit
+content into semantic slots, and simplify Review & Build. The approved end state
+is documented in
 [docs/WEBSITE_BUILDER_UX_SPEC.md](docs/WEBSITE_BUILDER_UX_SPEC.md).
 
-1. Start an owned migration project with the crawl, select source pages, and
-   save raw and deterministically cleaned content directly to the project.
-   Source-file download remains an optional backup rather than a handoff step.
-2. Review raw, cleaned, and editable approved content inside the builder.
-   Approval is revisioned and is removed automatically when content changes.
-3. Upload up to 20 JSON templates, review analysis, select page roles, and
-   compile portable artifacts. The builder matches each page template to one
-   approved stored page by slug and theme-neutral page role.
-4. Inventory full-resolution media from approved content, review metadata, and
-   dry-run uploads.
-5. Resolve or explicitly accept every regenerated dependency-ledger item.
-6. Convert supported classic structures through the versioned Atomic adapter.
-7. Prepare deployment, run the automatic no-write dry run, and use the explicit
-   final action to create WordPress drafts.
-8. Review saved progress and result links. Retry only failed drafts when needed.
-9. Prepare and dry-run Gutenberg blog drafts after their media has destination
-   IDs.
+1. Add and sanitize reusable layouts in the authenticated Template Library.
+2. Build the destination Page Plan using friendly page names, URLs, title tags,
+   and Ready layout choices. One service layout can be reused by every service.
+3. Continue through practice, brand, destination, and review while the remaining
+   content-matching and draft-preparation milestones are completed.
 
 Crawl-backed migrations do not require an exported or re-uploaded content file.
 The prepared-content import remains a compatibility option for projects that do
@@ -136,12 +127,12 @@ download external media or modify a WordPress site.
 
 ### Release verification
 
-Version 3.6.0 adds the authenticated Template Library, revisioned reusable
-layouts, deterministic source sanitation, semantic content slots, and
-source-residue scanning. Only layouts that pass the sanitation boundary are
-returned by the Ready-only library API.
+Version 3.7.0 adds a persistent Page Plan on top of the version 3.6.0 Template
+Library. Daily users can add one page, bulk-add services, reuse a Ready layout,
+edit destination URLs and title tags, duplicate, reorder, delete, and resume the
+saved plan without seeing filenames, source metadata, or dependency findings.
 
-Version 3.6.0 passes the complete automated suite, TypeScript checking, ESLint,
+Version 3.7.0 passes the complete automated suite, TypeScript checking, ESLint,
 migration security checks, Atomic and bridge checks, injection verification,
 and the optimized Next.js production build. Authenticated browser QA remains a
 manual rollout check because the local in-app browser proxy could not reach the
@@ -149,7 +140,7 @@ loopback development server.
 
 Before pushing this schema-bearing release, generate the Prisma client and sync
 the selected Neon database. The Template Library requires the new
-`LayoutTemplate` and `LayoutRevision` tables:
+`LayoutTemplate`, `LayoutRevision`, and `PagePlanItem` tables:
 
 ```bash
 npm run db:generate

@@ -32,31 +32,32 @@ model Client {
 }
 
 model MigrationProject {
-  id                String   @id @default(cuid())
-  crawlJobId        String?  @unique
+  id                String         @id @default(cuid())
+  crawlJobId        String?        @unique
   clientId          String?
-  client            Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  client            Client?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
   name              String
   sourceUrl         String?
   // draft | active | ready | deploying | complete | failed
-  status            String   @default("draft")
-  // source | cleanup | media | templates | resolution | blogs | deploy | complete
-  stage             String   @default("source")
-  schemaVersion     Int      @default(1)
-  sourcePages       Json     @default("[]")
-  cleanedPages      Json     @default("[]")
-  blogPosts         Json     @default("[]")
-  blogDrafts        Json     @default("[]")
-  assets            Json     @default("[]")
-  selectedTemplates Json     @default("[]")
-  mappings          Json     @default("[]")
-  resolutions       Json     @default("[]")
-  wizardWorkspace   Json     @default("{}")
-  deployment        Json     @default("{}")
+  status            String         @default("draft")
+  // source | cleanup | media | templates | plan | resolution | blogs | deploy | complete
+  stage             String         @default("source")
+  schemaVersion     Int            @default(1)
+  sourcePages       Json           @default("[]")
+  cleanedPages      Json           @default("[]")
+  blogPosts         Json           @default("[]")
+  blogDrafts        Json           @default("[]")
+  assets            Json           @default("[]")
+  selectedTemplates Json           @default("[]")
+  mappings          Json           @default("[]")
+  resolutions       Json           @default("[]")
+  wizardWorkspace   Json           @default("{}")
+  deployment        Json           @default("{}")
   lastError         String?
   createdBy         String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  pagePlanItems     PagePlanItem[]
 
   @@index([clientId])
   @@index([createdBy])
@@ -91,6 +92,7 @@ model LayoutRevision {
   layoutTemplateId     String
   layoutTemplate       LayoutTemplate   @relation("LayoutRevisions", fields: [layoutTemplateId], references: [id], onDelete: Cascade)
   activeFor            LayoutTemplate[] @relation("ActiveLayoutRevision")
+  pagePlanItems        PagePlanItem[]
   version              Int
   sourceChecksum       String
   originalFilename     String
@@ -107,6 +109,30 @@ model LayoutRevision {
   @@unique([layoutTemplateId, version])
   @@index([layoutTemplateId])
   @@index([sourceChecksum])
+  @@index([status])
+}
+
+model PagePlanItem {
+  id                 String           @id @default(cuid())
+  migrationProjectId String
+  migrationProject   MigrationProject @relation(fields: [migrationProjectId], references: [id], onDelete: Cascade)
+  layoutRevisionId   String
+  layoutRevision     LayoutRevision   @relation(fields: [layoutRevisionId], references: [id], onDelete: Restrict)
+  position           Int
+  pageName           String
+  slug               String
+  titleTag           String
+  // home | standard | service | contact | custom
+  pageType           String
+  emptyDraftAllowed  Boolean          @default(true)
+  // planned | matched | check | empty | ready | needs_attention
+  status             String           @default("planned")
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@unique([migrationProjectId, slug])
+  @@index([migrationProjectId, position])
+  @@index([layoutRevisionId])
   @@index([status])
 }
 
