@@ -184,7 +184,8 @@ assert.doesNotMatch(artifact, /Layout Donor|donor\.example|donor\.jpg|818/);
 assert.doesNotMatch(artifact, /old-client\.test\/uploads\/emergency\.jpg/);
 assert.doesNotMatch(artifact, /ENERGIZE_SLOT|ENERGIZE_BRAND/);
 assert.ok(prepared.appendedSlots > 0);
-assert.ok(prepared.notes.some((note) => /standard content section/.test(note)));
+assert.equal(prepared.adapterVersion, "2");
+assert.ok(prepared.notes.some((note) => /matching content section/.test(note)));
 
 const emptyMatch: PersistedContentMatch = {
   ...match("empty-plan", "unused"),
@@ -210,7 +211,79 @@ const empty = preparePageDraft({
 });
 assert.equal(empty.status, "ready");
 assert.match(JSON.stringify(empty.artifact), /Membership/);
+assert.match(JSON.stringify(empty.artifact), /Add image in WordPress/);
 assert.doesNotMatch(JSON.stringify(empty.artifact), /ENERGIZE_SLOT/);
 assert.ok(empty.removedPlaceholders > 0);
+
+const sectionTemplate = {
+  ...template,
+  content: [
+    {
+      id: "hero-section",
+      elType: "container",
+      settings: {},
+      elements: [
+        { id: "hero-title", elType: "widget", widgetType: "heading", settings: { title: "Old hero", header_size: "h1" }, elements: [] },
+        { id: "hero-body", elType: "widget", widgetType: "text-editor", settings: { editor: "Old hero body" }, elements: [] },
+      ],
+    },
+    {
+      id: "help-section",
+      elType: "container",
+      settings: {},
+      elements: [
+        { id: "help-title", elType: "widget", widgetType: "heading", settings: { title: "Old help title", header_size: "h2" }, elements: [] },
+        { id: "help-list", elType: "widget", widgetType: "icon-list", settings: { icon_list: [{ text: "Old list item" }] }, elements: [] },
+      ],
+    },
+    {
+      id: "expect-section",
+      elType: "container",
+      settings: {},
+      elements: [
+        { id: "expect-box", elType: "widget", widgetType: "icon-box", settings: { title: "Old expectation", description: "Old description" }, elements: [] },
+      ],
+    },
+  ],
+};
+const sectionTemplateText = JSON.stringify(sectionTemplate);
+const sectionLayout = sanitizeLayoutTemplate({
+  analysis: analyzeTemplateJson({
+    fileName: "Section-Service.json",
+    sizeBytes: sectionTemplateText.length,
+    checksum: createHash("sha256").update(sectionTemplateText).digest("hex"),
+    document: sectionTemplate,
+  }),
+  document: sectionTemplate,
+  fileName: "Section-Service.json",
+});
+assert.equal(sectionLayout.status, "ready");
+const sectionPrepared = preparePageDraft({
+  page: servicePlan,
+  match: matches[0],
+  sourcePage: serviceSource,
+  layoutRevision: {
+    id: "section-layout-revision",
+    status: "ready",
+    sanitizedArtifact: sectionLayout.artifact,
+    semanticSlots: sectionLayout.semanticSlots,
+    identityFingerprints: sectionLayout.identityFingerprints,
+  },
+  pagePlan: [servicePlan, contactPlan],
+  matches,
+  sourcePages: [serviceSource, contactSource],
+  assets: [],
+});
+assert.equal(sectionPrepared.status, "ready");
+assert.equal(sectionPrepared.artifact.length, 3);
+assert.match(JSON.stringify(sectionPrepared.artifact[0]), /Emergency Dentistry/);
+assert.match(JSON.stringify(sectionPrepared.artifact[1]), /Same-Day Help/);
+assert.match(JSON.stringify(sectionPrepared.artifact[2]), /What to Expect/);
+assert.doesNotMatch(JSON.stringify(sectionPrepared.artifact), /Old hero|Old list|Old expectation/);
+assert.doesNotMatch(JSON.stringify(sectionPrepared.artifact), /ENERGIZE_SLOT/);
+assert.equal(
+  sectionPrepared.notes.some((note) => /unsupported optional layout region/.test(note)),
+  false,
+);
 
 console.log("prepared draft checks passed");

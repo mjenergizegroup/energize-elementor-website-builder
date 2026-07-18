@@ -33,6 +33,7 @@ export interface ConversionReviewItem {
 export interface AtomicConversionResult {
   adapter: { id: string; version: string };
   elementorData: AtomicElement[];
+  slotTargets: Record<string, string>;
   converted: number;
   reviewItems: ConversionReviewItem[];
   deployable: boolean;

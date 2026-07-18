@@ -279,7 +279,8 @@ export function BuildWizard({
   const [savingCrawl, setSavingCrawl] = useState(false);
   const crawlIngestStartedRef = useRef(false);
   const [sourceSaved, setSourceSaved] = useState(resumedSourcePages.length > 0);
-  const [, setMigrationSourcePages] = useState<MigrationSourcePage[]>(resumedSourcePages);
+  const [migrationSourcePages, setMigrationSourcePages] =
+    useState<MigrationSourcePage[]>(resumedSourcePages);
 
   const [name, setName] = useState(
     initialClient?.name ?? initialWorkspace?.name ?? initialMigrationProject?.name.replace(/\s+migration$/i, "") ?? "",
@@ -1545,6 +1546,24 @@ export function BuildWizard({
 
               {(siteKind === "new" || sourceSaved) && (
                 <>
+                  {siteKind === "existing" && (
+                    <div className="flex flex-wrap items-center justify-between gap-4 border-2 border-[var(--color-black)] bg-white p-5" role="status">
+                      <div className="flex items-start gap-3">
+                        <span className="flex size-9 shrink-0 items-center justify-center bg-[var(--color-black)] text-white">
+                          <Check className="size-4" />
+                        </span>
+                        <div>
+                          <p className="text-sm font-black">Website crawl complete</p>
+                          <p className="mt-1 text-xs leading-5 text-[var(--color-muted)]">
+                            {migrationSourcePages.length} page{migrationSourcePages.length === 1 ? " was" : "s were"} crawled and cleaned before matching.
+                          </p>
+                        </div>
+                      </div>
+                      <Button variant="outline" onClick={startCrawl} disabled={crawlStatus === "scraping" || savingCrawl}>
+                        Crawl website again
+                      </Button>
+                    </div>
+                  )}
                   <ContentMatchWorkspace
                     pages={pagePlanItems}
                     matches={contentMatches}
@@ -1558,13 +1577,6 @@ export function BuildWizard({
                       setPagePlanSaveState("saving");
                     }}
                   />
-                  {siteKind === "existing" && (
-                    <div className="flex justify-end">
-                      <Button variant="outline" onClick={startCrawl} disabled={crawlStatus === "scraping" || savingCrawl}>
-                        Re-import current website
-                      </Button>
-                    </div>
-                  )}
                 </>
               )}
             </div>
@@ -1659,6 +1671,11 @@ export function BuildWizard({
                 label="Content"
                 onEdit={() => setStep(2)}
                 value={`${contentMatches.filter((match) => match.status === "matched").length} matched, ${contentMatches.filter((match) => match.status === "empty").length} empty drafts`}
+              />
+              <Review
+                label="Content fit"
+                onEdit={() => setStep(1)}
+                value={`${preparedDrafts.filter((draft) => draft.status === "ready").length} of ${pagePlanItems.length} pages fitted into their selected layouts`}
               />
               <Review label="WordPress site" value={siteUrl} onEdit={() => setStep(3)} />
               <Review label="Fonts" value={`${fontHeading} / ${fontBody}`} onEdit={() => setStep(3)} />

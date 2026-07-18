@@ -16,7 +16,8 @@ export function scanPreparedLayoutResidue(
     byLength.set(fingerprint.length, group);
   }
 
-  for (const value of strings) {
+  for (const entry of strings) {
+    const value = entry.value;
     const normalized = value.toLowerCase();
     if (
       options.checkPlaceholders !== false &&
@@ -29,12 +30,15 @@ export function scanPreparedLayoutResidue(
     }
     for (const [length, candidates] of byLength) {
       if (normalized.length < length) continue;
-      const digests = new Set(candidates.map((candidate) => candidate.digest));
+      const eligible = candidates.filter(
+        (candidate) => !(candidate.kind === "id" && entry.key === "id"),
+      );
+      const digests = new Set(eligible.map((candidate) => candidate.digest));
       for (let index = 0; index <= normalized.length - length; index += 1) {
         const window = normalized.slice(index, index + length);
         const digest = createHash("sha256").update(window).digest("hex");
         if (digests.has(digest)) {
-          for (const candidate of candidates.filter((item) => item.digest === digest)) {
+          for (const candidate of eligible.filter((item) => item.digest === digest)) {
             matches.add(`source ${candidate.kind}`);
           }
         }
@@ -44,19 +48,24 @@ export function scanPreparedLayoutResidue(
   return [...matches].sort();
 }
 
-function collectStrings(value: unknown, result: string[] = [], depth = 0): string[] {
+function collectStrings(
+  value: unknown,
+  result: Array<{ value: string; key?: string }> = [],
+  depth = 0,
+  key?: string,
+): Array<{ value: string; key?: string }> {
   if (depth > 100) return result;
   if (typeof value === "string") {
-    result.push(value);
+    result.push({ value, key });
     return result;
   }
   if (Array.isArray(value)) {
-    for (const child of value) collectStrings(child, result, depth + 1);
+    for (const child of value) collectStrings(child, result, depth + 1, key);
     return result;
   }
   if (value && typeof value === "object") {
-    for (const child of Object.values(value as Record<string, unknown>)) {
-      collectStrings(child, result, depth + 1);
+    for (const [childKey, child] of Object.entries(value as Record<string, unknown>)) {
+      collectStrings(child, result, depth + 1, childKey);
     }
   }
   return result;

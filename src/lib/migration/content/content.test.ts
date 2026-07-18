@@ -24,6 +24,22 @@ const normalized = normalizePageContent(page);
 assert.deepEqual(normalized.slots.map((slot) => slot.kind), ["heading", "rich-text", "link"]);
 assert.equal(new Set(normalized.slots.map((slot) => slot.id)).size, 3);
 
+const groupedPage = {
+  ...page,
+  id: "grouped-page",
+  cleanedMarkdown: "# Welcome\n\n[Schedule](https://example.com/book) [(803) 555-1212](tel:8035551212)\n\n- First benefit\n\n- Second benefit",
+  approvedMarkdown: "# Welcome\n\n[Schedule](https://example.com/book) [(803) 555-1212](tel:8035551212)\n\n- First benefit\n\n- Second benefit",
+};
+const grouped = normalizePageContent(groupedPage);
+assert.deepEqual(
+  grouped.slots.map((slot) => slot.kind),
+  ["heading", "link", "link", "rich-text"],
+);
+assert.match(
+  grouped.slots.find((slot) => slot.kind === "rich-text")?.html ?? "",
+  /<ul><li>First benefit<\/li><li>Second benefit<\/li><\/ul>/,
+);
+
 const approvedPage: MigrationSourcePage = {
   ...page,
   reviewed: true,

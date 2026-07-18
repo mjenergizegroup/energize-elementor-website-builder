@@ -65,11 +65,14 @@ Migration project state and its authenticated API are documented in
 
 ## Current site migration flow
 
-Version 4.1.0 uses the complete five-step layout-first workflow. The Page Plan is created
+Version 4.2.0 uses the complete five-step layout-first workflow. The Page Plan is created
 before the current website is imported, and deterministic matching shows only
 Matched, Check match, or No source content. Matched content is then fitted into
-semantic layout slots with safe overflow, rebuilt internal links, reviewed
-destination media, and a final source-residue check. Review & Build automatically
+the selected JSON layout section by section. Related headings, paragraphs,
+lists, and calls to action stay together, while safe overflow remains with its
+matching content section. Internal links are rebuilt, reviewed destination media
+is used when available, empty image regions remain visible for WordPress review,
+and a final source-residue check runs. Review & Build automatically
 runs a no-write check, pins the exact prepared inputs, and enables the explicit
 Create WordPress drafts action only after that check passes. The approved end
 state is documented in
@@ -137,6 +140,16 @@ The test suite uses synthetic inputs and mocked WordPress gateways. It does not
 download external media or modify a WordPress site.
 
 ### Release verification
+
+Version 4.2.0 fixes the website content-fitting path against the saved J.
+Bradford Smith project. The Import Content step now visibly confirms that the
+website crawl completed and how many pages were cleaned. Source-page selectors
+always show human-readable titles and paths instead of internal IDs. Prepared
+drafts use the layout's semantic slot map and fit cleaned markdown by major
+content section. Lists and multiple calls to action retain their structure,
+safe icon lists and icon boxes no longer block drafts, and missing destination
+media keeps a clear image placeholder instead of deleting the layout region.
+This release does not change the database schema.
 
 Version 4.1.0 adds content-free visual previews for reusable layouts. Template
 Library cards open a large scrollable preview, and every Page Plan layout picker

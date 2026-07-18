@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { analyzeTemplateJson } from "@/lib/template-import/analyze";
+import { scanPreparedLayoutResidue } from "./residue";
 import { sanitizeLayoutTemplate } from "./sanitize";
 
 const hostileSource = {
@@ -120,5 +121,22 @@ const unsupported = sanitizeLayoutTemplate({
 });
 assert.equal(unsupported.status, "needs_setup");
 assert.ok(unsupported.report.blockingReasons.length > 0);
+
+const sourceIdFingerprint = {
+  kind: "id" as const,
+  digest: createHash("sha256").update("source01").digest("hex"),
+  length: 8,
+};
+assert.deepEqual(
+  scanPreparedLayoutResidue({ id: "source01", settings: {} }, [sourceIdFingerprint]),
+  [],
+);
+assert.deepEqual(
+  scanPreparedLayoutResidue(
+    { id: "fresh-id", settings: { copiedValue: "source01" } },
+    [sourceIdFingerprint],
+  ),
+  ["source id"],
+);
 
 console.log("layout sanitation tests passed");

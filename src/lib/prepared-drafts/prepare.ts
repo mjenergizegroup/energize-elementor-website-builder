@@ -21,7 +21,7 @@ import type {
 import { pagePath, type PagePlanItemInput } from "@/lib/page-plan/types";
 import type { PreparedDraftResult } from "./types";
 
-export const DRAFT_PREPARER_VERSION = "1";
+export const DRAFT_PREPARER_VERSION = "2";
 
 export interface PrepareDraftInput {
   page: PagePlanItemInput;
@@ -70,13 +70,16 @@ export function preparePageDraft(input: PrepareDraftInput): PreparedDraftResult 
     fingerprints,
     { checkPlaceholders: false },
   );
-  const injected = injectNormalizedContent(converted.elementorData, normalized);
+  const injected = injectNormalizedContent(converted.elementorData, normalized, {
+    semanticSlots: parseSemanticSlots(input.layoutRevision.semanticSlots),
+    slotTargets: converted.slotTargets,
+  });
   const residueAfterFit = scanPreparedLayoutResidue(injected.elementorData, []);
   const residueReport = [...new Set([...residueBeforeFit, ...residueAfterFit])].sort();
   for (const item of converted.reviewItems) notes.push(plainReviewNote(item.message));
   if (!input.sourcePage) notes.push("Empty draft content was requested for this page.");
   if (injected.appended > 0) {
-    notes.push("Extra source content was placed in the standard content section.");
+    notes.push("Extra source content was kept with its matching content section.");
   }
   if (injected.removedPlaceholders > 0) {
     notes.push("Unused layout placeholders were removed.");
@@ -325,6 +328,10 @@ function textKey(value: string): string {
 
 function parseFingerprints(value: unknown): LayoutIdentityFingerprint[] {
   return Array.isArray(value) ? (value as LayoutIdentityFingerprint[]) : [];
+}
+
+function parseSemanticSlots(value: unknown): LayoutSemanticSlot[] {
+  return Array.isArray(value) ? (value as LayoutSemanticSlot[]) : [];
 }
 
 function plainReviewNote(message: string): string {

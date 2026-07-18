@@ -27,6 +27,16 @@ assert.equal(cleaned.removedNoiseLines, 2);
 assert.equal(cleaned.removedDuplicateSections, 1);
 assert.equal((cleaned.markdown.match(/Request an Appointment/g) ?? []).length, 1);
 
+const footerNoise = cleanMarkdown(`Useful page copy.
+
+[Open Accessibility Menu](https://www.energize-group.com/ "Open Accessibility Menu")
+
+We use cookies to ensure you get the best experience on our website.
+
+DenyAccept`);
+assert.equal(footerNoise.markdown, "Useful page copy.");
+assert.equal(footerNoise.removedNoiseLines, 3);
+
 const result = cleanAndClassifyPages([
   {
     url: "https://example.com/",

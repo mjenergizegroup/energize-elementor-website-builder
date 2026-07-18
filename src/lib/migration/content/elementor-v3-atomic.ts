@@ -7,13 +7,14 @@ type JsonRecord = Record<string, unknown>;
 
 export const elementorV3AtomicAdapter: TemplateConversionAdapter = {
   id: "elementor-v3-to-atomic",
-  version: "1",
+  version: "2",
   supports(document) {
     return isRecord(document) && Array.isArray(document.content);
   },
   convert(document) {
     if (!isRecord(document) || !Array.isArray(document.content)) throw new Error("Elementor content tree is required.");
     const reviewItems: ConversionReviewItem[] = [];
+    const slotTargets: Record<string, string> = {};
     let converted = 0;
     const convertNode = (value: unknown): AtomicElement | null => {
       if (!isRecord(value) || typeof value.elType !== "string") {
@@ -55,6 +56,25 @@ export const elementorV3AtomicAdapter: TemplateConversionAdapter = {
             String(settings.image_alt ?? settings.alt ?? ""),
             [CLASS_IDS.media],
           );
+        } else if (widget === "icon-list") {
+          result = paragraph(String(settings.icon_list ?? ""), [CLASS_IDS.body]);
+        } else if (widget === "icon-box") {
+          const boxChildren: AtomicElement[] = [];
+          if (typeof settings.title === "string") {
+            const title = heading(settings.title, "h3", [CLASS_IDS.h3]);
+            registerSlotTargets(settings.title, title.id, slotTargets);
+            boxChildren.push(title);
+          }
+          if (typeof settings.description === "string") {
+            const description = paragraph(settings.description, [CLASS_IDS.body]);
+            registerSlotTargets(settings.description, description.id, slotTargets);
+            boxChildren.push(description);
+          }
+          result = boxChildren.length > 0
+            ? flexbox([CLASS_IDS.stack], boxChildren)
+            : null;
+        } else if (widget === "icon") {
+          result = null;
         } else if (widget === "html" || widget === "shortcode" || widget === "google_maps") {
           result = legacyEmbed(widget, settings);
           reviewItems.push(review(widget === "shortcode" ? "shortcode" : "unsupported-widget", value, `${widget} is preserved as an explicit legacy embed.`));
@@ -62,13 +82,29 @@ export const elementorV3AtomicAdapter: TemplateConversionAdapter = {
           reviewItems.push(review("unsupported-widget", value, `Widget ${widget || "unknown"} requires a conversion adapter.`));
         }
       }
-      if (result) converted += 1;
+      if (result) {
+        if (String(value.widgetType ?? "") !== "icon-box") {
+          registerSlotTargets(settings, result.id, slotTargets);
+        }
+        converted += 1;
+      }
       return result;
     };
     const elementorData = document.content.map(convertNode).filter((item): item is AtomicElement => Boolean(item));
-    return { adapter: { id: this.id, version: this.version }, elementorData, converted, reviewItems, deployable: reviewItems.length === 0 } satisfies AtomicConversionResult;
+    return { adapter: { id: this.id, version: this.version }, elementorData, slotTargets, converted, reviewItems, deployable: reviewItems.length === 0 } satisfies AtomicConversionResult;
   },
 };
+
+function registerSlotTargets(
+  value: unknown,
+  atomicId: string,
+  targets: Record<string, string>,
+) {
+  const serialized = JSON.stringify(value);
+  for (const match of serialized.matchAll(/\{\{ENERGIZE_SLOT:([^}]+)\}\}/g)) {
+    targets[match[1]] = atomicId;
+  }
+}
 
 function headingClass(level: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"): string {
   return CLASS_IDS[level];

@@ -30,11 +30,11 @@ supersede the old user-facing theme workflow described in parts of
 
 - Workspace: `/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder`
 - Branch: `main`
-- Application version: `4.1.0`
-- Current implementation HEAD before this documentation update: `e337d89`
-- Current implementation commit: `e337d89 Add visual layout previews`
-- Previous commit: `dc614ed Fix layout names and JSON drop zone`
-- The working tree was clean before this handoff update.
+- Application version: `4.2.0`
+- Current implementation: section-aware website content fitting and explicit
+  crawl status in the current local commit
+- Previous implementation commit: `e337d89 Add visual layout previews`
+- The working tree should be clean after the version 4.2.0 commit.
 - Stack: Next.js 15 App Router, TypeScript, Tailwind v4, base-ui shadcn/ui,
   Clerk, Prisma 6, Neon PostgreSQL, and server-only WordPress integrations.
 
@@ -77,7 +77,28 @@ Core product rules:
 
 ## Completed implementation
 
-All planned website milestones are complete through version `4.1.0`.
+All planned website milestones are complete through version `4.2.0`.
+
+### Version 4.2.0: section-aware content fitting
+
+- Import Content now always shows whether the current website crawl completed
+  and how many pages were cleaned, including when a saved project resumes.
+- Content-match selectors render human-readable source titles and paths without
+  briefly exposing internal source-page IDs.
+- Cleaned markdown is grouped by major heading and fitted into the corresponding
+  sections of the selected JSON layout.
+- Related paragraphs and lists remain together, multiple standalone calls to
+  action remain separate buttons, and safe overflow stays with its matching
+  section when possible.
+- The prepared-draft engine now uses the saved semantic slot order instead of
+  filling every widget from independent type-only queues.
+- Safe icon-list and icon-box regions no longer make an otherwise sanitized
+  layout fail conversion.
+- Missing reviewed destination media leaves a clear WordPress image placeholder
+  instead of deleting the layout's image region.
+- Regenerated Elementor ID fields no longer create false source-ID residue
+  matches. A source ID copied anywhere else still blocks the draft.
+- No database schema change was required.
 
 ### Version 3.6.0: reusable Template Library
 
@@ -175,26 +196,26 @@ Versions 4.0.1 and 4.1.0 do not change the Prisma schema. Do not ask Mark to run
 Never print or document database credentials. Reverify external state if a
 future schema change is introduced.
 
-## Verification completed for version 4.1.0
+## Verification completed for version 4.2.0
 
-The following passed locally:
+The following passed locally for the content-fitting fix:
 
 - Complete `npm test` suite
-- Layout sanitation checks
-- Layout naming checks
-- Layout structural-preview checks
-- Page Plan and content-matching checks
-- Prepared-draft and website-build checks
+- Layout sanitation, migration cleanup, content conversion, semantic fitting,
+  prepared-draft, and website-build checks
 - Upload security and WordPress-client checks
-- Migration security checks
-- Atomic Foundation checks
-- WordPress bridge checks
-- Injection verification
+- Migration security, Atomic Foundation, WordPress bridge, and injection checks
 - `npm run typecheck`
 - `npm run lint`
 - Optimized `npm run build`
 - `git diff --check`
 - Prohibited em dash scan on changed files
+- Read-only, in-memory preparation against the saved J. Bradford Smith project:
+  all 10 planned pages Ready with no source-layout residue
+
+Local browser QA reached the protected route but redirected to the separate
+Clerk development sign-in in both available browser sessions. No credentials
+were entered. Authenticated wizard QA remains a manual rollout check.
 
 A read-only check against the saved Neon layouts confirmed distinct preview
 structures:
@@ -215,6 +236,8 @@ No database records were changed by that verification.
 - A full real migration build against J. Bradford Smith has not yet been
   accepted as production-tested by Mark.
 - The structural preview is not a final brand-styled website rendering.
+- Reviewed destination image migration is still separate from text fitting.
+  Missing images remain visible placeholders for completion in WordPress.
 - Landing-page workflow refactoring remains postponed.
 - AI content rewriting remains postponed.
 

@@ -38,7 +38,7 @@ export function ContentMatchWorkspace({
       <div>
         <h3 className="text-xl font-black tracking-[-0.03em]">Content matches</h3>
         <p className="mt-2 max-w-2xl text-xs leading-5 text-[var(--color-muted)]">
-          The builder matched the current website to your Page Plan. Only pages marked Check match need a choice.
+          The builder matched cleaned website content to your Page Plan. After matching, each page is fitted section by section into its selected layout.
         </p>
       </div>
 
@@ -50,6 +50,9 @@ export function ContentMatchWorkspace({
           );
           const choosing = choosingFor === page.id || match?.status === "check";
           const selected = selection[page.id] ?? match?.sourcePageId ?? match?.candidates[0]?.sourcePageId ?? "";
+          const selectedCandidate = match?.candidates.find(
+            (option) => option.sourcePageId === selected,
+          );
           return (
             <section
               key={page.id}
@@ -112,7 +115,11 @@ export function ContentMatchWorkspace({
                           onValueChange={(value) => setSelection((current) => ({ ...current, [page.id]: value ?? "" }))}
                         >
                           <SelectTrigger aria-label={`Current page for ${page.pageName}`}>
-                            <SelectValue placeholder="Choose current page" />
+                            <SelectValue>
+                              {() => selectedCandidate
+                                ? `${selectedCandidate.title} (${selectedCandidate.path})`
+                                : "Choose current page"}
+                            </SelectValue>
                           </SelectTrigger>
                           <SelectContent>
                             {match.candidates.map((option) => (
@@ -132,9 +139,9 @@ export function ContentMatchWorkspace({
                           {savingPageId === page.id ? "Saving" : "Use this page"}
                         </Button>
                       </div>
-                      {match.candidates.find((option) => option.sourcePageId === selected)?.preview && (
+                      {selectedCandidate?.preview && (
                         <p className="mt-3 line-clamp-3 text-xs leading-5 text-[var(--color-muted)]">
-                          {match.candidates.find((option) => option.sourcePageId === selected)?.preview}
+                          {selectedCandidate.preview}
                         </p>
                       )}
                     </>
