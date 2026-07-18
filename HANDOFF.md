@@ -11,7 +11,7 @@ Mark approved a simpler layout-first website workflow after testing version
 specification is in
 [`docs/WEBSITE_BUILDER_UX_SPEC.md`](docs/WEBSITE_BUILDER_UX_SPEC.md).
 
-All five milestones are complete through version `4.0.1`. The authenticated
+All five milestones are complete through version `4.1.0`. The authenticated
 Template Library owns reusable sanitized layouts, and the persistent Page Plan
 owns destination page names, URLs, title tags, order, and layout choices. The
 current-site import follows the Page Plan and stores automatic content matches,
@@ -31,6 +31,12 @@ The destination Page Plan will own page names, URLs, title tags, and layout
 choices. Reusable Ready layouts will own safe structure only. The crawl will run
 after the Page Plan exists and will supply content only. One service layout must
 be reusable across any number of service pages.
+
+Version 4.1.0 adds content-free visual layout previews. Template Library cards
+open a large scrollable preview, and every Page Plan layout selector includes a
+preview action. Preview geometry is derived on demand from the owned sanitized
+artifact and semantic slots, while all visible text and imagery remain neutral
+placeholders. This release does not change the database schema.
 
 Version 4.0.1 replaces raw revision IDs and stale generated labels in Page Plan
 layout selectors with category-correct friendly names. The Template Library now

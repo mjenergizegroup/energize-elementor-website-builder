@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowUp, Copy, LayoutTemplate, Plus, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Copy, Eye, LayoutTemplate, Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LayoutPreviewDialog } from "@/components/layout-preview-dialog";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -110,6 +111,7 @@ export function PagePlanWorkspace({
       layouts[0]?.activeRevisionId ??
       "",
   );
+  const [previewLayoutId, setPreviewLayoutId] = useState<string | null>(null);
   const validation = useMemo(() => validatePagePlan(items, layouts), [items, layouts]);
   const layoutByRevision = useMemo(
     () => new Map(layouts.map((layout) => [layout.activeRevisionId, layout])),
@@ -118,6 +120,7 @@ export function PagePlanWorkspace({
   const missingSuggestions = PAGE_SUGGESTIONS.filter(
     (suggestion) => !items.some((item) => item.pageName.toLowerCase() === suggestion.name.toLowerCase()),
   );
+  const previewLayout = layouts.find((layout) => layout.id === previewLayoutId) ?? null;
 
   function setItems(next: PagePlanItemInput[]) {
     onChange(next.map((item, position) => ({ ...item, position })));
@@ -288,6 +291,7 @@ export function PagePlanWorkspace({
               value={pageLayout || selectDefaultLayout(layouts, pageType, pageName)}
               layouts={layouts}
               onChange={setPageLayout}
+              onPreview={setPreviewLayoutId}
               label="Layout"
             />
           </div>
@@ -318,7 +322,13 @@ export function PagePlanWorkspace({
                 className="min-h-40 normal-case tracking-normal"
               />
             </label>
-            <LayoutSelect value={serviceLayout} layouts={layouts} onChange={setServiceLayout} label="Layout for these pages" />
+            <LayoutSelect
+              value={serviceLayout}
+              layouts={layouts}
+              onChange={setServiceLayout}
+              onPreview={setPreviewLayoutId}
+              label="Layout for these pages"
+            />
           </div>
           <div className="mt-5 flex justify-end">
             <Button onClick={addServices} disabled={!serviceNames.trim() || !serviceLayout}>
@@ -384,6 +394,7 @@ export function PagePlanWorkspace({
                     value={item.layoutRevisionId}
                     layouts={layouts}
                     onChange={(layoutRevisionId) => update(item.id, { layoutRevisionId })}
+                    onPreview={setPreviewLayoutId}
                     label={`Layout for ${item.pageName}`}
                     compact
                   />
@@ -423,6 +434,13 @@ export function PagePlanWorkspace({
                   : "Ready to save"}
         </span>
       </div>
+      <LayoutPreviewDialog
+        layout={previewLayout}
+        open={Boolean(previewLayout)}
+        onOpenChange={(open) => {
+          if (!open) setPreviewLayoutId(null);
+        }}
+      />
     </div>
   );
 }
@@ -431,12 +449,14 @@ function LayoutSelect({
   value,
   layouts,
   onChange,
+  onPreview,
   label,
   compact = false,
 }: {
   value: string;
   layouts: LayoutLibraryItem[];
   onChange: (value: string) => void;
+  onPreview: (layoutId: string) => void;
   label: string;
   compact?: boolean;
 }) {
@@ -444,27 +464,42 @@ function LayoutSelect({
     (layout) => (layout.activeRevisionId ?? layout.id) === value,
   );
   return (
-    <label className={`${compact ? "space-y-1 text-[9px] lg:space-y-0 lg:text-[0px]" : "space-y-2 text-[10px]"} font-bold uppercase tracking-[0.1em]`}>
-      {label}
-      <Select value={value} onValueChange={(next) => onChange(next ?? "")}>
-        <SelectTrigger aria-label={label}>
-          <SelectValue placeholder="Choose layout">
-            {selectedLayout?.friendlyName}
-          </SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          {layouts.map((layout) => (
-            <SelectItem key={layout.id} value={layout.activeRevisionId ?? layout.id}>
-              <span className="flex min-w-0 items-center gap-2">
-                <span className="truncate">{layout.friendlyName}</span>
-                <span className="text-[9px] font-bold uppercase tracking-[0.08em] text-[var(--color-muted)]">
-                  {layoutCategoryLabel(layout.category)}
+    <div className={`${compact ? "space-y-1 text-[9px] lg:space-y-0 lg:text-[0px]" : "space-y-2 text-[10px]"} font-bold uppercase tracking-[0.1em]`}>
+      <span className="block">{label}</span>
+      <div className="flex gap-1">
+        <Select value={value} onValueChange={(next) => onChange(next ?? "")}>
+          <SelectTrigger aria-label={label} className="min-w-0 flex-1">
+            <SelectValue placeholder="Choose layout">
+              {selectedLayout?.friendlyName}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {layouts.map((layout) => (
+              <SelectItem key={layout.id} value={layout.activeRevisionId ?? layout.id}>
+                <span className="flex min-w-0 items-center gap-2">
+                  <span className="truncate">{layout.friendlyName}</span>
+                  <span className="text-[9px] font-bold uppercase tracking-[0.08em] text-[var(--color-muted)]">
+                    {layoutCategoryLabel(layout.category)}
+                  </span>
                 </span>
-              </span>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </label>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          disabled={!selectedLayout}
+          onClick={() => {
+            if (selectedLayout) onPreview(selectedLayout.id);
+          }}
+          aria-label={selectedLayout ? `Preview ${selectedLayout.friendlyName}` : "Choose a layout to preview"}
+          title="Preview layout"
+        >
+          <Eye />
+        </Button>
+      </div>
+    </div>
   );
 }

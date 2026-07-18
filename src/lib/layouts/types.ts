@@ -39,6 +39,20 @@ export interface LayoutThumbnail {
   buttonSlots: number;
 }
 
+export type LayoutPreviewSlotKind = "heading" | "body" | "image" | "button";
+
+export interface LayoutPreviewRegion {
+  slots: LayoutPreviewSlotKind[];
+}
+
+export interface LayoutPreviewSection {
+  regions: LayoutPreviewRegion[];
+}
+
+export interface LayoutPreviewDocument {
+  sections: LayoutPreviewSection[];
+}
+
 export interface LayoutSanitationReport {
   sourceNodes: number;
   sanitizedNodes: number;

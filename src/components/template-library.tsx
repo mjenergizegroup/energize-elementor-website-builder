@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { Check, FileJson, Plus, Search, Settings2, Upload, X } from "lucide-react";
+import { Check, Eye, FileJson, Plus, Search, Settings2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { LayoutThumbnail } from "@/components/layout-thumbnail";
+import { LayoutPreviewDialog } from "@/components/layout-preview-dialog";
 import {
   LAYOUT_CATEGORIES,
   type LayoutCategory,
@@ -49,6 +50,7 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
   const [pending, setPending] = useState<PendingLayout[]>([]);
   const [uploading, setUploading] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [previewLayoutId, setPreviewLayoutId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const visibleLayouts = useMemo(() => {
@@ -59,6 +61,12 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
     });
   }, [filter, layouts, query]);
   const selected = layouts.find((layout) => layout.id === selectedId) ?? visibleLayouts[0];
+  const previewLayout = layouts.find((layout) => layout.id === previewLayoutId) ?? null;
+
+  function openPreview(layout: LayoutLibraryItem) {
+    setSelectedId(layout.id);
+    setPreviewLayoutId(layout.id);
+  }
 
   function chooseFiles(files: FileList | File[] | null) {
     if (!files) return;
@@ -376,11 +384,15 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
                     <button
                       key={layout.id}
                       type="button"
-                      onClick={() => setSelectedId(layout.id)}
+                      onClick={() => openPreview(layout)}
                       data-selected={selected?.id === layout.id}
-                      className="border-2 border-[var(--color-black)] bg-white p-3 text-left data-[selected=true]:border-[var(--color-red)] data-[selected=true]:outline-1 data-[selected=true]:outline-[var(--color-red)]"
+                      className="group relative border-2 border-[var(--color-black)] bg-white p-3 text-left outline-none transition-colors hover:bg-[var(--color-panel)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-red)] data-[selected=true]:border-[var(--color-red)] data-[selected=true]:outline-1 data-[selected=true]:outline-[var(--color-red)]"
+                      aria-label={`Preview ${layoutDisplayName(layout)}`}
                     >
                       <LayoutThumbnail data={layout.thumbnail} className="aspect-[1.28/1]" />
+                      <span className="absolute top-5 right-5 flex items-center gap-1.5 border border-[var(--color-black)] bg-[var(--color-black)] px-2 py-1 text-[8px] font-bold uppercase tracking-[0.1em] text-white">
+                        <Eye className="size-3" /> Preview
+                      </span>
                       <h3 className="mt-3 truncate text-base font-black tracking-[-0.02em]">
                         {layoutDisplayName(layout)}
                       </h3>
@@ -428,10 +440,17 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
                       </>
                     )}
                   </div>
+                  <Button
+                    variant="outline"
+                    className="mt-5 w-full"
+                    onClick={() => openPreview(selected)}
+                  >
+                    <Eye data-icon="inline-start" /> Preview layout
+                  </Button>
                   {selected.status === "ready" ? (
                     <Link
                       href="/dashboard/new?type=migrate"
-                      className={buttonVariants({ className: "mt-5 w-full" })}
+                      className={buttonVariants({ className: "mt-2 w-full" })}
                     >
                       Start website build
                     </Link>
@@ -452,6 +471,13 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
           </div>
         )}
       </section>
+      <LayoutPreviewDialog
+        layout={previewLayout}
+        open={Boolean(previewLayout)}
+        onOpenChange={(open) => {
+          if (!open) setPreviewLayoutId(null);
+        }}
+      />
     </>
   );
 }

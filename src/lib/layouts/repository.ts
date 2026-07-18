@@ -4,9 +4,11 @@ import { audit } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
 import type { TemplateAnalysis } from "@/lib/template-import/types";
 import { SANITIZER_VERSION, sanitizeLayoutTemplate } from "./sanitize";
+import { buildLayoutPreview } from "./preview";
 import type {
   LayoutCategory,
   LayoutLibraryItem,
+  LayoutPreviewDocument,
   LayoutThumbnail,
 } from "./types";
 import { layoutDisplayName } from "./naming";
@@ -96,6 +98,27 @@ export async function getLayoutTemplate(userId: string, layoutId: string) {
   });
   if (!layout) throw new Error("Layout not found.");
   return layout;
+}
+
+export async function getLayoutPreview(
+  userId: string,
+  layoutId: string,
+): Promise<LayoutPreviewDocument> {
+  const layout = await prisma.layoutTemplate.findFirst({
+    where: { id: layoutId, createdBy: userId },
+    select: {
+      thumbnail: true,
+      activeRevision: {
+        select: { sanitizedArtifact: true, semanticSlots: true },
+      },
+    },
+  });
+  if (!layout) throw new Error("Layout not found.");
+  return buildLayoutPreview({
+    artifact: layout.activeRevision?.sanitizedArtifact,
+    semanticSlots: layout.activeRevision?.semanticSlots,
+    fallback: parseThumbnail(layout.thumbnail),
+  });
 }
 
 export async function createLayoutTemplate(input: {
