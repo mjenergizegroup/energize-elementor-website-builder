@@ -19,7 +19,7 @@ theme or preset is selected in the build wizard.
 
 ## Approved next product direction
 
-The current migration flow below remains the implemented version 3.5.0 state.
+The current migration wizard below remains the implemented version 3.6.0 state.
 The approved next website-builder workflow is the layout-first Page Plan in
 [docs/WEBSITE_BUILDER_UX_SPEC.md](docs/WEBSITE_BUILDER_UX_SPEC.md).
 
@@ -28,6 +28,11 @@ sanitizes layouts before crawling content, allows one layout to serve any number
 of pages, and removes raw content review and dependency resolution from the
 daily builder experience. Landing-page workflow changes and content rewriting
 are outside its current scope.
+
+Milestone 1 is implemented in version 3.6.0. It adds a reusable Template
+Library, revisioned sanitized layout artifacts, semantic slots, and a residue
+scan. The Page Plan, reordered crawl, and simplified review remain the next
+milestones.
 
 ## Users and access
 

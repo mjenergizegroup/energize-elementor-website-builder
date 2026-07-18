@@ -1,0 +1,361 @@
+"use client";
+
+import { useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import { Check, FileJson, Plus, Search, Settings2, Upload, X } from "lucide-react";
+import { toast } from "sonner";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { LayoutThumbnail } from "@/components/layout-thumbnail";
+import {
+  LAYOUT_CATEGORIES,
+  type LayoutCategory,
+  type LayoutLibraryItem,
+} from "@/lib/layouts/types";
+
+type Filter = "all" | LayoutCategory;
+
+interface PendingLayout {
+  id: string;
+  file: File;
+  friendlyName: string;
+  category: LayoutCategory;
+  error?: string;
+}
+
+function categoryLabel(category: LayoutCategory) {
+  return LAYOUT_CATEGORIES.find((item) => item.value === category)?.label ?? category;
+}
+
+function nextFriendlyName(category: LayoutCategory, index: number) {
+  return `${categoryLabel(category)} Layout ${index + 1}`;
+}
+
+export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibraryItem[] }) {
+  const [layouts, setLayouts] = useState(initialLayouts);
+  const [selectedId, setSelectedId] = useState(initialLayouts[0]?.id ?? "");
+  const [filter, setFilter] = useState<Filter>("all");
+  const [query, setQuery] = useState("");
+  const [adding, setAdding] = useState(false);
+  const [pending, setPending] = useState<PendingLayout[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const visibleLayouts = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return layouts.filter((layout) => {
+      if (filter !== "all" && layout.category !== filter) return false;
+      return !needle || layout.friendlyName.toLowerCase().includes(needle);
+    });
+  }, [filter, layouts, query]);
+  const selected = layouts.find((layout) => layout.id === selectedId) ?? visibleLayouts[0];
+
+  function chooseFiles(files: FileList | null) {
+    if (!files) return;
+    const additions = Array.from(files).slice(0, 20).map((file, index) => ({
+      id: `${file.name}-${file.lastModified}-${crypto.randomUUID()}`,
+      file,
+      friendlyName: nextFriendlyName("flexible", pending.length + index),
+      category: "flexible" as LayoutCategory,
+    }));
+    setPending((current) => [...current, ...additions].slice(0, 20));
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  function updatePending(id: string, patch: Partial<PendingLayout>) {
+    setPending((current) =>
+      current.map((item) => (item.id === id ? { ...item, ...patch, error: undefined } : item)),
+    );
+  }
+
+  async function prepareLayouts() {
+    if (pending.length === 0 || uploading) return;
+    if (pending.some((item) => item.friendlyName.trim().length < 2)) {
+      toast.error("Add a friendly name for every layout.");
+      return;
+    }
+
+    setUploading(true);
+    const created: LayoutLibraryItem[] = [];
+    const failed = new Map<string, string>();
+    for (const item of pending) {
+      const body = new FormData();
+      body.set("file", item.file);
+      body.set("friendlyName", item.friendlyName.trim());
+      body.set("category", item.category);
+      try {
+        const response = await fetch("/api/layouts", { method: "POST", body });
+        const json = (await response.json()) as { layout?: LayoutLibraryItem; error?: string };
+        if (!response.ok || !json.layout) {
+          failed.set(item.id, json.error ?? "This layout could not be prepared.");
+          continue;
+        }
+        created.push(json.layout);
+      } catch {
+        failed.set(item.id, "The upload stopped before this layout could be saved.");
+      }
+    }
+
+    if (created.length > 0) {
+      setLayouts((current) => [...created, ...current]);
+      setSelectedId(created[0].id);
+      toast.success(
+        created.length === 1
+          ? `${created[0].friendlyName} was added.`
+          : `${created.length} layouts were added.`,
+      );
+    }
+    setPending((current) =>
+      current
+        .filter((item) => failed.has(item.id))
+        .map((item) => ({ ...item, error: failed.get(item.id) })),
+    );
+    if (failed.size === 0) setAdding(false);
+    else toast.error(`${failed.size} layout file${failed.size === 1 ? " needs" : "s need"} attention.`);
+    setUploading(false);
+  }
+
+  return (
+    <>
+      <section className="page-banner">
+        <div>
+          <div className="eyebrow">Template Library</div>
+          <h1 className="page-title">Template Library</h1>
+          <p className="page-copy">Choose safe, reusable layouts for website builds.</p>
+        </div>
+        <Button size="lg" onClick={() => setAdding((value) => !value)} aria-expanded={adding}>
+          {adding ? <X data-icon="inline-start" /> : <Plus data-icon="inline-start" />}
+          {adding ? "Close" : "Add layout"}
+        </Button>
+      </section>
+
+      {adding && (
+        <section className="mb-6 border-2 border-[var(--color-black)] bg-[var(--color-surface)]">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-[var(--color-black)] bg-[var(--color-panel)] p-5">
+            <div>
+              <h2 className="text-xl font-black tracking-[-0.03em]">Add safe layouts</h2>
+              <p className="mt-1 text-xs text-[var(--color-muted)]">
+                Name each layout for the team. The source file is checked and cleaned before use.
+              </p>
+            </div>
+            <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
+              <Upload data-icon="inline-start" /> Choose JSON files
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/json,.json"
+              multiple
+              className="sr-only"
+              onChange={(event) => chooseFiles(event.target.files)}
+            />
+          </div>
+
+          {pending.length === 0 ? (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex min-h-44 w-full flex-col items-center justify-center gap-3 p-8 text-center hover:bg-[var(--color-panel)]"
+            >
+              <span className="flex size-12 items-center justify-center bg-[var(--color-black)] text-white">
+                <FileJson className="size-5" />
+              </span>
+              <span className="text-sm font-bold">Choose Elementor JSON layouts</span>
+              <span className="text-xs text-[var(--color-muted)]">Up to 20 files, 2 MB each</span>
+            </button>
+          ) : (
+            <div>
+              <div className="hidden grid-cols-[minmax(0,1fr)_220px_48px] gap-4 border-b border-[var(--color-black)] bg-[var(--color-black)] px-5 py-3 text-[9px] font-bold uppercase tracking-[0.12em] text-white md:grid">
+                <span>Friendly layout name</span>
+                <span>Category</span>
+                <span />
+              </div>
+              {pending.map((item) => (
+                <div
+                  key={item.id}
+                  className="grid gap-3 border-b border-[var(--color-hairline)] p-5 md:grid-cols-[minmax(0,1fr)_220px_48px] md:items-start"
+                >
+                  <div>
+                    <Input
+                      value={item.friendlyName}
+                      aria-label={`Friendly name for ${item.file.name}`}
+                      onChange={(event) => updatePending(item.id, { friendlyName: event.target.value })}
+                    />
+                    <p className="mt-1.5 truncate text-[10px] text-[var(--color-muted)]">
+                      Source file: {item.file.name}
+                    </p>
+                    {item.error && <p className="mt-2 text-xs font-semibold text-[var(--color-red)]">{item.error}</p>}
+                  </div>
+                  <Select
+                    value={item.category}
+                    onValueChange={(value) =>
+                      updatePending(item.id, { category: value as LayoutCategory })
+                    }
+                  >
+                    <SelectTrigger aria-label={`Category for ${item.friendlyName}`}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {LAYOUT_CATEGORIES.map((category) => (
+                        <SelectItem key={category.value} value={category.value}>
+                          {category.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    aria-label={`Remove ${item.friendlyName}`}
+                    onClick={() => setPending((current) => current.filter((row) => row.id !== item.id))}
+                  >
+                    <X />
+                  </Button>
+                </div>
+              ))}
+              <div className="flex flex-wrap items-center justify-between gap-3 p-5">
+                <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
+                  <Plus data-icon="inline-start" /> Add more files
+                </Button>
+                <Button onClick={() => void prepareLayouts()} disabled={uploading}>
+                  {uploading ? "Checking layouts" : `Prepare ${pending.length} layout${pending.length === 1 ? "" : "s"}`}
+                </Button>
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      <section className="overflow-hidden border-2 border-[var(--color-black)] bg-[var(--color-surface)]">
+        <div className="flex flex-wrap items-center gap-2 border-b-2 border-[var(--color-black)] p-3">
+          {(["all", ...LAYOUT_CATEGORIES.map((item) => item.value)] as Filter[]).map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setFilter(value)}
+              data-active={filter === value}
+              className="h-9 border-2 border-transparent px-4 text-[10px] font-bold uppercase tracking-[0.12em] data-[active=true]:border-[var(--color-black)] data-[active=true]:bg-[var(--color-red)] data-[active=true]:text-white"
+            >
+              {value === "all" ? "All" : categoryLabel(value)}
+            </button>
+          ))}
+          <label className="relative ml-auto min-w-56 flex-1 sm:max-w-72">
+            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-[var(--color-muted)]" />
+            <Input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              aria-label="Search layouts"
+              placeholder="Search layouts"
+              className="pl-10"
+            />
+          </label>
+        </div>
+
+        {layouts.length === 0 ? (
+          <div className="flex min-h-96 flex-col items-center justify-center gap-3 p-10 text-center">
+            <span className="flex size-12 items-center justify-center bg-[var(--color-black)] text-white">
+              <FileJson className="size-5" />
+            </span>
+            <h2 className="text-xl font-black tracking-[-0.03em]">No layouts yet</h2>
+            <p className="max-w-sm text-sm text-[var(--color-muted)]">
+              Add a JSON layout once, give it a friendly name, and reuse it across website builds.
+            </p>
+            <Button onClick={() => setAdding(true)}>
+              <Plus data-icon="inline-start" /> Add layout
+            </Button>
+          </div>
+        ) : (
+          <div className="grid min-h-[620px] lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="border-b-2 border-[var(--color-black)] p-5 lg:border-r-2 lg:border-b-0">
+              {visibleLayouts.length === 0 ? (
+                <p className="p-10 text-center text-sm text-[var(--color-muted)]">No layouts match this filter.</p>
+              ) : (
+                <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                  {visibleLayouts.map((layout) => (
+                    <button
+                      key={layout.id}
+                      type="button"
+                      onClick={() => setSelectedId(layout.id)}
+                      data-selected={selected?.id === layout.id}
+                      className="border-2 border-[var(--color-black)] bg-white p-3 text-left data-[selected=true]:border-[var(--color-red)] data-[selected=true]:outline-1 data-[selected=true]:outline-[var(--color-red)]"
+                    >
+                      <LayoutThumbnail data={layout.thumbnail} className="aspect-[1.28/1]" />
+                      <h3 className="mt-3 truncate text-base font-black tracking-[-0.02em]">
+                        {layout.friendlyName}
+                      </h3>
+                      <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                        {categoryLabel(layout.category)}
+                      </p>
+                      <div className="mt-3 flex items-center gap-2 border-t border-[var(--color-black)] pt-3 text-xs font-semibold">
+                        {layout.status === "ready" ? (
+                          <>
+                            <Check className="size-4 text-green-700" /> Ready
+                          </>
+                        ) : (
+                          <>
+                            <Settings2 className="size-4 text-[var(--color-red)]" /> Needs setup
+                          </>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {selected && (
+              <aside className="flex flex-col bg-[var(--color-panel)]">
+                <div className="flex-1 p-6">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-red)]">
+                    {categoryLabel(selected.category)} layout
+                  </p>
+                  <h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">{selected.friendlyName}</h2>
+                  <LayoutThumbnail data={selected.thumbnail} className="mt-5 aspect-[1.28/1]" />
+                  <p className="mt-4 border-b border-[var(--color-black)] pb-4 text-sm leading-6 text-[var(--color-muted)]">
+                    {selected.structuralSummary}
+                  </p>
+                  <div className="mt-4 flex items-center gap-2 text-sm font-semibold">
+                    {selected.status === "ready" ? (
+                      <>
+                        <Check className="size-5 text-green-700" /> Ready to use
+                      </>
+                    ) : (
+                      <>
+                        <Settings2 className="size-5 text-[var(--color-red)]" /> Needs template setup
+                      </>
+                    )}
+                  </div>
+                  {selected.status === "ready" ? (
+                    <Link
+                      href="/dashboard/new?type=migrate"
+                      className={buttonVariants({ className: "mt-5 w-full" })}
+                    >
+                      Start website build
+                    </Link>
+                  ) : (
+                    <Button className="mt-5 w-full" disabled>
+                      Not available yet
+                    </Button>
+                  )}
+                </div>
+                <Link
+                  href={`/dashboard/templates/${selected.id}`}
+                  className="flex items-center gap-2 border-t-2 border-[var(--color-black)] bg-white p-5 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-red)] hover:bg-[var(--color-panel)]"
+                >
+                  <Settings2 className="size-4" /> Manage template setup
+                </Link>
+              </aside>
+            )}
+          </div>
+        )}
+      </section>
+    </>
+  );
+}

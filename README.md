@@ -48,6 +48,7 @@ src/lib/parser/           Compatibility import to structured page content
 src/lib/wp/               Server-side WordPress client + brand-kit mapping
 src/lib/deploy/           Deploy orchestration (yields progress events)
 src/lib/migration/        Resumable cleanup, media, conversion, blogs, and deploy
+src/lib/layouts/          Reusable layout sanitation, residue scanning, and library
 src/app/api/deploy/       Streaming NDJSON deploy route (auth, rate limit, audit)
 src/app/api/migrations/   Authenticated resumable migration routes
 src/app/api/parse/        Markdown parse route
@@ -62,8 +63,8 @@ Migration project state and its authenticated API are documented in
 
 ## Current site migration flow
 
-The flow below describes the current version 3.5.0 application. The next website
-builder release will replace its user-facing content and dependency review with
+The flow below describes the current version 3.6.0 wizard. The next website
+builder milestones will replace its user-facing content and dependency review with
 the simpler layout-first Page Plan workflow in
 [docs/WEBSITE_BUILDER_UX_SPEC.md](docs/WEBSITE_BUILDER_UX_SPEC.md).
 
@@ -135,14 +136,20 @@ download external media or modify a WordPress site.
 
 ### Release verification
 
-Version 3.5.0 passes the complete automated suite, TypeScript checking, ESLint,
+Version 3.6.0 adds the authenticated Template Library, revisioned reusable
+layouts, deterministic source sanitation, semantic content slots, and
+source-residue scanning. Only layouts that pass the sanitation boundary are
+returned by the Ready-only library API.
+
+Version 3.6.0 passes the complete automated suite, TypeScript checking, ESLint,
 migration security checks, Atomic and bridge checks, injection verification,
 and the optimized Next.js production build. Authenticated browser QA remains a
 manual rollout check because the local in-app browser proxy could not reach the
 loopback development server.
 
 Before pushing this schema-bearing release, generate the Prisma client and sync
-the selected Neon database:
+the selected Neon database. The Template Library requires the new
+`LayoutTemplate` and `LayoutRevision` tables:
 
 ```bash
 npm run db:generate

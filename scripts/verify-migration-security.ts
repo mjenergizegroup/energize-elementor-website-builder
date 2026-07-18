@@ -9,6 +9,7 @@ const routeFiles = [
   "src/app/api/migrations/[projectId]/media/route.ts",
   "src/app/api/migrations/[projectId]/blogs/route.ts",
   "src/app/api/migrations/[projectId]/deploy/route.ts",
+  "src/app/api/layouts/route.ts",
 ];
 
 for (const file of routeFiles) {
@@ -24,6 +25,7 @@ for (const file of [
   "src/lib/migration/media/remote.ts",
   "src/lib/migration/projects.ts",
   "src/lib/security/uploads.ts",
+  "src/lib/layouts/repository.ts",
 ]) {
   assert.match(read(file), /^import "server-only";/, `${file} must remain server-only`);
 }
@@ -32,6 +34,7 @@ const clientSources = [
   "src/components/build-wizard.tsx",
   "src/components/dependency-resolver.tsx",
   "src/components/template-importer.tsx",
+  "src/components/template-library.tsx",
 ].map(read).join("\n");
 assert.doesNotMatch(clientSources, /ENERGIZE_PLUGIN_SECRET|ENCRYPTION_KEY|DATABASE_URL/);
 

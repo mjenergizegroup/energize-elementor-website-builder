@@ -25,7 +25,7 @@ model Client {
   updatedAt              DateTime @updatedAt
   createdBy              String
 
-  builds Build[]
+  builds            Build[]
   migrationProjects MigrationProject[]
 
   @@index([createdBy])
@@ -62,6 +62,52 @@ model MigrationProject {
   @@index([createdBy])
   @@index([status])
   @@index([updatedAt])
+}
+
+model LayoutTemplate {
+  id                String           @id @default(cuid())
+  friendlyName      String
+  category          String
+  // ready | needs_setup | retired
+  status            String           @default("needs_setup")
+  activeRevisionId  String?          @unique
+  activeRevision    LayoutRevision?  @relation("ActiveLayoutRevision", fields: [activeRevisionId], references: [id], onDelete: SetNull)
+  thumbnail         Json             @default("{}")
+  structuralSummary String
+  createdBy         String
+  retiredAt         DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  revisions         LayoutRevision[] @relation("LayoutRevisions")
+
+  @@index([createdBy])
+  @@index([createdBy, status])
+  @@index([createdBy, category])
+  @@index([updatedAt])
+}
+
+model LayoutRevision {
+  id                   String           @id @default(cuid())
+  layoutTemplateId     String
+  layoutTemplate       LayoutTemplate   @relation("LayoutRevisions", fields: [layoutTemplateId], references: [id], onDelete: Cascade)
+  activeFor            LayoutTemplate[] @relation("ActiveLayoutRevision")
+  version              Int
+  sourceChecksum       String
+  originalFilename     String
+  analyzerVersion      String
+  sanitizerVersion     String
+  status               String
+  sanitizedArtifact    Json
+  semanticSlots        Json
+  technicalFindings    Json
+  sanitationReport     Json
+  identityFingerprints Json
+  createdAt            DateTime         @default(now())
+
+  @@unique([layoutTemplateId, version])
+  @@index([layoutTemplateId])
+  @@index([sourceChecksum])
+  @@index([status])
 }
 
 model Build {

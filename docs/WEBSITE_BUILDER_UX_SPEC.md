@@ -4,6 +4,12 @@ Status: Approved product direction for implementation planning
 Scope: Website migrations only  
 Prepared: July 17, 2026
 
+Implementation status: Milestone 1 complete in version 3.6.0. Milestone 2 is
+next.
+
+Visual reference for the Template Library:
+[template-library-concept.png](design/template-library-concept.png).
+
 ## 1. Product decision
 
 The website builder will stop asking daily users to review raw content, template

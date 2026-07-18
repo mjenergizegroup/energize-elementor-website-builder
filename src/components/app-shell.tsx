@@ -6,8 +6,9 @@ import { UserButton } from "@clerk/nextjs";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/dashboard/builds", label: "Builds" },
+  { href: "/dashboard/builds", label: "Website Builds" },
   { href: "/dashboard/clients", label: "Clients" },
+  { href: "/dashboard/templates", label: "Template Library" },
 ];
 
 export function AppShell({
