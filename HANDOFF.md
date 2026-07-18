@@ -11,12 +11,16 @@ Mark approved a simpler layout-first website workflow after testing version
 specification is in
 [`docs/WEBSITE_BUILDER_UX_SPEC.md`](docs/WEBSITE_BUILDER_UX_SPEC.md).
 
-Milestones 1 through 3 are complete through version `3.8.0`. The authenticated
+Milestones 1 through 4 are complete through version `3.9.0`. The authenticated
 Template Library owns reusable sanitized layouts, and the persistent Page Plan
 owns destination page names, URLs, title tags, order, and layout choices. The
-current-site import now follows the Page Plan and stores automatic content
-matches, with only ambiguous choices shown. The next implementation milestone
-fits matched content into semantic layout slots. Do not start with landing pages or AI rewriting.
+current-site import follows the Page Plan and stores automatic content matches,
+with only ambiguous choices shown. Revisioned prepared drafts now fit that
+content into sanitized layouts, rebuild links, map reviewed destination media,
+append overflow, remove empty placeholders, regenerate Atomic IDs, and block
+source residue. The next implementation milestone completes simplified review,
+automatic dry run, draft creation, partial failure, and retry. Do not start with
+landing pages or AI rewriting.
 The daily builder must not expose raw content review, template metadata,
 filenames, plugins, external template domains, global IDs, or dependency-ledger
 decisions.
@@ -26,7 +30,13 @@ choices. Reusable Ready layouts will own safe structure only. The crawl will run
 after the Page Plan exists and will supply content only. One service layout must
 be reusable across any number of service pages.
 
-Version 3.8.0 adds owned `ContentMatch` records, a deterministic path, name,
+Version 3.9.0 adds owned `PreparedDraft` revisions and the semantic preparation
+boundary. Page Plan identity wins, template copy never supplies fallback,
+destination links are rebuilt, only uploaded reviewed media is accepted, and a
+second residue scan gates Ready status. Extra crawl sections enter one standard
+Atomic content region and unused placeholders are removed.
+
+Version 3.8.0 added owned `ContentMatch` records, a deterministic path, name,
 synonym, heading, and history matcher, and the five-step Project, Plan Pages,
 Import Content, Brand & Destination, and Review & Build flow. Strong matches
 need no input, ambiguous matches ask one plain-language source-page question,

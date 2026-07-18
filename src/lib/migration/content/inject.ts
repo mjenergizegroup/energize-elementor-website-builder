@@ -35,6 +35,7 @@ export function injectNormalizedContent(
 
   const injectNodes = (nodes: AtomicElement[]): AtomicElement[] =>
     nodes.flatMap((node) => {
+      const originalChildCount = node.elements?.length ?? 0;
       node.elements = injectNodes(node.elements ?? []);
       if (node.widgetType === "e-heading") {
         const slot = queues.heading.shift();
@@ -73,6 +74,14 @@ export function injectNormalizedContent(
         node.settings.text = htmlValue(safeText(slot.label));
         node.settings.link = linkValue(safeLink(slot.href));
         replaced += 1;
+      }
+      if (
+        node.elType === "e-flexbox" &&
+        originalChildCount > 0 &&
+        (node.elements?.length ?? 0) === 0
+      ) {
+        removedPlaceholders += 1;
+        return [];
       }
       return [node];
     });

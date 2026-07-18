@@ -48,7 +48,9 @@ import {
 } from "@/lib/build-wizard/flow";
 import type { LayoutLibraryItem } from "@/lib/layouts/types";
 import type { PersistedContentMatch } from "@/lib/content-matches/types";
+import type { PreparedDraftSummary } from "@/lib/prepared-drafts/types";
 import {
+  pagePath,
   validatePagePlan,
   type PagePlanItem,
   type PagePlanItemInput,
@@ -76,6 +78,7 @@ export interface InitialMigrationProject {
   workspace?: MigrationWizardWorkspace;
   pagePlan: PagePlanItem[];
   contentMatches: PersistedContentMatch[];
+  preparedDrafts: PreparedDraftSummary[];
 }
 
 type Asset = UploadedAsset & { previewUrl: string };
@@ -348,6 +351,10 @@ export function BuildWizard({
     initialMigrationProject?.contentMatches ?? [],
   );
   const [savingContentMatchId, setSavingContentMatchId] = useState<string>();
+  const [preparedDrafts, setPreparedDrafts] = useState<PreparedDraftSummary[]>(
+    initialMigrationProject?.preparedDrafts ?? [],
+  );
+  const [preparingDrafts, setPreparingDrafts] = useState(false);
   const [pagePlanItems, setPagePlanItems] = useState<PagePlanItemInput[]>(() =>
     (initialMigrationProject?.pagePlan ?? []).map((item) => ({
       id: item.id,
@@ -399,30 +406,7 @@ export function BuildWizard({
 
   useEffect(() => {
     if (!migrationProjectId) return;
-    const workspace: MigrationWizardWorkspace = {
-      schemaVersion: 1,
-      step,
-      siteKind,
-      deployMode,
-      name,
-      slug,
-      address,
-      phone,
-      email,
-      hours,
-      bookingLink,
-      social,
-      siteUrl,
-      username,
-      colors,
-      fonts: { heading: fontHeading, body: fontBody },
-      ...(logo
-        ? { logo: { filename: logo.filename, dataBase64: logo.dataBase64 } }
-        : {}),
-      ...(favicon
-        ? { favicon: { filename: favicon.filename, dataBase64: favicon.dataBase64 } }
-        : {}),
-    };
+    const workspace = currentMigrationWorkspace();
     const timer = window.setTimeout(() => {
       void fetch(`/api/migrations/${migrationProjectId}`, {
         method: "PATCH",
@@ -451,6 +435,8 @@ export function BuildWizard({
         });
     }, 600);
     return () => window.clearTimeout(timer);
+    // All values read by currentMigrationWorkspace are listed below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     address,
     bookingLink,
@@ -474,6 +460,33 @@ export function BuildWizard({
     templateCompileBundle,
     username,
   ]);
+
+  function currentMigrationWorkspace(): MigrationWizardWorkspace {
+    return {
+      schemaVersion: 1,
+      step,
+      siteKind,
+      deployMode,
+      name,
+      slug,
+      address,
+      phone,
+      email,
+      hours,
+      bookingLink,
+      social,
+      siteUrl,
+      username,
+      colors,
+      fonts: { heading: fontHeading, body: fontBody },
+      ...(logo
+        ? { logo: { filename: logo.filename, dataBase64: logo.dataBase64 } }
+        : {}),
+      ...(favicon
+        ? { favicon: { filename: favicon.filename, dataBase64: favicon.dataBase64 } }
+        : {}),
+    };
+  }
 
   useEffect(() => {
     if (!migrationProjectId) return;
@@ -707,6 +720,55 @@ export function BuildWizard({
       setSavingContentMatchId(undefined);
     }
   }
+
+  async function saveWorkspaceNow(): Promise<boolean> {
+    if (!migrationProjectId) return false;
+    try {
+      const response = await fetch(`/api/migrations/${migrationProjectId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...(templateCompileBundle
+            ? { bundle: templateCompileBundle, resolutions: dependencyResolutions }
+            : {}),
+          workspace: currentMigrationWorkspace(),
+        }),
+      });
+      const json = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(json.error ?? "Could not save the website setup.");
+      return true;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not save the website setup.");
+      return false;
+    }
+  }
+
+  async function prepareDrafts(): Promise<boolean> {
+    if (!migrationProjectId) return false;
+    setPreparingDrafts(true);
+    try {
+      if (!(await saveWorkspaceNow())) return false;
+      const response = await fetch(`/api/migrations/${migrationProjectId}/prepared-drafts`, {
+        method: "POST",
+      });
+      const json = await response.json();
+      if (!response.ok) throw new Error(json.error ?? "Could not prepare the website drafts.");
+      const drafts = Array.isArray(json.drafts) ? json.drafts : [];
+      setPreparedDrafts(drafts);
+      const attention = drafts.filter(
+        (draft: PreparedDraftSummary) => draft.status === "needs_attention",
+      ).length;
+      if (attention > 0) toast.warning(`${attention} draft${attention === 1 ? " needs" : "s need"} attention.`);
+      else toast.success(`${drafts.length} drafts prepared safely.`);
+      return true;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not prepare the website drafts.");
+      return false;
+    } finally {
+      setPreparingDrafts(false);
+    }
+  }
+
   async function handleLogo(file: File) {
     if (file.size > 2 * 1024 * 1024) {
       toast.error("Logo must be 2MB or smaller.");
@@ -813,6 +875,10 @@ export function BuildWizard({
     if (step === 1 && (siteKind === "new" || sourceSaved)) {
       const matched = await rebuildMatches();
       if (!matched) return;
+    }
+    if (step === 3) {
+      const prepared = await prepareDrafts();
+      if (!prepared) return;
     }
     setStep((s) => Math.min(s + 1, STEPS.length - 1));
   }
@@ -1702,6 +1768,39 @@ export function BuildWizard({
               />
               <Review label="WordPress site" value={siteUrl} onEdit={() => setStep(3)} />
               <Review label="Fonts" value={`${fontHeading} / ${fontBody}`} onEdit={() => setStep(3)} />
+              <Review
+                label="Source check"
+                value={
+                  preparedDrafts.every((draft) => draft.residueReport.length === 0)
+                    ? "No source-layout residue found"
+                    : "A draft needs attention"
+                }
+                onEdit={() => setStep(1)}
+              />
+              <SectionLabel>Draft readiness</SectionLabel>
+              <div className="border-2 border-[var(--color-black)]">
+                {pagePlanItems.map((page) => {
+                  const draft = preparedDrafts.find((item) => item.pagePlanItemId === page.id);
+                  return (
+                    <div key={page.id} className="border-b border-[var(--color-hairline)] bg-white p-4 last:border-b-0">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <p className="font-bold">{page.pageName}</p>
+                          <p className="mt-1 text-xs text-[var(--color-muted)]">{pagePath(page.slug)}</p>
+                        </div>
+                        <Badge variant={draft?.status === "ready" ? "secondary" : "destructive"}>
+                          {draft?.status === "ready" ? "Ready" : "Needs attention"}
+                        </Badge>
+                      </div>
+                      {draft?.notes.length ? (
+                        <ul className="mt-3 space-y-1 text-xs text-[var(--color-muted)]">
+                          {draft.notes.map((note) => <li key={note}>{note}</li>)}
+                        </ul>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
           </div>
@@ -1718,10 +1817,12 @@ export function BuildWizard({
             {step < STEPS.length - 1 ? (
               <Button
                 onClick={() => void next()}
-                disabled={savingCrawl || (step === 1 && pagePlanSaveState === "saving")}
+                disabled={savingCrawl || preparingDrafts || (step === 1 && pagePlanSaveState === "saving")}
               >
                 {savingCrawl
                   ? "Importing website"
+                  : preparingDrafts
+                    ? "Preparing drafts"
                   : step === 1 && pagePlanSaveState === "saving"
                     ? "Saving Page Plan"
                     : "Next"}

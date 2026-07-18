@@ -40,7 +40,7 @@ model MigrationProject {
   sourceUrl         String?
   // draft | active | ready | deploying | complete | failed
   status            String         @default("draft")
-  // source | cleanup | media | templates | plan | resolution | blogs | deploy | complete
+  // source | cleanup | media | templates | plan | prepare | resolution | blogs | deploy | complete
   stage             String         @default("source")
   schemaVersion     Int            @default(1)
   sourcePages       Json           @default("[]")
@@ -93,6 +93,7 @@ model LayoutRevision {
   layoutTemplate       LayoutTemplate   @relation("LayoutRevisions", fields: [layoutTemplateId], references: [id], onDelete: Cascade)
   activeFor            LayoutTemplate[] @relation("ActiveLayoutRevision")
   pagePlanItems        PagePlanItem[]
+  preparedDrafts       PreparedDraft[]
   version              Int
   sourceChecksum       String
   originalFilename     String
@@ -130,6 +131,7 @@ model PagePlanItem {
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   contentMatch       ContentMatch?
+  preparedDrafts     PreparedDraft[]
 
   @@unique([migrationProjectId, slug])
   @@index([migrationProjectId, position])
@@ -154,6 +156,32 @@ model ContentMatch {
 
   @@index([status])
   @@index([sourcePageId])
+}
+
+model PreparedDraft {
+  id                    String         @id @default(cuid())
+  pagePlanItemId        String
+  pagePlanItem          PagePlanItem   @relation(fields: [pagePlanItemId], references: [id], onDelete: Cascade)
+  layoutRevisionId      String
+  layoutRevision        LayoutRevision @relation(fields: [layoutRevisionId], references: [id], onDelete: Restrict)
+  version               Int
+  sourcePageId          String?
+  sourceContentRevision Int?
+  contentChecksum       String
+  artifact              Json
+  notes                 Json           @default("[]")
+  residueReport         Json           @default("[]")
+  // ready | needs_attention
+  status                String
+  adapterId             String
+  adapterVersion        String
+  createdAt             DateTime       @default(now())
+
+  @@unique([pagePlanItemId, version])
+  @@index([pagePlanItemId, createdAt])
+  @@index([layoutRevisionId])
+  @@index([status])
+  @@index([contentChecksum])
 }
 
 model Build {

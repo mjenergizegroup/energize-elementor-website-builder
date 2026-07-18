@@ -28,12 +28,14 @@ of pages, and removes raw content review and dependency resolution from the
 daily builder experience. Landing-page workflow changes and content rewriting
 are outside its current scope.
 
-Milestones 1 through 3 are implemented through version 3.8.0. The builder now has a
+Milestones 1 through 4 are implemented through version 3.9.0. The builder now has a
 reusable Template Library, revisioned sanitized layout artifacts, semantic
 slots, residue scanning, and a persistent Page Plan with individual and bulk
 page creation. The crawl follows the plan and stores deterministic automatic
-content matches, with only ambiguous choices exposed. Semantic fit and the
-simplified build review remain the next milestones.
+content matches, with only ambiguous choices exposed. Matched content is fitted
+into sanitized layouts, extra content enters a standard section, internal links
+use Page Plan destinations, reviewed media is mapped, and residue checks gate
+revisioned prepared drafts. Simplified dry run and build review remain next.
 
 ## Users and access
 

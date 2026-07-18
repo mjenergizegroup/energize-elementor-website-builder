@@ -29,6 +29,14 @@ only a human-readable source title, clean path, and short preview. Confirmed
 choices survive re-import, while raw markdown and query URLs stay out of the
 daily client payload.
 
+Draft preparation pins the selected layout revision and content revision in a
+revisioned `PreparedDraft`. It converts only the sanitized layout artifact,
+regenerates Atomic IDs, applies Page Plan identity, rebuilds internal links,
+maps only uploaded reviewed media, removes unused placeholders, and appends
+overflow content to one standard Atomic section. A second source-fingerprint
+and unsafe-marker scan runs before the draft becomes Ready. The daily payload
+returns status and plain-language notes, never the prepared node tree.
+
 Each stored page also has an editable approved draft, a content revision, and an
 approval checksum and timestamp. Raw and cleaned text remain immutable during
 review. Editing the approved draft or destination title increments the revision
@@ -50,6 +58,9 @@ and removes approval until an authenticated reviewer approves it again.
 - `POST /api/migrations/{projectId}/content-matches` rebuilds deterministic matches.
 - `PATCH /api/migrations/{projectId}/content-matches` confirms an ambiguous
   source page or an empty draft.
+- `GET /api/migrations/{projectId}/prepared-drafts` returns latest safe summaries.
+- `POST /api/migrations/{projectId}/prepared-drafts` prepares or reuses the
+  latest deterministic draft revision.
 
 Source ingest accepts up to 1,000 pages, 2MB per page, and 20MB per request.
 Every route requires Clerk authentication. Project creation and source ingest
@@ -144,6 +155,7 @@ also creates a standard build-history record and audit entries.
 ## Database rollout
 
 The Prisma schema includes reusable layouts, Page Plan items, persisted content
-matches, the owned crawl reference, and the non-secret wizard workspace. Do not run
+matches, prepared draft revisions, the owned crawl reference, and the non-secret
+wizard workspace. Do not run
 `npm run db:push` against Neon until the database change is explicitly approved
 for that environment. Local Prisma client generation does not modify Neon.

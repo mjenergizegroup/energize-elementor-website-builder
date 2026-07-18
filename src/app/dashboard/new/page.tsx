@@ -21,6 +21,7 @@ import {
 import { listReadyLayouts } from "@/lib/layouts/repository";
 import { listPagePlan } from "@/lib/page-plan/repository";
 import { listContentMatches } from "@/lib/content-matches/repository";
+import { listPreparedDrafts } from "@/lib/prepared-drafts/repository";
 
 export const dynamic = "force-dynamic";
 
@@ -76,6 +77,7 @@ export default async function NewBuildPage({
         workspace: parseMigrationWizardWorkspace(project.wizardWorkspace),
         pagePlan: await listPagePlan(userId, project.id),
         contentMatches: await listContentMatches(userId, project.id),
+        preparedDrafts: await listPreparedDrafts(userId, project.id),
       };
     } catch {
       notFound();

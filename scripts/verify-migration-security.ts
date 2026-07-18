@@ -12,6 +12,7 @@ const routeFiles = [
   "src/app/api/layouts/route.ts",
   "src/app/api/migrations/[projectId]/page-plan/route.ts",
   "src/app/api/migrations/[projectId]/content-matches/route.ts",
+  "src/app/api/migrations/[projectId]/prepared-drafts/route.ts",
 ];
 
 for (const file of routeFiles) {
@@ -30,6 +31,7 @@ for (const file of [
   "src/lib/layouts/repository.ts",
   "src/lib/page-plan/repository.ts",
   "src/lib/content-matches/repository.ts",
+  "src/lib/prepared-drafts/repository.ts",
 ]) {
   assert.match(read(file), /^import "server-only";/, `${file} must remain server-only`);
 }
