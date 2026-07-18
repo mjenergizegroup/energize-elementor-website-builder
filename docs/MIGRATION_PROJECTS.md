@@ -16,12 +16,18 @@ requests.
 - `wizardWorkspace` stores non-secret form state and the current step. WordPress
   application passwords are never stored in this snapshot.
 
-An existing-site crawl creates its owned migration project immediately. The
-source ingest endpoint accepts the crawl job and selected URLs, retrieves the
-selected pages server-side, and re-runs deterministic cleanup and classification
-on every request. It stores raw and cleaned markdown, stable content checksums, and
-the reason for each classification. Blog detection uses metadata and content
-signals in addition to URL paths.
+The five-step builder creates the owned project and Page Plan before starting an
+existing-site crawl. Source ingest retrieves useful pages server-side and
+re-runs deterministic cleanup and classification on every request. It stores raw
+and cleaned markdown, stable content checksums, and classification reasons as
+internal recovery data. Daily users see only page match results.
+
+Each `PagePlanItem` has at most one `ContentMatch`. The matcher evaluates the
+destination path, planned page name, page-type synonyms, source headings, and
+confirmed match history. Strong matches are automatic. Ambiguous matches expose
+only a human-readable source title, clean path, and short preview. Confirmed
+choices survive re-import, while raw markdown and query URLs stay out of the
+daily client payload.
 
 Each stored page also has an editable approved draft, a content revision, and an
 approval checksum and timestamp. Raw and cleaned text remain immutable during
@@ -40,6 +46,10 @@ and removes approval until an authenticated reviewer approves it again.
 - `GET /api/migrations/{projectId}/source` returns normalized source review state.
 - `PATCH /api/migrations/{projectId}/source` saves inclusion, edits, revisions,
   and approval state.
+- `GET /api/migrations/{projectId}/content-matches` returns safe match summaries.
+- `POST /api/migrations/{projectId}/content-matches` rebuilds deterministic matches.
+- `PATCH /api/migrations/{projectId}/content-matches` confirms an ambiguous
+  source page or an empty draft.
 
 Source ingest accepts up to 1,000 pages, 2MB per page, and 20MB per request.
 Every route requires Clerk authentication. Project creation and source ingest
@@ -133,7 +143,7 @@ also creates a standard build-history record and audit entries.
 
 ## Database rollout
 
-The Prisma schema includes the owned crawl reference and non-secret wizard
-workspace fields on `MigrationProject`. Do not run
+The Prisma schema includes reusable layouts, Page Plan items, persisted content
+matches, the owned crawl reference, and the non-secret wizard workspace. Do not run
 `npm run db:push` against Neon until the database change is explicitly approved
 for that environment. Local Prisma client generation does not modify Neon.

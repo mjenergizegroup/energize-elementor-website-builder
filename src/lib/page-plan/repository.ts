@@ -66,13 +66,21 @@ export async function savePagePlan(
     : null;
   if (foreignItem) throw new Error("A Page Plan item does not belong to this project.");
 
+  const existingItems = await prisma.pagePlanItem.findMany({
+    where: { migrationProjectId: projectId },
+    select: { id: true, pageName: true, slug: true, pageType: true, status: true },
+  });
+  const existingById = new Map(existingItems.map((item) => [item.id, item]));
+
   const normalized = inputItems.map((item, position) => ({
     ...item,
     position,
     pageName: item.pageName.trim(),
     slug: item.slug.trim(),
     titleTag: item.titleTag.trim(),
-    status: "planned" as const,
+    status: matchingFieldsChanged(existingById.get(item.id), item)
+      ? ("planned" as const)
+      : existingById.get(item.id)?.status ?? ("planned" as const),
   }));
   const keepIds = normalized.map((item) => item.id);
   await prisma.$transaction(async (tx) => {
@@ -83,6 +91,9 @@ export async function savePagePlan(
       },
     });
     for (const item of normalized) {
+      if (item.status === "planned") {
+        await tx.contentMatch.deleteMany({ where: { pagePlanItemId: item.id } });
+      }
       await tx.pagePlanItem.upsert({
         where: { id: item.id },
         create: { ...item, migrationProjectId: projectId },
@@ -114,4 +125,16 @@ export async function savePagePlan(
     layouts: revisionIds.length,
   });
   return listPagePlan(userId, projectId);
+}
+
+function matchingFieldsChanged(
+  existing: { pageName: string; slug: string; pageType: string } | undefined,
+  input: PagePlanItemInput,
+): boolean {
+  return (
+    !existing ||
+    existing.pageName.trim() !== input.pageName.trim() ||
+    existing.slug.trim() !== input.slug.trim() ||
+    existing.pageType !== input.pageType
+  );
 }

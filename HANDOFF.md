@@ -11,11 +11,12 @@ Mark approved a simpler layout-first website workflow after testing version
 specification is in
 [`docs/WEBSITE_BUILDER_UX_SPEC.md`](docs/WEBSITE_BUILDER_UX_SPEC.md).
 
-Milestones 1 and 2 are complete through version `3.7.0`. The authenticated
+Milestones 1 through 3 are complete through version `3.8.0`. The authenticated
 Template Library owns reusable sanitized layouts, and the persistent Page Plan
 owns destination page names, URLs, title tags, order, and layout choices. The
-next implementation milestone reorders the crawl after the plan and adds
-automatic content matching. Do not start with landing pages or AI rewriting.
+current-site import now follows the Page Plan and stores automatic content
+matches, with only ambiguous choices shown. The next implementation milestone
+fits matched content into semantic layout slots. Do not start with landing pages or AI rewriting.
 The daily builder must not expose raw content review, template metadata,
 filenames, plugins, external template domains, global IDs, or dependency-ledger
 decisions.
@@ -25,7 +26,14 @@ choices. Reusable Ready layouts will own safe structure only. The crawl will run
 after the Page Plan exists and will supply content only. One service layout must
 be reusable across any number of service pages.
 
-Version 3.7.0 adds owned `PagePlanItem` records and a simple Plan Pages workspace
+Version 3.8.0 adds owned `ContentMatch` records, a deterministic path, name,
+synonym, heading, and history matcher, and the five-step Project, Plan Pages,
+Import Content, Brand & Destination, and Review & Build flow. Strong matches
+need no input, ambiguous matches ask one plain-language source-page question,
+and missing content creates an empty draft. Confirmed choices survive a
+re-import.
+
+Version 3.7.0 added owned `PagePlanItem` records and a simple Plan Pages workspace
 with individual pages, bulk services, Ready layout reuse, duplicate, reorder,
 delete, destination URL, and title-tag controls. It resumes the saved plan and
 removes the legacy content and dependency workspaces from the daily flow.

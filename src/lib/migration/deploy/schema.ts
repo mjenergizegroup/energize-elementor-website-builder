@@ -100,7 +100,7 @@ const workspaceAssetSchema = z.object({
 
 export const migrationWizardWorkspaceSchema = z.object({
   schemaVersion: z.literal(1),
-  step: z.number().int().min(0).max(5),
+  step: z.number().int().min(0).max(4),
   siteKind: z.enum(["existing", "new"]),
   deployMode: z.enum(["pages", "branding-only"]),
   name: z.string().max(200),

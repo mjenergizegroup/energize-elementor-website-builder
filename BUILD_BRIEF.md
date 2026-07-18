@@ -28,11 +28,12 @@ of pages, and removes raw content review and dependency resolution from the
 daily builder experience. Landing-page workflow changes and content rewriting
 are outside its current scope.
 
-Milestones 1 and 2 are implemented through version 3.7.0. The builder now has a
+Milestones 1 through 3 are implemented through version 3.8.0. The builder now has a
 reusable Template Library, revisioned sanitized layout artifacts, semantic
 slots, residue scanning, and a persistent Page Plan with individual and bulk
-page creation. The reordered crawl, automatic content matching, semantic fit,
-and simplified review remain the next milestones.
+page creation. The crawl follows the plan and stores deterministic automatic
+content matches, with only ambiguous choices exposed. Semantic fit and the
+simplified build review remain the next milestones.
 
 ## Users and access
 
@@ -41,7 +42,7 @@ and simplified review remain the next milestones.
 - Saved clients retain encrypted WordPress Application Passwords for rebuilds.
 - The application has no customer-facing publishing features.
 
-## Current build flow
+## Legacy deployment engine
 
 1. Choose an existing site crawl or a new-site source.
 2. Enter practice information and destination identity.

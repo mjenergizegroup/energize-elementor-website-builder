@@ -64,18 +64,21 @@ Migration project state and its authenticated API are documented in
 
 ## Current site migration flow
 
-Version 3.7.0 introduces the layout-first Page Plan while preserving the
-existing preparation and draft-deployment engine behind the simplified daily
-workflow. The remaining milestones will move the crawl after the plan, fit
-content into semantic slots, and simplify Review & Build. The approved end state
-is documented in
+Version 3.8.0 uses the five-step layout-first workflow. The Page Plan is created
+before the current website is imported, and deterministic matching shows only
+Matched, Check match, or No source content. The remaining milestones will fit
+content into semantic slots and complete the simplified Review & Build. The
+approved end state is documented in
 [docs/WEBSITE_BUILDER_UX_SPEC.md](docs/WEBSITE_BUILDER_UX_SPEC.md).
 
 1. Add and sanitize reusable layouts in the authenticated Template Library.
 2. Build the destination Page Plan using friendly page names, URLs, title tags,
    and Ready layout choices. One service layout can be reused by every service.
-3. Continue through practice, brand, destination, and review while the remaining
-   content-matching and draft-preparation milestones are completed.
+3. Import the current website after the plan. Strong matches require no action,
+   ambiguous matches ask one plain-language question, and missing content makes
+   an empty draft.
+4. Continue through brand, destination, and review while semantic draft
+   preparation is completed.
 
 Crawl-backed migrations do not require an exported or re-uploaded content file.
 The prepared-content import remains a compatibility option for projects that do
@@ -127,12 +130,13 @@ download external media or modify a WordPress site.
 
 ### Release verification
 
-Version 3.7.0 adds a persistent Page Plan on top of the version 3.6.0 Template
-Library. Daily users can add one page, bulk-add services, reuse a Ready layout,
-edit destination URLs and title tags, duplicate, reorder, delete, and resume the
-saved plan without seeing filenames, source metadata, or dependency findings.
+Version 3.8.0 adds persisted `ContentMatch` records, moves content import after
+the Page Plan, and automatically matches clean source pages using destination
+paths, page names, synonyms, headings, and confirmed match history. Confirmed
+choices survive re-imports. The daily workflow never shows raw markdown, crawl
+classifications, template filenames, source metadata, or dependency findings.
 
-Version 3.7.0 passes the complete automated suite, TypeScript checking, ESLint,
+Version 3.8.0 passes the complete automated suite, TypeScript checking, ESLint,
 migration security checks, Atomic and bridge checks, injection verification,
 and the optimized Next.js production build. Authenticated browser QA remains a
 manual rollout check because the local in-app browser proxy could not reach the
@@ -140,7 +144,7 @@ loopback development server.
 
 Before pushing this schema-bearing release, generate the Prisma client and sync
 the selected Neon database. The Template Library requires the new
-`LayoutTemplate`, `LayoutRevision`, and `PagePlanItem` tables:
+`LayoutTemplate`, `LayoutRevision`, `PagePlanItem`, and `ContentMatch` tables:
 
 ```bash
 npm run db:generate

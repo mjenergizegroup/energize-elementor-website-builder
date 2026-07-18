@@ -14,7 +14,6 @@ import {
   Palette,
   Rocket,
   UploadCloud,
-  UserRound,
   type LucideIcon,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -25,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Combobox } from "@/components/ui/combobox";
 import { PagePlanWorkspace } from "@/components/page-plan-workspace";
+import { ContentMatchWorkspace } from "@/components/content-match-workspace";
 import { GOOGLE_FONTS } from "@/lib/google-fonts";
 import { cn } from "@/lib/utils";
 import type { BrandKit, UploadedAsset } from "@/lib/types";
@@ -32,7 +32,6 @@ import type { PageContent } from "@/lib/injection/types";
 import type { ElevatePageType } from "@/lib/builders/elevate/types";
 import type { TemplateCompileBundle } from "@/lib/template-import/types";
 import type {
-  MigrationCleanupReport,
   MigrationResolution,
   MigrationSourcePage,
   MigrationWizardWorkspace,
@@ -48,6 +47,7 @@ import {
   type BuildWizardStep,
 } from "@/lib/build-wizard/flow";
 import type { LayoutLibraryItem } from "@/lib/layouts/types";
+import type { PersistedContentMatch } from "@/lib/content-matches/types";
 import {
   validatePagePlan,
   type PagePlanItem,
@@ -75,6 +75,7 @@ export interface InitialMigrationProject {
   resolutions: MigrationResolution[];
   workspace?: MigrationWizardWorkspace;
   pagePlan: PagePlanItem[];
+  contentMatches: PersistedContentMatch[];
 }
 
 type Asset = UploadedAsset & { previewUrl: string };
@@ -146,33 +147,6 @@ interface CrawlPageEntry {
   skipReason?: string;
 }
 
-function sourcePageToCrawlEntry(page: MigrationSourcePage): CrawlPageEntry {
-  return {
-    url: page.sourceUrl,
-    title: page.title,
-    markdown: page.rawMarkdown,
-    metadata: page.metadata,
-    recommended: page.included,
-    skipReason: page.included ? undefined : page.classificationReason,
-  };
-}
-
-function sourceReportFromPages(
-  pages: MigrationSourcePage[],
-): MigrationCleanupReport {
-  return {
-    input: pages.length,
-    unique: pages.length,
-    duplicates: 0,
-    corePages: pages.filter((page) => page.classification === "core-page").length,
-    blogPosts: pages.filter((page) => page.classification === "blog-post").length,
-    blogIndexes: pages.filter((page) => page.classification === "blog-index").length,
-    skipped: pages.filter((page) => page.classification === "skipped").length,
-    removedNoiseLines: 0,
-    removedDuplicateSections: 0,
-  };
-}
-
 const STEPS = BUILD_WIZARD_STEPS;
 
 const STEP_DETAILS: {
@@ -182,27 +156,9 @@ const STEP_DETAILS: {
   icon: LucideIcon;
 }[] = [
   {
-    title: "Crawl",
-    rail: "Source pages",
-    description: "Collect source pages for cleanup when this is an existing website.",
-    icon: Globe2,
-  },
-  {
-    title: "Practice Info",
-    rail: "Client identity",
-    description: "Set the client identity and production notes.",
-    icon: UserRound,
-  },
-  {
-    title: "Brand Kit",
-    rail: "Variables and assets",
-    description: "Map colors and fonts to Atomic variables, then add the logo and favicon.",
-    icon: Palette,
-  },
-  {
-    title: "WP Target",
-    rail: "Destination",
-    description: "Add the WordPress destination and credentials.",
+    title: "Project",
+    rail: "Website setup",
+    description: "Name the website project and identify whether content will come from an existing site.",
     icon: Globe2,
   },
   {
@@ -212,9 +168,21 @@ const STEP_DETAILS: {
     icon: FileText,
   },
   {
-    title: "Review",
+    title: "Import Content",
+    rail: "Automatic matching",
+    description: "Import the current website and confirm only the page matches that need help.",
+    icon: Globe2,
+  },
+  {
+    title: "Brand & Destination",
+    rail: "Identity and WordPress",
+    description: "Add practice details, brand assets, and the WordPress destination.",
+    icon: Palette,
+  },
+  {
+    title: "Review & Build",
     rail: "Final check",
-    description: "Confirm the build payload before deployment.",
+    description: "Confirm the planned drafts before the automatic dry run.",
     icon: ListChecks,
   },
 ];
@@ -233,6 +201,17 @@ function slugify(value: string): string {
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+function normalizeWebUrl(value: string): string | null {
+  try {
+    const withProtocol = /^https?:\/\//i.test(value.trim())
+      ? value.trim()
+      : `https://${value.trim()}`;
+    return new URL(withProtocol).toString();
+  } catch {
+    return null;
+  }
 }
 
 async function fileToBase64(file: File): Promise<string> {
@@ -278,9 +257,12 @@ export function BuildWizard({
   const router = useRouter();
   const initialWorkspace = initialMigrationProject?.workspace;
   const resumedSourcePages = initialMigrationProject?.sourcePages ?? [];
-  const [step, setStep] = useState(
-    initialWorkspace?.step ?? (resumedSourcePages.length > 0 ? 4 : 0),
-  );
+  const [step, setStep] = useState(() => {
+    if (!initialMigrationProject) return 0;
+    if (initialMigrationProject.pagePlan.length === 0) return 0;
+    if (resumedSourcePages.length === 0) return 1;
+    return Math.min(initialWorkspace?.step ?? 2, 4);
+  });
 
   const [siteKind, setSiteKind] = useState<"existing" | "new">(
     initialWorkspace?.siteKind ?? "existing",
@@ -295,26 +277,10 @@ export function BuildWizard({
     "idle" | "scraping" | "completed" | "failed"
   >(resumedSourcePages.length > 0 ? "completed" : "idle");
   const [crawlProgress, setCrawlProgress] = useState({ completed: 0, total: 0 });
-  const [crawlKeep, setCrawlKeep] = useState<CrawlPageEntry[]>(() =>
-    resumedSourcePages
-      .filter((page) => page.included)
-      .map(sourcePageToCrawlEntry),
-  );
-  const [crawlSkip, setCrawlSkip] = useState<CrawlPageEntry[]>(() =>
-    resumedSourcePages
-      .filter((page) => !page.included)
-      .map(sourcePageToCrawlEntry),
-  );
-  const [selectedCrawlUrls, setSelectedCrawlUrls] = useState<string[]>(() =>
-    resumedSourcePages.filter((page) => page.included).map((page) => page.sourceUrl),
-  );
   const [crawlError, setCrawlError] = useState("");
-  const [exportingCrawl, setExportingCrawl] = useState(false);
   const [savingCrawl, setSavingCrawl] = useState(false);
+  const crawlIngestStartedRef = useRef(false);
   const [sourceSaved, setSourceSaved] = useState(resumedSourcePages.length > 0);
-  const [sourceReport, setSourceReport] = useState<MigrationCleanupReport | null>(
-    resumedSourcePages.length > 0 ? sourceReportFromPages(resumedSourcePages) : null,
-  );
   const [migrationSourcePages, setMigrationSourcePages] =
     useState<MigrationSourcePage[]>(resumedSourcePages);
 
@@ -378,6 +344,10 @@ export function BuildWizard({
   const [migrationProjectId, setMigrationProjectId] = useState(
     initialMigrationProject?.id ?? "",
   );
+  const [contentMatches, setContentMatches] = useState<PersistedContentMatch[]>(
+    initialMigrationProject?.contentMatches ?? [],
+  );
+  const [savingContentMatchId, setSavingContentMatchId] = useState<string>();
   const [pagePlanItems, setPagePlanItems] = useState<PagePlanItemInput[]>(() =>
     (initialMigrationProject?.pagePlan ?? []).map((item) => ({
       id: item.id,
@@ -423,6 +393,8 @@ export function BuildWizard({
       void pollCrawl(crawlJobId);
     }, 3000);
     return () => window.clearInterval(timer);
+    // pollCrawl reads the latest render state and the status change stops this interval.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [crawlJobId, crawlStatus]);
 
   useEffect(() => {
@@ -538,13 +510,8 @@ export function BuildWizard({
   }, [initialLayouts, migrationProjectId, pagePlanItems]);
 
   async function startCrawl() {
-    let normalizedUrl: string;
-    try {
-      const withProtocol = /^https?:\/\//i.test(crawlUrl)
-        ? crawlUrl
-        : `https://${crawlUrl}`;
-      normalizedUrl = new URL(withProtocol).toString();
-    } catch {
+    const normalizedUrl = normalizeWebUrl(crawlUrl);
+    if (!normalizedUrl) {
       toast.error("Enter a valid site URL.");
       return;
     }
@@ -553,13 +520,11 @@ export function BuildWizard({
     setCrawlStatus("scraping");
     setCrawlJobId("");
     setCrawlProgress({ completed: 0, total: 0 });
-    setCrawlKeep([]);
-    setCrawlSkip([]);
-    setSelectedCrawlUrls([]);
     setCrawlError("");
     setSourceSaved(false);
-    setSourceReport(null);
     setMigrationSourcePages([]);
+    setContentMatches([]);
+    crawlIngestStartedRef.current = false;
 
     try {
       const res = await fetch("/api/crawl", {
@@ -567,6 +532,7 @@ export function BuildWizard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           url: normalizedUrl,
+          ...(migrationProjectId ? { projectId: migrationProjectId } : {}),
           ...(initialClient?.id ? { clientId: initialClient.id } : {}),
           ...(name.trim() ? { projectName: `${name.trim()} migration` } : {}),
         }),
@@ -606,12 +572,21 @@ export function BuildWizard({
       setCrawlProgress(json.progress ?? { completed: 0, total: 0 });
       setCrawlError(json.error ?? "");
       if (json.keep) {
-        setCrawlKeep(json.keep);
-        setSelectedCrawlUrls((prev) =>
-          prev.length > 0 ? prev : json.keep.map((page: CrawlPageEntry) => page.url),
-        );
+        const importUrls = json.keep.map((page: CrawlPageEntry) => page.url);
+        if (json.status === "completed" && importUrls.length === 0) {
+          setCrawlError("No useful website pages were found. Check the URL and try again.");
+          setCrawlStatus("failed");
+        }
+        if (
+          json.status === "completed" &&
+          importUrls.length > 0 &&
+          !sourceSaved &&
+          !crawlIngestStartedRef.current
+        ) {
+          crawlIngestStartedRef.current = true;
+          void saveSelectedCrawlPages(jobId, importUrls);
+        }
       }
-      if (json.skip) setCrawlSkip(json.skip);
       if (json.status === "failed") {
         toast.error(json.error ?? "Crawl failed.");
       }
@@ -623,28 +598,16 @@ export function BuildWizard({
     }
   }
 
-  function toggleCrawlUrl(url: string, checked: boolean) {
-    setSourceSaved(false);
-    setSelectedCrawlUrls((prev) =>
-      checked ? Array.from(new Set([...prev, url])) : prev.filter((item) => item !== url),
-    );
-  }
-
-  function moveSkippedPageToKeep(url: string) {
-    const page = crawlSkip.find((item) => item.url === url);
-    if (!page) return;
-    setCrawlSkip((prev) => prev.filter((item) => item.url !== url));
-    setCrawlKeep((prev) => [...prev, { ...page, recommended: true, skipReason: undefined }]);
-    toggleCrawlUrl(url, true);
-  }
-
-  async function saveSelectedCrawlPages(): Promise<boolean> {
-    if (!migrationProjectId || !crawlJobId) {
+  async function saveSelectedCrawlPages(
+    crawlJobIdOverride: string,
+    selectedUrlsOverride: string[],
+  ): Promise<boolean> {
+    if (!migrationProjectId || !crawlJobIdOverride) {
       toast.error("Start the crawl again so this migration can be saved.");
       return false;
     }
-    if (selectedCrawlUrls.length === 0) {
-      toast.error("Select at least one source page.");
+    if (selectedUrlsOverride.length === 0) {
+      toast.error("No useful website pages were found.");
       return false;
     }
     setSavingCrawl(true);
@@ -655,8 +618,8 @@ export function BuildWizard({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            crawlJobId,
-            selectedUrls: selectedCrawlUrls,
+            crawlJobId: crawlJobIdOverride,
+            selectedUrls: selectedUrlsOverride,
           }),
         },
       );
@@ -665,11 +628,11 @@ export function BuildWizard({
         throw new Error(json.error ?? "Could not save the selected source pages.");
       }
       setSourceSaved(true);
-      setSourceReport(json.report as MigrationCleanupReport);
       setMigrationSourcePages(
         Array.isArray(json.project?.sourcePages) ? json.project.sourcePages : [],
       );
-      toast.success(`${json.report.unique} source pages saved to this migration.`);
+      setContentMatches(Array.isArray(json.matches) ? json.matches : []);
+      toast.success("Website content imported and matched to the Page Plan.");
       return true;
     } catch (error) {
       toast.error(
@@ -683,44 +646,67 @@ export function BuildWizard({
     }
   }
 
-  async function exportCrawlMarkdown() {
-    if (!crawlJobId) {
-      toast.error("Start a crawl before exporting.");
-      return;
-    }
-    if (selectedCrawlUrls.length === 0) {
-      toast.error("Select at least one page to export.");
-      return;
-    }
-    setExportingCrawl(true);
+  async function ensureMigrationProject(): Promise<string | null> {
+    if (migrationProjectId) return migrationProjectId;
     try {
-      const res = await fetch(`/api/crawl/${crawlJobId}/export`, {
+      const normalizedSourceUrl = normalizeWebUrl(crawlUrl);
+      const response = await fetch("/api/migrations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ selectedUrls: selectedCrawlUrls }),
+        body: JSON.stringify({
+          name: `${name.trim()} website`,
+          ...(siteKind === "existing" && normalizedSourceUrl
+            ? { sourceUrl: normalizedSourceUrl }
+            : {}),
+          ...(initialClient?.id ? { clientId: initialClient.id } : {}),
+        }),
       });
-      const json = await res.json();
-      if (!res.ok) {
-        toast.error(json.error ?? "Could not export crawl markdown.");
-        return;
-      }
-      const blob = new Blob([json.content], { type: "text/markdown;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = json.filename;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
-      toast.success(`${json.filename} exported.`);
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Could not export crawl markdown.");
-    } finally {
-      setExportingCrawl(false);
+      const json = await response.json();
+      if (!response.ok) throw new Error(json.error ?? "Could not create the website project.");
+      const projectId = json.project.id as string;
+      setMigrationProjectId(projectId);
+      return projectId;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not create the website project.");
+      return null;
     }
   }
 
+  async function rebuildMatches(projectId = migrationProjectId): Promise<boolean> {
+    if (!projectId) return false;
+    try {
+      const response = await fetch(`/api/migrations/${projectId}/content-matches`, {
+        method: "POST",
+      });
+      const json = await response.json();
+      if (!response.ok) throw new Error(json.error ?? "Could not match website content.");
+      setContentMatches(Array.isArray(json.matches) ? json.matches : []);
+      return true;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not match website content.");
+      return false;
+    }
+  }
+
+  async function confirmMatch(pagePlanItemId: string, sourcePageId?: string) {
+    if (!migrationProjectId) return;
+    setSavingContentMatchId(pagePlanItemId);
+    try {
+      const response = await fetch(`/api/migrations/${migrationProjectId}/content-matches`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pagePlanItemId, ...(sourcePageId ? { sourcePageId } : {}) }),
+      });
+      const json = await response.json();
+      if (!response.ok) throw new Error(json.error ?? "Could not save the content match.");
+      setContentMatches(Array.isArray(json.matches) ? json.matches : []);
+      toast.success("Content match saved.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not save the content match.");
+    } finally {
+      setSavingContentMatchId(undefined);
+    }
+  }
   async function handleLogo(file: File) {
     if (file.size > 2 * 1024 * 1024) {
       toast.error("Logo must be 2MB or smaller.");
@@ -776,32 +762,11 @@ export function BuildWizard({
   function validateStep(current: number): string | null {
     switch (current) {
       case 0:
-        if (siteKind === "existing" && crawlStatus === "scraping")
-          return "Wait for the crawl to finish or switch to a new website.";
-        if (buildType === "migrate" && siteKind === "existing") {
-          if (crawlStatus !== "completed" && !sourceSaved) {
-            return "Complete a crawl before continuing this migration.";
-          }
-          if (selectedCrawlUrls.length === 0) {
-            return "Select at least one source page for this migration.";
-          }
-        }
-        return null;
-      case 1:
         if (!name.trim()) return "Practice name is required.";
         if (!slug.trim()) return "Slug is required.";
+        if (siteKind === "existing" && !normalizeWebUrl(crawlUrl)) return "Enter a valid current website URL.";
         return null;
-      case 2:
-        if (!logo?.dataBase64) return "Site logo is required.";
-        if (!favicon?.dataBase64) return "Site favicon is required.";
-        return null;
-      case 3:
-        if (!siteUrl.trim()) return "WordPress site URL is required.";
-        if (!username.trim()) return "WordPress username is required.";
-        if (!initialClient && !appPassword.trim())
-          return "Application password is required for a new client.";
-        return null;
-      case 4:
+      case 1:
         if (deployMode === "branding-only") return null;
         if (migrationProjectId && pagePlanSaveState === "error") {
           return "The Page Plan must be saved before review.";
@@ -810,6 +775,26 @@ export function BuildWizard({
           return "Wait for the Page Plan to finish saving.";
         }
         return validatePagePlan(pagePlanItems, initialLayouts).firstError ?? null;
+      case 2:
+        if (siteKind === "existing") {
+          if (crawlStatus === "scraping" || savingCrawl) return "Wait for the website import to finish.";
+          if (!sourceSaved) return "Import the current website before continuing.";
+        }
+        if (contentMatches.some((match) => match.status === "check")) {
+          return "Choose the source content for every page marked Check match.";
+        }
+        if (contentMatches.length !== pagePlanItems.length) {
+          return "Finish matching content to the Page Plan.";
+        }
+        return null;
+      case 3:
+        if (!logo?.dataBase64) return "Site logo is required.";
+        if (!favicon?.dataBase64) return "Site favicon is required.";
+        if (!siteUrl.trim()) return "WordPress site URL is required.";
+        if (!username.trim()) return "WordPress username is required.";
+        if (!initialClient && !appPassword.trim())
+          return "Application password is required for a new client.";
+        return null;
       default:
         return null;
     }
@@ -821,14 +806,13 @@ export function BuildWizard({
       toast.error(error);
       return;
     }
-    if (
-      step === 0 &&
-      buildType === "migrate" &&
-      siteKind === "existing" &&
-      !sourceSaved
-    ) {
-      const saved = await saveSelectedCrawlPages();
-      if (!saved) return;
+    if (step === 0) {
+      const projectId = await ensureMigrationProject();
+      if (!projectId) return;
+    }
+    if (step === 1 && (siteKind === "new" || sourceSaved)) {
+      const matched = await rebuildMatches();
+      if (!matched) return;
     }
     setStep((s) => Math.min(s + 1, STEPS.length - 1));
   }
@@ -1516,7 +1500,7 @@ export function BuildWizard({
     <main className="page-body">
       <PageHead
         title="New Build"
-        subline="Prepare one client through source, brand, WordPress, content, and review."
+        subline="Plan the destination pages, match source content, and prepare WordPress drafts."
         clientName={name || practiceMeta?.practiceName || "Untitled client"}
         buildTypeLabel={buildTypeLabel}
       >
@@ -1542,304 +1526,51 @@ export function BuildWizard({
           />
           <div className="space-y-7 bg-[var(--color-surface)] p-6 sm:p-8">
           {step === 0 && (
-            <div className="space-y-6">
-              <SectionLabel>Crawl source</SectionLabel>
+            <div className="space-y-7">
+              <SectionLabel>Website project</SectionLabel>
+              <Field label="Practice name">
+                <Input
+                  value={name}
+                  onChange={(event) => {
+                    setName(event.target.value);
+                    if (!initialClient) setSlug(slugify(event.target.value));
+                  }}
+                />
+              </Field>
+              <Field label="Project slug" hint="Used as the saved client identifier.">
+                <Input value={slug} onChange={(event) => setSlug(slugify(event.target.value))} />
+              </Field>
               <div className="grid gap-3 md:grid-cols-2">
                 <button
                   type="button"
                   onClick={() => setSiteKind("existing")}
-                  className={` border p-4 text-left transition ${
-                    siteKind === "existing"
-                      ? "border-[var(--primary)] bg-[var(--primary)]/10"
-                      : "border-[var(--line)] bg-[var(--paper-2)]"
-                  }`}
+                  className={`border-2 p-4 text-left ${siteKind === "existing" ? "border-[var(--color-red)] bg-[var(--color-red-light)]" : "border-[var(--color-black)] bg-white"}`}
                 >
-                  <span className="block text-sm font-semibold text-[var(--ink)]">
-                    Existing website
-                  </span>
-                  <span className="mt-1 block text-xs font-medium leading-5 text-[var(--muted)]">
-                    Crawl source pages and store raw, cleaned, and approved content in the project.
-                  </span>
+                  <span className="block text-sm font-bold">Existing website</span>
+                  <span className="mt-1 block text-xs leading-5 text-[var(--color-muted)]">Import content after the Page Plan is ready.</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setSiteKind("new")}
-                  className={` border p-4 text-left transition ${
-                    siteKind === "new"
-                      ? "border-[var(--primary)] bg-[var(--primary)]/10"
-                      : "border-[var(--line)] bg-[var(--paper-2)]"
-                  }`}
+                  className={`border-2 p-4 text-left ${siteKind === "new" ? "border-[var(--color-red)] bg-[var(--color-red-light)]" : "border-[var(--color-black)] bg-white"}`}
                 >
-                  <span className="block text-sm font-semibold text-[var(--ink)]">
-                    New website
-                  </span>
-                  <span className="mt-1 block text-xs font-medium leading-5 text-[var(--muted)]">
-                    Skip crawl and continue to the builder setup.
-                  </span>
+                  <span className="block text-sm font-bold">New website</span>
+                  <span className="mt-1 block text-xs leading-5 text-[var(--color-muted)]">Create empty drafts without importing another site.</span>
                 </button>
               </div>
-
               {siteKind === "existing" && (
-                <div className="space-y-5">
-                  <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                    <Field label="Website URL">
-                      <Input
-                        placeholder="https://example.com"
-                        value={crawlUrl}
-                        onChange={(e) => setCrawlUrl(e.target.value)}
-                        readOnly={Boolean(initialMigrationProject)}
-                      />
-                    </Field>
-                    <div className="flex items-end">
-                      <Button
-                        type="button"
-                        onClick={startCrawl}
-                        disabled={Boolean(initialMigrationProject) || crawlStatus === "scraping"}
-                      >
-                        {initialMigrationProject
-                          ? "Source saved"
-                          : crawlStatus === "scraping"
-                            ? "Crawling"
-                            : "Start Crawl"}
-                      </Button>
-                    </div>
-                  </div>
-
-                  {crawlStatus !== "idle" && (
-                    <div className=" border border-[var(--line)] bg-[var(--paper-2)] p-4 text-sm">
-                      <p className="font-semibold text-[var(--ink)]">
-                        {crawlStatus === "scraping"
-                          ? `Crawled ${crawlProgress.completed} / ${crawlProgress.total || "..."} pages`
-                          : crawlStatus === "completed"
-                            ? `Crawl complete: ${crawlKeep.length} kept, ${crawlSkip.length} skipped`
-                            : "Crawl failed"}
-                      </p>
-                      {crawlError && (
-                        <p className="mt-2 text-destructive">{crawlError}</p>
-                      )}
-                    </div>
-                  )}
-
-                  {(crawlKeep.length > 0 || crawlSkip.length > 0) && (
-                    <div className="grid gap-5 xl:grid-cols-2">
-                      <div className="space-y-3">
-                        <SectionLabel>Keep</SectionLabel>
-                        <div className="max-h-[420px] space-y-2 overflow-auto border border-[var(--line)] bg-[var(--paper-2)] p-3">
-                          {crawlKeep.map((page) => (
-                            <label
-                              key={page.url}
-                              className="flex gap-3 bg-[var(--card)] p-3 text-sm"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={selectedCrawlUrls.includes(page.url)}
-                                onChange={(e) => toggleCrawlUrl(page.url, e.target.checked)}
-                                disabled={Boolean(initialMigrationProject)}
-                              />
-                              <span className="min-w-0">
-                                <span className="block truncate font-semibold text-[var(--ink)]">
-                                  {page.title}
-                                </span>
-                                <span className="block truncate text-xs text-[var(--muted)]">
-                                  {page.url}
-                                </span>
-                              </span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        <SectionLabel>Skipped</SectionLabel>
-                        <div className="max-h-[420px] space-y-2 overflow-auto border border-[var(--line)] bg-[var(--paper-2)] p-3">
-                          {crawlSkip.map((page) => (
-                            <div
-                              key={page.url}
-                              className=" bg-[var(--card)] p-3 text-sm opacity-70"
-                            >
-                              <div className="flex items-start justify-between gap-3">
-                                <span className="min-w-0">
-                                  <span className="block truncate font-semibold text-[var(--ink)]">
-                                    {page.title}
-                                  </span>
-                                  <span className="block truncate text-xs text-[var(--muted)]">
-                                    {page.url}
-                                  </span>
-                                  {page.skipReason && (
-                                    <span className="mt-1 block text-xs text-[var(--muted)]">
-                                      {page.skipReason}
-                                    </span>
-                                  )}
-                                </span>
-                                {!initialMigrationProject && <button
-                                  type="button"
-                                  onClick={() => moveSkippedPageToKeep(page.url)}
-                                  className="shrink-0 text-xs font-semibold text-[var(--primary-deep)]"
-                                >
-                                  Move to keep
-                                </button>}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {crawlKeep.length > 0 && (
-                    <div className="flex flex-wrap items-center justify-between gap-3 border border-[var(--line)] bg-[var(--paper-2)] p-4">
-                      <div className="space-y-1">
-                        <p className="text-sm font-semibold text-[var(--ink)]">
-                          Selected pages stay inside this migration.
-                        </p>
-                        <p className="text-sm font-medium text-[var(--muted)]">
-                          Continuing saves the raw crawl and deterministic cleanup. Download is optional.
-                          {initialMigrationProject
-                            ? " Change page inclusion in the Content step."
-                            : ""}
-                        </p>
-                        {sourceSaved && sourceReport && (
-                          <p className="text-xs font-semibold text-[var(--good)]" role="status">
-                            Saved {migrationSourcePages.length} pages, including {sourceReport.corePages} core pages and {sourceReport.blogPosts} blog posts.
-                          </p>
-                        )}
-                      </div>
-                      {!initialMigrationProject && <Button
-                        type="button"
-                        variant="outline"
-                        onClick={exportCrawlMarkdown}
-                        disabled={exportingCrawl}
-                      >
-                        {exportingCrawl ? "Preparing backup" : "Download source backup"}
-                      </Button>}
-                    </div>
-                  )}
-                </div>
+                <Field label="Current website URL">
+                  <Input
+                    placeholder="https://example.com"
+                    value={crawlUrl}
+                    onChange={(event) => setCrawlUrl(event.target.value)}
+                  />
+                </Field>
               )}
             </div>
           )}
 
           {step === 1 && (
-            <div className="space-y-7">
-              <SectionLabel>Practice details</SectionLabel>
-              <Field label="Practice name">
-                <Input
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                    if (!initialClient) setSlug(slugify(e.target.value));
-                  }}
-                />
-              </Field>
-              <Field label="Slug" hint="Used as the saved client identifier.">
-                <Input value={slug} onChange={(e) => setSlug(slugify(e.target.value))} />
-              </Field>
-              <Field label="Address">
-                <Input value={address} onChange={(e) => setAddress(e.target.value)} />
-              </Field>
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="Phone">
-                  <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
-                </Field>
-                <Field label="Email">
-                  <Input value={email} onChange={(e) => setEmail(e.target.value)} />
-                </Field>
-              </div>
-              <Field label="Hours">
-                <Textarea value={hours} onChange={(e) => setHours(e.target.value)} rows={2} />
-              </Field>
-              <Field
-                label="Booking link"
-                hint="Used as the link for every booking button. Click-to-call buttons always use the practice phone number instead."
-              >
-                <Input
-                  placeholder="https://booking.example.com/practice"
-                  value={bookingLink}
-                  onChange={(e) => setBookingLink(e.target.value)}
-                />
-              </Field>
-              <p className="text-[12px] font-medium text-[var(--muted)]">
-                Doctor names, bios, and services come from the stored source content, so there is nothing to fill out for those here.
-              </p>
-              <SectionLabel>Production notes</SectionLabel>
-              <Field label="Social URLs" hint="One per line.">
-                <Textarea value={social} onChange={(e) => setSocial(e.target.value)} rows={3} />
-              </Field>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div className="space-y-6">
-              <SectionLabel>Color palette</SectionLabel>
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {(
-                  ["primary", "secondary", "accent", "text", "background"] as const
-                ).map((key) => (
-                  <ColorField
-                    key={key}
-                    label={key}
-                    value={colors[key]}
-                    onChange={(v) => setColors({ ...colors, [key]: v })}
-                  />
-                ))}
-              </div>
-              <SectionLabel>Typography</SectionLabel>
-              <div className="grid gap-4 md:grid-cols-2">
-                <FontSelect label="Heading font" value={fontHeading} onChange={setFontHeading} />
-                <FontSelect label="Body font" value={fontBody} onChange={setFontBody} />
-              </div>
-              <SectionLabel>Assets</SectionLabel>
-              <div className="grid gap-4 md:grid-cols-2">
-                <FileField
-                  label="Logo"
-                  hint="Required. PNG, JPG, or SVG. Max 2MB."
-                  accept=".png,.jpg,.jpeg,.svg"
-                  preview={logo?.previewUrl}
-                  onFile={handleLogo}
-                />
-                <FileField
-                  label="Favicon"
-                  hint="Required. PNG or ICO. Max 500KB."
-                  accept=".png,.ico"
-                  preview={favicon?.previewUrl}
-                  onFile={handleFavicon}
-                />
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div className="space-y-5">
-              <SectionLabel>WordPress destination</SectionLabel>
-              <Field label="WordPress site URL">
-                <Input
-                  placeholder="https://client.example.com"
-                  value={siteUrl}
-                  onChange={(e) => setSiteUrl(e.target.value)}
-                />
-              </Field>
-              <Field label="WordPress username">
-                <Input value={username} onChange={(e) => setUsername(e.target.value)} />
-              </Field>
-              <Field
-                label="Application password"
-                hint={
-                  initialClient
-                    ? "Leave blank to reuse the stored, encrypted password."
-                    : "Stored encrypted (AES-256-GCM). Never sent to the browser again."
-                }
-              >
-                <Input
-                  type="password"
-                  value={appPassword}
-                  onChange={(e) => setAppPassword(e.target.value)}
-                  placeholder={initialClient ? "(unchanged)" : ""}
-                />
-              </Field>
-            </div>
-          )}
-
-          {step === 4 && (
             <PagePlanWorkspace
               items={pagePlanItems}
               layouts={initialLayouts}
@@ -1847,54 +1578,130 @@ export function BuildWizard({
               saveState={pagePlanSaveState}
               onChange={(items) => {
                 setPagePlanItems(items);
+                setContentMatches([]);
                 setPagePlanSaveState(migrationProjectId ? "saving" : "idle");
               }}
             />
           )}
 
-          {step === 5 && (
+          {step === 2 && (
+            <div className="space-y-6">
+              {siteKind === "existing" && !sourceSaved && (
+                <div className="border-2 border-[var(--color-black)] bg-white p-6">
+                  <h3 className="text-xl font-black tracking-[-0.03em]">Import the current website</h3>
+                  <p className="mt-2 max-w-2xl text-xs leading-5 text-[var(--color-muted)]">
+                    The builder will find useful pages, clean crawl noise, and match content to your Page Plan automatically.
+                  </p>
+                  <div className="mt-5 flex flex-wrap items-end gap-3">
+                    <div className="min-w-64 flex-1">
+                      <Field label="Current website URL">
+                        <Input value={crawlUrl} onChange={(event) => setCrawlUrl(event.target.value)} />
+                      </Field>
+                    </div>
+                    <Button onClick={startCrawl} disabled={crawlStatus === "scraping" || savingCrawl}>
+                      {crawlStatus === "scraping" || savingCrawl ? "Importing website" : "Start import"}
+                    </Button>
+                  </div>
+                  {(crawlStatus !== "idle" || savingCrawl) && (
+                    <div className="mt-5 border-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4" role="status">
+                      <p className="text-sm font-bold">
+                        {savingCrawl
+                          ? "Matching content to your Page Plan"
+                          : crawlStatus === "scraping"
+                            ? `Finding website pages (${crawlProgress.completed} of ${crawlProgress.total || "more"})`
+                            : crawlStatus === "failed"
+                              ? "Website import stopped"
+                              : "Cleaning crawl noise"}
+                      </p>
+                      {crawlError && <p className="mt-2 text-xs text-[var(--color-red)]">{crawlError}</p>}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {(siteKind === "new" || sourceSaved) && (
+                <>
+                  <ContentMatchWorkspace
+                    pages={pagePlanItems}
+                    matches={contentMatches}
+                    savingPageId={savingContentMatchId}
+                    onConfirm={confirmMatch}
+                    onRemovePage={(pagePlanItemId) => {
+                      const page = pagePlanItems.find((item) => item.id === pagePlanItemId);
+                      if (!page || !window.confirm(`Remove ${page.pageName} from this Page Plan?`)) return;
+                      setPagePlanItems((items) => items.filter((item) => item.id !== pagePlanItemId));
+                      setContentMatches((items) => items.filter((item) => item.pagePlanItemId !== pagePlanItemId));
+                      setPagePlanSaveState("saving");
+                    }}
+                  />
+                  {siteKind === "existing" && (
+                    <div className="flex justify-end">
+                      <Button variant="outline" onClick={startCrawl} disabled={crawlStatus === "scraping" || savingCrawl}>
+                        Re-import current website
+                      </Button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="space-y-7">
+              <SectionLabel>Practice details</SectionLabel>
+              <Field label="Address"><Input value={address} onChange={(event) => setAddress(event.target.value)} /></Field>
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="Phone"><Input value={phone} onChange={(event) => setPhone(event.target.value)} /></Field>
+                <Field label="Email"><Input value={email} onChange={(event) => setEmail(event.target.value)} /></Field>
+              </div>
+              <Field label="Hours"><Textarea value={hours} onChange={(event) => setHours(event.target.value)} rows={2} /></Field>
+              <Field label="Booking link"><Input value={bookingLink} onChange={(event) => setBookingLink(event.target.value)} /></Field>
+              <Field label="Social URLs" hint="One per line."><Textarea value={social} onChange={(event) => setSocial(event.target.value)} rows={3} /></Field>
+
+              <SectionLabel>Brand kit</SectionLabel>
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {(["primary", "secondary", "accent", "text", "background"] as const).map((key) => (
+                  <ColorField key={key} label={key} value={colors[key]} onChange={(value) => setColors({ ...colors, [key]: value })} />
+                ))}
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <FontSelect label="Heading font" value={fontHeading} onChange={setFontHeading} />
+                <FontSelect label="Body font" value={fontBody} onChange={setFontBody} />
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <FileField label="Logo" hint="Required. PNG, JPG, or SVG. Max 2MB." accept=".png,.jpg,.jpeg,.svg" preview={logo?.previewUrl} onFile={handleLogo} />
+                <FileField label="Favicon" hint="Required. PNG or ICO. Max 500KB." accept=".png,.ico" preview={favicon?.previewUrl} onFile={handleFavicon} />
+              </div>
+
+              <SectionLabel>WordPress destination</SectionLabel>
+              <Field label="WordPress site URL"><Input placeholder="https://client.example.com" value={siteUrl} onChange={(event) => setSiteUrl(event.target.value)} /></Field>
+              <Field label="WordPress username"><Input value={username} onChange={(event) => setUsername(event.target.value)} /></Field>
+              <Field
+                label="Application password"
+                hint={initialClient ? "Leave blank to reuse the stored, encrypted password." : "Stored encrypted and never returned to the browser."}
+              >
+                <Input type="password" value={appPassword} onChange={(event) => setAppPassword(event.target.value)} placeholder={initialClient ? "(unchanged)" : ""} />
+              </Field>
+            </div>
+          )}
+
+          {step === 4 && (
             <div className="space-y-4 text-sm">
-              <SectionLabel>Build summary</SectionLabel>
-              <Review
-                label="Source"
-                value={siteKind === "existing" ? "Existing website" : "New website"}
-                onEdit={() => setStep(0)}
-              />
-              <Review label="Site name" value={name} onEdit={() => setStep(1)} />
-              <Review label="Practice slug" value={slug} onEdit={() => setStep(1)} />
-              <Review label="WP site" value={siteUrl} onEdit={() => setStep(3)} />
-              <Review
-                label="Brand colors"
-                onEdit={() => setStep(2)}
-                value={
-                  <span className="flex gap-1">
-                    {Object.values(colors).map((c, i) => (
-                      <span
-                        key={i}
-                        className="inline-block h-4 w-4 rounded border"
-                        style={{ backgroundColor: c }}
-                        title={c}
-                      />
-                    ))}
-                  </span>
-                }
-              />
-              <Review label="Fonts" value={`${fontHeading} / ${fontBody}`} onEdit={() => setStep(2)} />
-              <Review label="Site logo" value={logo ? logo.filename : "none"} onEdit={() => setStep(2)} />
-              <Review label="Site favicon" value={favicon ? favicon.filename : "none"} onEdit={() => setStep(2)} />
+              <SectionLabel>Website build summary</SectionLabel>
+              <Review label="Project" value={name} onEdit={() => setStep(0)} />
+              <Review label="Source" value={siteKind === "existing" ? "Existing website imported" : "New website with empty drafts"} onEdit={() => setStep(2)} />
               <Review
                 label="Page Plan"
-                onEdit={() => setStep(4)}
-                value={
-                  <span className="flex flex-wrap gap-1">
-                    {pagePlanItems.map((page) => (
-                          <Badge key={page.id} variant="secondary">
-                            {page.pageName}
-                          </Badge>
-                      ))}
-                  </span>
-                }
+                onEdit={() => setStep(1)}
+                value={<span className="flex flex-wrap gap-1">{pagePlanItems.map((page) => <Badge key={page.id} variant="secondary">{page.pageName}</Badge>)}</span>}
               />
+              <Review
+                label="Content"
+                onEdit={() => setStep(2)}
+                value={`${contentMatches.filter((match) => match.status === "matched").length} matched, ${contentMatches.filter((match) => match.status === "empty").length} empty drafts`}
+              />
+              <Review label="WordPress site" value={siteUrl} onEdit={() => setStep(3)} />
+              <Review label="Fonts" value={`${fontHeading} / ${fontBody}`} onEdit={() => setStep(3)} />
             </div>
           )}
           </div>
@@ -1911,11 +1718,11 @@ export function BuildWizard({
             {step < STEPS.length - 1 ? (
               <Button
                 onClick={() => void next()}
-                disabled={savingCrawl || (step === 4 && pagePlanSaveState === "saving")}
+                disabled={savingCrawl || (step === 1 && pagePlanSaveState === "saving")}
               >
                 {savingCrawl
-                  ? "Saving source"
-                  : step === 4 && pagePlanSaveState === "saving"
+                  ? "Importing website"
+                  : step === 1 && pagePlanSaveState === "saving"
                     ? "Saving Page Plan"
                     : "Next"}
                 <ArrowRight data-icon="inline-end" />

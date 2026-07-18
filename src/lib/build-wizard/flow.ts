@@ -1,10 +1,9 @@
 export const BUILD_WIZARD_STEPS = [
-  "Crawl",
-  "Practice Info",
-  "Brand Kit",
-  "WP Target",
+  "Project",
   "Plan Pages",
-  "Review",
+  "Import Content",
+  "Brand & Destination",
+  "Review & Build",
 ] as const;
 
 export type BuildWizardStep = (typeof BUILD_WIZARD_STEPS)[number];

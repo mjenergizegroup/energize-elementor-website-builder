@@ -2,12 +2,11 @@ import assert from "node:assert/strict";
 import { BUILD_WIZARD_STEPS } from "./flow";
 
 assert.deepEqual(BUILD_WIZARD_STEPS, [
-  "Crawl",
-  "Practice Info",
-  "Brand Kit",
-  "WP Target",
+  "Project",
   "Plan Pages",
-  "Review",
+  "Import Content",
+  "Brand & Destination",
+  "Review & Build",
 ]);
 assert.equal(BUILD_WIZARD_STEPS.includes("Theme" as never), false);
 

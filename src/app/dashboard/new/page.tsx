@@ -20,6 +20,7 @@ import {
 } from "@/lib/migration/projects";
 import { listReadyLayouts } from "@/lib/layouts/repository";
 import { listPagePlan } from "@/lib/page-plan/repository";
+import { listContentMatches } from "@/lib/content-matches/repository";
 
 export const dynamic = "force-dynamic";
 
@@ -74,6 +75,7 @@ export default async function NewBuildPage({
         resolutions: parseMigrationResolutions(project.resolutions),
         workspace: parseMigrationWizardWorkspace(project.wizardWorkspace),
         pagePlan: await listPagePlan(userId, project.id),
+        contentMatches: await listContentMatches(userId, project.id),
       };
     } catch {
       notFound();

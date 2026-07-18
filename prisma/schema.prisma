@@ -129,11 +129,31 @@ model PagePlanItem {
   status             String           @default("planned")
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
+  contentMatch       ContentMatch?
 
   @@unique([migrationProjectId, slug])
   @@index([migrationProjectId, position])
   @@index([layoutRevisionId])
   @@index([status])
+}
+
+model ContentMatch {
+  id                        String       @id @default(cuid())
+  pagePlanItemId            String       @unique
+  pagePlanItem              PagePlanItem @relation(fields: [pagePlanItemId], references: [id], onDelete: Cascade)
+  sourcePageId              String?
+  score                     Float        @default(0)
+  signals                   Json         @default("[]")
+  candidates                Json         @default("[]")
+  // matched | check | empty
+  status                    String
+  confirmedByUser           Boolean      @default(false)
+  normalizedContentRevision Int?
+  createdAt                 DateTime     @default(now())
+  updatedAt                 DateTime     @updatedAt
+
+  @@index([status])
+  @@index([sourcePageId])
 }
 
 model Build {

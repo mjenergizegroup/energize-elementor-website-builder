@@ -150,6 +150,30 @@ export async function getMigrationProject(userId: string, projectId: string) {
   return project;
 }
 
+export async function attachMigrationCrawlJob(
+  userId: string,
+  projectId: string,
+  crawlJobId: string,
+  sourceUrl: string,
+) {
+  const existing = await getMigrationProject(userId, projectId);
+  const project = await migrationProjects.update({
+    where: { id: existing.id },
+    data: {
+      crawlJobId,
+      sourceUrl,
+      status: "active",
+      stage: "source",
+      lastError: null,
+    },
+  });
+  await audit(userId, "migration.crawl.attach", existing.clientId, {
+    migrationProjectId: existing.id,
+    sourceUrl,
+  });
+  return project;
+}
+
 export async function ingestMigrationSource(
   userId: string,
   projectId: string,

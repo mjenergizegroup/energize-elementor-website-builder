@@ -9,6 +9,7 @@ import {
   saveMigrationSourceReview,
 } from "@/lib/migration/projects";
 import { sourceContentSummary } from "@/lib/migration/content/review";
+import { rebuildContentMatches } from "@/lib/content-matches/repository";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -120,7 +121,8 @@ export async function POST(
           parsed.data.selectedUrls,
         );
     const result = await ingestMigrationSource(userId, projectId, pages);
-    return Response.json(result);
+    const matches = await rebuildContentMatches(userId, projectId);
+    return Response.json({ ...result, matches });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Could not ingest source content.";
