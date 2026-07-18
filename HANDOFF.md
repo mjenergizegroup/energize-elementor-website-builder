@@ -30,16 +30,13 @@ supersede the old user-facing theme workflow described in parts of
 
 - Workspace: `/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder`
 - Branch: `main`
-- Application version: `4.2.0`
-- Current implementation: section-aware website content fitting and explicit
-  crawl status in the current local commit
-- Previous implementation commit: `e337d89 Add visual layout previews`
-- The working tree should be clean after the version 4.2.0 commit.
+- Application version: `4.3.0`
+- Current implementation: design-preserving V3 layout fitting for Elementor 4
+  hybrid documents, final content cleanup, and stable homepage draft slugs
+- Previous implementation commit: `4d83e5e Fit crawled content into selected layouts`
+- The working tree should be clean after the version 4.3.0 commit.
 - Stack: Next.js 15 App Router, TypeScript, Tailwind v4, base-ui shadcn/ui,
   Clerk, Prisma 6, Neon PostgreSQL, and server-only WordPress integrations.
-
-This handoff is documentation-only. Do not bump the application version for the
-handoff update.
 
 ## Product direction
 
@@ -77,7 +74,34 @@ Core product rules:
 
 ## Completed implementation
 
-All planned website milestones are complete through version `4.2.0`.
+All planned website milestones are complete through version `4.3.0`.
+
+### Version 4.3.0: preserve layout design while fitting content
+
+- Ready sanitized V3 Elementor layouts are filled in place instead of being
+  rebuilt as generic Atomic blocks.
+- Original containers, sections, columns, responsive settings, spacing,
+  typography, backgrounds, and other sanitized presentation settings remain in
+  the prepared document.
+- Elementor 4 hybrid documents may contain the preserved V3 layout plus native
+  Atomic overflow when true overflow is unavoidable.
+- Extra headings, body copy, lists, images, and calls to action stay inside the
+  corresponding existing layout region when capacity allows.
+- Global color bindings from recognized template roles become destination brand
+  color markers during sanitation and resolve during preparation.
+- Icon-box `title_text` and `description_text` fields are now semantic content
+  slots. Description fields are no longer mistaken for script fields.
+- A final cleanup pass removes repeated standalone CTA groups and trailing
+  cookie or accessibility chrome from older stored crawls.
+- The homepage uses `home` as its WordPress draft slug instead of passing an
+  empty slug that can collide with an existing published homepage.
+- WPCode Bridge v2.3.0 accepts only native Atomic elements and an explicit
+  allowlist of sanitized classic elements. The build stops before draft creation
+  when a target with preserved V3 layouts has an older bridge.
+- Sanitizer v1 artifacts are blocked because their discarded presentation data
+  cannot be reconstructed. Add the original JSON again and reselect the new
+  Ready layout in the Page Plan.
+- No database schema change was required.
 
 ### Version 4.2.0: section-aware content fitting
 
@@ -190,15 +214,15 @@ Prisma reported that the database was in sync and generated Prisma Client
 6.19.3. The layout, page-plan, content-match, prepared-draft, and build-plan
 tables are available.
 
-Versions 4.0.1 and 4.1.0 do not change the Prisma schema. Do not ask Mark to run
-`db:generate` or `db:push` for these two releases.
+Versions 4.0.1 through 4.3.0 do not change the Prisma schema. Do not ask Mark to
+run `db:push` for these releases.
 
 Never print or document database credentials. Reverify external state if a
 future schema change is introduced.
 
-## Verification completed for version 4.2.0
+## Verification completed for version 4.3.0
 
-The following passed locally for the content-fitting fix:
+The following passed locally for the design-preserving content-fitting fix:
 
 - Complete `npm test` suite
 - Layout sanitation, migration cleanup, content conversion, semantic fitting,
@@ -210,8 +234,13 @@ The following passed locally for the content-fitting fix:
 - Optimized `npm run build`
 - `git diff --check`
 - Prohibited em dash scan on changed files
-- Read-only, in-memory preparation against the saved J. Bradford Smith project:
-  all 10 planned pages Ready with no source-layout residue
+- Read-only exact-file preparation with the supplied Bristol templates and
+  Myrtle Grove cleaned markdown:
+  - About retained all 5 template sections and produced 295 classic Elementor
+    settings, with no top-level Atomic overflow, stale footer, or layout residue.
+  - General Dentistry retained all 8 template sections and produced 401 classic
+    Elementor settings, with no top-level Atomic overflow, stale footer, or
+    layout residue.
 
 Local browser QA reached the protected route but redirected to the separate
 Clerk development sign-in in both available browser sessions. No credentials
@@ -229,7 +258,7 @@ No database records were changed by that verification.
 ## What has not been done
 
 - Commits have not been pushed by Codex.
-- Version 4.1.0 has not been deployed by Codex.
+- Version 4.3.0 has not been deployed by Codex.
 - No external WordPress site was modified while building these milestones.
 - An authenticated local browser smoke test is still manual because the local
   Clerk development domain requires a separate sign-in session.
@@ -243,28 +272,30 @@ No database records were changed by that verification.
 
 ## Recommended next objective
 
-Push the existing local commits through Mark's normal GitHub workflow so Vercel
-builds the application, then perform an authenticated production smoke test.
-Codex must not push unless Mark explicitly asks.
+Install WPCode Bridge v2.3.0 on the intended staging WordPress destination while
+preserving its existing shared secret, then push the local commit through Mark's
+normal GitHub workflow so Vercel builds the application. Codex must not modify
+WordPress, push, or deploy unless Mark explicitly asks.
 
 Production smoke-test order:
 
-1. Open Template Library.
-2. Confirm the three layouts show friendly category-correct names.
-3. Drag and drop one or more Elementor JSON files and confirm the intake works.
-4. Click each template card and confirm the large preview opens, scrolls, and
-   closes with the close button, backdrop, and Escape key.
-5. Open J. Bradford Smith in the website builder.
-6. Confirm every Page Plan layout selector shows a friendly name.
-7. Use the preview button beside Home, About, Contact, and service-page layout
-   selections.
-8. Confirm one Service layout can be reused across all service pages.
-9. Import the current site and confirm routine content is matched automatically.
-10. Continue through Brand & Destination.
-11. Run Review & Build and confirm the no-write check passes before any draft
-    action becomes available.
-12. Do not create WordPress drafts unless Mark explicitly wants to test that
-    external write at that time.
+1. Add the original Home, About, Contact, and Service JSON files to Template
+   Library again, then select those new Ready layouts in the Page Plan.
+2. Replace the active WPCode bridge with v2.3.0 and preserve the existing shared
+   secret.
+3. Open J. Bradford Smith in the website builder.
+4. Confirm one Service layout can be reused across all service pages.
+5. Import the current site and confirm the crawl-complete summary and routine
+   automatic matches.
+6. Continue through Brand & Destination.
+7. Run Review & Build and confirm the no-write check passes before any draft
+   action becomes available.
+8. With Mark's explicit approval, create drafts on staging.
+9. Preview About and General Dentistry and confirm the supplied template design,
+   spacing, typography, and responsive layout remain intact.
+10. Confirm stale cookie/accessibility content and repeated CTA groups are absent.
+11. Confirm Home is created or recovered as the `home` draft without touching a
+    published homepage.
 
 If Mark reports a production issue, diagnose the exact failing screen and Vercel
 server log before changing code. Do not reintroduce the old content editor,
@@ -287,8 +318,10 @@ is the landing-page workflow. Keep it separate from website builder hardening.
 - `src/lib/layouts/preview.ts`: structural preview derivation
 - `src/lib/content-matches/`: deterministic source matching
 - `src/lib/prepared-drafts/`: semantic content-to-layout preparation
+- `src/lib/migration/content/inject-elementor-v3.ts`: preserved V3 layout fitting
 - `src/lib/website-builds/`: no-write check, build plan, draft progress, retry
 - `src/lib/wp/`: server-only WordPress integrations
+- `wordpress-plugin/energize-build-tool.php`: v2.3.0 hybrid-document bridge
 - `prisma/schema.prisma`: owned migration data model
 
 ## Repository and security rules

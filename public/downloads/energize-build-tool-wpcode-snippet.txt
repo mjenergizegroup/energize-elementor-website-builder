@@ -1,7 +1,7 @@
 /**
  * Plugin Name: Energize Website Builder
- * Description: WPCode-compatible REST bridge used by the Energize Website Builder to create Elementor V4 Atomic pages and manage site assets.
- * Version: 2.2.0
+ * Description: WPCode-compatible REST bridge used by the Energize Website Builder to create Elementor 4 hybrid pages and manage site assets.
+ * Version: 2.3.0
  * Author: Energize Group
  *
  * WPCode setup: create a PHP snippet, paste this file, choose Run Everywhere,
@@ -23,7 +23,7 @@ if (!defined('ENERGIZE_BUILD_SECRET')) {
 }
 
 if (!defined('ENERGIZE_BUILD_TOOL_VERSION')) {
-    define('ENERGIZE_BUILD_TOOL_VERSION', '2.2.0');
+    define('ENERGIZE_BUILD_TOOL_VERSION', '2.3.0');
 }
 
 if (!defined('ENERGIZE_BUILD_TABLE_VERSION')) {
@@ -190,7 +190,7 @@ function energize_build_create_page(WP_REST_Request $request) {
     if (!defined('ELEMENTOR_VERSION') || version_compare(ELEMENTOR_VERSION, '4.1.1', '<')) {
         return new WP_Error(
             'energize_elementor_v4_required',
-            'Elementor 4.1.1 or newer is required for Energize Atomic pages.',
+            'Elementor 4.1.1 or newer is required for Energize pages.',
             array('status' => 409)
         );
     }
@@ -237,13 +237,14 @@ function energize_build_create_page(WP_REST_Request $request) {
 }
 
 /**
- * Validate that layout and content are Atomic. The only classic widgets allowed
- * are isolated embeds for forms, reviews, maps, and shortcodes.
+ * Validate Atomic content and the sanitized classic elements that Elementor 4
+ * supports in hybrid documents.
  */
 function energize_build_validate_atomic_data(array $elements) {
-    $atomic_count = 0;
-    $legacy_exceptions = array('html', 'shortcode', 'google_maps');
-    $walk = function (array $nodes) use (&$walk, &$atomic_count, $legacy_exceptions) {
+    $supported_count = 0;
+    $classic_layouts = array('section', 'column', 'container');
+    $classic_widgets = array('button', 'google_maps', 'heading', 'html', 'icon', 'icon-box', 'icon-list', 'image', 'shortcode', 'text-editor');
+    $walk = function (array $nodes) use (&$walk, &$supported_count, $classic_layouts, $classic_widgets) {
         foreach ($nodes as $node) {
             if (!is_array($node)) {
                 return new WP_Error('energize_bad_input', 'Every Elementor element must be an object.', array('status' => 400));
@@ -252,18 +253,17 @@ function energize_build_validate_atomic_data(array $elements) {
             $widget_type = isset($node['widgetType']) ? (string) $node['widgetType'] : '';
             $is_atomic_layout = in_array($element_type, array('e-flexbox', 'e-div-block', 'e-grid'), true);
             $is_atomic_widget = $element_type === 'widget' && strpos($widget_type, 'e-') === 0;
-            $is_legacy_exception = $element_type === 'widget' && in_array($widget_type, $legacy_exceptions, true);
+            $is_classic_layout = in_array($element_type, $classic_layouts, true);
+            $is_classic_widget = $element_type === 'widget' && in_array($widget_type, $classic_widgets, true);
 
-            if (!$is_atomic_layout && !$is_atomic_widget && !$is_legacy_exception) {
+            if (!$is_atomic_layout && !$is_atomic_widget && !$is_classic_layout && !$is_classic_widget) {
                 return new WP_Error(
-                    'energize_non_atomic_element',
-                    'Non-Atomic element rejected: ' . sanitize_text_field($element_type . '/' . $widget_type),
+                    'energize_unsupported_element',
+                    'Unsupported Elementor element rejected: ' . sanitize_text_field($element_type . '/' . $widget_type),
                     array('status' => 400)
                 );
             }
-            if ($is_atomic_layout || $is_atomic_widget) {
-                $atomic_count++;
-            }
+            $supported_count++;
             if (isset($node['elements']) && is_array($node['elements'])) {
                 $result = $walk($node['elements']);
                 if (is_wp_error($result)) {
@@ -278,8 +278,8 @@ function energize_build_validate_atomic_data(array $elements) {
     if (is_wp_error($result)) {
         return $result;
     }
-    if ($atomic_count === 0) {
-        return new WP_Error('energize_atomic_required', 'At least one Atomic element is required.', array('status' => 400));
+    if ($supported_count === 0) {
+        return new WP_Error('energize_elements_required', 'At least one supported Elementor element is required.', array('status' => 400));
     }
     return true;
 }

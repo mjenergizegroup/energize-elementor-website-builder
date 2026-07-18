@@ -28,16 +28,18 @@ of pages, and removes raw content review and dependency resolution from the
 daily builder experience. Landing-page workflow changes and content rewriting
 are outside its current scope.
 
-All five website milestones are implemented through version 4.0.0. The builder
+All five website milestones are implemented through version 4.3.0. The builder
 has a reusable Template Library, revisioned sanitized layout artifacts, semantic
 slots, residue scanning, and a persistent Page Plan with individual and bulk
 page creation. The crawl follows the plan and stores deterministic automatic
 content matches, with only ambiguous choices exposed. Matched content is fitted
-into sanitized layouts, extra content enters a standard section, internal links
-use Page Plan destinations, reviewed media is mapped, and residue checks gate
-revisioned prepared drafts. Review & Build now performs an automatic no-write
-check, pins immutable build inputs, requires an explicit final action, preserves
-successful drafts during partial failure, and retries only failed pages.
+into sanitized layouts, internal links use Page Plan destinations, reviewed
+media is mapped, and residue checks gate revisioned prepared drafts. Sanitized
+V3 layouts retain their original Elementor structure and presentation settings
+inside Elementor 4 hybrid documents. Extra content remains with the matching
+layout region. Review & Build performs an automatic no-write check, pins
+immutable build inputs, requires an explicit final action, preserves successful
+drafts during partial failure, and retries only failed pages.
 
 ## Users and access
 
@@ -98,10 +100,12 @@ Media migration preserves original source URLs, removes known resize parameters,
 requires reviewed alt text, generates readable filenames, and stores destination
 IDs so retries do not duplicate uploads.
 
-Template conversion uses an additive adapter registry. The current adapter maps
-classic sections, columns, containers, headings, rich text, buttons, images, and
-approved embed exceptions into Atomic structures. Unsupported regions remain
-explicit review items.
+Template preparation uses an additive adapter registry. Ready sanitized V3
+layouts are filled in place so their sections, columns, containers, responsive
+settings, spacing, typography, and other design settings remain intact in
+Elementor 4. Native Atomic layouts continue through the Atomic adapter. Only
+true content overflow may use a standard Atomic section. Unsupported regions
+remain explicit review items.
 
 ## WordPress behavior
 
@@ -113,11 +117,13 @@ explicit review items.
 - Every real page deployment creates standard build-history and audit records.
 - WordPress credentials and the bridge secret remain server-only.
 
-Normal page drafts use the existing `/wp-json/energize/v1/page` bridge. The
-bridge validates Atomic content, writes Elementor metadata, and returns admin
-and preview links. The existing new-site workflow also verifies the Atomic
-Foundation, applies brand variables and assets, updates site identity, and
-flushes Elementor CSS.
+Normal page drafts use the existing `/wp-json/energize/v1/page` bridge. Bridge
+v2.3.0 validates native Atomic elements and an explicit allowlist of sanitized
+classic elements used in Elementor 4 hybrid documents, writes Elementor
+metadata, and returns admin and preview links. Unsupported elements are rejected
+before WordPress creates a draft. The existing new-site workflow also verifies
+the Atomic Foundation, applies brand variables and assets, updates site
+identity, and flushes Elementor CSS.
 
 Elementor Theme Builder templates are analyzed and represented in dependency
 state, but automated display-condition deployment is intentionally blocked.
