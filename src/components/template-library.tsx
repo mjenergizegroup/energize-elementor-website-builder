@@ -19,6 +19,12 @@ import {
   type LayoutCategory,
   type LayoutLibraryItem,
 } from "@/lib/layouts/types";
+import {
+  generatedLayoutNumber,
+  inferLayoutCategory,
+  layoutCategoryLabel as categoryLabel,
+  layoutDisplayName,
+} from "@/lib/layouts/naming";
 
 type Filter = "all" | LayoutCategory;
 
@@ -30,12 +36,8 @@ interface PendingLayout {
   error?: string;
 }
 
-function categoryLabel(category: LayoutCategory) {
-  return LAYOUT_CATEGORIES.find((item) => item.value === category)?.label ?? category;
-}
-
 function nextFriendlyName(category: LayoutCategory, index: number) {
-  return `${categoryLabel(category)} Layout ${index + 1}`;
+  return `${categoryLabel(category)} Layout ${index}`;
 }
 
 export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibraryItem[] }) {
@@ -46,32 +48,96 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
   const [adding, setAdding] = useState(false);
   const [pending, setPending] = useState<PendingLayout[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const visibleLayouts = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return layouts.filter((layout) => {
       if (filter !== "all" && layout.category !== filter) return false;
-      return !needle || layout.friendlyName.toLowerCase().includes(needle);
+      return !needle || layoutDisplayName(layout).toLowerCase().includes(needle);
     });
   }, [filter, layouts, query]);
   const selected = layouts.find((layout) => layout.id === selectedId) ?? visibleLayouts[0];
 
-  function chooseFiles(files: FileList | null) {
+  function chooseFiles(files: FileList | File[] | null) {
     if (!files) return;
-    const additions = Array.from(files).slice(0, 20).map((file, index) => ({
-      id: `${file.name}-${file.lastModified}-${crypto.randomUUID()}`,
-      file,
-      friendlyName: nextFriendlyName("flexible", pending.length + index),
-      category: "flexible" as LayoutCategory,
-    }));
-    setPending((current) => [...current, ...additions].slice(0, 20));
+    const incoming = Array.from(files);
+    const valid = incoming.filter(
+      (file) =>
+        file.name.toLowerCase().endsWith(".json") &&
+        file.size > 0 &&
+        file.size <= 2 * 1024 * 1024,
+    );
+    const rejected = incoming.length - valid.length;
+    if (rejected > 0) {
+      toast.error(
+        `${rejected} file${rejected === 1 ? " was" : "s were"} skipped. Use JSON files smaller than 2 MB.`,
+      );
+    }
+    if (valid.length > Math.max(0, 20 - pending.length)) {
+      toast.warning("Only the first 20 layout files can be added at once.");
+    }
+    setPending((current) => {
+      const existingFiles = new Set(
+        current.map(
+          (item) => `${item.file.name}:${item.file.size}:${item.file.lastModified}`,
+        ),
+      );
+      const rows = [...current];
+      const nextNumber = new Map<LayoutCategory, number>();
+      for (const category of LAYOUT_CATEGORIES.map((item) => item.value)) {
+        const numbers = [
+          ...layouts
+            .filter((layout) => layout.category === category)
+            .map((layout) => generatedLayoutNumber(layout.friendlyName)),
+          ...current
+            .filter((item) => item.category === category)
+            .map((item) => generatedLayoutNumber(item.friendlyName)),
+        ].filter((value): value is number => typeof value === "number");
+        nextNumber.set(category, Math.max(0, ...numbers) + 1);
+      }
+      for (const file of valid) {
+        if (rows.length >= 20) break;
+        const fileKey = `${file.name}:${file.size}:${file.lastModified}`;
+        if (existingFiles.has(fileKey)) continue;
+        existingFiles.add(fileKey);
+        const category = inferLayoutCategory(file.name);
+        const number = nextNumber.get(category) ?? 1;
+        nextNumber.set(category, number + 1);
+        rows.push({
+          id: `${file.name}-${file.lastModified}-${crypto.randomUUID()}`,
+          file,
+          friendlyName: nextFriendlyName(category, number),
+          category,
+        });
+      }
+      return rows;
+    });
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   function updatePending(id: string, patch: Partial<PendingLayout>) {
     setPending((current) =>
       current.map((item) => (item.id === id ? { ...item, ...patch, error: undefined } : item)),
+    );
+  }
+
+  function changePendingCategory(id: string, category: LayoutCategory) {
+    setPending((current) =>
+      current.map((item) => {
+        if (item.id !== id) return item;
+        const number = generatedLayoutNumber(item.friendlyName);
+        return {
+          ...item,
+          category,
+          friendlyName:
+            number === undefined
+              ? item.friendlyName
+              : nextFriendlyName(category, number),
+          error: undefined,
+        };
+      }),
     );
   }
 
@@ -158,19 +224,47 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
             />
           </div>
 
-          {pending.length === 0 ? (
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="flex min-h-44 w-full flex-col items-center justify-center gap-3 p-8 text-center hover:bg-[var(--color-panel)]"
-            >
-              <span className="flex size-12 items-center justify-center bg-[var(--color-black)] text-white">
-                <FileJson className="size-5" />
-              </span>
-              <span className="text-sm font-bold">Choose Elementor JSON layouts</span>
-              <span className="text-xs text-[var(--color-muted)]">Up to 20 files, 2 MB each</span>
-            </button>
-          ) : (
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            onDragEnter={(event) => {
+              event.preventDefault();
+              setDragging(true);
+            }}
+            onDragOver={(event) => {
+              event.preventDefault();
+              event.dataTransfer.dropEffect = "copy";
+              setDragging(true);
+            }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={(event) => {
+              event.preventDefault();
+              setDragging(false);
+              chooseFiles(event.dataTransfer.files);
+            }}
+            data-dragging={dragging}
+            className={`flex w-full flex-col items-center justify-center gap-3 border-b-2 border-[var(--color-black)] p-6 text-center transition-colors ${
+              pending.length === 0 ? "min-h-44" : "min-h-28"
+            } ${
+              dragging
+                ? "bg-[var(--color-red-light)] outline-4 outline-inset outline-[var(--color-red)]"
+                : "bg-white hover:bg-[var(--color-panel)]"
+            }`}
+          >
+            <span className="flex size-12 items-center justify-center bg-[var(--color-black)] text-white">
+              <FileJson className="size-5" />
+            </span>
+            <span className="text-sm font-bold">
+              {dragging
+                ? "Drop JSON layouts to add them"
+                : "Drag and drop Elementor JSON layouts here"}
+            </span>
+            <span className="text-xs text-[var(--color-muted)]">
+              Or click to choose files. Up to 20 files, 2 MB each.
+            </span>
+          </button>
+
+          {pending.length > 0 && (
             <div>
               <div className="hidden grid-cols-[minmax(0,1fr)_220px_48px] gap-4 border-b border-[var(--color-black)] bg-[var(--color-black)] px-5 py-3 text-[9px] font-bold uppercase tracking-[0.12em] text-white md:grid">
                 <span>Friendly layout name</span>
@@ -196,11 +290,11 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
                   <Select
                     value={item.category}
                     onValueChange={(value) =>
-                      updatePending(item.id, { category: value as LayoutCategory })
+                      changePendingCategory(item.id, value as LayoutCategory)
                     }
                   >
                     <SelectTrigger aria-label={`Category for ${item.friendlyName}`}>
-                      <SelectValue />
+                      <SelectValue>{categoryLabel(item.category)}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       {LAYOUT_CATEGORIES.map((category) => (
@@ -288,7 +382,7 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
                     >
                       <LayoutThumbnail data={layout.thumbnail} className="aspect-[1.28/1]" />
                       <h3 className="mt-3 truncate text-base font-black tracking-[-0.02em]">
-                        {layout.friendlyName}
+                        {layoutDisplayName(layout)}
                       </h3>
                       <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">
                         {categoryLabel(layout.category)}
@@ -316,7 +410,9 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
                   <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-red)]">
                     {categoryLabel(selected.category)} layout
                   </p>
-                  <h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">{selected.friendlyName}</h2>
+                  <h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">
+                    {layoutDisplayName(selected)}
+                  </h2>
                   <LayoutThumbnail data={selected.thumbnail} className="mt-5 aspect-[1.28/1]" />
                   <p className="mt-4 border-b border-[var(--color-black)] pb-4 text-sm leading-6 text-[var(--color-muted)]">
                     {selected.structuralSummary}

@@ -65,7 +65,7 @@ Migration project state and its authenticated API are documented in
 
 ## Current site migration flow
 
-Version 4.0.0 uses the complete five-step layout-first workflow. The Page Plan is created
+Version 4.0.1 uses the complete five-step layout-first workflow. The Page Plan is created
 before the current website is imported, and deterministic matching shows only
 Matched, Check match, or No source content. Matched content is then fitted into
 semantic layout slots with safe overflow, rebuilt internal links, reviewed
@@ -137,6 +137,11 @@ The test suite uses synthetic inputs and mocked WordPress gateways. It does not
 download external media or modify a WordPress site.
 
 ### Release verification
+
+Version 4.0.1 corrects generated layout names from their assigned category,
+shows those friendly names in Page Plan selectors, and adds persistent drag and
+drop JSON intake to the Template Library. New filenames are used only to suggest
+an initial layout category. This patch does not change the database schema.
 
 Version 4.0.0 completes the Page Plan workflow. Revisioned `PreparedDraft`
 records replace source titles with Page Plan values, internal links are rebuilt

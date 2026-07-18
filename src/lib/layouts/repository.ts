@@ -9,6 +9,7 @@ import type {
   LayoutLibraryItem,
   LayoutThumbnail,
 } from "./types";
+import { layoutDisplayName } from "./naming";
 
 export const LAYOUT_ANALYZER_VERSION = "1";
 
@@ -51,7 +52,10 @@ function serializeLayout(layout: {
 }): LayoutLibraryItem {
   return {
     id: layout.id,
-    friendlyName: layout.friendlyName,
+    friendlyName: layoutDisplayName({
+      friendlyName: layout.friendlyName,
+      category: layout.category as LayoutCategory,
+    }),
     category: layout.category as LayoutCategory,
     status: layout.status as LayoutLibraryItem["status"],
     activeRevisionId: layout.activeRevisionId,

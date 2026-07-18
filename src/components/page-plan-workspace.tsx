@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { LayoutLibraryItem } from "@/lib/layouts/types";
+import { layoutCategoryLabel } from "@/lib/layouts/naming";
 import {
   normalizePageSlug,
   pagePath,
@@ -439,17 +440,27 @@ function LayoutSelect({
   label: string;
   compact?: boolean;
 }) {
+  const selectedLayout = layouts.find(
+    (layout) => (layout.activeRevisionId ?? layout.id) === value,
+  );
   return (
     <label className={`${compact ? "space-y-1 text-[9px] lg:space-y-0 lg:text-[0px]" : "space-y-2 text-[10px]"} font-bold uppercase tracking-[0.1em]`}>
       {label}
       <Select value={value} onValueChange={(next) => onChange(next ?? "")}>
         <SelectTrigger aria-label={label}>
-          <SelectValue placeholder="Choose layout" />
+          <SelectValue placeholder="Choose layout">
+            {selectedLayout?.friendlyName}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           {layouts.map((layout) => (
             <SelectItem key={layout.id} value={layout.activeRevisionId ?? layout.id}>
-              {layout.friendlyName}
+              <span className="flex min-w-0 items-center gap-2">
+                <span className="truncate">{layout.friendlyName}</span>
+                <span className="text-[9px] font-bold uppercase tracking-[0.08em] text-[var(--color-muted)]">
+                  {layoutCategoryLabel(layout.category)}
+                </span>
+              </span>
             </SelectItem>
           ))}
         </SelectContent>
