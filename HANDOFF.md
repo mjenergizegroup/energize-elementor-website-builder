@@ -30,11 +30,11 @@ supersede the old user-facing theme workflow described in parts of
 
 - Workspace: `/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder`
 - Branch: `codex/frontend-reskin`
-- Application version: `4.4.1`
-- Current implementation: complete frontend reskin with a persistent sidebar
-  and borderless light dashboard design system, while preserving the version
-  4.3 migration behavior
-- Current version commit: `Add sidebar and borderless interface` on the local
+- Application version: `4.4.2`
+- Current implementation: complete frontend reskin with a persistent sidebar,
+  official Energize branding, reusable side drawers, and a borderless light
+  dashboard design system, while preserving the version 4.3 migration behavior
+- Current version work: `Add branded side drawers` on the local
   `codex/frontend-reskin` branch
 - Base reskin commit: `54a1d9d Reskin frontend with light dashboard system`,
   pushed to `origin/codex/frontend-reskin`
@@ -54,6 +54,8 @@ supersede the old user-facing theme workflow described in parts of
 - Git uses the GitHub CLI credential helper backed by the macOS Keychain.
 - Pull request #2 is merged. Do not recreate or remerge it.
 - The pull request Vercel preview checks passed before merge.
+- Version 4.4.1 is pushed to `origin/codex/frontend-reskin`. Version 4.4.2 is
+  currently local only.
 - A production Vercel deployment triggered from the merged `main` branch was
   not explicitly verified in this chat.
 - The historical branch `agent/preserve-elementor-layout-design` may still
@@ -98,7 +100,21 @@ Core product rules:
 
 ## Completed implementation
 
-All planned website milestones are complete through version `4.4.1`.
+All planned website milestones are complete through version `4.4.2`.
+
+### Version 4.4.2: branded side drawers
+
+- Added one reusable Base UI side-drawer primitive with focus trapping,
+  backdrop and Escape dismissal, responsive sizing, and reduced-motion support.
+- Moved New Build selection and Template Library JSON intake into right-side
+  drawers without changing their routes, validation, or upload behavior.
+- Moved the Page Plan add-page and add-services flows into the same drawer
+  pattern while retaining the centered layout preview for wide visual content.
+- Replaced the temporary E tile with the official supplied Energize Group logo
+  in the application shell, public landing page, sign-in page, and sign-up page.
+- Preserved the borderless product language and all existing keyboard focus
+  states.
+- No database schema change was required.
 
 ### Version 4.4.1: sidebar and borderless product surfaces
 
@@ -268,11 +284,26 @@ Prisma reported that the database was in sync and generated Prisma Client
 6.19.3. The layout, page-plan, content-match, prepared-draft, and build-plan
 tables are available.
 
-Versions 4.0.1 through 4.4.1 do not change the Prisma schema. Do not ask Mark to
+Versions 4.0.1 through 4.4.2 do not change the Prisma schema. Do not ask Mark to
 run `db:push` for these releases.
 
 Never print or document database credentials. Reverify external state if a
 future schema change is introduced.
+
+## Verification completed for version 4.4.2
+
+The following passed locally for the branded side-drawer follow-up:
+
+- `npm run typecheck`
+- `npm run lint`
+- Optimized `npm run build`
+- Complete `npm test` suite
+- `git diff --check`
+- Prohibited em dash and en dash scan on every changed file
+
+The protected drawer flows compiled successfully. Authenticated browser review
+remains manual because the Clerk development account domain is not available to
+the automated browser session.
 
 ## Verification completed for version 4.4.1
 
@@ -353,7 +384,9 @@ No database records were changed by that verification.
   been explicitly verified.
 - Version 4.4.0 is pushed to the `codex/frontend-reskin` preview branch but has
   not been merged into `main` or promoted to a production deployment.
-- Version 4.4.1 has not been pushed, merged, or deployed. Its commit exists only
+- Version 4.4.1 is pushed to the `codex/frontend-reskin` preview branch but has
+  not been merged into `main` or promoted to a production deployment.
+- Version 4.4.2 has not been pushed, merged, or deployed. Its work exists only
   on the local `codex/frontend-reskin` branch.
 - No external WordPress site was modified while building these milestones.
 - An authenticated local browser smoke test is still manual because the local
@@ -368,12 +401,13 @@ No database records were changed by that verification.
 
 ## Recommended next objective
 
-Version 4.3.0 is already pushed and merged into GitHub's `main`. Version 4.4.0 is
-available on the `codex/frontend-reskin` preview branch. Version 4.4.1 adds the
-sidebar and borderless product language locally on that same branch. The next
-step is an authenticated visual review of the dashboard and both build workflows
-at desktop and mobile widths. If Mark approves the local result, request separate
-authorization before pushing, opening a pull request, merging, or deploying.
+Version 4.3.0 is already pushed and merged into GitHub's `main`. Versions 4.4.0
+and 4.4.1 are available on the `codex/frontend-reskin` preview branch. Version
+4.4.2 adds official branding and side drawers locally on that same branch. The
+next step is an authenticated visual review of the dashboard and both build
+workflows at desktop and mobile widths. If Mark approves the local result,
+request separate authorization before pushing, opening a pull request, merging,
+or deploying.
 Codex must not modify WordPress, deploy, publish, or make a GitHub state change
 unless Mark explicitly asks.
 

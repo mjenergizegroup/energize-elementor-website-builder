@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
@@ -38,11 +39,14 @@ export function AppShell({
         <aside className="sidebar">
           <div className="sidebar-main">
             <Link href="/dashboard" className="sidebar-brand">
-              <span className="brand-mark">E</span>
-              <span className="brand-copy">
-                <span className="brand-name">Energize</span>
-                <span className="brand-product">Website Builder</span>
-              </span>
+              <Image
+                src="/brand/energize-logo.png"
+                alt="Energize Group"
+                width={180}
+                height={81}
+                priority
+                className="sidebar-logo"
+              />
             </Link>
 
             <nav className="sidebar-nav" aria-label="Primary navigation">

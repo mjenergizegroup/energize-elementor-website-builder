@@ -1,6 +1,6 @@
 {
   "name": "energize-build-tool",
-  "version": "4.4.1",
+  "version": "4.4.2",
   "private": true,
   "scripts": {
     "test": "npm run test:parser && npm run test:deploy-schema && npm run test:build-wizard && npm run test:accessibility && npm run test:migration-cleanup && npm run test:migration-source-review && npm run test:migration-content-approval && npm run test:migration-workspace && npm run test:migration-media && npm run test:migration-content && npm run test:migration-dependencies && npm run test:migration-blogs && npm run test:migration-deploy && npm run test:template-import && npm run test:template-compile && npm run test:layout-sanitize && npm run test:layout-naming && npm run test:layout-preview && npm run test:page-plan && npm run test:content-matches && npm run test:prepared-drafts && npm run test:website-build && npm run test:upload-security && npm run test:wp-client && npm run verify:migration-security && npm run verify:atomic && npm run verify:bridge && npm run verify:injection",

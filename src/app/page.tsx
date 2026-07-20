@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { auth } from "@clerk/nextjs/server";
 import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
@@ -11,7 +12,14 @@ export default async function Home() {
       <section className="auth-card mx-auto grid w-full max-w-[760px] md:grid-cols-[220px_minmax(0,1fr)]">
         <div className="flex flex-col justify-between bg-[var(--color-primary-tint)] p-7 text-[var(--color-text-primary)]">
           <div>
-            <div className="brand-mark mb-5">E</div>
+            <Image
+              src="/brand/energize-logo.png"
+              alt="Energize Group"
+              width={180}
+              height={81}
+              priority
+              className="mb-6 h-auto w-36"
+            />
             <div className="text-xs font-semibold uppercase leading-none tracking-[0.04em] text-[var(--color-text-faint)]">
               Internal tool
             </div>

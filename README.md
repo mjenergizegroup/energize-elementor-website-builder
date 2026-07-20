@@ -66,7 +66,7 @@ Migration project state and its authenticated API are documented in
 
 ## Current site migration flow
 
-Version 4.4.1 keeps the complete five-step layout-first workflow. The Page Plan
+Version 4.4.2 keeps the complete five-step layout-first workflow. The Page Plan
 is created before the current website is imported, and deterministic matching
 shows only Matched, Check match, or No source content. Matched content is fitted
 into the selected JSON layout section by section. Sanitized V3 Elementor layouts
@@ -148,6 +148,15 @@ The test suite uses synthetic inputs and mocked WordPress gateways. It does not
 download external media or modify a WordPress site.
 
 ### Release verification
+
+Version 4.4.2 adds a reusable right-side drawer for focused creation tasks.
+New Build selection, Template Library uploads, and the Page Plan add-page and
+add-services flows now open beside the current workspace with focus trapping,
+Escape and backdrop dismissal, responsive sizing, and reduced-motion support.
+Wide visual previews remain centered. The official Energize Group logo replaces
+the temporary E tile across the application shell and authentication surfaces.
+This release does not change routes, data, authentication behavior, the database
+schema, WordPress output, or deployment behavior.
 
 Version 4.4.1 replaces the horizontal application navigation with a persistent
 desktop sidebar and a compact responsive navigation bar on smaller screens.

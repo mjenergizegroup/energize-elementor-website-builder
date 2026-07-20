@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { LayoutThumbnail } from "@/components/layout-thumbnail";
 import { LayoutPreviewDialog } from "@/components/layout-preview-dialog";
+import { SideDrawer } from "@/components/ui/side-drawer";
 import {
   LAYOUT_CATEGORIES,
   type LayoutCategory,
@@ -204,21 +205,25 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
           <h1 className="page-title">Template Library</h1>
           <p className="page-copy">Choose safe, reusable layouts for website builds.</p>
         </div>
-        <Button size="lg" onClick={() => setAdding((value) => !value)} aria-expanded={adding}>
-          {adding ? <X data-icon="inline-start" /> : <Plus data-icon="inline-start" />}
-          {adding ? "Close" : "Add layout"}
+        <Button size="lg" onClick={() => setAdding(true)} aria-haspopup="dialog">
+          <Plus data-icon="inline-start" />
+          Add layout
         </Button>
       </section>
 
-      {adding && (
-        <section className="mb-6 overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--color-border-default)] bg-[var(--color-surface)] p-5">
-            <div>
-              <h2 className="text-xl font-semibold tracking-[-0.02em]">Add safe layouts</h2>
-              <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
-                Name each layout for the team. The source file is checked and cleaned before use.
-              </p>
-            </div>
+      <SideDrawer
+        open={adding}
+        onOpenChange={setAdding}
+        eyebrow="Template Library"
+        title="Add safe layouts"
+        description="Name each layout for the team. The source file is checked and cleaned before use."
+        size="wide"
+        preventClose={uploading}
+      >
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg bg-[var(--color-surface)] p-4">
+            <p className="max-w-sm text-xs leading-5 text-[var(--color-text-secondary)]">
+              Upload Elementor JSON files. You can review the names and categories before preparing them.
+            </p>
             <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
               <Upload data-icon="inline-start" /> Choose JSON files
             </Button>
@@ -251,7 +256,7 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
               chooseFiles(event.dataTransfer.files);
             }}
             data-dragging={dragging}
-            className={`flex w-full flex-col items-center justify-center gap-3 border-b border-[var(--color-border-default)] p-6 text-center transition-colors ${
+            className={`mt-4 flex w-full flex-col items-center justify-center gap-3 rounded-lg p-6 text-center shadow-xs transition-colors ${
               pending.length === 0 ? "min-h-44" : "min-h-28"
             } ${
               dragging
@@ -274,7 +279,7 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
 
           {pending.length > 0 && (
             <div>
-              <div className="hidden grid-cols-[minmax(0,1fr)_220px_48px] gap-4 border-b border-[var(--color-border-default)] bg-[var(--color-surface)] px-5 py-3 text-xs font-semibold text-[var(--color-text-faint)] md:grid">
+              <div className="mt-5 hidden grid-cols-[minmax(0,1fr)_180px_48px] gap-3 rounded-md bg-[var(--color-surface)] px-4 py-3 text-xs font-semibold text-[var(--color-text-faint)] md:grid">
                 <span>Friendly layout name</span>
                 <span>Category</span>
                 <span />
@@ -282,7 +287,7 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
               {pending.map((item) => (
                 <div
                   key={item.id}
-                  className="grid gap-3 border-b border-[var(--color-border-default)] p-5 md:grid-cols-[minmax(0,1fr)_220px_48px] md:items-start"
+                  className="mt-3 grid gap-3 rounded-lg bg-[var(--color-surface-raised)] p-4 shadow-xs md:grid-cols-[minmax(0,1fr)_180px_48px] md:items-start"
                 >
                   <div>
                     <Input
@@ -322,7 +327,7 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
                   </Button>
                 </div>
               ))}
-              <div className="flex flex-wrap items-center justify-between gap-3 p-5">
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                 <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
                   <Plus data-icon="inline-start" /> Add more files
                 </Button>
@@ -332,8 +337,7 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
               </div>
             </div>
           )}
-        </section>
-      )}
+      </SideDrawer>
 
       <section className="overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm">
         <div className="flex flex-wrap items-center gap-2 border-b border-[var(--color-border-default)] p-3">

@@ -1,4 +1,5 @@
 import { SignIn } from "@clerk/nextjs";
+import Image from "next/image";
 
 const appearance = {
   variables: {
@@ -18,7 +19,14 @@ export default function SignInPage() {
       <section className="auth-card mx-auto grid w-full max-w-[980px] md:grid-cols-[320px_minmax(0,1fr)]">
         <div className="flex flex-col justify-between bg-[var(--color-primary-tint)] p-8 text-[var(--color-text-primary)]">
           <div>
-            <div className="brand-mark mb-6">E</div>
+            <Image
+              src="/brand/energize-logo.png"
+              alt="Energize Group"
+              width={180}
+              height={81}
+              priority
+              className="mb-8 h-auto w-36"
+            />
             <div className="eyebrow">Secure access</div>
             <h1 className="mt-3 text-4xl font-bold leading-tight tracking-[-0.03em] text-[var(--color-text-primary)]">
               Energize Builder

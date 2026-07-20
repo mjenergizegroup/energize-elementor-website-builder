@@ -1,6 +1,6 @@
 # Energize Website Builder Design System
 
-Version: 4.4.1
+Version: 4.4.2
 Register: product
 Status: implemented
 
@@ -15,9 +15,9 @@ The visual reference is a modern operational dashboard viewed on a bright
 desktop display. The interface should feel dependable and easy to scan without
 becoming decorative or resembling a generic marketing dashboard.
 
-The red Energize E tile remains as a small continuity marker. Blue owns primary
-actions, current navigation, focus, progress, and selected states everywhere
-else.
+The official Energize Group logo owns the primary brand position in the sidebar
+and authentication surfaces. Blue owns primary actions, current navigation,
+focus, progress, and selected states everywhere else.
 
 ## Design principles
 
@@ -123,8 +123,8 @@ when it is prose rather than data.
 Desktop navigation uses a persistent 232px white sidebar with icon and text
 links. The active route uses a blue tint and primary blue text. The sidebar
 becomes a compact two-row navigation bar on tablets and an icon-first bar on
-phones. The E tile remains red and the account control stays at the bottom of
-the desktop rail.
+phones. The official transparent Energize Group logo anchors the top of the
+rail, and the account control stays at the bottom on desktop.
 
 ### Page headers
 
@@ -180,6 +180,15 @@ and blue fill. Selection cards use a blue tint and soft ring only when selected.
 Dialogs use raised white surfaces, large radius, and medium shadow without an
 outline. Headers remain light. Backdrops use a low-opacity dark neutral. Menus
 and dropdowns use medium radius and medium shadow.
+
+### Side drawers
+
+Focused creation tasks open in a right-side drawer so the current workspace
+remains visible. Drawers use a raised white surface, no outline, a restrained
+backdrop, and a left-facing shadow. New Build selection and add flows use this
+pattern. Wide visual previews and confirmation prompts remain dialogs. Drawers
+fill the viewport width on narrow screens, trap focus, close with Escape or the
+backdrop when safe, and respect reduced-motion preferences.
 
 ### Footer
 

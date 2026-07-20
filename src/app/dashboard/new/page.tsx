@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { X } from "lucide-react";
+import { ArrowRight, Download } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -9,7 +9,7 @@ import {
   type InitialMigrationProject,
 } from "@/components/build-wizard";
 import { LandingPageWizard } from "@/components/landing-page-wizard";
-import { buttonVariants } from "@/components/ui/button";
+import { RouteSideDrawer } from "@/components/route-side-drawer";
 import type { BrandKit } from "@/lib/types";
 import {
   getMigrationProject,
@@ -117,74 +117,72 @@ export default async function NewBuildPage({
   }
 
   return (
-    <main className="modal-overlay">
-      <section className="modal-panel" aria-labelledby="new-build-title">
-        <div className="modal-head">
-          <div>
-            <div className="eyebrow">New build</div>
-            <h1 id="new-build-title" className="mt-1 text-lg font-semibold tracking-[-0.01em] text-[var(--color-text-primary)]">
-              Select build type
-            </h1>
-          </div>
-          <Link
-            href="/dashboard"
-            className="ml-auto flex size-9 items-center justify-center rounded-md border border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]"
-            aria-label="Close new build selector"
-          >
-            <X className="size-4" />
-          </Link>
-        </div>
-        <div className="modal-body">
-          <p className="mb-6 max-w-[540px] text-[13px] leading-6 text-[var(--color-text-secondary)]">
-            Choose what you are building. Each path walks you through the steps
-            specific to that type.
-          </p>
-          <div className="modal-cards">
-            {buildTypes.map((item) => (
-              <article key={item.key} className="modal-card">
-                <div className="card-num" data-featured={item.featured}>
-                  {item.code}
-                </div>
+    <main className="page-body">
+      <RouteSideDrawer
+        closeHref="/dashboard"
+        eyebrow="New build"
+        title="What are you building?"
+        description="Choose a workflow. The next screen will guide you through the steps for that build type."
+        size="wide"
+      >
+        <div className="grid gap-3">
+          {buildTypes.map((item) => (
+            <Link
+              key={item.key}
+              href={`/dashboard/new?type=${item.key}`}
+              className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-4 rounded-lg bg-[var(--color-surface)] p-5 shadow-xs outline-none transition-[background-color,box-shadow,transform] hover:-translate-y-0.5 hover:bg-[var(--color-primary-tint)] hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
+            >
+              <div className="card-num mt-0.5" data-featured={item.featured}>
+                {item.code}
+              </div>
+              <div className="min-w-0">
                 <div className="label-type">{item.type}</div>
-                <h2 className="card-title">{item.title}</h2>
-                <p className="card-desc">{item.desc}</p>
-                <Link
-                  href={`/dashboard/new?type=${item.key}`}
-                  className={buttonVariants({ variant: "outline", size: "sm" })}
-                >
-                  Select
-                </Link>
-              </article>
-            ))}
-          </div>
-          <div className="mt-6 border-t border-[var(--color-border-default)] pt-4 text-[12px] text-[var(--color-text-secondary)]">
-            Setting up the WP Engine default site?{" "}
-            <a
-              href="/downloads/energize-atomic-foundation.zip"
-              className="font-semibold text-[var(--color-primary-hover)] underline underline-offset-4"
-              download
-            >
-              Download the Energize Atomic Foundation
-            </a>
-            {" · "}
-            <a
-              href="/downloads/energize-atomic-style-guide.json"
-              className="font-semibold text-[var(--color-primary-hover)] underline underline-offset-4"
-              download
-            >
-              Download the Atomic Style Guide
-            </a>
-            {" · "}
-            <a
-              href="/downloads/energize-build-tool-wpcode-snippet.txt"
-              className="font-semibold text-[var(--color-primary-hover)] underline underline-offset-4"
-              download
-            >
-              Download the WPCode Bridge
-            </a>
-          </div>
+                <h2 className="mt-1 text-base font-semibold tracking-[-0.015em] text-[var(--color-text-primary)]">
+                  {item.title}
+                </h2>
+                <p className="mt-2 text-xs leading-5 text-[var(--color-text-secondary)]">
+                  {item.desc}
+                </p>
+              </div>
+              <ArrowRight className="mt-2 size-5 text-[var(--color-text-faint)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--color-primary-hover)]" />
+            </Link>
+          ))}
         </div>
-      </section>
+
+        <section className="mt-8 rounded-lg bg-[var(--color-surface)] p-5">
+          <div className="flex items-start gap-3">
+            <Download className="mt-0.5 size-4 shrink-0 text-[var(--color-primary)]" />
+            <div>
+              <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">
+                Setting up a WP Engine default site?
+              </h2>
+              <div className="mt-3 grid gap-2 text-xs">
+                <a
+                  href="/downloads/energize-atomic-foundation.zip"
+                  className="font-semibold text-[var(--color-primary-hover)] hover:underline hover:underline-offset-4"
+                  download
+                >
+                  Energize Atomic Foundation
+                </a>
+                <a
+                  href="/downloads/energize-atomic-style-guide.json"
+                  className="font-semibold text-[var(--color-primary-hover)] hover:underline hover:underline-offset-4"
+                  download
+                >
+                  Atomic Style Guide
+                </a>
+                <a
+                  href="/downloads/energize-build-tool-wpcode-snippet.txt"
+                  className="font-semibold text-[var(--color-primary-hover)] hover:underline hover:underline-offset-4"
+                  download
+                >
+                  WPCode Bridge
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </RouteSideDrawer>
     </main>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowUp, Copy, Eye, LayoutTemplate, Plus, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Copy, Eye, LayoutTemplate, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LayoutPreviewDialog } from "@/components/layout-preview-dialog";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { SideDrawer } from "@/components/ui/side-drawer";
 import type { LayoutLibraryItem } from "@/lib/layouts/types";
 import { layoutCategoryLabel } from "@/lib/layouts/naming";
 import {
@@ -220,10 +221,10 @@ export function PagePlanWorkspace({
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={() => setMode(mode === "page" ? null : "page")}>
+          <Button variant="outline" onClick={() => setMode("page")} aria-haspopup="dialog">
             <Plus data-icon="inline-start" /> Add page
           </Button>
-          <Button onClick={() => setMode(mode === "services" ? null : "services")}>
+          <Button onClick={() => setMode("services")} aria-haspopup="dialog">
             <Plus data-icon="inline-start" /> Add services
           </Button>
         </div>
@@ -241,102 +242,95 @@ export function PagePlanWorkspace({
         </div>
       )}
 
-      {mode === "page" && (
-        <section className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-5 shadow-xs">
-          <div className="flex items-center justify-between gap-3">
-            <h4 className="text-base font-semibold tracking-[-0.01em]">Add one page</h4>
-            <Button variant="ghost" size="icon-sm" onClick={() => setMode(null)} aria-label="Close add page form">
-              <X />
-            </Button>
+      <SideDrawer
+        open={mode === "page"}
+        onOpenChange={(open) => setMode(open ? "page" : null)}
+        eyebrow="Page Plan"
+        title="Add one page"
+        description="Create a destination page and choose the reusable layout that will provide its structure."
+      >
+        {missingSuggestions.length > 0 && (
+          <div className="flex flex-wrap gap-2" aria-label="Suggested pages">
+            {missingSuggestions.map((suggestion) => (
+              <button
+                key={suggestion.name}
+                type="button"
+                onClick={() => addSuggestedPage(suggestion.name, suggestion.type)}
+                disabled={layouts.length === 0}
+                className="rounded-pill border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] px-3 py-2 text-xs font-semibold text-[var(--color-text-secondary)] hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-tint)] hover:text-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                + {suggestion.name}
+              </button>
+            ))}
           </div>
-          {missingSuggestions.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2" aria-label="Suggested pages">
-              {missingSuggestions.map((suggestion) => (
-                <button
-                  key={suggestion.name}
-                  type="button"
-                  onClick={() => addSuggestedPage(suggestion.name, suggestion.type)}
-                  disabled={layouts.length === 0}
-                  className="rounded-pill border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] px-3 py-2 text-xs font-semibold text-[var(--color-text-secondary)] hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-tint)] hover:text-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  + {suggestion.name}
-                </button>
-              ))}
-            </div>
-          )}
-          <div className="mt-4 grid gap-4 md:grid-cols-3">
-            <label className="space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
-              Page name
-              <Input
-                value={pageName}
-                onChange={(event) => setPageName(event.target.value)}
-                placeholder="Emergency Dentistry"
-                className="normal-case tracking-normal"
-              />
-            </label>
-            <label className="space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
-              Page type
-              <Select value={pageType} onValueChange={(value) => setPageType(value as PagePlanPageType)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="standard">Standard page</SelectItem>
-                  <SelectItem value="home">Home page</SelectItem>
-                  <SelectItem value="service">Service page</SelectItem>
-                  <SelectItem value="contact">Contact page</SelectItem>
-                  <SelectItem value="custom">Custom page</SelectItem>
-                </SelectContent>
-              </Select>
-            </label>
-            <LayoutSelect
-              value={pageLayout || selectDefaultLayout(layouts, pageType, pageName)}
-              layouts={layouts}
-              onChange={setPageLayout}
-              onPreview={setPreviewLayoutId}
-              label="Layout"
+        )}
+        <div className="mt-6 grid gap-5">
+          <label className="space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
+            Page name
+            <Input
+              value={pageName}
+              onChange={(event) => setPageName(event.target.value)}
+              placeholder="Emergency Dentistry"
+              className="normal-case tracking-normal"
             />
-          </div>
-          <div className="mt-5 flex justify-end">
-            <Button onClick={addPage} disabled={!pageName.trim() || layouts.length === 0}>Add page</Button>
-          </div>
-        </section>
-      )}
+          </label>
+          <label className="space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
+            Page type
+            <Select value={pageType} onValueChange={(value) => setPageType(value as PagePlanPageType)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="standard">Standard page</SelectItem>
+                <SelectItem value="home">Home page</SelectItem>
+                <SelectItem value="service">Service page</SelectItem>
+                <SelectItem value="contact">Contact page</SelectItem>
+                <SelectItem value="custom">Custom page</SelectItem>
+              </SelectContent>
+            </Select>
+          </label>
+          <LayoutSelect
+            value={pageLayout || selectDefaultLayout(layouts, pageType, pageName)}
+            layouts={layouts}
+            onChange={setPageLayout}
+            onPreview={setPreviewLayoutId}
+            label="Layout"
+          />
+        </div>
+        <div className="mt-5 flex justify-end">
+          <Button onClick={addPage} disabled={!pageName.trim() || layouts.length === 0}>Add page</Button>
+        </div>
+      </SideDrawer>
 
-      {mode === "services" && (
-        <section className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-5 shadow-xs">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h4 className="text-base font-semibold tracking-[-0.01em]">Add service pages</h4>
-              <p className="mt-1 text-xs text-[var(--color-text-secondary)]">Enter one service per line and apply one shared layout.</p>
-            </div>
-            <Button variant="ghost" size="icon-sm" onClick={() => setMode(null)} aria-label="Close add services form">
-              <X />
-            </Button>
-          </div>
-          <div className="mt-4 grid gap-4 md:grid-cols-[minmax(0,1fr)_280px]">
-            <label className="space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
-              Service page names
-              <Textarea
-                value={serviceNames}
-                onChange={(event) => setServiceNames(event.target.value)}
-                placeholder={"Emergency Dentistry\nPreventive Dentistry\nDental Implants\nTeeth Whitening"}
-                className="min-h-40 normal-case tracking-normal"
-              />
-            </label>
-            <LayoutSelect
-              value={serviceLayout}
-              layouts={layouts}
-              onChange={setServiceLayout}
-              onPreview={setPreviewLayoutId}
-              label="Layout for these pages"
+      <SideDrawer
+        open={mode === "services"}
+        onOpenChange={(open) => setMode(open ? "services" : null)}
+        eyebrow="Page Plan"
+        title="Add service pages"
+        description="Enter one service per line and apply one shared layout to the full group."
+      >
+        <div className="grid gap-5">
+          <label className="space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
+            Service page names
+            <Textarea
+              value={serviceNames}
+              onChange={(event) => setServiceNames(event.target.value)}
+              placeholder={"Emergency Dentistry\nPreventive Dentistry\nDental Implants\nTeeth Whitening"}
+              className="min-h-40 normal-case tracking-normal"
             />
-          </div>
-          <div className="mt-5 flex justify-end">
-            <Button onClick={addServices} disabled={!serviceNames.trim() || !serviceLayout}>
-              Add service pages
-            </Button>
-          </div>
-        </section>
-      )}
+          </label>
+          <LayoutSelect
+            value={serviceLayout}
+            layouts={layouts}
+            onChange={setServiceLayout}
+            onPreview={setPreviewLayoutId}
+            label="Layout for these pages"
+          />
+        </div>
+        <div className="mt-5 flex justify-end">
+          <Button onClick={addServices} disabled={!serviceNames.trim() || !serviceLayout}>
+            Add service pages
+          </Button>
+        </div>
+      </SideDrawer>
 
       {items.length === 0 ? (
         <div className="flex min-h-64 flex-col items-center justify-center rounded-lg border border-dashed border-[var(--color-border-strong)] bg-[var(--color-surface)] p-8 text-center">
