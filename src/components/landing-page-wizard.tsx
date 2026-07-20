@@ -251,8 +251,10 @@ function parseBuildPackage(text: string): BuildPackage {
 
 export function LandingPageWizard({
   initialClient,
+  embedded = false,
 }: {
   initialClient?: InitialClient;
+  embedded?: boolean;
 }) {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -563,12 +565,14 @@ export function LandingPageWizard({
             : "Deploying";
 
     return (
-      <main className="page-body">
-        <PageHead
-          title={title}
-          subline="Landing pages are generated with Atomic elements and pushed as Elementor drafts."
-          clientName={name || buildPackage?.client || "Untitled client"}
-        />
+      <div className={embedded ? "drawer-build-workspace" : "page-body"}>
+        {!embedded ? (
+          <PageHead
+            title={title}
+            subline="Landing pages are generated with Atomic elements and pushed as Elementor drafts."
+            clientName={name || buildPackage?.client || "Untitled client"}
+          />
+        ) : null}
         <section className="wizard-frame">
           <PanelHead
             icon={Rocket}
@@ -645,29 +649,31 @@ export function LandingPageWizard({
             </div>
           )}
         </section>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="page-body">
-      <PageHead
-        title="Landing Page Build"
-        subline="Create Google Ads landing pages from one Build Package JSON file."
-        clientName={name || buildPackage?.client || "Untitled client"}
-      >
-        <Link
-          href="/dashboard"
-          className={cn(
-            buttonVariants({ variant: "ghost" }),
-            "-ml-0.5 h-auto self-stretch px-4"
-          )}
+    <div className={embedded ? "drawer-build-workspace" : "page-body"}>
+      {!embedded ? (
+        <PageHead
+          title="Landing Page Build"
+          subline="Create Google Ads landing pages from one Build Package JSON file."
+          clientName={name || buildPackage?.client || "Untitled client"}
         >
-          Cancel
-        </Link>
-      </PageHead>
+          <Link
+            href="/dashboard"
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "-ml-0.5 h-auto self-stretch px-4"
+            )}
+          >
+            Cancel
+          </Link>
+        </PageHead>
+      ) : null}
 
-      <div className="grid overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm lg:grid-cols-[248px_minmax(0,1fr)]">
+      <div className="wizard-workspace-frame grid overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm lg:grid-cols-[248px_minmax(0,1fr)]">
         <StepperRail step={step} setStep={setStep} />
         <section className="overflow-hidden bg-[var(--color-surface)]">
           <PanelHead
@@ -675,7 +681,7 @@ export function LandingPageWizard({
             title={STEP_DETAILS[step].title}
             description={STEP_DETAILS[step].description}
           />
-          <div className="space-y-7 bg-[var(--color-surface)] p-6 sm:p-8">
+          <div key={step} className="wizard-step-enter space-y-7 bg-[var(--color-surface)] p-6 sm:p-8">
             {step === 0 && (
               <div className="space-y-6">
                 <SectionLabel>Upload area</SectionLabel>
@@ -868,7 +874,7 @@ export function LandingPageWizard({
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 
@@ -1218,7 +1224,6 @@ function PageHead({
   return (
     <div className="page-banner">
       <div>
-        <div className="eyebrow">Build workspace</div>
         <h1 className="page-title">{title}</h1>
         <p className="page-copy">{subline}</p>
       </div>
@@ -1293,7 +1298,7 @@ function StepperRail({
       <div className="mt-3 space-y-2 border-t border-[var(--color-border-default)] p-3 pt-4">
         <div className="h-2 overflow-hidden rounded-pill bg-[var(--color-border-default)]">
           <div
-            className="h-full rounded-pill bg-[var(--color-primary)] transition-all duration-200"
+            className="h-full rounded-pill bg-[var(--color-primary)] transition-[width] duration-200 ease-out"
             style={{ width: `${percent}%` }}
           />
         </div>

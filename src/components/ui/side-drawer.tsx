@@ -13,6 +13,10 @@ export function SideDrawer({
   children,
   footer,
   size = "default",
+  tone = "default",
+  entrance = "standard",
+  leadingAction,
+  bodyClassName,
   preventClose = false,
 }: {
   open: boolean;
@@ -22,7 +26,11 @@ export function SideDrawer({
   description?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
-  size?: "default" | "wide";
+  size?: "default" | "wide" | "workspace";
+  tone?: "default" | "soft";
+  entrance?: "standard" | "route";
+  leadingAction?: React.ReactNode;
+  bodyClassName?: string;
   preventClose?: boolean;
 }) {
   function handleOpenChange(nextOpen: boolean) {
@@ -33,18 +41,29 @@ export function SideDrawer({
   return (
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Portal>
-        <Dialog.Backdrop className="side-drawer-backdrop" />
+        <Dialog.Backdrop
+          className={cn(
+            "side-drawer-backdrop",
+            entrance === "route" && "side-drawer-backdrop-route",
+          )}
+        />
         <Dialog.Viewport className="side-drawer-viewport">
           <Dialog.Popup
             className={cn(
               "side-drawer-panel",
               size === "wide" && "side-drawer-panel-wide",
+              size === "workspace" && "side-drawer-panel-workspace",
+              tone === "soft" && "side-drawer-panel-soft",
+              entrance === "route" && "side-drawer-panel-route",
             )}
           >
             <header className="side-drawer-head">
               <div className="min-w-0 flex-1">
+                {leadingAction ? (
+                  <div className="mb-4">{leadingAction}</div>
+                ) : null}
                 {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
-                <Dialog.Title className="mt-1 text-2xl font-semibold tracking-[-0.025em] text-[var(--color-text-primary)]">
+                <Dialog.Title className="text-2xl font-semibold tracking-[-0.025em] text-[var(--color-text-primary)]">
                   {title}
                 </Dialog.Title>
                 {description ? (
@@ -62,7 +81,7 @@ export function SideDrawer({
               </Dialog.Close>
             </header>
 
-            <div className="side-drawer-body">{children}</div>
+            <div className={cn("side-drawer-body", bodyClassName)}>{children}</div>
 
             {footer ? <footer className="side-drawer-footer">{footer}</footer> : null}
           </Dialog.Popup>

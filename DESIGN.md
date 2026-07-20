@@ -1,6 +1,6 @@
 # Energize Website Builder Design System
 
-Version: 4.4.2
+Version: 4.4.3
 Register: product
 Status: implemented
 
@@ -51,6 +51,7 @@ color values.
 | Page background | `--color-page-background` | `#F7F9FC` |
 | Surface | `--color-surface` | `#F4F6F8` |
 | Raised surface | `--color-surface-raised` | `#FFFFFF` |
+| Drawer surface | `--color-drawer-surface` | `#EEF1F5` |
 | Default border | `--color-border-default` | `transparent` |
 | Strong border | `--color-border-strong` | `transparent` |
 | Primary text | `--color-text-primary` | `#1A1D21` |
@@ -189,6 +190,13 @@ backdrop, and a left-facing shadow. New Build selection and add flows use this
 pattern. Wide visual previews and confirmation prompts remain dialogs. Drawers
 fill the viewport width on narrow screens, trap focus, close with Escape or the
 backdrop when safe, and respect reduced-motion preferences.
+
+The build drawer is a larger, cool-gray workspace that remains open from build
+selection through the complete wizard. White working surfaces sit above the
+drawer background for clear depth without outlines. Build choices use plain
+titles and descriptions without code circles or category eyebrows. Route drawer
+motion runs for 360ms with an ease-out entrance, while control and wizard-step
+feedback stays between 150ms and 240ms.
 
 ### Footer
 

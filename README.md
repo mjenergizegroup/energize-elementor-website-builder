@@ -66,7 +66,7 @@ Migration project state and its authenticated API are documented in
 
 ## Current site migration flow
 
-Version 4.4.2 keeps the complete five-step layout-first workflow. The Page Plan
+Version 4.4.3 keeps the complete five-step layout-first workflow. The Page Plan
 is created before the current website is imported, and deterministic matching
 shows only Matched, Check match, or No source content. Matched content is fitted
 into the selected JSON layout section by section. Sanitized V3 Elementor layouts
@@ -148,6 +148,16 @@ The test suite uses synthetic inputs and mocked WordPress gateways. It does not
 download external media or modify a WordPress site.
 
 ### Release verification
+
+Version 4.4.3 keeps the complete build workflow inside one responsive drawer.
+The build-type chooser and all three selected workflows now share the same
+large workspace surface, so selecting a build no longer jumps to a separate
+full-page view. Route drawers have reliable entrance and exit motion, selected
+links show immediate pending feedback, and wizard step content uses a restrained
+state transition. The chooser removes code circles and repeated category
+eyebrows, while a cooler gray drawer surface separates the workspace from the
+page behind it. This release does not change routes, data, authentication,
+WordPress output, deployment behavior, or the database schema.
 
 Version 4.4.2 adds a reusable right-side drawer for focused creation tasks.
 New Build selection, Template Library uploads, and the Page Plan add-page and

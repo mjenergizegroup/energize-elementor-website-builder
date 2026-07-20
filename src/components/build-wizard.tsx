@@ -246,11 +246,13 @@ export function BuildWizard({
   initialMigrationProject,
   initialLayouts = [],
   buildType = "new-website",
+  embedded = false,
 }: {
   initialClient?: InitialClient;
   initialMigrationProject?: InitialMigrationProject;
   initialLayouts?: LayoutLibraryItem[];
   buildType?: string;
+  embedded?: boolean;
 }) {
   const router = useRouter();
   const initialWorkspace = initialMigrationProject?.workspace;
@@ -1195,17 +1197,19 @@ export function BuildWizard({
               : "Deploying";
 
     return (
-      <div className="page-body">
-        <PageHead
-          title={title}
-          subline={
-            buildType === "migrate"
-              ? "Prepared pages are saved as recoverable WordPress drafts and are never published automatically."
-              : "The deploy stream validates the Atomic Foundation before creating WordPress drafts."
-          }
-          clientName={name || practiceMeta?.practiceName || "Untitled client"}
-          buildTypeLabel={buildTypeLabel}
-        />
+      <div className={embedded ? "drawer-build-workspace" : "page-body"}>
+        {!embedded ? (
+          <PageHead
+            title={title}
+            subline={
+              buildType === "migrate"
+                ? "Prepared pages are saved as recoverable WordPress drafts and are never published automatically."
+                : "The deploy stream validates the Atomic Foundation before creating WordPress drafts."
+            }
+            clientName={name || practiceMeta?.practiceName || "Untitled client"}
+            buildTypeLabel={buildTypeLabel}
+          />
+        ) : null}
 
         <section className="wizard-frame">
           <PanelHead
@@ -1422,25 +1426,27 @@ export function BuildWizard({
 
   // Wizard steps.
   return (
-    <main className="page-body">
-      <PageHead
-        title="New Build"
-        subline="Plan the destination pages, match source content, and prepare WordPress drafts."
-        clientName={name || practiceMeta?.practiceName || "Untitled client"}
-        buildTypeLabel={buildTypeLabel}
-      >
-        <Link
-          href="/dashboard"
-          className={cn(
-            buttonVariants({ variant: "ghost" }),
-            "-ml-0.5 h-auto self-stretch px-4"
-          )}
+    <div className={embedded ? "drawer-build-workspace" : "page-body"}>
+      {!embedded ? (
+        <PageHead
+          title="New Build"
+          subline="Plan the destination pages, match source content, and prepare WordPress drafts."
+          clientName={name || practiceMeta?.practiceName || "Untitled client"}
+          buildTypeLabel={buildTypeLabel}
         >
-          Cancel
-        </Link>
-      </PageHead>
+          <Link
+            href="/dashboard"
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "-ml-0.5 h-auto self-stretch px-4"
+            )}
+          >
+            Cancel
+          </Link>
+        </PageHead>
+      ) : null}
 
-      <div className="grid overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm lg:grid-cols-[248px_minmax(0,1fr)]">
+      <div className="wizard-workspace-frame grid overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm lg:grid-cols-[248px_minmax(0,1fr)]">
         <StepperRail step={step} setStep={setStep} />
 
         <section className="overflow-hidden bg-[var(--color-surface-raised)]">
@@ -1449,7 +1455,7 @@ export function BuildWizard({
             title={STEP_DETAILS[step].title}
             description={STEP_DETAILS[step].description}
           />
-          <div className="space-y-7 bg-[var(--color-surface-raised)] p-6 sm:p-8">
+          <div key={step} className="wizard-step-enter space-y-7 bg-[var(--color-surface-raised)] p-6 sm:p-8">
           {step === 0 && (
             <div className="space-y-7">
               <SectionLabel>Website project</SectionLabel>
@@ -1763,7 +1769,7 @@ export function BuildWizard({
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 
@@ -1795,7 +1801,7 @@ function ColorField({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="space-y-2 border border-[var(--line)] bg-[var(--paper-2)] p-3 transition-all duration-200 hover:border-[var(--line-strong)]">
+    <div className="space-y-2 border border-[var(--line)] bg-[var(--paper-2)] p-3 transition-colors duration-200 hover:border-[var(--line-strong)]">
       <Label className="text-[10px] uppercase tracking-[0.15em]">{label}</Label>
       <div className="flex items-center gap-3">
         <label
@@ -1903,7 +1909,7 @@ function FileField({
           setDragging(false);
           loadFile(e.dataTransfer.files?.[0]);
         }}
-        className={`flex min-h-36 cursor-pointer flex-col items-center justify-center gap-2 border border-dashed p-5 text-center transition-all duration-200 hover:border-[var(--secondary)] hover:bg-[var(--card)] ${
+        className={`flex min-h-36 cursor-pointer flex-col items-center justify-center gap-2 border border-dashed p-5 text-center transition-[background-color,box-shadow] duration-200 ease-out hover:bg-[var(--card)] ${
           dragging
             ? "border-[var(--secondary)] bg-[rgba(22,138,173,.08)]"
             : "border-[var(--line-strong)] bg-[var(--paper-2)]"
@@ -1988,7 +1994,6 @@ function PageHead({
   return (
     <div className="page-banner">
       <div>
-        <div className="eyebrow">Build workspace</div>
         <h1 className="page-title">{title}</h1>
         <p className="page-copy">{subline}</p>
       </div>
@@ -2075,7 +2080,7 @@ function StepperRail({
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={percent}
-            className="h-full rounded-pill bg-[var(--color-primary)] transition-all duration-200"
+            className="h-full rounded-pill bg-[var(--color-primary)] transition-[width] duration-200 ease-out"
             style={{ width: `${percent}%` }}
           />
         </div>

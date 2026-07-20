@@ -30,11 +30,11 @@ supersede the old user-facing theme workflow described in parts of
 
 - Workspace: `/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder`
 - Branch: `codex/frontend-reskin`
-- Application version: `4.4.2`
+- Application version: `4.4.3`
 - Current implementation: complete frontend reskin with a persistent sidebar,
-  official Energize branding, reusable side drawers, and a borderless light
+  official Energize branding, continuous build drawers, and a borderless light
   dashboard design system, while preserving the version 4.3 migration behavior
-- Current version work: `Add branded side drawers` on the local
+- Current version work: `Polish continuous build drawer motion` on the local
   `codex/frontend-reskin` branch
 - Base reskin commit: `54a1d9d Reskin frontend with light dashboard system`,
   pushed to `origin/codex/frontend-reskin`
@@ -54,8 +54,8 @@ supersede the old user-facing theme workflow described in parts of
 - Git uses the GitHub CLI credential helper backed by the macOS Keychain.
 - Pull request #2 is merged. Do not recreate or remerge it.
 - The pull request Vercel preview checks passed before merge.
-- Version 4.4.1 is pushed to `origin/codex/frontend-reskin`. Version 4.4.2 is
-  currently local only.
+- Versions 4.4.1 and 4.4.2 are pushed to `origin/codex/frontend-reskin`.
+  Version 4.4.3 is currently local only.
 - A production Vercel deployment triggered from the merged `main` branch was
   not explicitly verified in this chat.
 - The historical branch `agent/preserve-elementor-layout-design` may still
@@ -100,7 +100,22 @@ Core product rules:
 
 ## Completed implementation
 
-All planned website milestones are complete through version `4.4.2`.
+All planned website milestones are complete through version `4.4.3`.
+
+### Version 4.4.3: continuous build drawer and motion polish
+
+- Kept Landing Page Build, Migrate a Website, and New Website Build inside the
+  same responsive drawer used by the build-type chooser.
+- Expanded the build drawer into a large workspace and added a cooler gray
+  surface so white working panels remain visually distinct without outlines.
+- Added reliable route-drawer entrance and exit motion, pending navigation
+  feedback, and restrained wizard-step transitions using transform and opacity.
+- Removed LP, MG, and NW code circles plus Google Ads, Migration, and New build
+  category eyebrows from the build chooser.
+- Removed the redundant Build workspace eyebrow from standalone wizard headers.
+- Replaced broad transition declarations in the touched build controls with
+  precise property transitions and preserved reduced-motion behavior.
+- No database schema change was required.
 
 ### Version 4.4.2: branded side drawers
 
@@ -284,11 +299,25 @@ Prisma reported that the database was in sync and generated Prisma Client
 6.19.3. The layout, page-plan, content-match, prepared-draft, and build-plan
 tables are available.
 
-Versions 4.0.1 through 4.4.2 do not change the Prisma schema. Do not ask Mark to
+Versions 4.0.1 through 4.4.3 do not change the Prisma schema. Do not ask Mark to
 run `db:push` for these releases.
 
 Never print or document database credentials. Reverify external state if a
 future schema change is introduced.
+
+## Verification completed for version 4.4.3
+
+The following passed locally for the continuous build drawer and motion pass:
+
+- `npm run typecheck`
+- `npm run lint`
+- Optimized `npm run build`
+- Complete `npm test` suite
+- `git diff --check`
+- Prohibited em dash and en dash scan on every changed file
+
+Authenticated visual review remains manual because the protected local route
+requires Mark's Clerk browser session.
 
 ## Verification completed for version 4.4.2
 
@@ -386,7 +415,9 @@ No database records were changed by that verification.
   not been merged into `main` or promoted to a production deployment.
 - Version 4.4.1 is pushed to the `codex/frontend-reskin` preview branch but has
   not been merged into `main` or promoted to a production deployment.
-- Version 4.4.2 has not been pushed, merged, or deployed. Its work exists only
+- Version 4.4.2 is pushed to the `codex/frontend-reskin` preview branch but has
+  not been merged into `main` or promoted to a production deployment.
+- Version 4.4.3 has not been pushed, merged, or deployed. Its work exists only
   on the local `codex/frontend-reskin` branch.
 - No external WordPress site was modified while building these milestones.
 - An authenticated local browser smoke test is still manual because the local
@@ -402,12 +433,12 @@ No database records were changed by that verification.
 ## Recommended next objective
 
 Version 4.3.0 is already pushed and merged into GitHub's `main`. Versions 4.4.0
-and 4.4.1 are available on the `codex/frontend-reskin` preview branch. Version
-4.4.2 adds official branding and side drawers locally on that same branch. The
-next step is an authenticated visual review of the dashboard and both build
-workflows at desktop and mobile widths. If Mark approves the local result,
-request separate authorization before pushing, opening a pull request, merging,
-or deploying.
+through 4.4.2 are available on the `codex/frontend-reskin` preview branch.
+Version 4.4.3 adds the continuous build drawer and motion polish locally on that
+same branch. The next step is an authenticated visual review of the chooser and
+all three build workflows at desktop and mobile widths. If Mark approves the
+local result, request separate authorization before pushing, opening a pull
+request, merging, or deploying.
 Codex must not modify WordPress, deploy, publish, or make a GitHub state change
 unless Mark explicitly asks.
 
