@@ -53,8 +53,8 @@
   --color-surface: #f4f6f8;
   --color-surface-raised: #ffffff;
   --color-row-hover: #f2f5fa;
-  --color-border-default: #e7eaef;
-  --color-border-strong: #d6dae0;
+  --color-border-default: transparent;
+  --color-border-strong: transparent;
   --color-text-primary: #1a1d21;
   --color-text-secondary: #667085;
   --color-text-faint: #98a2b3;
@@ -1311,4 +1311,331 @@
   .grid-head {
     display: none;
   }
+}
+
+@layer components {
+  .app-wrap {
+    width: 100%;
+    max-width: none;
+    min-height: 100dvh;
+    margin: 0;
+    padding: 0;
+  }
+
+  .app-shell {
+    display: grid;
+    grid-template-columns: 232px minmax(0, 1fr);
+    min-height: 100dvh;
+    overflow: visible;
+    background: var(--color-page-background);
+    border: 0;
+  }
+
+  .app-stage {
+    min-width: 0;
+  }
+
+  .app-stage > main {
+    width: 100%;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    height: 100dvh;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 18px 14px 16px;
+    background: var(--color-surface-raised);
+    box-shadow: 8px 0 28px rgb(31 42 55 / 5%);
+  }
+
+  .sidebar-main {
+    min-width: 0;
+  }
+
+  .sidebar-brand {
+    display: flex;
+    min-height: 56px;
+    align-items: center;
+    gap: 12px;
+    padding: 0 10px 18px;
+    color: var(--color-text-primary);
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 18px rgb(191 46 49 / 16%);
+  }
+
+  .brand-copy {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+  }
+
+  .brand-name {
+    color: var(--color-text-primary);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .brand-product {
+    overflow: hidden;
+    color: var(--color-text-faint);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sidebar-nav {
+    display: grid;
+    gap: 6px;
+    margin-top: 18px;
+  }
+
+  .nav-link {
+    position: relative;
+    display: flex;
+    height: 46px;
+    align-items: center;
+    gap: 12px;
+    padding: 0 13px;
+    color: var(--color-text-secondary);
+    border: 0;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 550;
+    letter-spacing: -0.005em;
+    line-height: 1;
+    text-transform: none;
+  }
+
+  .nav-link::after {
+    display: none;
+  }
+
+  .nav-link:hover {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+  }
+
+  .nav-link[data-active="true"] {
+    background: var(--color-primary-tint);
+    color: var(--color-primary-hover);
+  }
+
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    stroke-width: 1.8;
+  }
+
+  .sidebar-bottom {
+    display: grid;
+    gap: 12px;
+  }
+
+  .sidebar-account {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    gap: 11px;
+    padding: 7px 10px;
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+  }
+
+  .sidebar-account-label {
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .app-version {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    padding: 4px 10px 0;
+    background: transparent;
+    border: 0;
+    color: var(--color-text-faint);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.4;
+    text-transform: none;
+  }
+
+  .app-version-value {
+    color: var(--color-text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .page-body {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 32px 40px 48px;
+  }
+
+  .page-banner,
+  .detail-head {
+    margin-bottom: 28px;
+    padding: 4px 0 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .stat-cell {
+    background: var(--color-surface-raised);
+    border: 0;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .stat-cell:last-child {
+    border: 0;
+  }
+
+  .table-block,
+  .info-panel,
+  .wizard-frame,
+  .auth-card,
+  .modal-panel {
+    border: 0;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .block-head,
+  .grid-head,
+  .grid-row,
+  .modal-head,
+  .info-row {
+    border: 0;
+  }
+
+  .grid-row + .grid-row {
+    box-shadow: inset 0 1px 0 rgb(26 29 33 / 4%);
+  }
+
+  .page-chip {
+    border: 0;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .page-chip:hover {
+    color: var(--color-text-primary);
+  }
+
+  .page-chip[data-active="true"] {
+    border: 0;
+    box-shadow: none;
+  }
+
+  .modal-card,
+  .modal-card:last-child {
+    border: 0;
+    box-shadow: var(--shadow-xs);
+  }
+}
+
+@media (max-width: 1023px) {
+  .app-shell {
+    display: block;
+  }
+
+  .sidebar {
+    position: static;
+    display: grid;
+    height: auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 20px;
+    padding: 12px 18px;
+    box-shadow: 0 8px 24px rgb(31 42 55 / 5%);
+  }
+
+  .sidebar-main {
+    display: contents;
+  }
+
+  .sidebar-brand {
+    min-height: 44px;
+    padding: 0;
+  }
+
+  .sidebar-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex;
+    gap: 6px;
+    margin: 0;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .nav-link {
+    height: 42px;
+    flex: 0 0 auto;
+    padding: 0 12px;
+  }
+
+  .sidebar-bottom {
+    display: block;
+    align-self: center;
+  }
+
+  .sidebar-account {
+    min-height: 42px;
+    padding: 4px 8px;
+    background: transparent;
+  }
+
+  .sidebar-account-label,
+  .app-version {
+    display: none;
+  }
+
+  .page-body {
+    padding: 28px 24px 40px;
+  }
+}
+
+@media (max-width: 639px) {
+  .sidebar {
+    padding: 10px 12px;
+  }
+
+  .brand-product,
+  .nav-link span {
+    display: none;
+  }
+
+  .nav-link {
+    width: 44px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .page-body {
+    padding: 22px 16px 32px;
+  }
+}
+
+/* Borderless product language. Focus is communicated with outlines and rings. */
+body *,
+body [class^="cl-"],
+body [class*=" cl-"] {
+  border-color: transparent !important;
 }

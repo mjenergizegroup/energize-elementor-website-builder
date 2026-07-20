@@ -41,7 +41,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "flex w-full items-center justify-between gap-1.5 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] py-2 pr-2 pl-3.5 text-sm font-medium text-[var(--color-text-primary)] whitespace-nowrap shadow-xs transition-[border-color,box-shadow] outline-none select-none focus-visible:border-[var(--color-primary)] focus-visible:ring-4 focus-visible:ring-[rgb(57_115_210_/_12%)] disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive data-placeholder:text-[var(--color-text-faint)] data-[size=default]:h-11 data-[size=sm]:h-9 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "flex w-full items-center justify-between gap-1.5 rounded-md bg-[var(--color-surface-raised)] py-2 pr-2 pl-3.5 text-sm font-medium text-[var(--color-text-primary)] whitespace-nowrap shadow-xs transition-[box-shadow] outline-none select-none focus-visible:ring-4 focus-visible:ring-[rgb(57_115_210_/_16%)] disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-2 aria-invalid:ring-[var(--color-danger)] data-placeholder:text-[var(--color-text-faint)] data-[size=default]:h-11 data-[size=sm]:h-9 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -83,7 +83,7 @@ function SelectContent({
         <SelectPrimitive.Popup
           data-slot="select-content"
           data-align-trigger={alignItemWithTrigger}
-          className={cn("relative isolate z-50 max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md border border-[var(--color-border-default)] bg-popover text-popover-foreground shadow-md duration-100", className )}
+          className={cn("relative isolate z-50 max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md bg-popover text-popover-foreground shadow-md duration-100", className )}
           {...props}
         >
           <SelectScrollUpButton />

@@ -29,17 +29,20 @@ supersede the old user-facing theme workflow described in parts of
 ## Current repository state
 
 - Workspace: `/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder`
-- Branch: `main`
-- Application version: `4.4.0`
-- Current implementation: complete frontend reskin with a centralized light
-  dashboard design system, while preserving the version 4.3 migration behavior
-- Implementation commit: `Reskin frontend with light dashboard system` (local
-  only when this handoff was written)
+- Branch: `codex/frontend-reskin`
+- Application version: `4.4.1`
+- Current implementation: complete frontend reskin with a persistent sidebar
+  and borderless light dashboard design system, while preserving the version
+  4.3 migration behavior
+- Current version commit: `Add sidebar and borderless interface` on the local
+  `codex/frontend-reskin` branch
+- Base reskin commit: `54a1d9d Reskin frontend with light dashboard system`,
+  pushed to `origin/codex/frontend-reskin`
 - Main merge commit: `6d0a3e9 Merge pull request #2 from
   mjenergizegroup/agent/preserve-elementor-layout-design`
 - Pull request: `#2`, merged into `main` on July 20, 2026
 - Local `main` contains the earlier documentation refresh plus the version 4.4.0
-  reskin commit. Neither local commit has been pushed to `origin/main`.
+  reskin commit. Those commits have not been pushed to `origin/main`.
 - Stack: Next.js 15 App Router, TypeScript, Tailwind v4, base-ui shadcn/ui,
   Clerk, Prisma 6, Neon PostgreSQL, and server-only WordPress integrations.
 
@@ -95,7 +98,20 @@ Core product rules:
 
 ## Completed implementation
 
-All planned website milestones are complete through version `4.4.0`.
+All planned website milestones are complete through version `4.4.1`.
+
+### Version 4.4.1: sidebar and borderless product surfaces
+
+- Replaced the horizontal application navigation with a persistent desktop
+  sidebar and compact responsive navigation on smaller screens.
+- Added clear Lucide icons, active-route fill, account placement, and release
+  information to the sidebar without changing routes or access behavior.
+- Removed decorative border colors across shared controls, cards, panels,
+  tables, dialogs, workspace components, and Clerk surfaces.
+- Preserved visible keyboard focus through outlines and rings.
+- Preserved all workflows, API boundaries, Clerk behavior, Prisma behavior,
+  server-only credential boundaries, and WordPress workflows.
+- No database schema change was required.
 
 ### Version 4.4.0: complete frontend visual reskin
 
@@ -252,11 +268,29 @@ Prisma reported that the database was in sync and generated Prisma Client
 6.19.3. The layout, page-plan, content-match, prepared-draft, and build-plan
 tables are available.
 
-Versions 4.0.1 through 4.4.0 do not change the Prisma schema. Do not ask Mark to
+Versions 4.0.1 through 4.4.1 do not change the Prisma schema. Do not ask Mark to
 run `db:push` for these releases.
 
 Never print or document database credentials. Reverify external state if a
 future schema change is introduced.
+
+## Verification completed for version 4.4.1
+
+The following passed locally for the sidebar and borderless visual follow-up:
+
+- Complete `npm test` suite
+- Migration security, Atomic Foundation, WordPress bridge, and injection checks
+- `npm run typecheck`
+- `npm run lint`
+- Optimized `npm run build`
+- `git diff --check`
+- Prohibited em dash and en dash scan on every changed file
+- Public desktop browser review at 1440 by 1000 pixels
+
+The public landing surface rendered the borderless control and panel language
+correctly. The protected dashboard compiled successfully, but authenticated
+browser review remains manual because the Clerk development account domain is
+not available to the automated browser session.
 
 ## Verification completed for version 4.4.0
 
@@ -317,8 +351,10 @@ No database records were changed by that verification.
 
 - The production Vercel deployment state after merging pull request #2 has not
   been explicitly verified.
-- Version 4.4.0 has not been pushed, opened as a pull request, merged, or
-  deployed. Its commit exists only in this local repository.
+- Version 4.4.0 is pushed to the `codex/frontend-reskin` preview branch but has
+  not been merged into `main` or promoted to a production deployment.
+- Version 4.4.1 has not been pushed, merged, or deployed. Its commit exists only
+  on the local `codex/frontend-reskin` branch.
 - No external WordPress site was modified while building these milestones.
 - An authenticated local browser smoke test is still manual because the local
   Clerk development domain requires a separate sign-in session.
@@ -333,13 +369,13 @@ No database records were changed by that verification.
 ## Recommended next objective
 
 Version 4.3.0 is already pushed and merged into GitHub's `main`. Version 4.4.0 is
-committed only to the local `main` branch. The next step is an authenticated
-visual review of the dashboard and both build workflows at desktop and mobile
-widths. If Mark approves that review, explain and request separate authorization
-before pushing, opening a pull request, merging, or deploying. If rollout status
-also matters, verify which `main` commit Vercel currently serves. Codex must not
-modify WordPress, deploy, publish, or make a GitHub state change unless Mark
-explicitly asks.
+available on the `codex/frontend-reskin` preview branch. Version 4.4.1 adds the
+sidebar and borderless product language locally on that same branch. The next
+step is an authenticated visual review of the dashboard and both build workflows
+at desktop and mobile widths. If Mark approves the local result, request separate
+authorization before pushing, opening a pull request, merging, or deploying.
+Codex must not modify WordPress, deploy, publish, or make a GitHub state change
+unless Mark explicitly asks.
 
 Production smoke-test order:
 

@@ -37,7 +37,7 @@ function Combobox({
       <ComboboxPrimitive.Trigger
         data-slot="combobox-trigger"
         className={cn(
-          "flex h-11 w-full items-center justify-between gap-1.5 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] py-2 pr-2 pl-3.5 text-sm font-medium text-[var(--color-text-primary)] whitespace-nowrap shadow-xs transition-[border-color,box-shadow] outline-none select-none focus-visible:border-[var(--color-primary)] focus-visible:ring-4 focus-visible:ring-[rgb(57_115_210_/_12%)] disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-11 w-full items-center justify-between gap-1.5 rounded-md bg-[var(--color-surface-raised)] py-2 pr-2 pl-3.5 text-sm font-medium text-[var(--color-text-primary)] whitespace-nowrap shadow-xs transition-[box-shadow] outline-none select-none focus-visible:ring-4 focus-visible:ring-[rgb(57_115_210_/_16%)] disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
       >
@@ -62,9 +62,9 @@ function Combobox({
         >
           <ComboboxPrimitive.Popup
             data-slot="combobox-content"
-            className="relative isolate z-50 flex max-h-[min(theme(spacing.80),var(--available-height))] w-(--anchor-width) min-w-36 origin-(--transform-origin) flex-col overflow-hidden rounded-md border border-[var(--color-border-default)] bg-popover text-popover-foreground shadow-md duration-100"
+            className="relative isolate z-50 flex max-h-[min(theme(spacing.80),var(--available-height))] w-(--anchor-width) min-w-36 origin-(--transform-origin) flex-col overflow-hidden rounded-md bg-popover text-popover-foreground shadow-md duration-100"
           >
-            <div className="flex items-center gap-2 border-b border-[var(--color-border-default)] px-3">
+            <div className="flex items-center gap-2 bg-[var(--color-surface)] px-3">
               <SearchIcon className="size-4 shrink-0 text-[var(--color-text-faint)]" />
               <ComboboxPrimitive.Input
                 placeholder={searchPlaceholder}

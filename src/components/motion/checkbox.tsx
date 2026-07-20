@@ -56,12 +56,12 @@ export function MotionCheckbox({
         whileTap={reduce || disabled ? undefined : { scale: 0.9 }}
         transition={SPRING_PRESS}
         className={cn(
-          "inline-flex size-5 shrink-0 items-center justify-center rounded-sm border outline-none transition-colors duration-150",
+          "inline-flex size-5 shrink-0 items-center justify-center rounded-sm shadow-xs outline-none transition-colors duration-150",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]",
           "disabled:cursor-not-allowed disabled:opacity-40",
           showMark
-            ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]"
-            : "border-[var(--color-border-default)] bg-[var(--color-surface-raised)] hover:bg-[var(--color-surface)]",
+            ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+            : "bg-[var(--color-surface-raised)] hover:bg-[var(--color-surface)]",
         )}
       >
         <AnimatePresence initial={false}>

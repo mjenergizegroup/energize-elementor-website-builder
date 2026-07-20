@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-pill border border-transparent px-2.5 py-1 text-xs font-semibold leading-none whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  "group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-pill px-2.5 py-1 text-xs font-semibold leading-none whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&>svg]:pointer-events-none [&>svg]:size-3!",
   {
     variants: {
       variant: {
@@ -16,8 +16,8 @@ const badgeVariants = cva(
           "bg-[var(--color-warning-tint)] text-[var(--color-warning)]",
         destructive:
           "bg-[var(--color-danger-tint)] text-[var(--color-danger)]",
-        outline: "border-[var(--color-border-default)] bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)]",
-        ghost: "border-transparent bg-transparent text-[var(--color-text-secondary)]",
+        outline: "bg-[var(--color-surface)] text-[var(--color-text-secondary)]",
+        ghost: "bg-transparent text-[var(--color-text-secondary)]",
         link: "text-primary underline-offset-4 hover:underline",
       },
     },

@@ -1,6 +1,6 @@
 # Energize Website Builder Design System
 
-Version: 4.4.0
+Version: 4.4.1
 Register: product
 Status: implemented
 
@@ -9,7 +9,7 @@ Status: implemented
 Energize Website Builder is calm, precise production software for team members
 who spend long work sessions planning, importing, reviewing, and creating
 WordPress drafts. The interface uses a light canvas, restrained blue accents,
-soft borders, rounded controls, and clear sentence-case labels.
+borderless rounded controls, and clear sentence-case labels.
 
 The visual reference is a modern operational dashboard viewed on a bright
 desktop display. The interface should feel dependable and easy to scan without
@@ -22,7 +22,8 @@ else.
 ## Design principles
 
 1. Show the next decision clearly and keep technical detail secondary.
-2. Use whitespace, hierarchy, and subtle surface changes before adding borders.
+2. Use whitespace, hierarchy, and subtle surface changes instead of decorative
+   borders.
 3. Keep one primary action visually dominant in each working area.
 4. Use familiar product controls with complete hover, focus, disabled, loading,
    success, warning, and error states.
@@ -50,8 +51,8 @@ color values.
 | Page background | `--color-page-background` | `#F7F9FC` |
 | Surface | `--color-surface` | `#F4F6F8` |
 | Raised surface | `--color-surface-raised` | `#FFFFFF` |
-| Default border | `--color-border-default` | `#E7EAEF` |
-| Strong border | `--color-border-strong` | `#D6DAE0` |
+| Default border | `--color-border-default` | `transparent` |
+| Strong border | `--color-border-strong` | `transparent` |
 | Primary text | `--color-text-primary` | `#1A1D21` |
 | Secondary text | `--color-text-secondary` | `#667085` |
 | Faint text | `--color-text-faint` | `#98A2B3` |
@@ -81,8 +82,9 @@ use the pill radius.
 | Small | `--shadow-sm` | Cards and panels |
 | Medium | `--shadow-md` | Dialogs, menus, elevated hover states |
 
-Shadows stay low-opacity and are never used as decoration. Borders remain one
-pixel except for the active wizard accent and visible keyboard focus.
+Shadows stay low-opacity and are never used as decoration. Surface fills and
+spacing define groups. Keyboard focus uses a visible blue ring without changing
+control size.
 
 ## Typography
 
@@ -118,29 +120,30 @@ when it is prose rather than data.
 
 ### Navigation
 
-The top navigation uses a raised white surface, a soft border, and 14px
-sentence-case links. The active route uses primary blue text and a two-pixel
-underline. The E tile remains red and uses an 8px radius. The user avatar is a
-pill.
+Desktop navigation uses a persistent 232px white sidebar with icon and text
+links. The active route uses a blue tint and primary blue text. The sidebar
+becomes a compact two-row navigation bar on tablets and an icon-first bar on
+phones. The E tile remains red and the account control stays at the bottom of
+the desktop rail.
 
 ### Page headers
 
-Page headers use a raised surface, large radius, soft border, and small shadow.
-The title is bold but not heavy. Supporting text is muted. The primary route
-action is a blue button with a small shadow.
+Page headers sit directly on the canvas without a container outline. The title
+is bold but not heavy. Supporting text is muted. The primary route action is a
+blue button with a small shadow.
 
 ### Cards and stats
 
-Cards use the light gray surface, default border, large radius, and small
-shadow. Stat labels are 14px and muted. Values are 38px and bold. Supporting
-lines are neutral unless they communicate a real semantic state.
+Cards use a raised surface, large radius, and small shadow without an outline.
+Stat labels are 14px and muted. Values are 38px and bold. Supporting lines are
+neutral unless they communicate a real semantic state.
 
 ### Tables and section blocks
 
-Section blocks use a white raised surface with one outer border. Headers are
-inside the card and never use a black bar. Table headers use the light gray
-surface, sentence-case 12px labels, and one-pixel dividers. Rows use the raised
-surface and the row-hover token.
+Section blocks use a white raised surface without an outer border. Headers are
+inside the surface and never use a black bar. Table headers use the light gray
+surface and sentence-case 12px labels. Rows use spacing, a restrained inset
+separator, and the row-hover token.
 
 ### Status pills
 
@@ -148,40 +151,40 @@ surface and the row-hover token.
 - Partial or warning: warning tint with warning text
 - Failure: danger tint with danger text
 - In progress: primary tint with primary text
-- Neutral: white with a default border and secondary text
+- Neutral: light gray fill with secondary text
 
 Pills use 12px semibold text and the pill radius.
 
 ### Buttons
 
 Primary buttons use primary blue, white text, medium radius, and an extra-small
-shadow. Secondary buttons use a raised white surface and default border.
-Tertiary actions use primary-hover text without a filled background. Icons use
-Lucide and remain 16px to 18px.
+shadow. Secondary buttons use a raised white or light gray fill without a
+border. Tertiary actions use primary-hover text without a filled background.
+Icons use Lucide and remain 16px to 18px.
 
 ### Inputs
 
-Inputs use the raised surface, default border, medium radius, and comfortable
-44px height. Focus combines a primary border with a soft blue ring. Placeholders
-use faint text. Invalid fields use danger without changing layout.
+Inputs use the raised surface, medium radius, low elevation, and comfortable
+44px height. Focus uses a soft blue ring. Placeholders use faint text. Invalid
+fields use a danger ring without changing layout.
 
 ### Wizard
 
 The wizard rail uses soft gray navigation rows. Step numbers are circular.
 Active steps use a primary tint, blue number circle, and blue left accent.
 Completed steps use a green check circle. Progress uses a rounded gray track
-and blue fill. Selection cards use a blue border and tint only when selected.
+and blue fill. Selection cards use a blue tint and soft ring only when selected.
 
 ### Dialogs and menus
 
-Dialogs use raised white surfaces, large radius, default border, and medium
-shadow. Headers remain light. Backdrops use a low-opacity dark neutral. Menus
+Dialogs use raised white surfaces, large radius, and medium shadow without an
+outline. Headers remain light. Backdrops use a low-opacity dark neutral. Menus
 and dropdowns use medium radius and medium shadow.
 
 ### Footer
 
-The release footer uses muted 12px text on the page background with a subtle top
-border. It never uses a solid black bar.
+The release label uses muted 11px text at the bottom of the desktop sidebar. It
+has no outline or decorative separator.
 
 ## Motion
 
@@ -205,6 +208,7 @@ nonessential animation. Layout properties are not animated.
 - No square controls or square status badges
 - No ornamental gradients, glass effects, or decorative motion
 - No nested cards when spacing or a divider is sufficient
+- No decorative colored outlines on controls, cards, panels, dialogs, or tables
 - No source IDs, filenames, plugin ledgers, or other implementation detail in
   the daily builder workflow
 - No em dash characters in UI copy, comments, or generated content
