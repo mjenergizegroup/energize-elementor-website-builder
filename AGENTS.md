@@ -1,8 +1,8 @@
 # Agent notes
 
 This is the Energize Website Builder (Next.js 15 App Router, TypeScript, Tailwind v4,
-shadcn/ui, Clerk, Prisma + Neon). Read [README.md](README.md) and
-[BUILD_BRIEF.md](BUILD_BRIEF.md) first.
+shadcn/ui, Clerk, Prisma + Neon). Read [HANDOFF.md](HANDOFF.md) completely, then
+[README.md](README.md) and [BUILD_BRIEF.md](BUILD_BRIEF.md), before making changes.
 
 House rules:
 
@@ -17,3 +17,10 @@ House rules:
   buttons use `buttonVariants()` on a `<Link>`.
 - Verify the injection engine with `npm run verify:injection` after touching
   anything under `src/lib/injection/` or `theme-templates/`.
+- Mark is new to Git and GitHub. Explain branches, commits, pull requests,
+  merges, deployments, and their consequences in plain language when they are
+  relevant. Before a GitHub state change, say whether it affects only a working
+  branch, the official `main` branch, or a live deployment.
+- Do not push, merge, deploy, publish, or modify an external WordPress site
+  without Mark's explicit authorization. A push, pull request, merge, Vercel
+  deployment, and WordPress draft creation are separate actions.

@@ -1,6 +1,6 @@
 # Energize Website Builder Handoff
 
-Updated July 18, 2026. This is the authoritative handoff for the next Codex
+Updated July 20, 2026. This is the authoritative handoff for the next Codex
 chat. Read this file completely before making changes.
 
 ## Start here
@@ -33,10 +33,30 @@ supersede the old user-facing theme workflow described in parts of
 - Application version: `4.3.0`
 - Current implementation: design-preserving V3 layout fitting for Elementor 4
   hybrid documents, final content cleanup, and stable homepage draft slugs
-- Previous implementation commit: `4d83e5e Fit crawled content into selected layouts`
-- The working tree should be clean after the version 4.3.0 commit.
+- Implementation commit: `f5471aa Preserve Elementor layout design during migration`
+- Main merge commit: `6d0a3e9 Merge pull request #2 from
+  mjenergizegroup/agent/preserve-elementor-layout-design`
+- Pull request: `#2`, merged into `main` on July 20, 2026
+- Local `main` and `origin/main` matched at `6d0a3e9` before this documentation
+  refresh. The working tree was clean.
 - Stack: Next.js 15 App Router, TypeScript, Tailwind v4, base-ui shadcn/ui,
   Clerk, Prisma 6, Neon PostgreSQL, and server-only WordPress integrations.
+
+## Current GitHub state
+
+- Repository: `mjenergizegroup/energize-elementor-website-builder`
+- Remote: `https://github.com/mjenergizegroup/energize-elementor-website-builder.git`
+- Active GitHub CLI account: `mjenergizegroup`
+- Git uses the GitHub CLI credential helper backed by the macOS Keychain.
+- Pull request #2 is merged. Do not recreate or remerge it.
+- The pull request Vercel preview checks passed before merge.
+- A production Vercel deployment triggered from the merged `main` branch was
+  not explicitly verified in this chat.
+- The historical branch `agent/preserve-elementor-layout-design` may still
+  exist locally and remotely. It is already merged and does not need more work.
+- Mark is new to GitHub terminology. Explain the purpose and effect of a branch,
+  commit, push, pull request, merge, or deployment in plain language before an
+  external state change.
 
 ## Product direction
 
@@ -257,8 +277,8 @@ No database records were changed by that verification.
 
 ## What has not been done
 
-- Commits have not been pushed by Codex.
-- Version 4.3.0 has not been deployed by Codex.
+- The production Vercel deployment state after merging pull request #2 has not
+  been explicitly verified.
 - No external WordPress site was modified while building these milestones.
 - An authenticated local browser smoke test is still manual because the local
   Clerk development domain requires a separate sign-in session.
@@ -272,10 +292,12 @@ No database records were changed by that verification.
 
 ## Recommended next objective
 
-Install WPCode Bridge v2.3.0 on the intended staging WordPress destination while
-preserving its existing shared secret, then push the local commit through Mark's
-normal GitHub workflow so Vercel builds the application. Codex must not modify
-WordPress, push, or deploy unless Mark explicitly asks.
+Version 4.3.0 is already pushed and merged into `main`. Do not repeat the branch,
+push, pull request, or merge work. If rollout status matters, first verify which
+`main` commit Vercel currently serves. Then, with Mark's explicit authorization,
+install WPCode Bridge v2.3.0 on the intended staging WordPress destination while
+preserving its existing shared secret and run the real migration smoke test.
+Codex must not modify WordPress, deploy, or publish unless Mark explicitly asks.
 
 Production smoke-test order:
 
@@ -364,7 +386,9 @@ Do not restart the old autonomous goal. Its website milestones are complete.
 Do not begin landing-page work unless Mark asks.
 
 Start by reading the required files and inspecting Git. Then ask Mark what he
-observed during production testing, or proceed with the specific issue included
-in his new-chat request. Continue autonomously through routine implementation
-and testing. Stop only for a genuine blocker, a required external write, or a
-major product choice that cannot be safely inferred.
+observed during staging or production testing, or proceed with the specific
+issue included in his new-chat request. Do not redo pull request #2 or the
+version 4.3.0 merge. Continue autonomously through routine implementation and
+testing. Explain GitHub actions in plain language. Stop only for a genuine
+blocker, a required external write, or a major product choice that cannot be
+safely inferred.
