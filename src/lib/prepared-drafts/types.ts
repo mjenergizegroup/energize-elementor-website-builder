@@ -1,5 +1,3 @@
-import type { AtomicElement } from "@/lib/elementor/atomic/types";
-
 export type PreparedDraftStatus = "ready" | "needs_attention";
 
 export interface PreparedDraftResult {
@@ -8,7 +6,7 @@ export interface PreparedDraftResult {
   sourcePageId?: string;
   sourceContentRevision?: number;
   contentChecksum: string;
-  artifact: AtomicElement[];
+  artifact: unknown[];
   notes: string[];
   residueReport: string[];
   status: PreparedDraftStatus;

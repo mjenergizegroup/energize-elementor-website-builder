@@ -44,6 +44,14 @@ const NOISE_LINE_PATTERNS = [
   /^(facebook|instagram|linkedin|youtube|x|twitter)$/i,
 ];
 
+const TRAILING_SITE_CHROME_PATTERNS = [
+  /^open accessibility menu$/i,
+  /^we use cookies to ensure you get the best experience on our website\.?$/i,
+  /^cookie (settings|preferences|policy)$/i,
+];
+
+const MARKDOWN_LINK = /\[([^\]]+)\]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/g;
+
 const DUPLICATE_SECTION_HEADINGS =
   /^(#{1,6})\s+(contact form|request an appointment|book an appointment|get in touch)$/i;
 
@@ -141,9 +149,12 @@ export function cleanAndClassifyPages(
 }
 
 export function cleanMarkdown(markdown: string): CleanMarkdownResult {
-  const lines = normalizeNewlines(markdown).split("\n");
+  const trailingChrome = removeTrailingSiteChrome(
+    normalizeNewlines(markdown).split("\n"),
+  );
+  const lines = trailingChrome.lines;
   const cleanedLines: string[] = [];
-  let removedNoiseLines = 0;
+  let removedNoiseLines = trailingChrome.removed;
 
   for (const line of lines) {
     const normalized = line
@@ -168,12 +179,106 @@ export function cleanMarkdown(markdown: string): CleanMarkdownResult {
     cleanedLines.push(line.replace(/[ \t]+$/g, ""));
   }
 
-  const deduped = removeDuplicateFormSections(cleanedLines);
+  const callsToAction = removeRepeatedCallsToAction(cleanedLines);
+  removedNoiseLines += callsToAction.removed;
+  const deduped = removeDuplicateFormSections(callsToAction.lines);
   return {
     markdown: deduped.lines.join("\n").replace(/\n{3,}/g, "\n\n").trim(),
     removedNoiseLines,
     removedDuplicateSections: deduped.removed,
   };
+}
+
+function removeTrailingSiteChrome(lines: string[]): {
+  lines: string[];
+  removed: number;
+} {
+  const nonEmptyIndexes = lines
+    .map((line, index) => ({ index, normalized: normalizeNoiseLine(line) }))
+    .filter((item) => item.normalized);
+  const tailStart = Math.max(
+    0,
+    nonEmptyIndexes.length - 10,
+    Math.floor(nonEmptyIndexes.length * 0.5),
+  );
+  const tail = nonEmptyIndexes.slice(tailStart);
+  const marker = tail.find((item) =>
+    TRAILING_SITE_CHROME_PATTERNS.some((pattern) => pattern.test(item.normalized)),
+  );
+  if (!marker) return { lines, removed: 0 };
+  return {
+    lines: lines.slice(0, marker.index),
+    removed: lines.slice(marker.index).filter((line) => line.trim()).length,
+  };
+}
+
+function removeRepeatedCallsToAction(lines: string[]): {
+  lines: string[];
+  removed: number;
+} {
+  const blocks = splitLineBlocks(lines);
+  const fingerprints = blocks.map(callToActionFingerprint);
+  const indexes = new Map<string, number[]>();
+  for (let index = 0; index < fingerprints.length; index += 1) {
+    const fingerprint = fingerprints[index];
+    if (!fingerprint) continue;
+    const matches = indexes.get(fingerprint) ?? [];
+    matches.push(index);
+    indexes.set(fingerprint, matches);
+  }
+
+  const remove = new Set<number>();
+  for (const matches of indexes.values()) {
+    if (matches.length <= 2) continue;
+    for (const index of matches.slice(1, -1)) remove.add(index);
+  }
+  if (remove.size === 0) return { lines, removed: 0 };
+
+  const kept = blocks.filter((_block, index) => !remove.has(index));
+  return {
+    lines: kept.flatMap((block, index) =>
+      index === kept.length - 1 ? block : [...block, ""],
+    ),
+    removed: [...remove].reduce(
+      (count, index) => count + blocks[index].filter((line) => line.trim()).length,
+      0,
+    ),
+  };
+}
+
+function splitLineBlocks(lines: string[]): string[][] {
+  const blocks: string[][] = [];
+  let current: string[] = [];
+  for (const line of lines) {
+    if (!line.trim()) {
+      if (current.length > 0) {
+        blocks.push(current);
+        current = [];
+      }
+      continue;
+    }
+    current.push(line);
+  }
+  if (current.length > 0) blocks.push(current);
+  return blocks;
+}
+
+function callToActionFingerprint(block: string[]): string | undefined {
+  const value = block.join(" ").trim();
+  const matches = [...value.matchAll(MARKDOWN_LINK)];
+  if (matches.length === 0 || value.replace(MARKDOWN_LINK, "").trim()) {
+    return undefined;
+  }
+  return matches
+    .map((match) => `${match[1].trim().toLowerCase()}|${match[2].trim().toLowerCase()}`)
+    .join("::");
+}
+
+function normalizeNoiseLine(line: string): string {
+  return line
+    .replace(/^[-*+]\s+/, "")
+    .replace(/^\[([^\]]+)\]\([^)]+\)$/, "$1")
+    .trim();
 }
 
 export function normalizeSourceUrl(value: string): string {

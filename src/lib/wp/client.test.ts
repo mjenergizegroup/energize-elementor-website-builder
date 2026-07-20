@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
-import { WpApiError, WpClient } from "./client";
+import {
+  bridgeSupportsPreservedV3Layouts,
+  WpApiError,
+  WpClient,
+} from "./client";
 
 type StubResponse = {
   status: number;
@@ -83,6 +87,22 @@ async function expectComponentLicenseFailure(
 
 async function main() {
   try {
+    assert.equal(bridgeSupportsPreservedV3Layouts("2.2.0"), false);
+    assert.equal(bridgeSupportsPreservedV3Layouts("2.3.0"), true);
+    assert.equal(bridgeSupportsPreservedV3Layouts("3.0.0"), true);
+    assert.equal(bridgeSupportsPreservedV3Layouts(undefined), false);
+
+    const currentSuccess = await checkWithResponses([
+      { status: 200, body: { id: 1 } },
+      { status: 200, body: { title: "Example" } },
+      { status: 200, body: { ok: true, version: "2.3.0" } },
+    ]);
+    assert.deepEqual(currentSuccess.result, {
+      ok: true,
+      detail: "Credentials valid.",
+      bridgeVersion: "2.3.0",
+    });
+
     const legacySuccess = await checkWithResponses([
       { status: 200, body: { id: 1 } },
       { status: 200, body: { title: "Example" } },
@@ -168,7 +188,7 @@ async function main() {
       },
     ]);
     assert.equal(legacyMissingSecret.result.ok, false);
-    assert.match(legacyMissingSecret.result.detail, /v2\.2\.0 WPCode Bridge/);
+    assert.match(legacyMissingSecret.result.detail, /v2\.3\.0 WPCode Bridge/);
     assert.match(legacyMissingSecret.result.detail, /Run Everywhere/);
 
     const currentMissingSecret = await checkWithResponses([
@@ -183,7 +203,7 @@ async function main() {
       },
     ]);
     assert.equal(currentMissingSecret.result.ok, false);
-    assert.match(currentMissingSecret.result.detail, /v2\.2\.0 WPCode Bridge/);
+    assert.match(currentMissingSecret.result.detail, /v2\.3\.0 WPCode Bridge/);
     assert.match(currentMissingSecret.result.detail, /live configuration/);
 
     const administratorPermissionFailure = await checkWithResponses([

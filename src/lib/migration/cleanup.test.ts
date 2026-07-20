@@ -37,6 +37,56 @@ DenyAccept`);
 assert.equal(footerNoise.markdown, "Useful page copy.");
 assert.equal(footerNoise.removedNoiseLines, 3);
 
+const staleFooterNoise = cleanMarkdown(`Useful page copy.
+
+[Open Accessibility Menu](https://www.energize-group.com/ "Open Accessibility Menu")
+
+We use cookies to ensure you get the best experience on our website.
+
+[Learn more.](https://example.com/cookie-policy)
+
+DenyAccept`);
+assert.equal(staleFooterNoise.markdown, "Useful page copy.");
+assert.equal(staleFooterNoise.removedNoiseLines, 4);
+
+const leadingAccessibilityControl = cleanMarkdown(`Open Accessibility Menu
+
+# Short Page
+
+Useful content must remain.`);
+assert.equal(
+  leadingAccessibilityControl.markdown,
+  "# Short Page\n\nUseful content must remain.",
+);
+
+const repeatedCallsToAction = cleanMarkdown(`# About Us
+
+[(803) 555-0100](tel:8035550100) [Schedule Online](https://example.com/book)
+
+## Our Story
+
+Story copy.
+
+[(803) 555-0100](tel:8035550100) [Schedule Online](https://example.com/book)
+
+## Our Practice
+
+Practice copy.
+
+[(803) 555-0100](tel:8035550100) [Schedule Online](https://example.com/book)
+
+## Visit Us
+
+Visit copy.
+
+[(803) 555-0100](tel:8035550100) [Schedule Online](https://example.com/book)`);
+assert.equal(
+  (repeatedCallsToAction.markdown.match(/Schedule Online/g) ?? []).length,
+  2,
+);
+assert.match(repeatedCallsToAction.markdown, /# About Us/);
+assert.match(repeatedCallsToAction.markdown, /## Visit Us/);
+
 const result = cleanAndClassifyPages([
   {
     url: "https://example.com/",

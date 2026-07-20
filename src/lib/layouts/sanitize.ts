@@ -10,20 +10,22 @@ import type {
 
 type JsonRecord = Record<string, unknown>;
 
-const SANITIZER_VERSION = "1";
+const SANITIZER_VERSION = "2";
 const CONTENT_KEYS = new Set([
   "description",
+  "description_text",
   "editor",
   "sub_title",
   "subtitle",
   "text",
   "title",
+  "title_text",
 ]);
-const SOURCE_MEDIA_PATTERN = /(?:background.*(?:image|gallery)|image|gallery|video|poster)/i;
+const SOURCE_MEDIA_PATTERN = /^(?:image|(?:background|background_overlay)_image(?:_(?:tablet|mobile))?|gallery|video|poster)(?:$|_url$)/i;
 const SOURCE_LINK_PATTERN = /(?:^|_)(?:link|url|href)(?:$|_)/i;
-const CUSTOM_CODE_PATTERN = /(?:custom_css|html|javascript|script|code|tracking|pixel)/i;
+const CUSTOM_CODE_PATTERN = /^(?:custom_css|html|javascript|script|code|tracking|pixel)(?:_|$)/i;
 const GLOBAL_PATTERN = /^__(?:globals|dynamic)__$/;
-const SAFE_STYLE_PATTERN = /^(?:_element_|_flex_|align|animation|background_(?:background|position|repeat|size)|border|content_width|display|flex|gap|grid|header_size|height|icon_|justify|margin|max_|min_|object_|order|overflow|padding|position|text_align|text_padding|transform|transition|typography_(?:font_size|font_style|font_weight|letter_spacing|line_height|text_transform)|width|z_index)/;
+const SAFE_STYLE_PATTERN = /^(?:_?(?:animation|border|element|flex|margin|padding|position|transform|transition|z_index)|align|background_(?:(?:overlay_)?(?:background|position|repeat|size|xpos|ypos|bg_width|opacity))|box_shadow|boxed_width|button_hover_transition_duration|container_type|content_(?:vertical_alignment|width)|display|flex|gap|grid|header_size|height|hide_|hover_animation|icon_|image_(?:border|box_shadow|size)|justify|max_|min_|motion_fx_|object[-_](?:fit|position)|order|overflow|padding|position|selected_icon|shape_divider|text_align|text_padding|title_bottom_space|transform|transition|typography_(?:typography|font_size|font_style|font_weight|letter_spacing|line_height|text_transform)|view|width|z_index)/;
 const SUPPORTED_WIDGETS = new Set([
   "button",
   "heading",
@@ -160,6 +162,17 @@ function sanitizeSettings(
   state: MutableState,
 ): JsonRecord {
   const result: JsonRecord = {};
+  const globalSettings = isRecord(settings.__globals__)
+    ? settings.__globals__
+    : {};
+
+  for (const [settingKey, reference] of Object.entries(globalSettings)) {
+    if (typeof reference !== "string") continue;
+    const colorRole = reference.match(/globals\/colors\?id=(primary|secondary|accent|text|background)(?:$|&)/i)?.[1];
+    if (colorRole) {
+      result[settingKey] = `{{ENERGIZE_BRAND:${colorRole.toLowerCase()}}}`;
+    }
+  }
 
   for (const [key, value] of Object.entries(settings)) {
     if (GLOBAL_PATTERN.test(key)) {
@@ -192,7 +205,7 @@ function sanitizeSettings(
       continue;
     }
     if (CONTENT_KEYS.has(key)) {
-      let kind: LayoutSlotKind = key === "editor" || key === "description" ? "body" : "heading";
+      let kind: LayoutSlotKind = key === "editor" || key.startsWith("description") ? "body" : "heading";
       if (widgetType === "button" && key === "text") kind = "button-label";
       if (widgetType === "icon-list") kind = "list";
       const slot = addSlot(state, nodeId, kind, key, kind === "list");

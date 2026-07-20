@@ -34,7 +34,18 @@ assert.equal(
   true,
 );
 assert.equal(source.includes("function energize_build_health()"), true);
-assert.equal(source.includes("ENERGIZE_BUILD_TOOL_VERSION', '2.2.0'"), true);
+assert.equal(source.includes("ENERGIZE_BUILD_TOOL_VERSION', '2.3.0'"), true);
+assert.equal(
+  source.includes("array('section', 'column', 'container')"),
+  true,
+  "The bridge must accept sanitized classic layout elements in Elementor 4 hybrid documents.",
+);
+assert.equal(
+  source.includes("'button', 'google_maps', 'heading', 'html', 'icon', 'icon-box', 'icon-list', 'image', 'shortcode', 'text-editor'"),
+  true,
+  "The bridge must use the reviewed classic widget allowlist.",
+);
+assert.equal(source.includes("energize_unsupported_element"), true);
 assert.equal(
   source.includes("The WPCode Bridge secret is not configured."),
   true,

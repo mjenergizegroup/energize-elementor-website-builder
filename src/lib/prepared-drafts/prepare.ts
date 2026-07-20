@@ -7,12 +7,18 @@ import type {
   LayoutSemanticSlot,
 } from "@/lib/layouts/types";
 import { convertTemplateToAtomic } from "@/lib/migration/content/registry";
+import { cleanMarkdown } from "@/lib/migration/cleanup";
 import { injectNormalizedContent } from "@/lib/migration/content/inject";
+import {
+  injectSanitizedElementorV3Content,
+  isSanitizedElementorV3Artifact,
+} from "@/lib/migration/content/inject-elementor-v3";
 import { normalizePageContent } from "@/lib/migration/content/normalize";
 import type {
   NormalizedContentSlot,
   NormalizedPageContent,
 } from "@/lib/migration/content/types";
+import type { AtomicElement } from "@/lib/elementor/atomic/types";
 import type {
   MigrationAsset,
   MigrationSourcePage,
@@ -21,7 +27,7 @@ import type {
 import { pagePath, type PagePlanItemInput } from "@/lib/page-plan/types";
 import type { PreparedDraftResult } from "./types";
 
-export const DRAFT_PREPARER_VERSION = "2";
+export const DRAFT_PREPARER_VERSION = "3";
 
 export interface PrepareDraftInput {
   page: PagePlanItemInput;
@@ -30,6 +36,7 @@ export interface PrepareDraftInput {
   layoutRevision: {
     id: string;
     status: string;
+    sanitizerVersion?: string;
     sanitizedArtifact: Prisma.JsonValue | Record<string, unknown>;
     semanticSlots: Prisma.JsonValue | LayoutSemanticSlot[];
     identityFingerprints: Prisma.JsonValue | LayoutIdentityFingerprint[];
@@ -63,20 +70,44 @@ export function preparePageDraft(input: PrepareDraftInput): PreparedDraftResult 
   const normalized = input.sourcePage
     ? normalizeForDestination({ ...input, sourcePage: input.sourcePage }, notes)
     : emptyDestinationContent(input.page);
-  const converted = convertTemplateToAtomic(input.layoutRevision.sanitizedArtifact);
   const fingerprints = parseFingerprints(input.layoutRevision.identityFingerprints);
-  const residueBeforeFit = scanPreparedLayoutResidue(
-    converted.elementorData,
-    fingerprints,
-    { checkPlaceholders: false },
-  );
-  const injected = injectNormalizedContent(converted.elementorData, normalized, {
-    semanticSlots: parseSemanticSlots(input.layoutRevision.semanticSlots),
-    slotTargets: converted.slotTargets,
+  const semanticSlots = parseSemanticSlots(input.layoutRevision.semanticSlots);
+  const sanitizedArtifact = input.layoutRevision.sanitizedArtifact;
+  const preserveElementorV3 = isSanitizedElementorV3Artifact(sanitizedArtifact);
+  const sanitizerVersion = input.layoutRevision.sanitizerVersion ??
+    artifactSanitizerVersion(sanitizedArtifact);
+  if (
+    preserveElementorV3 &&
+    !supportsDesignPreservingSanitizer(sanitizerVersion)
+  ) {
+    throw new Error(
+      `The selected layout for ${input.page.pageName} was prepared by an older layout engine and cannot preserve its design. Add the original JSON to Template Library again, then choose the new Ready layout.`,
+    );
+  }
+  const converted = preserveElementorV3
+    ? undefined
+    : convertTemplateToAtomic(sanitizedArtifact);
+  const sourceLayout = preserveElementorV3
+    ? sanitizedContent(sanitizedArtifact)
+    : converted?.elementorData ?? [];
+  const residueBeforeFit = scanPreparedLayoutResidue(sourceLayout, fingerprints, {
+    checkPlaceholders: false,
   });
+  const injected = preserveElementorV3
+    ? injectSanitizedElementorV3Content(sourceLayout, normalized, {
+        semanticSlots,
+        colors: input.workspace?.colors,
+      })
+    : injectNormalizedContent(sourceLayout as AtomicElement[], normalized, {
+        semanticSlots,
+        slotTargets: converted?.slotTargets,
+      });
   const residueAfterFit = scanPreparedLayoutResidue(injected.elementorData, []);
   const residueReport = [...new Set([...residueBeforeFit, ...residueAfterFit])].sort();
-  for (const item of converted.reviewItems) notes.push(plainReviewNote(item.message));
+  for (const item of converted?.reviewItems ?? []) notes.push(plainReviewNote(item.message));
+  if (preserveElementorV3) {
+    notes.push("The sanitized layout design was preserved in its original Elementor structure.");
+  }
   if (!input.sourcePage) notes.push("Empty draft content was requested for this page.");
   if (injected.appended > 0) {
     notes.push("Extra source content was kept with its matching content section.");
@@ -96,6 +127,7 @@ export function preparePageDraft(input: PrepareDraftInput): PreparedDraftResult 
     },
     sourceChecksum: input.sourcePage?.sourceChecksum,
     sourceRevision: input.sourcePage?.contentRevision,
+    sanitizerVersion,
     match: {
       sourcePageId: input.match.sourcePageId,
       status: input.match.status,
@@ -128,25 +160,54 @@ export function preparePageDraft(input: PrepareDraftInput): PreparedDraftResult 
     notes: [...new Set(notes)],
     residueReport,
     status:
-      converted.deployable && residueReport.length === 0
+      (converted?.deployable ?? true) && residueReport.length === 0
         ? "ready"
         : "needs_attention",
-    adapterId: converted.adapter.id,
-    adapterVersion: converted.adapter.version,
+    adapterId: converted?.adapter.id ?? "elementor-v3-preserved",
+    adapterVersion: converted?.adapter.version ?? "1",
     replacedSlots: injected.replaced,
     appendedSlots: injected.appended,
     removedPlaceholders: injected.removedPlaceholders,
   };
 }
 
+function supportsDesignPreservingSanitizer(version: string | undefined): boolean {
+  if (!version) return false;
+  const major = Number.parseInt(version, 10);
+  return Number.isFinite(major) && major >= 2;
+}
+
+function artifactSanitizerVersion(value: unknown): string | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const sanitizer = (value as Record<string, unknown>).sanitizer;
+  if (!sanitizer || typeof sanitizer !== "object" || Array.isArray(sanitizer)) {
+    return undefined;
+  }
+  const version = (sanitizer as Record<string, unknown>).version;
+  return typeof version === "string" ? version : undefined;
+}
+
+function sanitizedContent(value: unknown): unknown[] {
+  return value && typeof value === "object" && !Array.isArray(value) &&
+    Array.isArray((value as Record<string, unknown>).content)
+    ? (value as Record<string, unknown>).content as unknown[]
+    : [];
+}
+
 function normalizeForDestination(
   input: PrepareDraftInput & { sourcePage: MigrationSourcePage },
   notes: string[],
 ): NormalizedPageContent {
+  const approvedMarkdown =
+    input.sourcePage.approvedMarkdown || input.sourcePage.cleanedMarkdown;
+  const finalCleanup = cleanMarkdown(approvedMarkdown);
+  if (finalCleanup.markdown !== approvedMarkdown.trim()) {
+    notes.push("Repeated website controls and footer text were removed before fitting content.");
+  }
   const rewrittenPage = {
     ...input.sourcePage,
     approvedMarkdown: rewriteMarkdownLinks(
-      input.sourcePage.approvedMarkdown || input.sourcePage.cleanedMarkdown,
+      finalCleanup.markdown,
       (href, label) => rewriteLink(input, href, label, notes),
     ),
   };

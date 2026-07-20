@@ -7,7 +7,8 @@ import { prisma } from "@/lib/prisma";
 import { checkDeployRateLimit } from "@/lib/rate-limit";
 import { validateBrandKitAssets } from "@/lib/security/uploads";
 import { prepareProjectDrafts } from "@/lib/prepared-drafts/repository";
-import { WpClient } from "@/lib/wp/client";
+import { containsClassicElementorContent } from "@/lib/migration/content/inject-elementor-v3";
+import { bridgeSupportsPreservedV3Layouts, WpClient } from "@/lib/wp/client";
 import {
   createPreparedBuildPlan,
   runPreparedBuildPlan,
@@ -158,6 +159,9 @@ export async function POST(
     });
 
     const wordpress = new WpClient(client.wpSiteUrl);
+    const requiresPreservedV3 = source.pages.some((page) =>
+      containsClassicElementorContent(page.artifact),
+    );
     const result = await runPreparedBuildPlan(
       plan,
       source.pages,
@@ -165,6 +169,14 @@ export async function POST(
         prepareDestination: async () => {
           const connection = await wordpress.checkConnection(client.wpUsername, client.appPassword);
           if (!connection.ok) throw new Error(connection.detail);
+          if (
+            requiresPreservedV3 &&
+            !bridgeSupportsPreservedV3Layouts(connection.bridgeVersion)
+          ) {
+            throw new Error(
+              "This WordPress site needs the v2.3.0 WPCode Bridge before it can preserve the selected layout design. Replace the bridge snippet and retry. No drafts were created.",
+            );
+          }
           await wordpress.setSiteName(client.wpUsername, client.appPassword, client.name);
         },
         applyBrand: async () => {

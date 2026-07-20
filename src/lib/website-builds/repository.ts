@@ -2,6 +2,7 @@ import "server-only";
 import type { Prisma } from "@prisma/client";
 import { audit } from "@/lib/audit";
 import { getMigrationProject, parseMigrationWizardWorkspace } from "@/lib/migration/projects";
+import { isSanitizedElementorV3Artifact } from "@/lib/migration/content/inject-elementor-v3";
 import { prisma } from "@/lib/prisma";
 import { checksum } from "./orchestrate";
 import type { PreparedBuildPlan, PreparedBuildSourcePage } from "./types";
@@ -16,17 +17,24 @@ export async function loadPreparedBuildSource(
     orderBy: { position: "asc" },
     include: {
       contentMatch: true,
+      layoutRevision: {
+        select: { sanitizerVersion: true, sanitizedArtifact: true },
+      },
       preparedDrafts: { orderBy: { version: "desc" }, take: 1 },
     },
   });
   const pages = records.map((page): PreparedBuildSourcePage => {
     const draft = page.preparedDrafts[0];
     if (!draft) throw new Error(`${page.pageName} has not been prepared yet.`);
+    const preservedV3Ready =
+      !isSanitizedElementorV3Artifact(page.layoutRevision.sanitizedArtifact) ||
+      (supportsDesignPreservingSanitizer(page.layoutRevision.sanitizerVersion) &&
+        draft.adapterId === "elementor-v3-preserved");
     return {
       preparedDraftId: draft.id,
       pagePlanItemId: page.id,
       pageName: page.pageName,
-      slug: page.slug,
+      slug: page.slug || "home",
       contentChecksum: draft.contentChecksum,
       layoutRevisionId: draft.layoutRevisionId,
       sourceSignature: checksum({
@@ -36,6 +44,9 @@ export async function loadPreparedBuildSource(
         pageType: page.pageType,
         layoutRevisionId: page.layoutRevisionId,
         pageUpdatedAt: page.updatedAt.toISOString(),
+        layoutSanitizerVersion: page.layoutRevision.sanitizerVersion,
+        draftAdapterId: draft.adapterId,
+        draftAdapterVersion: draft.adapterVersion,
         match: page.contentMatch
           ? {
               sourcePageId: page.contentMatch.sourcePageId,
@@ -46,7 +57,9 @@ export async function loadPreparedBuildSource(
           : null,
       }),
       status:
-        draft.status === "ready" && draft.layoutRevisionId === page.layoutRevisionId
+        draft.status === "ready" &&
+        draft.layoutRevisionId === page.layoutRevisionId &&
+        preservedV3Ready
           ? "ready"
           : "needs_attention",
       residueReport: parseStrings(draft.residueReport),
@@ -80,6 +93,11 @@ export async function loadPreparedBuildSource(
         : null,
     ),
   };
+}
+
+function supportsDesignPreservingSanitizer(version: string): boolean {
+  const major = Number.parseInt(version, 10);
+  return Number.isFinite(major) && major >= 2;
 }
 
 export async function savePreparedBuildPlan(

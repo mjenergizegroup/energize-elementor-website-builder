@@ -102,7 +102,7 @@ export class WpApiError extends Error {
 }
 
 const BRIDGE_SECRET_SETUP_DETAIL =
-  "WordPress credentials are valid, but the WPCode Bridge secret is not configured. In WordPress, open WPCode > Code Snippets > Bridge Tool, replace the active code with the v2.2.0 WPCode Bridge download, replace PASTE_YOUR_EXISTING_SECRET_HERE with the existing shared secret in the live configuration near the top, choose Run Everywhere, then save and activate it.";
+  "WordPress credentials are valid, but the WPCode Bridge secret is not configured. In WordPress, open WPCode > Code Snippets > Bridge Tool, replace the active code with the v2.3.0 WPCode Bridge download, replace PASTE_YOUR_EXISTING_SECRET_HERE with the existing shared secret in the live configuration near the top, choose Run Everywhere, then save and activate it.";
 
 const WORDPRESS_ADMIN_PERMISSION_DETAIL =
   "The Application Password is valid, but WordPress is not granting its user the Administrator permission required by the Atomic API. In WordPress, open Users > All Users and confirm the exact username saved in this build is an Administrator. Then create a new Application Password while logged into that same Administrator account and update the client's WP Target. If the role already shows Administrator, check whether a security or role-management plugin is restricting REST API permissions for that user.";
@@ -131,6 +131,14 @@ function bridgeFailureDetail(error: unknown, legacy: boolean): string {
   return `WordPress credentials are valid, but the ${checkName} failed: ${
     error instanceof Error ? error.message : "Unknown bridge error"
   }`;
+}
+
+export function bridgeSupportsPreservedV3Layouts(version: string | undefined): boolean {
+  if (!version) return false;
+  const parts = version.split(".").map((part) => Number.parseInt(part, 10));
+  if (parts.some((part) => !Number.isFinite(part))) return false;
+  const [major = 0, minor = 0, patch = 0] = parts;
+  return major > 2 || (major === 2 && (minor > 3 || (minor === 3 && patch >= 0)));
 }
 
 export class WpClient {
@@ -399,7 +407,7 @@ export class WpClient {
   async checkConnection(
     username: string,
     appPassword: string,
-  ): Promise<{ ok: boolean; detail: string }> {
+  ): Promise<{ ok: boolean; detail: string; bridgeVersion?: string }> {
     const auth = this.basicAuth(username, appPassword);
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
@@ -435,7 +443,12 @@ export class WpClient {
       }
 
       try {
-        await this.postPlugin<{ ok: boolean; version: string }>("/health", {});
+        const health = await this.postPlugin<{ ok: boolean; version: string }>("/health", {});
+        return {
+          ok: true,
+          detail: "Credentials valid.",
+          bridgeVersion: health.version,
+        };
       } catch (error) {
         // Bridge 2.0.0 predates the dedicated health route. Its flush-css
         // endpoint uses the same shared-secret permission callback and is safe
@@ -463,7 +476,6 @@ export class WpClient {
           detail: bridgeFailureDetail(error, false),
         };
       }
-      return { ok: true, detail: "Credentials valid." };
     } catch (e) {
       return {
         ok: false,

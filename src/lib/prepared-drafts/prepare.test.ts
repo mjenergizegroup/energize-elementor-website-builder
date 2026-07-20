@@ -15,7 +15,10 @@ const template = {
     {
       id: "donor-section",
       elType: "container",
-      settings: { flex_direction: "column" },
+      settings: {
+        flex_direction: "column",
+        padding: { unit: "px", top: "80", right: "24", bottom: "80", left: "24" },
+      },
       elements: [
         { id: "donor-title", elType: "widget", widgetType: "heading", settings: { title: "Layout Donor Dentistry", header_size: "h1" }, elements: [] },
         { id: "donor-body", elType: "widget", widgetType: "text-editor", settings: { editor: "Template donor body copy." }, elements: [] },
@@ -180,12 +183,29 @@ assert.match(artifact, /Emergency Dentistry/);
 assert.match(artifact, /Fast, compassionate dental care/);
 assert.match(artifact, /\/contact-us\//);
 assert.match(artifact, /destination\.test\/uploads\/emergency-room\.jpg/);
-assert.doesNotMatch(artifact, /Layout Donor|donor\.example|donor\.jpg|818/);
+assert.doesNotMatch(artifact, /Layout Donor|donor\.example|donor\.jpg|"id":818/);
 assert.doesNotMatch(artifact, /old-client\.test\/uploads\/emergency\.jpg/);
 assert.doesNotMatch(artifact, /ENERGIZE_SLOT|ENERGIZE_BRAND/);
 assert.ok(prepared.appendedSlots > 0);
-assert.equal(prepared.adapterVersion, "2");
+assert.equal(prepared.adapterId, "elementor-v3-preserved");
+assert.equal(prepared.adapterVersion, "1");
 assert.ok(prepared.notes.some((note) => /matching content section/.test(note)));
+const preservedRoot = prepared.artifact[0] as {
+  id: string;
+  elType: string;
+  settings: Record<string, unknown>;
+};
+assert.equal(preservedRoot.elType, "container");
+assert.match(preservedRoot.id, /^[a-f0-9]{8}$/);
+assert.equal(preservedRoot.settings.flex_direction, "column");
+assert.deepEqual(preservedRoot.settings.padding, {
+  unit: "px",
+  top: "80",
+  right: "24",
+  bottom: "80",
+  left: "24",
+});
+assert.ok(prepared.notes.some((note) => /original Elementor structure/.test(note)));
 
 const emptyMatch: PersistedContentMatch = {
   ...match("empty-plan", "unused"),
@@ -276,14 +296,109 @@ const sectionPrepared = preparePageDraft({
 });
 assert.equal(sectionPrepared.status, "ready");
 assert.equal(sectionPrepared.artifact.length, 3);
-assert.match(JSON.stringify(sectionPrepared.artifact[0]), /Emergency Dentistry/);
-assert.match(JSON.stringify(sectionPrepared.artifact[1]), /Same-Day Help/);
-assert.match(JSON.stringify(sectionPrepared.artifact[2]), /What to Expect/);
+const preservedSections = sectionPrepared.artifact.filter(
+  (item) => (item as { elType?: string }).elType === "container",
+);
+assert.equal(preservedSections.length, 3);
+assert.match(JSON.stringify(preservedSections[0]), /Emergency Dentistry/);
+assert.match(JSON.stringify(preservedSections[1]), /Same-Day Help/);
+assert.match(JSON.stringify(preservedSections[2]), /What to Expect/);
+assert.equal(
+  sectionPrepared.artifact.some(
+    (item) => (item as { elType?: string }).elType === "e-flexbox",
+  ),
+  false,
+);
 assert.doesNotMatch(JSON.stringify(sectionPrepared.artifact), /Old hero|Old list|Old expectation/);
 assert.doesNotMatch(JSON.stringify(sectionPrepared.artifact), /ENERGIZE_SLOT/);
 assert.equal(
   sectionPrepared.notes.some((note) => /unsupported optional layout region/.test(note)),
   false,
+);
+
+const legacySectionTemplate = {
+  ...template,
+  content: [
+    {
+      id: "legacy-section",
+      elType: "section",
+      settings: { background_color: "#f5f5f5" },
+      elements: [
+        {
+          id: "legacy-column",
+          elType: "column",
+          settings: { _column_size: 100 },
+          elements: [
+            { id: "legacy-title", elType: "widget", widgetType: "heading", settings: { title: "Old title", header_size: "h1" }, elements: [] },
+            { id: "legacy-body", elType: "widget", widgetType: "text-editor", settings: { editor: "Old body" }, elements: [] },
+          ],
+        },
+      ],
+    },
+  ],
+};
+const legacySectionText = JSON.stringify(legacySectionTemplate);
+const legacySectionLayout = sanitizeLayoutTemplate({
+  analysis: analyzeTemplateJson({
+    fileName: "Legacy-Section-Service.json",
+    sizeBytes: legacySectionText.length,
+    checksum: createHash("sha256").update(legacySectionText).digest("hex"),
+    document: legacySectionTemplate,
+  }),
+  document: legacySectionTemplate,
+  fileName: "Legacy-Section-Service.json",
+});
+assert.equal(legacySectionLayout.status, "ready");
+const legacySectionPrepared = preparePageDraft({
+  page: servicePlan,
+  match: matches[0],
+  sourcePage: serviceSource,
+  layoutRevision: {
+    id: "legacy-section-layout-revision",
+    status: "ready",
+    sanitizedArtifact: legacySectionLayout.artifact,
+    semanticSlots: legacySectionLayout.semanticSlots,
+    identityFingerprints: legacySectionLayout.identityFingerprints,
+  },
+  pagePlan: [servicePlan, contactPlan],
+  matches,
+  sourcePages: [serviceSource, contactSource],
+  assets: [],
+});
+const legacySectionRoot = legacySectionPrepared.artifact[0] as {
+  elType: string;
+  settings: Record<string, unknown>;
+  elements: Array<{ elType: string; elements: Array<{ elType: string }> }>;
+};
+assert.equal(legacySectionRoot.elType, "section");
+assert.equal(legacySectionRoot.settings.background_color, "#FFFFFF");
+assert.equal(legacySectionRoot.elements[0].elType, "column");
+assert.ok(
+  legacySectionRoot.elements[0].elements.some(
+    (element) => element.elType === "container",
+  ),
+);
+
+assert.throws(
+  () =>
+    preparePageDraft({
+      page: servicePlan,
+      match: matches[0],
+      sourcePage: serviceSource,
+      layoutRevision: {
+        id: "old-layout-revision",
+        status: "ready",
+        sanitizerVersion: "1",
+        sanitizedArtifact: sanitized.artifact,
+        semanticSlots: sanitized.semanticSlots,
+        identityFingerprints: sanitized.identityFingerprints,
+      },
+      pagePlan: [servicePlan, contactPlan],
+      matches,
+      sourcePages: [serviceSource, contactSource],
+      assets: [],
+    }),
+  /Add the original JSON to Template Library again/,
 );
 
 console.log("prepared draft checks passed");

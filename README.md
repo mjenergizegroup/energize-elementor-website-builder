@@ -1,8 +1,9 @@
 # Energize Website Builder
 
-Internal web app for the Energize Group website team. It builds Elementor V4
-pages from the shared Energize Atomic Foundation and pushes finished pages to
-client WordPress sites as drafts through a custom WPCode bridge snippet.
+Internal web app for the Energize Group website team. It builds Elementor 4
+pages from reusable sanitized layouts and the shared Energize Atomic Foundation,
+then pushes finished pages to client WordPress sites as drafts through a custom
+WPCode bridge snippet.
 
 See [BUILD_BRIEF.md](BUILD_BRIEF.md) for the full product brief.
 The approved Page Plan redesign and implementation milestones are documented in
@@ -65,14 +66,17 @@ Migration project state and its authenticated API are documented in
 
 ## Current site migration flow
 
-Version 4.2.0 uses the complete five-step layout-first workflow. The Page Plan is created
-before the current website is imported, and deterministic matching shows only
-Matched, Check match, or No source content. Matched content is then fitted into
-the selected JSON layout section by section. Related headings, paragraphs,
-lists, and calls to action stay together, while safe overflow remains with its
-matching content section. Internal links are rebuilt, reviewed destination media
-is used when available, empty image regions remain visible for WordPress review,
-and a final source-residue check runs. Review & Build automatically
+Version 4.3.0 uses the complete five-step layout-first workflow. The Page Plan
+is created before the current website is imported, and deterministic matching
+shows only Matched, Check match, or No source content. Matched content is fitted
+into the selected JSON layout section by section. Sanitized V3 Elementor layouts
+keep their original containers, responsive settings, spacing, typography, and
+other presentation settings inside Elementor 4 hybrid documents. Related
+headings, paragraphs, lists, and calls to action stay together, while safe
+overflow remains with its matching content section. Internal links are rebuilt,
+reviewed destination media is used when available, empty image regions remain
+visible for WordPress review, and a final source-residue check runs. Review &
+Build automatically
 runs a no-write check, pins the exact prepared inputs, and enables the explicit
 Create WordPress drafts action only after that check passes. The approved end
 state is documented in
@@ -84,8 +88,9 @@ state is documented in
 3. Import the current website after the plan. Strong matches require no action,
    ambiguous matches ask one plain-language question, and missing content makes
    an empty draft.
-4. Add brand and destination settings. The server prepares revisioned Atomic
-   drafts from the sanitized layout and matched content.
+4. Add brand and destination settings. The server prepares revisioned Elementor
+   drafts from the sanitized layout and matched content. Sanitized V3 layouts
+   are filled in place, while native Atomic layouts remain Atomic.
 5. Review plain-language readiness. The builder automatically runs a no-write
    check, then creates drafts only after the user selects the final action.
    Successful drafts are preserved if another page fails, and retry processes
@@ -107,9 +112,11 @@ new-site builds.
 
 ### Injection flow
 
-1. Parser turns approved markdown into structured page content.
-2. The Atomic page builder composes V4 flexboxes, headings, paragraphs, buttons,
-   and global classes from that content and regenerates every element ID.
+1. Parser turns approved markdown into structured page content and performs one
+   final cleanup pass for repeated controls and stale footer text.
+2. Sanitized V3 layouts receive content through their saved semantic slots
+   without losing layout settings. Native Atomic layouts continue through the
+   Atomic page builder. Every Elementor element ID is regenerated.
 3. The deploy layer verifies the Atomic Foundation on the target site, updates
    semantic color and font variables, seeds missing components, pushes each page,
    updates site identity and assets, and flushes the Elementor CSS cache.
@@ -117,8 +124,9 @@ new-site builds.
    active theme header and footer render. Use `elementor_canvas` only when a
    page explicitly requests a standalone canvas layout.
 
-Classic widgets are rejected except for isolated HTML, shortcode, and map
-embeds. Components are Atomic-only.
+The v2.3.0 bridge accepts only the reviewed sanitized classic layout and widget
+allowlists plus native Atomic elements. Unsupported Elementor elements are
+rejected. Components remain Atomic-only.
 
 ### Verify the injection engine
 
@@ -140,6 +148,21 @@ The test suite uses synthetic inputs and mocked WordPress gateways. It does not
 download external media or modify a WordPress site.
 
 ### Release verification
+
+Version 4.3.0 fixes the layout-fidelity failure in the V3-to-V4 preparation
+path. Ready V3 layouts are no longer rebuilt as generic Atomic blocks. Their
+sanitized Elementor structure and presentation settings are preserved, matched
+legacy content is inserted through semantic slots, and extra content remains
+inside the corresponding layout region. The final cleanup pass removes repeated
+standalone CTA groups and trailing cookie or accessibility chrome. Empty
+homepage URLs now deploy with the stable `home` draft slug instead of an empty
+slug. The WordPress bridge is version 2.3.0 and checks an explicit hybrid-element
+allowlist before accepting a draft. Existing target sites must replace the
+bridge snippet before using preserved V3 layouts. This release does not change
+the database schema. Layouts added before version 4.3.0 must be added again from
+their original JSON and reselected in the Page Plan because older sanitized
+artifacts already discarded presentation data that cannot be reconstructed. The
+builder blocks those older artifacts instead of creating another broken draft.
 
 Version 4.2.0 fixes the website content-fitting path against the saved J.
 Bradford Smith project. The Import Content step now visibly confirms that the
@@ -219,9 +242,10 @@ Endpoints (all POST, all require `X-Energize-Secret`): `/wp-json/energize/v1/`
 classes, and components use Elementor's authenticated V4 REST APIs. Auth
 failures are logged to a custom table.
 
-The `/page` endpoint requires Elementor 4.1.1 or newer and rejects classic
-layout or content widgets. The only accepted classic widgets are the explicit
-embed exceptions.
+The `/page` endpoint requires Elementor 4.1.1 or newer. Bridge v2.3.0 accepts
+native Atomic elements and an explicit allowlist of sanitized classic Elementor
+layouts and widgets for hybrid documents. Everything else is rejected. Replace
+older bridge snippets before building pages from preserved V3 layouts.
 
 Theme Builder display-condition deployment is not exposed through this bridge.
 Migration preflight names those targets as blockers rather than creating an
