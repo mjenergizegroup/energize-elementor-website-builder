@@ -30,15 +30,16 @@ supersede the old user-facing theme workflow described in parts of
 
 - Workspace: `/Users/markjohnson/Desktop/Energize-Claude-Cowork/Energize-website-builder`
 - Branch: `main`
-- Application version: `4.3.0`
-- Current implementation: design-preserving V3 layout fitting for Elementor 4
-  hybrid documents, final content cleanup, and stable homepage draft slugs
-- Implementation commit: `f5471aa Preserve Elementor layout design during migration`
+- Application version: `4.4.0`
+- Current implementation: complete frontend reskin with a centralized light
+  dashboard design system, while preserving the version 4.3 migration behavior
+- Implementation commit: `Reskin frontend with light dashboard system` (local
+  only when this handoff was written)
 - Main merge commit: `6d0a3e9 Merge pull request #2 from
   mjenergizegroup/agent/preserve-elementor-layout-design`
 - Pull request: `#2`, merged into `main` on July 20, 2026
-- Local `main` and `origin/main` matched at `6d0a3e9` before this documentation
-  refresh. The working tree was clean.
+- Local `main` contains the earlier documentation refresh plus the version 4.4.0
+  reskin commit. Neither local commit has been pushed to `origin/main`.
 - Stack: Next.js 15 App Router, TypeScript, Tailwind v4, base-ui shadcn/ui,
   Clerk, Prisma 6, Neon PostgreSQL, and server-only WordPress integrations.
 
@@ -94,7 +95,24 @@ Core product rules:
 
 ## Completed implementation
 
-All planned website milestones are complete through version `4.3.0`.
+All planned website milestones are complete through version `4.4.0`.
+
+### Version 4.4.0: complete frontend visual reskin
+
+- Replaced the black, white, and red brutalist interface with a soft, modern
+  light dashboard system inspired by the supplied CRM reference.
+- Centralized the primary blue, neutral surfaces, semantic status colors,
+  border colors, radii, and shadow elevations in `globals.css` and the Tailwind
+  configuration.
+- Restyled the persistent navigation, dashboard summary cards, build and client
+  tables, Template Library, Page Plan, content matching, technical workspaces,
+  dialogs, authentication, and both build wizards.
+- Standardized shared buttons, inputs, text areas, selectors, tabs, progress,
+  cards, labels, and badges so every route inherits the same interaction states.
+- Preserved the compact red E brand tile as the only prominent red brand accent.
+- Preserved all routes, data loading, form state, API calls, Clerk behavior,
+  Prisma behavior, server-only credential boundaries, and WordPress workflows.
+- No database schema change was required.
 
 ### Version 4.3.0: preserve layout design while fitting content
 
@@ -234,11 +252,31 @@ Prisma reported that the database was in sync and generated Prisma Client
 6.19.3. The layout, page-plan, content-match, prepared-draft, and build-plan
 tables are available.
 
-Versions 4.0.1 through 4.3.0 do not change the Prisma schema. Do not ask Mark to
+Versions 4.0.1 through 4.4.0 do not change the Prisma schema. Do not ask Mark to
 run `db:push` for these releases.
 
 Never print or document database credentials. Reverify external state if a
 future schema change is introduced.
+
+## Verification completed for version 4.4.0
+
+The following passed locally for the complete frontend reskin:
+
+- Complete `npm test` suite
+- Migration security, Atomic Foundation, WordPress bridge, and injection checks
+- `npm run typecheck`
+- `npm run lint`
+- Optimized `npm run build`
+- `git diff --check`
+- Prohibited em dash scan on every changed file
+
+The production build needed normal network access to fetch the configured Inter
+font from Google during compilation. It did not deploy or modify any external
+system.
+
+Authenticated browser QA remains a manual rollout check because the local Clerk
+development domain requires a separate sign-in session. All public and protected
+routes compiled successfully in the optimized build.
 
 ## Verification completed for version 4.3.0
 
@@ -279,6 +317,8 @@ No database records were changed by that verification.
 
 - The production Vercel deployment state after merging pull request #2 has not
   been explicitly verified.
+- Version 4.4.0 has not been pushed, opened as a pull request, merged, or
+  deployed. Its commit exists only in this local repository.
 - No external WordPress site was modified while building these milestones.
 - An authenticated local browser smoke test is still manual because the local
   Clerk development domain requires a separate sign-in session.
@@ -292,12 +332,14 @@ No database records were changed by that verification.
 
 ## Recommended next objective
 
-Version 4.3.0 is already pushed and merged into `main`. Do not repeat the branch,
-push, pull request, or merge work. If rollout status matters, first verify which
-`main` commit Vercel currently serves. Then, with Mark's explicit authorization,
-install WPCode Bridge v2.3.0 on the intended staging WordPress destination while
-preserving its existing shared secret and run the real migration smoke test.
-Codex must not modify WordPress, deploy, or publish unless Mark explicitly asks.
+Version 4.3.0 is already pushed and merged into GitHub's `main`. Version 4.4.0 is
+committed only to the local `main` branch. The next step is an authenticated
+visual review of the dashboard and both build workflows at desktop and mobile
+widths. If Mark approves that review, explain and request separate authorization
+before pushing, opening a pull request, merging, or deploying. If rollout status
+also matters, verify which `main` commit Vercel currently serves. Codex must not
+modify WordPress, deploy, publish, or make a GitHub state change unless Mark
+explicitly asks.
 
 Production smoke-test order:
 

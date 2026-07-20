@@ -1,454 +1,210 @@
----
-version: alpha
-name: Energize Website Builder
-description: An internal dental agency production tool built on a brutalist grid
-  system. Warm paper canvas floored at #F0EFEB, ruled everywhere by 2px solid
-  #191919 borders and a single Energize Red accent. No border-radius on
-  interactive elements, no drop shadows anywhere. Typography is Inter across all
-  weights — the hierarchy lives entirely in size, weight, and uppercase tracking
-  rather than color or decoration. The interface reads like precision engineering
-  software: dense, fast, intentional.
+# Energize Website Builder Design System
 
-colors:
-  red:          "#bf2e31"
-  red-dark:     "#9e2527"
-  red-light:    "#f9ecec"
-  black:        "#191919"
-  canvas:       "#F0EFEB"
-  surface:      "#FFFFFF"
-  panel:        "#F7F6F2"
-  muted:        "#5a5a5a"
-  hairline:     "#D2CFC8"
-  on-red:       "#FFFFFF"
-  on-black:     "#FFFFFF"
+Version: 4.4.0
+Register: product
+Status: implemented
 
-typography:
-  display:
-    fontFamily: "'Inter', sans-serif"
-    fontSize: 36px
-    fontWeight: 900
-    lineHeight: 1.0
-    letterSpacing: -0.04em
-  heading:
-    fontFamily: "'Inter', sans-serif"
-    fontSize: 32px
-    fontWeight: 900
-    lineHeight: 1.0
-    letterSpacing: -0.04em
-  subheading:
-    fontFamily: "'Inter', sans-serif"
-    fontSize: 20px
-    fontWeight: 800
-    lineHeight: 1.1
-    letterSpacing: -0.025em
-  body:
-    fontFamily: "'Inter', sans-serif"
-    fontSize: 13px
-    fontWeight: 400
-    lineHeight: 1.5
-    letterSpacing: 0
-  body-strong:
-    fontFamily: "'Inter', sans-serif"
-    fontSize: 13px
-    fontWeight: 600
-    lineHeight: 1.5
-    letterSpacing: -0.01em
-  label:
-    fontFamily: "'Inter', sans-serif"
-    fontSize: 10px
-    fontWeight: 700
-    lineHeight: 1
-    letterSpacing: 0.12em
-    textTransform: uppercase
-  caption:
-    fontFamily: "'Inter', sans-serif"
-    fontSize: 11px
-    fontWeight: 500
-    lineHeight: 1.4
-    letterSpacing: 0
-  mono:
-    fontFamily: "'JetBrains Mono', monospace"
-    fontSize: 11px
-    fontWeight: 400
-    lineHeight: 1.4
-    letterSpacing: 0
+## Design direction
 
-rounded:
-  none: 0px
+Energize Website Builder is calm, precise production software for team members
+who spend long work sessions planning, importing, reviewing, and creating
+WordPress drafts. The interface uses a light canvas, restrained blue accents,
+soft borders, rounded controls, and clear sentence-case labels.
 
-spacing:
-  xs:      4px
-  sm:      8px
-  md:      12px
-  base:    16px
-  lg:      24px
-  xl:      32px
-  2xl:     48px
-  section: 80px
+The visual reference is a modern operational dashboard viewed on a bright
+desktop display. The interface should feel dependable and easy to scan without
+becoming decorative or resembling a generic marketing dashboard.
 
-components:
-  button-primary:
-    backgroundColor: "{colors.red}"
-    textColor:       "{colors.on-red}"
-    borderColor:     "{colors.black}"
-    borderWidth:     2px
-    typography:      "{typography.label}"
-    padding:         12px 24px
-    rounded:         "{rounded.none}"
-    hover:           "backgroundColor: {colors.red-dark}"
+The red Energize E tile remains as a small continuity marker. Blue owns primary
+actions, current navigation, focus, progress, and selected states everywhere
+else.
 
-  button-ghost:
-    backgroundColor: "{colors.surface}"
-    textColor:       "{colors.black}"
-    borderColor:     "{colors.black}"
-    borderWidth:     2px
-    typography:      "{typography.label}"
-    padding:         12px 20px
-    rounded:         "{rounded.none}"
-    hover:           "backgroundColor: {colors.panel}"
+## Design principles
 
-  badge-success:
-    backgroundColor: "{colors.black}"
-    textColor:       "{colors.on-black}"
-    borderColor:     "{colors.black}"
-    borderWidth:     2px
-    typography:      "{typography.label}"
-    padding:         3px 9px
-    rounded:         "{rounded.none}"
+1. Show the next decision clearly and keep technical detail secondary.
+2. Use whitespace, hierarchy, and subtle surface changes before adding borders.
+3. Keep one primary action visually dominant in each working area.
+4. Use familiar product controls with complete hover, focus, disabled, loading,
+   success, warning, and error states.
+5. Use restrained motion only to communicate state changes.
+6. Keep dense production data readable on desktop and structurally responsive.
 
-  badge-partial:
-    backgroundColor: "{colors.surface}"
-    textColor:       "{colors.black}"
-    borderColor:     "{colors.black}"
-    borderWidth:     2px
-    typography:      "{typography.label}"
-    padding:         3px 9px
-    rounded:         "{rounded.none}"
+## Color tokens
 
-  badge-in-progress:
-    backgroundColor: "{colors.red}"
-    textColor:       "{colors.on-red}"
-    borderColor:     "{colors.red}"
-    borderWidth:     2px
-    typography:      "{typography.label}"
-    padding:         3px 9px
-    rounded:         "{rounded.none}"
+All runtime values are defined in `src/app/globals.css` and mirrored in
+`tailwind.config.ts`. Components must reference token names instead of raw
+color values.
 
-  nav-link:
-    backgroundColor: "transparent"
-    textColor:       "#777777"
-    borderRight:     "1px solid #222222"
-    typography:      "{typography.label}"
-    padding:         0 20px
-    height:          52px
-    active-backgroundColor: "{colors.red}"
-    active-textColor:       "{colors.on-red}"
+| Role | Token | Value |
+|---|---|---|
+| Primary | `--color-primary` | `#3973D2` |
+| Primary hover | `--color-primary-hover` | `#2E63BC` |
+| Primary tint | `--color-primary-tint` | `#E9F0FB` |
+| Success | `--color-success` | `#1FA47C` |
+| Success tint | `--color-success-tint` | `#E7F7F1` |
+| Success dot | `--color-success-dot` | `#34C79A` |
+| Warning | `--color-warning` | `#B45309` |
+| Warning tint | `--color-warning-tint` | `#FEF3E2` |
+| Danger | `--color-danger` | `#C0392B` |
+| Danger tint | `--color-danger-tint` | `#FCEBEB` |
+| Page background | `--color-page-background` | `#F7F9FC` |
+| Surface | `--color-surface` | `#F4F6F8` |
+| Raised surface | `--color-surface-raised` | `#FFFFFF` |
+| Default border | `--color-border-default` | `#E7EAEF` |
+| Strong border | `--color-border-strong` | `#D6DAE0` |
+| Primary text | `--color-text-primary` | `#1A1D21` |
+| Secondary text | `--color-text-secondary` | `#667085` |
+| Faint text | `--color-text-faint` | `#98A2B3` |
+| Row hover | `--color-row-hover` | `#F2F5FA` |
+| Brand tile | `--color-brand-red` | `#BF2E31` |
 
-  stat-cell:
-    backgroundColor: "{colors.surface}"
-    borderRight:     "2px solid {colors.black}"
-    padding:         20px 22px
-    labelTypography: "{typography.label}"
-    valueTypography: "{typography.display}"
-    deltaTypography: "{typography.caption}"
-    deltaColor:      "{colors.red}"
+Color strategy is restrained. Primary blue is reserved for actions, current
+selection, focus, and progress. Semantic colors communicate status and must be
+paired with text or an icon so state never depends on color alone.
 
-  table-row:
-    backgroundColor: "{colors.surface}"
-    typography:      "{typography.body}"
-    padding:         15px 20px
-    borderBottom:    "1px solid {colors.hairline}"
-    hover-backgroundColor: "{colors.panel}"
+## Radius and elevation
 
-  step-tile:
-    size:            26px
-    borderWidth:     2px
-    borderColor:     "{colors.black}"
-    typography:      "{typography.label}"
-    done-backgroundColor: "{colors.black}"
-    done-textColor:       "{colors.on-black}"
-    active-backgroundColor: "{colors.red}"
-    active-textColor:       "{colors.on-red}"
-    upcoming-backgroundColor: "{colors.surface}"
-    upcoming-textColor:       "{colors.muted}"
+| Role | Token | Value |
+|---|---|---|
+| Small | `--radius-sm` | `8px` |
+| Medium | `--radius-md` | `10px` |
+| Large | `--radius-lg` | `16px` |
+| Pill | `--radius-pill` | `999px` |
 
-  step-row:
-    padding:         14px 16px
-    borderBottom:    "1px solid {colors.black}"
-    active-backgroundColor:  "{colors.red-light}"
-    active-borderLeft:       "3px solid {colors.red}"
-    done-backgroundColor:    "{colors.surface}"
-    upcoming-opacity:        0.6
+Cards and large panels use the large radius. Inputs and buttons use the medium
+radius. Compact chips use the small radius. Statuses, avatars, and step circles
+use the pill radius.
 
-  page-chip:
-    padding:         9px 16px
-    borderWidth:     2px
-    borderColor:     "{colors.black}"
-    typography:      "{typography.label}"
-    off-backgroundColor: "{colors.surface}"
-    off-textColor:       "{colors.black}"
-    on-backgroundColor:  "{colors.black}"
-    on-textColor:        "{colors.on-black}"
+| Role | Token | Use |
+|---|---|---|
+| Extra small | `--shadow-xs` | Inputs, buttons, compact controls |
+| Small | `--shadow-sm` | Cards and panels |
+| Medium | `--shadow-md` | Dialogs, menus, elevated hover states |
 
-  modal:
-    backgroundColor:   "{colors.surface}"
-    borderWidth:       2px
-    borderColor:       "{colors.black}"
-    rounded:           "{rounded.none}"
-    header-backgroundColor: "{colors.black}"
-    header-textColor:       "{colors.on-black}"
-    overlay:           "rgba(25, 25, 25, 0.75)"
-    maxWidth:          760px
-
-  topnav:
-    backgroundColor:   "{colors.black}"
-    height:            52px
-    borderBottom:      "2px solid {colors.black}"
-    brand-mark-color:  "{colors.red}"
----
-
-## Overview
-
-Energize Website Builder is an internal production tool used by the Energize Group
-web team to build, migrate, and deploy dental practice websites to WordPress on
-WP Engine. The interface needs to feel fast and confident — this is a tool people
-use daily, not a product they demo.
-
-The aesthetic is **brutalist functional**: a warm paper canvas ({colors.canvas})
-ruled by 2px {colors.black} borders everywhere, with {colors.red} (#bf2e31) as
-the sole brand accent. There is no secondary brand color. Red carries every
-primary CTA, active nav state, active step indicator, and the stat deltas. Used
-at that frequency it stays energetic without becoming noise.
-
-Inter is the only typeface. Hierarchy comes entirely from weight (400 to 900) and
-size, with uppercase letter-tracked labels ({typography.label}) doing the
-organizational work that color would do in a softer system.
-
-Zero border-radius on interactive elements. Zero drop shadows anywhere. Depth
-comes from layering {colors.canvas} under {colors.surface} white panels, divided
-by {colors.black} 2px borders. The result is a grid-locked, highly legible
-interface that looks nothing like a generic SaaS dashboard.
-
-**Key Characteristics:**
-- Single accent: {colors.red} carries all primary actions, active states, and brand moments.
-- 2px solid {colors.black} borders on every interactive element and panel boundary.
-- No border-radius on buttons, chips, badges, modals, or table containers.
-- No drop shadows anywhere in the system.
-- All category labels and button text in {typography.label} — 10px, 700 weight, 0.12em tracking, uppercase.
-- Inter 900 weight for display headings at -0.04em tracking — tight, confident, loud.
-- Warm canvas background ({colors.canvas}) with white ({colors.surface}) for cards and panels.
-- Active wizard step uses {colors.red-light} background wash with a 3px red left border.
-- Stat delta values always render in {colors.red} to signal direction and urgency.
-
----
-
-## Colors
-
-### Brand & Accent
-- **Red** ({colors.red} — #bf2e31): The Energize brand color. Used on all
-  primary buttons, the active nav link, active step tiles, badge-in-progress,
-  the brand mark, and stat delta text. Never used for backgrounds except
-  on CTA buttons and the active nav item.
-- **Red Dark** ({colors.red-dark} — #9e2527): Button hover and pressed state only.
-- **Red Light** ({colors.red-light} — #f9ecec): The active step row background
-  wash in the wizard stepper. Subtle tint — communicates active without
-  competing with the border accent.
-
-### Surface
-- **Canvas** ({colors.canvas} — #F0EFEB): The page floor. A warm off-white
-  rather than pure white — lower glare, more character. All page backgrounds
-  sit on this.
-- **Surface** ({colors.surface} — #FFFFFF): White. Used for cards, table
-  backgrounds, panels, and modal bodies. Floats one visible step above
-  the canvas because of the 2px border.
-- **Panel** ({colors.panel} — #F7F6F2): Slightly off-white. Used for table
-  column headers, stepper footers, and any secondary surface that sits
-  inside a white card.
-
-### Text
-- **Black** ({colors.black} — #191919): The primary text, border, and
-  button-ghost color. Soft black rather than pure #000 — less harsh on
-  the warm canvas.
-- **Muted** ({colors.muted} — #5a5a5a): Secondary labels, timestamps, helper
-  text, and placeholder values.
-
-### Structure
-- **Hairline** ({colors.hairline} — #D2CFC8): Row dividers inside tables and
-  info panels. Lighter than the 2px structural borders — separates rows
-  without competing with the outer panel border.
-
----
+Shadows stay low-opacity and are never used as decoration. Borders remain one
+pixel except for the active wizard accent and visible keyboard focus.
 
 ## Typography
 
-Font family: Inter (Google Fonts). Full weight range 400–900 is used.
-No fallback to system fonts in production — load Inter explicitly.
+Inter is the only application family.
 
-| Style          | Size  | Weight | Tracking   | Transform | Usage |
-|----------------|-------|--------|------------|-----------|-------|
-| display        | 36px  | 900    | -0.04em    | none      | Page headings, banner H1 |
-| heading        | 32px  | 900    | -0.04em    | none      | Step panel H2 titles |
-| subheading     | 20px  | 800    | -0.025em   | none      | Card H2, modal card titles |
-| body-strong    | 13px  | 600    | -0.01em    | none      | Table names, client names |
-| body           | 13px  | 400    | 0          | none      | Descriptions, helper text |
-| label          | 10px  | 700    | 0.12em     | uppercase | Section headers, buttons, badges, field labels |
-| caption        | 11px  | 500    | 0          | none      | Timestamps, sub-labels, stat deltas |
-| mono           | 11px  | 400    | 0          | none      | Build IDs, technical values |
+| Style | Size | Weight | Use |
+|---|---:|---:|---|
+| Page title | 30px to 40px | 700 | Route and workflow titles |
+| Stat value | 36px to 40px | 700 | Dashboard metrics |
+| Section title | 16px to 18px | 600 | Panels, tables, dialogs |
+| Body | 14px | 400 | Supporting copy and data |
+| Body label | 14px | 500 | Fields and navigation |
+| Eyebrow | 12px | 600 | Rare grouping label |
 
-### Principles
-Display and heading sizes lean on Inter Black (900) at aggressive negative
-tracking (-0.04em). The tightness reads like compressed engineering notation —
-intentional, not accidental. Body copy stays at regular 13px with zero
-tracking for maximum readability at information density. Labels are
-the organizational workhorse: 10px uppercase with wide positive tracking
-creates clear visual separation between categories and content without
-using color to do it.
+Sentence case is the default. Uppercase is limited to muted eyebrow labels at
+0.04em tracking. Body copy should remain within 65 to 75 characters per line
+when it is prose rather than data.
 
----
+## Layout and spacing
 
-## Layout
-
-Container max-width: 1440px, centered with `margin: 0 auto`.
-Page padding: 28px top, 32px horizontal on the `.app-wrap`.
-The app shell itself is a single block element with `border: 2px solid {colors.black}`
-that contains the topnav and all page content.
-
-### Spacing scale
-Uses the spacing tokens defined in YAML. The most common values in practice:
-- `{spacing.base}` (16px): Default inner padding unit.
-- `{spacing.lg}` (24px): Section gaps and card padding.
-- `{spacing.xl}` (32px): Page body padding, wizard panel padding.
-- `{spacing.2xl}` (48px): Banner and detail view top padding.
-
-### Grid patterns
-- **Stat grid**: 4 equal columns, each `border-right: 2px solid {colors.black}`.
-- **Table**: Full-width with named column-template grids. Each table type
-  (builds, clients, pages) has its own `grid-template-columns` defined.
-- **Wizard**: 2-column — 230px fixed stepper sidebar + 1fr content panel,
-  separated by `border-right: 2px solid {colors.black}`.
-- **Build Detail**: 2-column — 1fr pages table + 280px fixed info sidebar.
-- **Dashboard banner**: 2-column — 1fr copy + auto CTA button.
-
-### Whitespace philosophy
-Density over breathing room. Padding is consistent and tight. Borders do
-the separating work — there is no need for large gaps when a 2px line
-already creates a hard edge. Vertical rhythm comes from consistent row
-heights (stat cells at ~70px, table rows at ~48px) rather than variable spacing.
-
----
-
-## Elevation
-
-There are no drop shadows in this design system. None. Ever.
-
-Depth is created through two mechanisms only:
-1. **Canvas vs Surface contrast** — {colors.canvas} (#F0EFEB) as the page
-   floor, {colors.surface} (#FFFFFF) white for cards. The color step is
-   small but the 2px border makes it unmistakable.
-2. **Border weight** — 2px {colors.black} outer borders on panels, 1px
-   {colors.hairline} inner row dividers. The weight difference signals
-   structural hierarchy without shadows.
-
-Modal overlays use `rgba(25, 25, 25, 0.75)` as the backdrop scrim. This is
-the only transparency in the system.
-
----
+- Application width is capped at 1440px.
+- Desktop page padding is 24px horizontally with 20px to 32px vertical rhythm.
+- Card padding is 20px to 24px.
+- Section gaps are 20px to 24px.
+- Table rows are at least 56px tall.
+- Stat cards use four columns on large screens, two on tablets, and one on
+  narrow screens.
+- Wizard rails remain visible on desktop and collapse structurally with the
+  existing responsive grid.
+- Tables remove nonessential columns and stack values when space is limited.
 
 ## Components
 
-**`button-primary`** — The main action button. Background {colors.red},
-text {colors.on-red}, {typography.label} type, 12px × 24px padding,
-border: 2px solid {colors.black}, zero radius. Hover shifts to {colors.red-dark}.
-Used for: New Build, Continue in wizard, Rebuild, card Select actions.
-Never use more than one primary button per visible panel.
+### Navigation
 
-**`button-ghost`** — Secondary action. Background {colors.surface}, text
-{colors.black}, {typography.label}, 12px × 20px padding, border: 2px solid
-{colors.black}. Hover background {colors.panel}. Used for: Back, Save progress,
-Export, Cancel. Ghost buttons can stack edge-to-edge (margin-left: -2px) to
-create a segmented button group with shared borders.
+The top navigation uses a raised white surface, a soft border, and 14px
+sentence-case links. The active route uses primary blue text and a two-pixel
+underline. The E tile remains red and uses an 8px radius. The user avatar is a
+pill.
 
-**`badge-success`** — Filled {colors.black} with {colors.on-black} text.
-{typography.label}, 3px × 9px padding, 2px {colors.black} border. Communicates
-a completed, successful build. Solid fill signals done.
+### Page headers
 
-**`badge-partial`** — Outlined. Background {colors.surface}, text and border
-{colors.black}. Same padding and type as badge-success. Communicates an incomplete
-or partially-failed build. Outline vs fill is the only difference — no color change.
+Page headers use a raised surface, large radius, soft border, and small shadow.
+The title is bold but not heavy. Supporting text is muted. The primary route
+action is a blue button with a small shadow.
 
-**`badge-in-progress`** — Filled {colors.red}. Background {colors.red}, text
-{colors.on-red}, border {colors.red}. Communicates an actively running build.
+### Cards and stats
 
-**`nav-link`** — Inside the topnav ({colors.black} bar, 52px tall). Text #777777
-at rest, {typography.label}. `border-right: 1px solid #222222`. Active state:
-background {colors.red}, text {colors.on-red}. No underlines, no hover background
-other than a subtle #222 darkening.
+Cards use the light gray surface, default border, large radius, and small
+shadow. Stat labels are 14px and muted. Values are 38px and bold. Supporting
+lines are neutral unless they communicate a real semantic state.
 
-**`stat-cell`** — Inside the 4-column stat grid. Background {colors.surface},
-`border-right: 2px solid {colors.black}`. Label in {typography.label} and
-{colors.muted}. Value in {typography.display} at {colors.black}. Delta line in
-{typography.caption} at {colors.red} with an arrow prefix (↑ / ↓).
+### Tables and section blocks
 
-**`table-row`** — Grid-based row. Background {colors.surface}, padding 15px 20px,
-`border-bottom: 1px solid {colors.hairline}`. {typography.body-strong} for the
-primary name column. {typography.caption} for timestamps and secondary values.
-Hover: background {colors.panel}. Action column text in {colors.red}, right-aligned,
-{typography.label}, with ` →` appended.
+Section blocks use a white raised surface with one outer border. Headers are
+inside the card and never use a black bar. Table headers use the light gray
+surface, sentence-case 12px labels, and one-pixel dividers. Rows use the raised
+surface and the row-hover token.
 
-**`step-tile`** — 26px × 26px square. Border: 2px solid {colors.black}.
-Three states: upcoming (background {colors.surface}, text {colors.muted}),
-done (background {colors.black}, text {colors.on-black}, showing ✓),
-active (background {colors.red}, text {colors.on-red}). {typography.label} for
-the number. Never rounded.
+### Status pills
 
-**`step-row`** — Full stepper row containing a step-tile and text. Padding 14px 16px,
-`border-bottom: 1px solid {colors.black}`. Active state: `background: {colors.red-light}`,
-`border-left: 3px solid {colors.red}`. Done and upcoming rows: white background,
-full opacity for done, 0.6 opacity for upcoming. Title in {typography.body-strong},
-sub-label in {typography.label} at {colors.muted}.
+- Success: success tint with success text
+- Partial or warning: warning tint with warning text
+- Failure: danger tint with danger text
+- In progress: primary tint with primary text
+- Neutral: white with a default border and secondary text
 
-**`page-chip`** — Toggle chip for page selection. Padding 9px 16px,
-`border: 2px solid {colors.black}`, {typography.label}. Chips stack edge-to-edge
-using `margin: 0 -2px -2px 0` so their borders merge into a grid. Off state:
-background {colors.surface}, text {colors.black}. On state: background {colors.black},
-text {colors.on-black}.
+Pills use 12px semibold text and the pill radius.
 
-**`modal`** — Centered overlay panel. Background {colors.surface},
-`border: 2px solid {colors.black}`, no border-radius. Max-width 760px.
-Backdrop: `rgba(25, 25, 25, 0.75)`. Header bar: background {colors.black}, text
-{colors.on-black}, {typography.label}. Body padding 28px. Modal card grid is 3-up
-inside a shared `border: 2px solid {colors.black}` wrapper, cards separated by
-`border-right: 2px solid {colors.black}`.
+### Buttons
 
-**`topnav`** — Full-width bar, background {colors.black}, height 52px. Left: brand
-mark (26px × 26px {colors.red} square with white E glyph) + product name in
-{typography.body-strong} at {colors.on-black} + version in {typography.caption}
-at #555. Center: nav-link list. Right: user chip (avatar + name).
+Primary buttons use primary blue, white text, medium radius, and an extra-small
+shadow. Secondary buttons use a raised white surface and default border.
+Tertiary actions use primary-hover text without a filled background. Icons use
+Lucide and remain 16px to 18px.
 
----
+### Inputs
 
-## Responsive Behavior
+Inputs use the raised surface, default border, medium radius, and comfortable
+44px height. Focus combines a primary border with a soft blue ring. Placeholders
+use faint text. Invalid fields use danger without changing layout.
 
-| Breakpoint | Width      | Key changes |
-|------------|------------|-------------|
-| Desktop    | ≥ 1280px   | Full layout as designed. All columns visible. |
-| Laptop     | 1024–1279px | Stat grid stays 4-up; table columns may truncate text. |
-| Tablet     | 768–1023px | Wizard stepper collapses to top progress bar; tables drop secondary columns. |
-| Mobile     | < 768px    | Not a target use case — this is a desktop production tool. |
+### Wizard
 
-This tool is used on desktop only. Mobile responsiveness is not a design priority.
-The interface can scroll horizontally on small screens rather than reflow.
+The wizard rail uses soft gray navigation rows. Step numbers are circular.
+Active steps use a primary tint, blue number circle, and blue left accent.
+Completed steps use a green check circle. Progress uses a rounded gray track
+and blue fill. Selection cards use a blue border and tint only when selected.
 
----
+### Dialogs and menus
 
-## Known Gaps
+Dialogs use raised white surfaces, large radius, default border, and medium
+shadow. Headers remain light. Backdrops use a low-opacity dark neutral. Menus
+and dropdowns use medium radius and medium shadow.
 
-- Dark mode is not a documented variant. One canvas, one mode.
-- Animation and transition timings are not specified. Hover transitions use
-  `0.15s ease` by convention throughout.
-- Error and empty states are not yet designed.
-- The Landing Page build wizard steps are not yet designed — this is a planned
-  addition with its own step sequence.
-- Form validation states are not specified.
-- The Clients page and Settings page layouts are not yet designed — they follow
-  the same brutalist grid system but their specific column structures are TBD.
+### Footer
+
+The release footer uses muted 12px text on the page background with a subtle top
+border. It never uses a solid black bar.
+
+## Motion
+
+Transitions run 150ms to 250ms with ease-out curves. Motion communicates hover,
+selection, progress, or loading state only. Reduced-motion preferences remove
+nonessential animation. Layout properties are not animated.
+
+## Accessibility
+
+- Every interactive control has a visible keyboard focus state.
+- Status never relies on color alone.
+- Contrast must remain readable on the page, surface, and tint colors.
+- Touch targets should reach 44px where practical.
+- Dialog focus is trapped and returns to its trigger.
+- Responsive order stays predictable for keyboard and screen-reader users.
+
+## Anti-patterns
+
+- No black header bars or hard two-pixel structural borders
+- No all-caps labels except small muted eyebrows
+- No square controls or square status badges
+- No ornamental gradients, glass effects, or decorative motion
+- No nested cards when spacing or a divider is sufficient
+- No source IDs, filenames, plugin ledgers, or other implementation detail in
+  the daily builder workflow
+- No em dash characters in UI copy, comments, or generated content

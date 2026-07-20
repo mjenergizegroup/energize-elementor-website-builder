@@ -4,21 +4,21 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center border-2 border-[var(--color-black)] bg-clip-padding text-[10px] font-bold uppercase leading-none tracking-[0.12em] whitespace-nowrap transition-colors duration-150 outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-red)] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-md border bg-clip-padding text-sm font-semibold leading-none whitespace-nowrap shadow-xs transition-[background-color,border-color,color,box-shadow,transform] duration-150 outline-none select-none focus-visible:border-[var(--color-primary)] focus-visible:ring-4 focus-visible:ring-[rgb(57_115_210_/_12%)] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default:
-          "bg-[var(--color-red)] text-[var(--color-on-red)] hover:bg-[var(--color-red-dark)]",
+          "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)] hover:border-[var(--color-primary-hover)] hover:bg-[var(--color-primary-hover)] active:translate-y-px",
         outline:
-          "bg-[var(--color-surface)] text-[var(--color-black)] hover:bg-[var(--color-panel)] aria-expanded:bg-[var(--color-panel)]",
+          "border-[var(--color-border-default)] bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface)] aria-expanded:bg-[var(--color-surface)]",
         secondary:
-          "bg-[var(--color-panel)] text-[var(--color-black)] hover:bg-[var(--color-surface)]",
+          "border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-raised)]",
         ghost:
-          "bg-[var(--color-surface)] text-[var(--color-black)] hover:bg-[var(--color-panel)] aria-expanded:bg-[var(--color-panel)]",
+          "border-transparent bg-transparent text-[var(--color-text-secondary)] shadow-none hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)] aria-expanded:bg-[var(--color-surface)]",
         destructive:
-          "bg-[var(--color-surface)] text-[var(--color-red)] hover:bg-[var(--color-red-light)]",
-        link: "border-transparent bg-transparent px-0 text-[var(--color-red)] underline-offset-4 hover:underline",
+          "border-[var(--color-danger-tint)] bg-[var(--color-danger-tint)] text-[var(--color-danger)] shadow-none hover:border-[var(--color-danger)]",
+        link: "border-transparent bg-transparent px-0 text-[var(--color-primary-hover)] shadow-none underline-offset-4 hover:text-[var(--color-primary)] hover:underline",
       },
       size: {
         default:

@@ -5,17 +5,19 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden border-2 px-[9px] py-[3px] text-[10px] font-bold uppercase leading-none tracking-[0.12em] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-red)] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  "group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-pill border border-transparent px-2.5 py-1 text-xs font-semibold leading-none whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&>svg]:pointer-events-none [&>svg]:size-3!",
   {
     variants: {
       variant: {
-        default: "border-[var(--color-black)] bg-[var(--color-black)] text-[var(--color-on-black)]",
+        default: "bg-[var(--color-success-tint)] text-[var(--color-success)]",
         secondary:
-          "border-[var(--color-red)] bg-[var(--color-red)] text-[var(--color-on-red)]",
+          "bg-[var(--color-primary-tint)] text-[var(--color-primary-hover)]",
+        warning:
+          "bg-[var(--color-warning-tint)] text-[var(--color-warning)]",
         destructive:
-          "border-[var(--color-red)] bg-[var(--color-surface)] text-[var(--color-red)]",
-        outline: "border-[var(--color-black)] bg-[var(--color-surface)] text-[var(--color-black)]",
-        ghost: "border-transparent bg-transparent text-[var(--color-black)]",
+          "bg-[var(--color-danger-tint)] text-[var(--color-danger)]",
+        outline: "border-[var(--color-border-default)] bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)]",
+        ghost: "border-transparent bg-transparent text-[var(--color-text-secondary)]",
         link: "text-primary underline-offset-4 hover:underline",
       },
     },

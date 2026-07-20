@@ -37,7 +37,7 @@ function Combobox({
       <ComboboxPrimitive.Trigger
         data-slot="combobox-trigger"
         className={cn(
-          "flex h-11 w-full items-center justify-between gap-1.5 border-2 border-[var(--color-black)] bg-[var(--color-surface)] py-2 pr-2 pl-3.5 text-[13px] font-medium text-[var(--color-black)] whitespace-nowrap transition-colors outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-red)] disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-11 w-full items-center justify-between gap-1.5 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] py-2 pr-2 pl-3.5 text-sm font-medium text-[var(--color-text-primary)] whitespace-nowrap shadow-xs transition-[border-color,box-shadow] outline-none select-none focus-visible:border-[var(--color-primary)] focus-visible:ring-4 focus-visible:ring-[rgb(57_115_210_/_12%)] disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
       >
@@ -62,16 +62,16 @@ function Combobox({
         >
           <ComboboxPrimitive.Popup
             data-slot="combobox-content"
-            className="relative isolate z-50 flex max-h-[min(theme(spacing.80),var(--available-height))] w-(--anchor-width) min-w-36 origin-(--transform-origin) flex-col overflow-hidden border-2 border-[var(--color-black)] bg-popover text-popover-foreground duration-100"
+            className="relative isolate z-50 flex max-h-[min(theme(spacing.80),var(--available-height))] w-(--anchor-width) min-w-36 origin-(--transform-origin) flex-col overflow-hidden rounded-md border border-[var(--color-border-default)] bg-popover text-popover-foreground shadow-md duration-100"
           >
-            <div className="flex items-center gap-2 border-b border-[var(--color-black)] px-3">
-              <SearchIcon className="size-4 shrink-0 text-[var(--color-muted)]" />
+            <div className="flex items-center gap-2 border-b border-[var(--color-border-default)] px-3">
+              <SearchIcon className="size-4 shrink-0 text-[var(--color-text-faint)]" />
               <ComboboxPrimitive.Input
                 placeholder={searchPlaceholder}
-                className="h-10 w-full bg-transparent text-[13px] font-medium text-[var(--color-black)] outline-none placeholder:text-[var(--color-muted)]"
+                className="h-10 w-full bg-transparent text-sm font-medium text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-faint)]"
               />
             </div>
-            <ComboboxPrimitive.Empty className="px-3 py-3 text-[13px] text-[var(--color-muted)] empty:hidden">
+            <ComboboxPrimitive.Empty className="px-3 py-3 text-sm text-[var(--color-text-secondary)] empty:hidden">
               {emptyMessage}
             </ComboboxPrimitive.Empty>
             <ComboboxPrimitive.List className="overflow-y-auto p-1">
@@ -79,7 +79,7 @@ function Combobox({
                 <ComboboxPrimitive.Item
                   key={item}
                   value={item}
-                  className="relative flex w-full cursor-default items-center gap-1.5 py-2 pr-8 pl-2 text-[13px] outline-hidden select-none data-highlighted:bg-[var(--color-panel)] data-highlighted:text-[var(--color-black)]"
+                  className="relative flex w-full cursor-default items-center gap-1.5 rounded-sm py-2 pr-8 pl-2 text-sm outline-hidden select-none data-highlighted:bg-[var(--color-primary-tint)] data-highlighted:text-[var(--color-primary-hover)]"
                 >
                   <span className="flex flex-1 shrink-0 gap-2 whitespace-nowrap">
                     {item}

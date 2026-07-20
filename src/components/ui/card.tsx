@@ -12,7 +12,7 @@ function Card({
       data-slot="card"
       data-size={size}
       className={cn(
-        "group/card flex flex-col gap-4 overflow-hidden border-2 border-[var(--color-black)] bg-[var(--color-surface)] py-5 text-sm text-[var(--color-black)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-4 data-[size=sm]:has-data-[slot=card-footer]:pb-0",
+        "group/card flex flex-col gap-4 overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] py-6 text-sm text-[var(--color-text-primary)] shadow-sm has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-4 data-[size=sm]:has-data-[slot=card-footer]:pb-0",
         className
       )}
       {...props}
@@ -38,7 +38,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-title"
       className={cn(
-        "font-heading text-[20px] leading-[1.1] font-extrabold tracking-[-0.025em] text-[var(--color-black)] group-data-[size=sm]/card:text-base",
+        "font-heading text-lg leading-tight font-semibold tracking-[-0.02em] text-[var(--color-text-primary)] group-data-[size=sm]/card:text-base",
         className
       )}
       {...props}
@@ -50,7 +50,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-description"
-      className={cn("text-[13px] leading-6 text-[var(--color-muted)]", className)}
+      className={cn("text-sm leading-6 text-[var(--color-text-secondary)]", className)}
       {...props}
     />
   )
@@ -84,7 +84,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-footer"
       className={cn(
-        "flex items-center border-t border-[var(--color-black)] bg-[var(--color-panel)] p-5 group-data-[size=sm]/card:p-4",
+        "flex items-center border-t border-[var(--color-border-default)] bg-[var(--color-surface)] p-5 group-data-[size=sm]/card:p-4",
         className
       )}
       {...props}

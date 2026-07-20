@@ -277,14 +277,14 @@ export function TemplateImporter({
         animate={
           reduceMotion
             ? undefined
-            : { scale: dragging ? 1.008 : 1, backgroundColor: dragging ? "#f9ecec" : "#ffffff" }
+            : { scale: dragging ? 1.008 : 1, backgroundColor: dragging ? "var(--color-primary-tint)" : "var(--color-surface-raised)" }
         }
         className={cn(
-          "flex min-h-36 cursor-pointer flex-col items-stretch justify-between gap-6 border-2 border-dashed p-6 outline-none sm:flex-row sm:items-center",
-          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-red)]",
+          "flex min-h-36 cursor-pointer flex-col items-stretch justify-between gap-6 rounded-lg border border-dashed p-6 shadow-xs outline-none sm:flex-row sm:items-center",
+          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]",
           dragging
-            ? "border-[var(--color-red)]"
-            : "border-[var(--color-black)] bg-[var(--color-surface)]",
+            ? "border-[var(--color-primary)] bg-[var(--color-primary-tint)]"
+            : "border-[var(--color-border-default)] bg-[var(--color-surface-raised)]",
           busy && "cursor-wait",
         )}
       >
@@ -302,21 +302,21 @@ export function TemplateImporter({
                 ? { repeat: Infinity, duration: 1, ease: "linear" }
                 : { duration: 0.2, ease: EASE_OUT }
             }
-            className="flex size-12 shrink-0 items-center justify-center bg-[var(--color-black)] text-white"
+            className="flex size-12 shrink-0 items-center justify-center rounded-md bg-[var(--color-primary-tint)] text-[var(--color-primary-hover)]"
           >
             {analyzing ? <LoaderCircle className="size-5" /> : <UploadCloud className="size-5" />}
           </motion.div>
           <div className="min-w-0">
-            <p className="text-[15px] font-bold text-[var(--color-black)]">
+            <p className="text-[15px] font-bold text-[var(--color-text-primary)]">
               {analyzing ? "Analyzing template batch" : "Drop JSON templates here"}
             </p>
-            <p className="mt-1 text-[12px] font-medium text-[var(--color-muted)]">
+            <p className="mt-1 text-[12px] font-medium text-[var(--color-text-secondary)]">
               Up to 20 files, 2 MB each. Raw JSON is analyzed on the server and is not deployed.
             </p>
           </div>
         </div>
         {!busy && (
-          <span className="hidden items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-red)] sm:flex">
+          <span className="hidden items-center gap-2 text-sm font-semibold text-[var(--color-primary-hover)] sm:flex">
             <Plus className="size-4" />
             Choose files
           </span>
@@ -345,14 +345,14 @@ export function TemplateImporter({
             transition={reduceMotion ? { duration: 0 } : { duration: 0.24, ease: EASE_OUT }}
             className="space-y-4"
           >
-            <div className="grid border-2 border-[var(--color-black)] bg-[var(--color-black)] sm:grid-cols-4">
+            <div className="grid overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] shadow-xs sm:grid-cols-4">
               <Metric label="Files analyzed" value={analyses.length} />
               <Metric label="Pages included" value={selectedCount} />
               <Metric label="Need review" value={reviewCount} />
               <Metric label="Blocked" value={blockedCount} />
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 border border-[var(--color-black)] bg-[var(--color-panel)] p-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-3">
               <MotionCheckbox
                 checked={allSelected}
                 indeterminate={partiallySelected}
@@ -417,10 +417,10 @@ export function TemplateImporter({
                           : { ...SPRING_LAYOUT, delay: Math.min(index * 0.035, 0.2) }
                       }
                       className={cn(
-                        "border-2 bg-[var(--color-surface)]",
+                        "rounded-lg border bg-[var(--color-surface-raised)] shadow-xs",
                         analysis.status === "blocked"
-                          ? "border-[var(--color-red)]"
-                          : "border-[var(--color-black)]",
+                          ? "border-[var(--color-danger)]"
+                          : "border-[var(--color-border-default)]",
                       )}
                     >
                       <div className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(170px,0.7fr)_minmax(150px,0.7fr)_auto] lg:items-start">
@@ -434,13 +434,13 @@ export function TemplateImporter({
                           />
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
-                              <FileJson className="size-4 shrink-0 text-[var(--color-red)]" />
+                              <FileJson className="size-4 shrink-0 text-[var(--color-primary)]" />
                               <h3 className="truncate text-[14px] font-bold tracking-[-0.01em]">
                                 {analysis.file.name}
                               </h3>
                               <StatusBadge status={analysis.status} />
                             </div>
-                            <p className="mt-2 text-[11px] font-medium leading-5 text-[var(--color-muted)]">
+                            <p className="mt-2 text-[11px] font-medium leading-5 text-[var(--color-text-secondary)]">
                               {analysis.format.label}
                               {analysis.format.exportVersion
                                 ? ` v${analysis.format.exportVersion}`
@@ -451,7 +451,7 @@ export function TemplateImporter({
                         </div>
 
                         <div className="space-y-2">
-                          <label className="text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">
+                          <label className="text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--color-text-secondary)]">
                             Page role
                           </label>
                           <Select
@@ -475,7 +475,7 @@ export function TemplateImporter({
                               ))}
                             </SelectContent>
                           </Select>
-                          <p className="text-[10px] font-medium text-[var(--color-muted)]">
+                          <p className="text-[10px] font-medium text-[var(--color-text-secondary)]">
                             {Math.round(analysis.suggestedPage.confidence * 100)}% suggestion confidence
                           </p>
                         </div>
@@ -570,16 +570,16 @@ function CompileSummary({
       animate={{ opacity: 1, y: 0 }}
       exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
       transition={reduceMotion ? { duration: 0 } : { duration: 0.24, ease: EASE_OUT }}
-      className="border-2 border-[var(--color-black)]"
+      className="overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm"
       aria-label="Portable compile result"
       aria-live="polite"
     >
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-[var(--color-black)] p-4 text-white">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--color-border-default)] bg-[var(--color-surface)] p-4 text-[var(--color-text-primary)]">
         <div className="flex items-center gap-3">
-          <PackageCheck className="size-5 text-[var(--color-red)]" />
+          <PackageCheck className="size-5 text-[var(--color-primary)]" />
           <div>
             <h3 className="text-[14px] font-bold">Portable compile result</h3>
-            <p className="mt-1 text-[10px] font-medium text-[#b5b5b5]">
+            <p className="mt-1 text-xs font-medium text-[var(--color-text-secondary)]">
               Nothing has been sent to WordPress.
             </p>
           </div>
@@ -590,14 +590,14 @@ function CompileSummary({
         </Button>
       </div>
 
-      <div className="grid border-b border-[var(--color-black)] sm:grid-cols-4">
+      <div className="grid border-b border-[var(--color-border-default)] sm:grid-cols-4">
         <CompileMetric label="Artifacts" value={bundle.totals.compiled} />
         <CompileMetric label="Ready" value={bundle.totals.ready} />
         <CompileMetric label="Need review" value={bundle.totals.review} />
         <CompileMetric label="Blocked" value={bundle.totals.blocked} />
       </div>
 
-      <div className="divide-y divide-[var(--color-black)] bg-[var(--color-surface)]">
+      <div className="divide-y divide-[var(--color-border-default)] bg-[var(--color-surface-raised)]">
         {bundle.pages.map((page) => (
           <div
             key={page.analysisId}
@@ -608,11 +608,11 @@ function CompileSummary({
                 <p className="truncate text-[13px] font-bold">{page.mapping.title}</p>
                 <StatusBadge status={page.status} />
               </div>
-              <p className="mt-1 text-[10px] font-medium leading-5 text-[var(--color-muted)]">
+              <p className="mt-1 text-[10px] font-medium leading-5 text-[var(--color-text-secondary)]">
                 {page.compiler.id} · {page.transformations.elementIdsRegenerated} IDs regenerated · {page.transformations.mediaIdsCleared} media IDs cleared
               </p>
             </div>
-            <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+            <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--color-text-secondary)]">
               {page.targetKind === "wp-page" ? "WordPress page" : "Theme Builder template"}
             </span>
           </div>
@@ -624,9 +624,9 @@ function CompileSummary({
 
 function CompileMetric({ label, value }: { label: string; value: number }) {
   return (
-    <div className="border-b border-[var(--color-black)] p-3 last:border-b-0 sm:border-r sm:border-b-0 sm:last:border-r-0">
-      <span className="text-[18px] font-black">{value}</span>
-      <span className="ml-2 text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+    <div className="border-b border-[var(--color-border-default)] p-3 last:border-b-0 sm:border-r sm:border-b-0 sm:last:border-r-0">
+      <span className="text-lg font-semibold">{value}</span>
+      <span className="ml-2 text-xs font-medium text-[var(--color-text-faint)]">
         {label}
       </span>
     </div>
@@ -635,7 +635,7 @@ function CompileMetric({ label, value }: { label: string; value: number }) {
 
 function AnalysisDetails({ analysis }: { analysis: TemplateAnalysis }) {
   return (
-    <div className="grid gap-5 border-t-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4 lg:grid-cols-3">
+    <div className="grid gap-5 border-t border-[var(--color-border-default)] bg-[var(--color-surface)] p-4 lg:grid-cols-3">
       <div>
         <DetailLabel>Detected dependencies</DetailLabel>
         <div className="mt-2 flex flex-wrap gap-1.5">
@@ -646,7 +646,7 @@ function AnalysisDetails({ analysis }: { analysis: TemplateAnalysis }) {
               </Badge>
             ))
           ) : (
-            <span className="text-[12px] font-medium text-[var(--color-muted)]">No extra plugins detected</span>
+            <span className="text-[12px] font-medium text-[var(--color-text-secondary)]">No extra plugins detected</span>
           )}
         </div>
         <dl className="mt-4 grid grid-cols-2 gap-3 text-[11px]">
@@ -660,7 +660,7 @@ function AnalysisDetails({ analysis }: { analysis: TemplateAnalysis }) {
       <div>
         <DetailLabel>External hosts</DetailLabel>
         {analysis.dependencies.externalHosts.length > 0 ? (
-          <ul className="mt-2 space-y-1 font-mono text-[10px] leading-5 text-[var(--color-black)]">
+          <ul className="mt-2 space-y-1 font-mono text-[10px] leading-5 text-[var(--color-text-primary)]">
             {analysis.dependencies.externalHosts.slice(0, 8).map((host) => (
               <li key={host} className="truncate">
                 {host}
@@ -668,7 +668,7 @@ function AnalysisDetails({ analysis }: { analysis: TemplateAnalysis }) {
             ))}
           </ul>
         ) : (
-          <p className="mt-2 text-[12px] font-medium text-[var(--color-muted)]">No external hosts detected</p>
+          <p className="mt-2 text-[12px] font-medium text-[var(--color-text-secondary)]">No external hosts detected</p>
         )}
       </div>
 
@@ -681,7 +681,7 @@ function AnalysisDetails({ analysis }: { analysis: TemplateAnalysis }) {
             ))}
           </ul>
         ) : (
-          <p className="mt-2 text-[12px] font-medium text-[var(--color-muted)]">No compatibility warnings</p>
+          <p className="mt-2 text-[12px] font-medium text-[var(--color-text-secondary)]">No compatibility warnings</p>
         )}
       </div>
     </div>
@@ -695,12 +695,12 @@ function WarningItem({ warning }: { warning: TemplateWarning }) {
       <Icon
         className={cn(
           "mt-0.5 size-3.5 shrink-0",
-          warning.severity === "blocker" ? "text-[var(--color-red)]" : "text-[var(--color-black)]",
+          warning.severity === "blocker" ? "text-[var(--color-primary)]" : "text-[var(--color-text-primary)]",
         )}
       />
       <div>
         <p className="font-bold">{warning.title}</p>
-        <p className="font-medium text-[var(--color-muted)]">{warning.message}</p>
+        <p className="font-medium text-[var(--color-text-secondary)]">{warning.message}</p>
       </div>
     </li>
   );
@@ -708,9 +708,9 @@ function WarningItem({ warning }: { warning: TemplateWarning }) {
 
 function Metric({ label, value }: { label: string; value: number }) {
   return (
-    <div className="border-b border-[#3a3a3a] p-4 text-white last:border-b-0 sm:border-r sm:border-b-0 sm:last:border-r-0">
-      <AnimatedNumber value={value} className="block text-[26px] font-black leading-none tracking-[-0.04em]" />
-      <span className="mt-2 block text-[9px] font-bold uppercase tracking-[0.14em] text-[#9a9a9a]">
+    <div className="border-b border-[var(--color-border-default)] p-4 text-[var(--color-text-primary)] last:border-b-0 sm:border-r sm:border-b-0 sm:last:border-r-0">
+      <AnimatedNumber value={value} className="block text-[26px] font-semibold leading-none tracking-[-0.03em]" />
+      <span className="mt-2 block text-xs font-medium text-[var(--color-text-faint)]">
         {label}
       </span>
     </div>
@@ -725,7 +725,7 @@ function StatusBadge({ status }: { status: TemplateAnalysis["status"] }) {
 
 function DetailLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">
+    <p className="text-xs font-semibold text-[var(--color-text-faint)]">
       {children}
     </p>
   );
@@ -734,8 +734,8 @@ function DetailLabel({ children }: { children: React.ReactNode }) {
 function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div>
-      <dt className="font-medium text-[var(--color-muted)]">{label}</dt>
-      <dd className="mt-0.5 text-[14px] font-black text-[var(--color-black)]">{value}</dd>
+      <dt className="font-medium text-[var(--color-text-secondary)]">{label}</dt>
+      <dd className="mt-0.5 text-sm font-semibold text-[var(--color-text-primary)]">{value}</dd>
     </div>
   );
 }

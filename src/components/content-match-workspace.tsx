@@ -36,13 +36,13 @@ export function ContentMatchWorkspace({
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-xl font-black tracking-[-0.03em]">Content matches</h3>
-        <p className="mt-2 max-w-2xl text-xs leading-5 text-[var(--color-muted)]">
+        <h3 className="text-xl font-semibold tracking-[-0.02em]">Content matches</h3>
+        <p className="mt-2 max-w-2xl text-xs leading-5 text-[var(--color-text-secondary)]">
           The builder matched cleaned website content to your Page Plan. After matching, each page is fitted section by section into its selected layout.
         </p>
       </div>
 
-      <div className="border-2 border-[var(--color-black)]">
+      <div className="overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-xs">
         {pages.map((page) => {
           const match = matchByPage.get(page.id);
           const candidate = match?.candidates.find(
@@ -56,12 +56,12 @@ export function ContentMatchWorkspace({
           return (
             <section
               key={page.id}
-              className="border-b border-[var(--color-hairline)] bg-white p-5 last:border-b-0"
+              className="border-b border-[var(--color-border-default)] bg-[var(--color-surface-raised)] p-5 last:border-b-0"
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <h4 className="font-black tracking-[-0.02em]">{page.pageName}</h4>
-                  <p className="mt-1 text-xs text-[var(--color-muted)]">
+                  <h4 className="font-semibold tracking-[-0.01em]">{page.pageName}</h4>
+                  <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
                     {page.slug ? `/${page.slug}/` : "/"}
                   </p>
                 </div>
@@ -69,10 +69,10 @@ export function ContentMatchWorkspace({
               </div>
 
               {match?.status === "matched" && !choosing && (
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4">
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4">
                   <div>
                     <p className="text-sm font-bold">{candidate?.title ?? "Current website content"}</p>
-                    {candidate?.path && <p className="mt-1 text-xs text-[var(--color-muted)]">{candidate.path}</p>}
+                    {candidate?.path && <p className="mt-1 text-xs text-[var(--color-text-secondary)]">{candidate.path}</p>}
                   </div>
                   <Button variant="outline" size="sm" onClick={() => setChoosingFor(page.id)}>
                     Change
@@ -81,12 +81,12 @@ export function ContentMatchWorkspace({
               )}
 
               {match?.status === "empty" && !choosing && (
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4">
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4">
                   <div className="flex items-start gap-3">
-                    <FilePlus2 className="mt-0.5 size-4 text-[var(--color-red)]" />
+                    <FilePlus2 className="mt-0.5 size-4 text-[var(--color-primary)]" />
                     <div>
                       <p className="text-sm font-bold">Create an empty draft</p>
-                      <p className="mt-1 text-xs text-[var(--color-muted)]">You can add or adjust this page in WordPress later.</p>
+                      <p className="mt-1 text-xs text-[var(--color-text-secondary)]">You can add or adjust this page in WordPress later.</p>
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -103,8 +103,8 @@ export function ContentMatchWorkspace({
               )}
 
               {choosing && match && (
-                <div className="mt-4 border-2 border-[var(--color-black)] bg-[var(--color-red-light)] p-4">
-                  <p className="text-sm font-black">
+                <div className="mt-4 rounded-lg border border-[var(--color-primary)] bg-[var(--color-primary-tint)] p-4">
+                  <p className="text-sm font-semibold">
                     Which current page contains the content for {page.pageName}?
                   </p>
                   {match.candidates.length > 0 ? (
@@ -140,13 +140,13 @@ export function ContentMatchWorkspace({
                         </Button>
                       </div>
                       {selectedCandidate?.preview && (
-                        <p className="mt-3 line-clamp-3 text-xs leading-5 text-[var(--color-muted)]">
+                        <p className="mt-3 line-clamp-3 text-xs leading-5 text-[var(--color-text-secondary)]">
                           {selectedCandidate.preview}
                         </p>
                       )}
                     </>
                   ) : (
-                    <p className="mt-3 text-xs text-[var(--color-muted)]">No other useful current pages were found.</p>
+                    <p className="mt-3 text-xs text-[var(--color-text-secondary)]">No other useful current pages were found.</p>
                   )}
                   <div className="mt-4 flex flex-wrap justify-between gap-2">
                     <Button
@@ -170,7 +170,7 @@ export function ContentMatchWorkspace({
               )}
 
               {!match && (
-                <div className="mt-4 flex items-center gap-3 border-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4 text-sm font-bold">
+                <div className="mt-4 flex items-center gap-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4 text-sm font-semibold">
                   <RefreshCw className="size-4" /> Waiting for content import
                 </div>
               )}
@@ -185,24 +185,24 @@ export function ContentMatchWorkspace({
 function MatchBadge({ status }: { status?: PersistedContentMatch["status"] }) {
   if (status === "matched") {
     return (
-      <span className="inline-flex items-center gap-2 border-2 border-[var(--color-black)] bg-[var(--color-black)] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-white">
+      <span className="inline-flex items-center gap-2 rounded-pill bg-[var(--color-success-tint)] px-3 py-2 text-xs font-semibold text-[var(--color-success)]">
         <Check className="size-3.5" /> Matched
       </span>
     );
   }
   if (status === "check") {
     return (
-      <span className="inline-flex items-center gap-2 border-2 border-[var(--color-red)] bg-[var(--color-red-light)] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-red)]">
+      <span className="inline-flex items-center gap-2 rounded-pill bg-[var(--color-warning-tint)] px-3 py-2 text-xs font-semibold text-[var(--color-warning)]">
         <CircleAlert className="size-3.5" /> Check match
       </span>
     );
   }
   if (status === "empty") {
     return (
-      <span className="border-2 border-[var(--color-black)] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em]">
+      <span className="rounded-pill border border-[var(--color-border-default)] bg-[var(--color-surface)] px-3 py-2 text-xs font-semibold text-[var(--color-text-secondary)]">
         No source content
       </span>
     );
   }
-  return <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-muted)]">Waiting</span>;
+  return <span className="text-xs font-semibold text-[var(--color-text-faint)]">Waiting</span>;
 }

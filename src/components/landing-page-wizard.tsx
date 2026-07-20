@@ -580,7 +580,7 @@ export function LandingPageWizard({
               {events.map((event) => (
                 <li
                   key={event.key}
-                  className="flex items-start gap-3 border-2 border-[var(--color-black)] bg-[var(--color-panel)] px-3 py-2.5"
+                  className="flex items-start gap-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] px-3 py-2.5"
                 >
                   <StatusMark status={event.status} />
                   <span className={event.status === "fail" ? "text-destructive" : ""}>
@@ -590,7 +590,7 @@ export function LandingPageWizard({
                 </li>
               ))}
               {events.length === 0 && (
-                <li className="border-2 border-[var(--color-black)] bg-[var(--color-panel)] px-3 py-2.5 text-[var(--color-muted)]">
+                <li className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] px-3 py-2.5 text-[var(--color-text-secondary)]">
                   Starting...
                 </li>
               )}
@@ -607,7 +607,7 @@ export function LandingPageWizard({
                         href={link.editUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="border-2 border-[var(--color-black)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-red)]"
+                        className="rounded-md border border-[var(--color-border-default)] px-2.5 py-1 text-xs font-semibold text-[var(--color-primary-hover)]"
                       >
                         Edit in WP
                       </a>
@@ -615,7 +615,7 @@ export function LandingPageWizard({
                         href={link.viewUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="border-2 border-[var(--color-black)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-red)]"
+                        className="rounded-md border border-[var(--color-border-default)] px-2.5 py-1 text-xs font-semibold text-[var(--color-primary-hover)]"
                       >
                         Preview
                       </a>
@@ -626,7 +626,7 @@ export function LandingPageWizard({
             )}
           </div>
           {finished && (
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-[var(--color-black)] bg-[var(--color-panel)] p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-border-default)] bg-[var(--color-surface)] p-5">
               <Button variant="ghost" onClick={() => router.push("/dashboard")}>
                 <ArrowLeft data-icon="inline-start" />
                 Back to dashboard
@@ -667,7 +667,7 @@ export function LandingPageWizard({
         </Link>
       </PageHead>
 
-      <div className="grid gap-0 border-2 border-[var(--color-black)] bg-[var(--color-surface)] lg:grid-cols-[230px_minmax(0,1fr)]">
+      <div className="grid overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm lg:grid-cols-[248px_minmax(0,1fr)]">
         <StepperRail step={step} setStep={setStep} />
         <section className="overflow-hidden bg-[var(--color-surface)]">
           <PanelHead
@@ -681,7 +681,7 @@ export function LandingPageWizard({
                 <SectionLabel>Upload area</SectionLabel>
                 <BuildPackageUpload onFile={handleBuildPackage} />
                 {packageError && (
-                  <div className="border-2 border-[var(--color-black)] bg-[var(--color-red-light)] p-4 text-sm font-semibold text-[var(--color-red)]">
+                  <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-primary-tint)] p-4 text-sm font-semibold text-[var(--color-primary)]">
                     {packageError}
                   </div>
                 )}
@@ -845,7 +845,7 @@ export function LandingPageWizard({
             )}
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t-2 border-[var(--color-black)] bg-[var(--color-panel)] p-5">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--color-border-default)] bg-[var(--color-surface)] p-5">
             <Button variant="ghost" onClick={back} disabled={step === 0}>
               <ArrowLeft data-icon="inline-start" />
               Back
@@ -908,9 +908,9 @@ function BuildPackageUpload({
         setDragging(false);
         loadFile(e.dataTransfer.files?.[0]);
       }}
-      className={`flex min-h-56 cursor-pointer flex-col items-center justify-center gap-3 border-2 border-dashed p-6 text-center transition ${
+      className={`flex min-h-56 cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border border-dashed p-6 text-center shadow-xs transition ${
         dragging
-          ? "border-[var(--color-red)] bg-[var(--color-red-light)]"
+          ? "border-[var(--color-primary)] bg-[var(--color-primary-tint)]"
           : "border-[var(--line-strong)] bg-[var(--paper-2)] hover:bg-[var(--card)]"
       }`}
     >
@@ -1068,7 +1068,7 @@ function AssetUpload({
       }}
       className={`flex min-h-36 cursor-pointer flex-col items-center justify-center gap-2 border border-dashed p-5 text-center transition ${
         dragging
-          ? "border-[var(--color-red)] bg-[var(--color-red-light)]"
+          ? "border-[var(--color-primary)] bg-[var(--color-primary-tint)]"
           : "border-[var(--line-strong)] bg-[var(--paper-2)] hover:bg-[var(--card)]"
       }`}
     >
@@ -1159,7 +1159,7 @@ function OptionalColorField({
           type="checkbox"
           checked={checked}
           onChange={(e) => onCheckedChange(e.target.checked)}
-          className="size-4 shrink-0 cursor-pointer accent-[var(--color-red)]"
+          className="size-4 shrink-0 cursor-pointer accent-[var(--color-primary)]"
         />
         <span className="text-[10px] font-semibold uppercase tracking-[0.15em]">
           Use {label} color
@@ -1218,15 +1218,15 @@ function PageHead({
   return (
     <div className="page-banner">
       <div>
-        <div className="eyebrow">{"// Build Workspace"}</div>
-        <h1 className="page-title">{title}.</h1>
+        <div className="eyebrow">Build workspace</div>
+        <h1 className="page-title">{title}</h1>
         <p className="page-copy">{subline}</p>
       </div>
-      <div className="flex flex-wrap items-center gap-0">
-        <div className="border-2 border-[var(--color-black)] bg-[var(--color-red)] px-4 py-3 text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--color-on-red)]">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="rounded-pill bg-[var(--color-primary-tint)] px-3.5 py-2 text-xs font-semibold text-[var(--color-primary-hover)]">
           Landing Page
         </div>
-        <div className="-ml-0.5 border-2 border-[var(--color-black)] bg-[var(--color-surface)] px-4 py-3 text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--color-black)]">
+        <div className="rounded-pill border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] px-3.5 py-2 text-xs font-semibold text-[var(--color-text-secondary)]">
           {clientName}
         </div>
         {children}
@@ -1244,11 +1244,11 @@ function StepperRail({
 }) {
   const percent = Math.round(((step + 1) / STEPS.length) * 100);
   return (
-    <aside className="border-r-2 border-[var(--color-black)] bg-[var(--color-surface)] lg:self-stretch">
-      <div className="bg-[var(--color-black)] px-4 py-3 text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--color-on-black)]">
-        {"// Build Steps"}
+    <aside className="border-r border-[var(--color-border-default)] bg-[var(--color-surface)] p-3 lg:self-stretch">
+      <div className="px-3 py-3 text-xs font-semibold uppercase leading-none tracking-[0.04em] text-[var(--color-text-faint)]">
+        Build steps
       </div>
-      <ol>
+      <ol className="space-y-1">
         {STEP_DETAILS.map((item, i) => {
           const done = i < step;
           const active = i === step;
@@ -1258,30 +1258,30 @@ function StepperRail({
                 type="button"
                 disabled={i > step}
                 onClick={() => i <= step && setStep(i)}
-                className={`relative flex w-full items-center gap-3 border-b border-[var(--color-black)] px-4 py-[14px] text-left transition-colors ${
+                className={`relative flex w-full items-center gap-3 rounded-md px-3 py-3 text-left transition-colors ${
                   active
-                    ? "border-l-[3px] border-l-[var(--color-red)] bg-[var(--color-red-light)] pl-[13px]"
+                    ? "border-l-[3px] border-l-[var(--color-primary)] bg-[var(--color-primary-tint)] pl-[10px]"
                     : done
-                      ? "bg-[var(--color-surface)] hover:bg-[var(--color-panel)]"
-                      : "cursor-default bg-[var(--color-surface)] opacity-60"
+                      ? "bg-transparent hover:bg-[var(--color-surface-raised)]"
+                      : "cursor-default bg-transparent opacity-60"
                 }`}
               >
                 <span
-                  className={`flex size-[26px] shrink-0 items-center justify-center border-2 text-[10px] font-bold leading-none tracking-[0.12em] ${
+                  className={`flex size-7 shrink-0 items-center justify-center rounded-pill border text-xs font-semibold leading-none ${
                     done
-                      ? "border-[var(--color-black)] bg-[var(--color-black)] text-[var(--color-on-black)]"
+                      ? "border-[var(--color-success)] bg-[var(--color-success)] text-[var(--color-on-primary)]"
                       : active
-                        ? "border-[var(--color-red)] bg-[var(--color-red)] text-[var(--color-on-red)]"
-                        : "border-[var(--color-black)] bg-[var(--color-surface)] text-[var(--color-muted)]"
+                        ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                        : "border-[var(--color-border-strong)] bg-[var(--color-surface-raised)] text-[var(--color-text-faint)]"
                   }`}
                 >
                   {done ? <Check className="size-3.5" /> : i + 1}
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-[13px] font-semibold leading-tight tracking-[-0.01em] text-[var(--color-black)]">
+                  <span className={`block text-[13px] font-semibold leading-tight tracking-[-0.01em] ${active ? "text-[var(--color-primary-hover)]" : "text-[var(--color-text-primary)]"}`}>
                     {item.title}
                   </span>
-                  <span className="mt-1 block text-[10px] font-bold uppercase leading-none tracking-[0.06em] text-[var(--color-muted)]">
+                  <span className="mt-1 block text-xs font-medium leading-none text-[var(--color-text-faint)]">
                     {item.rail}
                   </span>
                 </span>
@@ -1290,14 +1290,14 @@ function StepperRail({
           );
         })}
       </ol>
-      <div className="space-y-2 border-t-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4">
-        <div className="h-1 overflow-hidden bg-[#E0DDD6]">
+      <div className="mt-3 space-y-2 border-t border-[var(--color-border-default)] p-3 pt-4">
+        <div className="h-2 overflow-hidden rounded-pill bg-[var(--color-border-default)]">
           <div
-            className="h-full bg-[var(--color-red)] transition-all duration-200"
+            className="h-full rounded-pill bg-[var(--color-primary)] transition-all duration-200"
             style={{ width: `${percent}%` }}
           />
         </div>
-        <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <div className="text-xs font-medium text-[var(--color-text-faint)]">
           {percent}% complete
         </div>
       </div>
@@ -1315,16 +1315,16 @@ function PanelHead({
   description: string;
 }) {
   return (
-    <div className="flex items-center gap-4 border-b-2 border-[var(--color-black)] bg-[var(--color-panel)] p-5 sm:p-6">
-      <div className="flex size-[42px] shrink-0 items-center justify-center border-2 border-[var(--color-black)] bg-[var(--color-surface)] text-[var(--color-red)]">
+    <div className="flex items-center gap-4 border-b border-[var(--color-border-default)] bg-[var(--color-surface)] p-5 sm:p-6">
+      <div className="flex size-11 shrink-0 items-center justify-center rounded-md bg-[var(--color-primary-tint)] text-[var(--color-primary-hover)]">
         <Icon className="size-5" />
       </div>
       <div>
-        <div className="eyebrow mb-2">{"// Step"}</div>
-        <h2 className="text-[32px] font-black leading-none tracking-[-0.04em] text-[var(--color-black)]">
+        <div className="eyebrow mb-2">Current step</div>
+        <h2 className="text-2xl font-semibold leading-tight tracking-[-0.025em] text-[var(--color-text-primary)]">
           {title}
         </h2>
-        <p className="mt-2 max-w-xl text-[13px] leading-6 text-[var(--color-muted)]">
+        <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--color-text-secondary)]">
           {description}
         </p>
       </div>
@@ -1335,10 +1335,10 @@ function PanelHead({
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="shrink-0 text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--color-red)]">
+      <span className="shrink-0 text-xs font-semibold uppercase leading-none tracking-[0.04em] text-[var(--color-text-faint)]">
         {children}
       </span>
-      <span className="h-px flex-1 bg-[var(--color-hairline)]" />
+      <span className="h-px flex-1 bg-[var(--color-border-default)]" />
     </div>
   );
 }
@@ -1347,12 +1347,12 @@ function StatusMark({ status }: { status: StepEvent["status"] }) {
   return (
     <span
       aria-hidden
-      className={`mt-0.5 flex size-5 shrink-0 items-center justify-center border-2 border-[var(--color-black)] text-xs font-bold ${
+      className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-pill border text-xs font-bold ${
         status === "ok"
-          ? "bg-[var(--color-black)] text-[var(--color-on-black)]"
+          ? "border-[var(--color-success)] bg-[var(--color-success)] text-[var(--color-on-primary)]"
           : status === "fail"
-            ? "bg-[var(--color-red-light)] text-[var(--color-red)]"
-            : "bg-[var(--color-surface)] text-[var(--color-muted)]"
+            ? "border-[var(--color-danger)] bg-[var(--color-danger-tint)] text-[var(--color-danger)]"
+            : "border-[var(--color-border-default)] bg-[var(--color-surface-raised)] text-[var(--color-text-faint)]"
       }`}
     >
       {status === "ok" ? <Check className="size-3.5" /> : status === "fail" ? "x" : "..."}

@@ -211,11 +211,11 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
       </section>
 
       {adding && (
-        <section className="mb-6 border-2 border-[var(--color-black)] bg-[var(--color-surface)]">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-[var(--color-black)] bg-[var(--color-panel)] p-5">
+        <section className="mb-6 overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--color-border-default)] bg-[var(--color-surface)] p-5">
             <div>
-              <h2 className="text-xl font-black tracking-[-0.03em]">Add safe layouts</h2>
-              <p className="mt-1 text-xs text-[var(--color-muted)]">
+              <h2 className="text-xl font-semibold tracking-[-0.02em]">Add safe layouts</h2>
+              <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
                 Name each layout for the team. The source file is checked and cleaned before use.
               </p>
             </div>
@@ -251,15 +251,15 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
               chooseFiles(event.dataTransfer.files);
             }}
             data-dragging={dragging}
-            className={`flex w-full flex-col items-center justify-center gap-3 border-b-2 border-[var(--color-black)] p-6 text-center transition-colors ${
+            className={`flex w-full flex-col items-center justify-center gap-3 border-b border-[var(--color-border-default)] p-6 text-center transition-colors ${
               pending.length === 0 ? "min-h-44" : "min-h-28"
             } ${
               dragging
-                ? "bg-[var(--color-red-light)] outline-4 outline-inset outline-[var(--color-red)]"
-                : "bg-white hover:bg-[var(--color-panel)]"
+                ? "bg-[var(--color-primary-tint)] outline-2 outline-inset outline-[var(--color-primary)]"
+                : "bg-[var(--color-surface-raised)] hover:bg-[var(--color-surface)]"
             }`}
           >
-            <span className="flex size-12 items-center justify-center bg-[var(--color-black)] text-white">
+            <span className="flex size-12 items-center justify-center rounded-md bg-[var(--color-primary-tint)] text-[var(--color-primary-hover)]">
               <FileJson className="size-5" />
             </span>
             <span className="text-sm font-bold">
@@ -267,14 +267,14 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
                 ? "Drop JSON layouts to add them"
                 : "Drag and drop Elementor JSON layouts here"}
             </span>
-            <span className="text-xs text-[var(--color-muted)]">
+            <span className="text-xs text-[var(--color-text-secondary)]">
               Or click to choose files. Up to 20 files, 2 MB each.
             </span>
           </button>
 
           {pending.length > 0 && (
             <div>
-              <div className="hidden grid-cols-[minmax(0,1fr)_220px_48px] gap-4 border-b border-[var(--color-black)] bg-[var(--color-black)] px-5 py-3 text-[9px] font-bold uppercase tracking-[0.12em] text-white md:grid">
+              <div className="hidden grid-cols-[minmax(0,1fr)_220px_48px] gap-4 border-b border-[var(--color-border-default)] bg-[var(--color-surface)] px-5 py-3 text-xs font-semibold text-[var(--color-text-faint)] md:grid">
                 <span>Friendly layout name</span>
                 <span>Category</span>
                 <span />
@@ -282,7 +282,7 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
               {pending.map((item) => (
                 <div
                   key={item.id}
-                  className="grid gap-3 border-b border-[var(--color-hairline)] p-5 md:grid-cols-[minmax(0,1fr)_220px_48px] md:items-start"
+                  className="grid gap-3 border-b border-[var(--color-border-default)] p-5 md:grid-cols-[minmax(0,1fr)_220px_48px] md:items-start"
                 >
                   <div>
                     <Input
@@ -290,10 +290,10 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
                       aria-label={`Friendly name for ${item.file.name}`}
                       onChange={(event) => updatePending(item.id, { friendlyName: event.target.value })}
                     />
-                    <p className="mt-1.5 truncate text-[10px] text-[var(--color-muted)]">
+                    <p className="mt-1.5 truncate text-[10px] text-[var(--color-text-secondary)]">
                       Source file: {item.file.name}
                     </p>
-                    {item.error && <p className="mt-2 text-xs font-semibold text-[var(--color-red)]">{item.error}</p>}
+                    {item.error && <p className="mt-2 text-xs font-semibold text-[var(--color-danger)]">{item.error}</p>}
                   </div>
                   <Select
                     value={item.category}
@@ -335,21 +335,21 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
         </section>
       )}
 
-      <section className="overflow-hidden border-2 border-[var(--color-black)] bg-[var(--color-surface)]">
-        <div className="flex flex-wrap items-center gap-2 border-b-2 border-[var(--color-black)] p-3">
+      <section className="overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm">
+        <div className="flex flex-wrap items-center gap-2 border-b border-[var(--color-border-default)] p-3">
           {(["all", ...LAYOUT_CATEGORIES.map((item) => item.value)] as Filter[]).map((value) => (
             <button
               key={value}
               type="button"
               onClick={() => setFilter(value)}
               data-active={filter === value}
-              className="h-9 border-2 border-transparent px-4 text-[10px] font-bold uppercase tracking-[0.12em] data-[active=true]:border-[var(--color-black)] data-[active=true]:bg-[var(--color-red)] data-[active=true]:text-white"
+              className="h-9 rounded-pill border border-transparent px-4 text-sm font-medium text-[var(--color-text-secondary)] data-[active=true]:border-[var(--color-primary)] data-[active=true]:bg-[var(--color-primary-tint)] data-[active=true]:font-semibold data-[active=true]:text-[var(--color-primary-hover)]"
             >
               {value === "all" ? "All" : categoryLabel(value)}
             </button>
           ))}
           <label className="relative ml-auto min-w-56 flex-1 sm:max-w-72">
-            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-[var(--color-muted)]" />
+            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-[var(--color-text-secondary)]" />
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -362,11 +362,11 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
 
         {layouts.length === 0 ? (
           <div className="flex min-h-96 flex-col items-center justify-center gap-3 p-10 text-center">
-            <span className="flex size-12 items-center justify-center bg-[var(--color-black)] text-white">
+            <span className="flex size-12 items-center justify-center rounded-md bg-[var(--color-primary-tint)] text-[var(--color-primary-hover)]">
               <FileJson className="size-5" />
             </span>
-            <h2 className="text-xl font-black tracking-[-0.03em]">No layouts yet</h2>
-            <p className="max-w-sm text-sm text-[var(--color-muted)]">
+            <h2 className="text-xl font-semibold tracking-[-0.02em]">No layouts yet</h2>
+            <p className="max-w-sm text-sm text-[var(--color-text-secondary)]">
               Add a JSON layout once, give it a friendly name, and reuse it across website builds.
             </p>
             <Button onClick={() => setAdding(true)}>
@@ -375,9 +375,9 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
           </div>
         ) : (
           <div className="grid min-h-[620px] lg:grid-cols-[minmax(0,1fr)_360px]">
-            <div className="border-b-2 border-[var(--color-black)] p-5 lg:border-r-2 lg:border-b-0">
+            <div className="border-b border-[var(--color-border-default)] p-5 lg:border-r lg:border-b-0">
               {visibleLayouts.length === 0 ? (
-                <p className="p-10 text-center text-sm text-[var(--color-muted)]">No layouts match this filter.</p>
+                <p className="p-10 text-center text-sm text-[var(--color-text-secondary)]">No layouts match this filter.</p>
               ) : (
                 <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                   {visibleLayouts.map((layout) => (
@@ -386,27 +386,27 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
                       type="button"
                       onClick={() => openPreview(layout)}
                       data-selected={selected?.id === layout.id}
-                      className="group relative border-2 border-[var(--color-black)] bg-white p-3 text-left outline-none transition-colors hover:bg-[var(--color-panel)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-red)] data-[selected=true]:border-[var(--color-red)] data-[selected=true]:outline-1 data-[selected=true]:outline-[var(--color-red)]"
+                      className="group relative rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] p-3 text-left shadow-xs outline-none transition-[border-color,background-color,box-shadow] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface)] hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] data-[selected=true]:border-[var(--color-primary)] data-[selected=true]:ring-2 data-[selected=true]:ring-[rgb(57_115_210_/_10%)]"
                       aria-label={`Preview ${layoutDisplayName(layout)}`}
                     >
                       <LayoutThumbnail data={layout.thumbnail} className="aspect-[1.28/1]" />
-                      <span className="absolute top-5 right-5 flex items-center gap-1.5 border border-[var(--color-black)] bg-[var(--color-black)] px-2 py-1 text-[8px] font-bold uppercase tracking-[0.1em] text-white">
+                      <span className="absolute top-5 right-5 flex items-center gap-1.5 rounded-pill bg-[var(--color-surface-raised)] px-2.5 py-1.5 text-xs font-semibold text-[var(--color-primary-hover)] shadow-sm">
                         <Eye className="size-3" /> Preview
                       </span>
-                      <h3 className="mt-3 truncate text-base font-black tracking-[-0.02em]">
+                      <h3 className="mt-3 truncate text-base font-semibold tracking-[-0.01em]">
                         {layoutDisplayName(layout)}
                       </h3>
-                      <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                      <p className="mt-1 text-xs font-medium text-[var(--color-text-faint)]">
                         {categoryLabel(layout.category)}
                       </p>
-                      <div className="mt-3 flex items-center gap-2 border-t border-[var(--color-black)] pt-3 text-xs font-semibold">
+                      <div className="mt-3 flex items-center gap-2 border-t border-[var(--color-border-default)] pt-3 text-xs font-semibold">
                         {layout.status === "ready" ? (
                           <>
-                            <Check className="size-4 text-green-700" /> Ready
+                            <Check className="size-4 text-[var(--color-success)]" /> Ready
                           </>
                         ) : (
                           <>
-                            <Settings2 className="size-4 text-[var(--color-red)]" /> Needs setup
+                            <Settings2 className="size-4 text-[var(--color-warning)]" /> Needs setup
                           </>
                         )}
                       </div>
@@ -417,26 +417,26 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
             </div>
 
             {selected && (
-              <aside className="flex flex-col bg-[var(--color-panel)]">
+              <aside className="flex flex-col bg-[var(--color-surface)]">
                 <div className="flex-1 p-6">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-red)]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.04em] text-[var(--color-text-faint)]">
                     {categoryLabel(selected.category)} layout
                   </p>
-                  <h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">
+                  <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em]">
                     {layoutDisplayName(selected)}
                   </h2>
                   <LayoutThumbnail data={selected.thumbnail} className="mt-5 aspect-[1.28/1]" />
-                  <p className="mt-4 border-b border-[var(--color-black)] pb-4 text-sm leading-6 text-[var(--color-muted)]">
+                  <p className="mt-4 border-b border-[var(--color-border-default)] pb-4 text-sm leading-6 text-[var(--color-text-secondary)]">
                     {selected.structuralSummary}
                   </p>
                   <div className="mt-4 flex items-center gap-2 text-sm font-semibold">
                     {selected.status === "ready" ? (
                       <>
-                        <Check className="size-5 text-green-700" /> Ready to use
+                        <Check className="size-5 text-[var(--color-success)]" /> Ready to use
                       </>
                     ) : (
                       <>
-                        <Settings2 className="size-5 text-[var(--color-red)]" /> Needs template setup
+                        <Settings2 className="size-5 text-[var(--color-warning)]" /> Needs template setup
                       </>
                     )}
                   </div>
@@ -462,7 +462,7 @@ export function TemplateLibrary({ initialLayouts }: { initialLayouts: LayoutLibr
                 </div>
                 <Link
                   href={`/dashboard/templates/${selected.id}`}
-                  className="flex items-center gap-2 border-t-2 border-[var(--color-black)] bg-white p-5 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-red)] hover:bg-[var(--color-panel)]"
+                  className="flex items-center gap-2 border-t border-[var(--color-border-default)] bg-[var(--color-surface-raised)] p-5 text-sm font-semibold text-[var(--color-primary-hover)] hover:bg-[var(--color-primary-tint)]"
                 >
                   <Settings2 className="size-4" /> Manage template setup
                 </Link>

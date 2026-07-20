@@ -53,11 +53,11 @@ export function AppShell({
               appearance={{
                 variables: {
                   fontFamily: "Inter, sans-serif",
-                  colorPrimary: "#bf2e31",
-                  colorText: "#191919",
-                  colorTextSecondary: "#5a5a5a",
-                  colorBackground: "#FFFFFF",
-                  borderRadius: "0px",
+                  colorPrimary: "var(--color-primary)",
+                  colorText: "var(--color-text-primary)",
+                  colorTextSecondary: "var(--color-text-secondary)",
+                  colorBackground: "var(--color-surface-raised)",
+                  borderRadius: "10px",
                 },
                 elements: {
                   userButtonAvatarBox: "energize-clerk-avatar",

@@ -26,7 +26,8 @@ function formatDate(value: Date | string | null | undefined) {
 
 function statusVariant(status: string) {
   if (status === "success") return "default";
-  if (status === "partial" || status === "in_progress") return "secondary";
+  if (status === "partial") return "warning";
+  if (status === "in_progress") return "secondary";
   if (status === "failed") return "destructive";
   return "outline";
 }
@@ -65,19 +66,19 @@ export default async function BuildsPage({
     <main className="page-body">
       <section className="page-banner">
         <div>
-          <div className="eyebrow">{"// Build History"}</div>
-          <h1 className="page-title">Builds.</h1>
+          <div className="eyebrow">Build history</div>
+          <h1 className="page-title">Website builds</h1>
           <p className="page-copy">
             Review every deploy run, filter by status, and open the pushed page
             details.
           </p>
         </div>
         <Link href="/dashboard/new" className={buttonVariants()}>
-          New Build
+          New build
         </Link>
       </section>
 
-      <div className="mb-6 flex flex-wrap gap-0">
+      <div className="mb-6 flex flex-wrap gap-2">
         {filters.map((item) => (
           <Link
             key={item}
@@ -85,7 +86,7 @@ export default async function BuildsPage({
             className={buttonVariants({
               variant: status === item ? "default" : "outline",
               size: "sm",
-              className: "-ml-0.5 first:ml-0",
+              className: "capitalize",
             })}
           >
             {item}

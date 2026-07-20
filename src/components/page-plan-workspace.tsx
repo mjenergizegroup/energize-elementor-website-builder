@@ -214,8 +214,8 @@ export function PagePlanWorkspace({
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h3 className="text-xl font-black tracking-[-0.03em]">Plan the destination pages</h3>
-          <p className="mt-2 max-w-2xl text-xs leading-5 text-[var(--color-muted)]">
+          <h3 className="text-xl font-semibold tracking-[-0.02em]">Plan the destination pages</h3>
+          <p className="mt-2 max-w-2xl text-xs leading-5 text-[var(--color-text-secondary)]">
             Name every draft, choose its URL and title tag, then reuse any Ready layout as many times as needed.
           </p>
         </div>
@@ -230,11 +230,11 @@ export function PagePlanWorkspace({
       </div>
 
       {layouts.length === 0 && (
-        <div className="border-2 border-[var(--color-red)] bg-[var(--color-red-light)] p-5">
-          <p className="font-bold text-[var(--color-red)]">Add a Ready layout before planning pages.</p>
+        <div className="rounded-lg border border-[var(--color-danger)] bg-[var(--color-danger-tint)] p-5">
+          <p className="font-semibold text-[var(--color-danger)]">Add a Ready layout before planning pages.</p>
           <Link
             href="/dashboard/templates"
-            className="mt-3 inline-flex text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-red)] underline underline-offset-4"
+            className="mt-3 inline-flex text-sm font-semibold text-[var(--color-primary-hover)] underline underline-offset-4"
           >
             Open Template Library
           </Link>
@@ -242,9 +242,9 @@ export function PagePlanWorkspace({
       )}
 
       {mode === "page" && (
-        <section className="border-2 border-[var(--color-black)] bg-[var(--color-panel)] p-5">
+        <section className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-5 shadow-xs">
           <div className="flex items-center justify-between gap-3">
-            <h4 className="text-base font-black tracking-[-0.02em]">Add one page</h4>
+            <h4 className="text-base font-semibold tracking-[-0.01em]">Add one page</h4>
             <Button variant="ghost" size="icon-sm" onClick={() => setMode(null)} aria-label="Close add page form">
               <X />
             </Button>
@@ -257,7 +257,7 @@ export function PagePlanWorkspace({
                   type="button"
                   onClick={() => addSuggestedPage(suggestion.name, suggestion.type)}
                   disabled={layouts.length === 0}
-                  className="border-2 border-[var(--color-black)] bg-white px-3 py-2 text-[10px] font-bold uppercase tracking-[0.08em] hover:bg-[var(--color-red-light)] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-pill border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] px-3 py-2 text-xs font-semibold text-[var(--color-text-secondary)] hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-tint)] hover:text-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   + {suggestion.name}
                 </button>
@@ -265,7 +265,7 @@ export function PagePlanWorkspace({
             </div>
           )}
           <div className="mt-4 grid gap-4 md:grid-cols-3">
-            <label className="space-y-2 text-[10px] font-bold uppercase tracking-[0.1em]">
+            <label className="space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
               Page name
               <Input
                 value={pageName}
@@ -274,7 +274,7 @@ export function PagePlanWorkspace({
                 className="normal-case tracking-normal"
               />
             </label>
-            <label className="space-y-2 text-[10px] font-bold uppercase tracking-[0.1em]">
+            <label className="space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
               Page type
               <Select value={pageType} onValueChange={(value) => setPageType(value as PagePlanPageType)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
@@ -302,18 +302,18 @@ export function PagePlanWorkspace({
       )}
 
       {mode === "services" && (
-        <section className="border-2 border-[var(--color-black)] bg-[var(--color-panel)] p-5">
+        <section className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-5 shadow-xs">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h4 className="text-base font-black tracking-[-0.02em]">Add service pages</h4>
-              <p className="mt-1 text-xs text-[var(--color-muted)]">Enter one service per line and apply one shared layout.</p>
+              <h4 className="text-base font-semibold tracking-[-0.01em]">Add service pages</h4>
+              <p className="mt-1 text-xs text-[var(--color-text-secondary)]">Enter one service per line and apply one shared layout.</p>
             </div>
             <Button variant="ghost" size="icon-sm" onClick={() => setMode(null)} aria-label="Close add services form">
               <X />
             </Button>
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-[minmax(0,1fr)_280px]">
-            <label className="space-y-2 text-[10px] font-bold uppercase tracking-[0.1em]">
+            <label className="space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
               Service page names
               <Textarea
                 value={serviceNames}
@@ -339,23 +339,23 @@ export function PagePlanWorkspace({
       )}
 
       {items.length === 0 ? (
-        <div className="flex min-h-64 flex-col items-center justify-center border-2 border-dashed border-[var(--color-black)] p-8 text-center">
-          <LayoutTemplate className="size-8 text-[var(--color-red)]" />
-          <h4 className="mt-4 text-lg font-black tracking-[-0.03em]">No pages planned yet</h4>
-          <p className="mt-2 max-w-sm text-sm text-[var(--color-muted)]">
+        <div className="flex min-h-64 flex-col items-center justify-center rounded-lg border border-dashed border-[var(--color-border-strong)] bg-[var(--color-surface)] p-8 text-center">
+          <LayoutTemplate className="size-8 text-[var(--color-primary)]" />
+          <h4 className="mt-4 text-lg font-semibold tracking-[-0.02em]">No pages planned yet</h4>
+          <p className="mt-2 max-w-sm text-sm text-[var(--color-text-secondary)]">
             Add pages one at a time or add a list of services using one shared layout.
           </p>
         </div>
       ) : (
-        <div className="border-2 border-[var(--color-black)]">
-          <div className="hidden grid-cols-[minmax(150px,0.8fr)_minmax(150px,0.8fr)_minmax(180px,1fr)_minmax(180px,0.8fr)_132px] gap-3 bg-[var(--color-black)] px-4 py-3 text-[9px] font-bold uppercase tracking-[0.12em] text-white lg:grid">
+        <div className="overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-xs">
+          <div className="hidden grid-cols-[minmax(150px,0.8fr)_minmax(150px,0.8fr)_minmax(180px,1fr)_minmax(180px,0.8fr)_132px] gap-3 border-b border-[var(--color-border-default)] bg-[var(--color-surface)] px-4 py-3 text-xs font-semibold text-[var(--color-text-faint)] lg:grid">
             <span>Page name</span><span>URL</span><span>Title tag</span><span>Layout</span><span />
           </div>
           {items.map((item, index) => {
             const errors = validation.errors[item.id] ?? [];
             const layout = layoutByRevision.get(item.layoutRevisionId);
             return (
-              <div key={item.id} className="border-b border-[var(--color-hairline)] bg-white p-4 last:border-b-0">
+              <div key={item.id} className="border-b border-[var(--color-border-default)] bg-[var(--color-surface-raised)] p-4 last:border-b-0">
                 <div className="grid gap-3 lg:grid-cols-[minmax(150px,0.8fr)_minmax(150px,0.8fr)_minmax(180px,1fr)_minmax(180px,0.8fr)_132px] lg:items-start">
                   <label className="space-y-1 text-[9px] font-bold uppercase tracking-[0.1em] lg:space-y-0 lg:text-[0px]">
                     Page name
@@ -368,8 +368,8 @@ export function PagePlanWorkspace({
                   </label>
                   <label className="space-y-1 text-[9px] font-bold uppercase tracking-[0.1em] lg:space-y-0 lg:text-[0px]">
                     URL
-                    <div className="flex h-11 border-2 border-[var(--color-black)] bg-white">
-                      <span className="flex items-center border-r border-[var(--color-hairline)] px-3 text-sm">/</span>
+                    <div className="flex h-11 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-xs focus-within:border-[var(--color-primary)] focus-within:ring-4 focus-within:ring-[rgb(57_115_210_/_12%)]">
+                      <span className="flex items-center border-r border-[var(--color-border-default)] px-3 text-sm">/</span>
                       <input
                         value={item.slug}
                         onChange={(event) => update(item.id, { slug: normalizePageSlug(event.target.value) })}
@@ -388,7 +388,7 @@ export function PagePlanWorkspace({
                       aria-label={`Title tag for ${item.pageName}`}
                       className="normal-case tracking-normal"
                     />
-                    <span className="block text-right text-[9px] font-medium text-[var(--color-muted)] lg:text-[9px]">{item.titleTag.length}/160</span>
+                    <span className="block text-right text-[9px] font-medium text-[var(--color-text-secondary)] lg:text-[9px]">{item.titleTag.length}/160</span>
                   </label>
                   <LayoutSelect
                     value={item.layoutRevisionId}
@@ -405,12 +405,12 @@ export function PagePlanWorkspace({
                     <Button variant="destructive" size="icon-sm" onClick={() => remove(index)} aria-label={`Remove ${item.pageName}`}><Trash2 /></Button>
                   </div>
                 </div>
-                <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[10px] text-[var(--color-muted)]">
+                <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[10px] text-[var(--color-text-secondary)]">
                   <span>{pagePath(item.slug)}</span>
                   <span>{layout?.friendlyName ?? "Choose a Ready layout"}</span>
                 </div>
                 {errors.length > 0 && (
-                  <ul className="mt-2 space-y-1 text-xs font-semibold text-[var(--color-red)]">
+                  <ul className="mt-2 space-y-1 text-xs font-semibold text-[var(--color-danger)]">
                     {errors.map((error) => <li key={error}>{error}</li>)}
                   </ul>
                 )}
@@ -420,9 +420,9 @@ export function PagePlanWorkspace({
         </div>
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4">
         <span className="text-sm font-bold">{items.length} page{items.length === 1 ? "" : "s"} planned</span>
-        <span className={`text-xs font-semibold ${saveState === "error" || !validation.valid ? "text-[var(--color-red)]" : "text-[var(--color-muted)]"}`}>
+        <span className={`text-xs font-semibold ${saveState === "error" || !validation.valid ? "text-[var(--color-danger)]" : "text-[var(--color-text-secondary)]"}`}>
           {!validation.valid
             ? validation.firstError
             : saveState === "saving"
@@ -464,7 +464,7 @@ function LayoutSelect({
     (layout) => (layout.activeRevisionId ?? layout.id) === value,
   );
   return (
-    <div className={`${compact ? "space-y-1 text-[9px] lg:space-y-0 lg:text-[0px]" : "space-y-2 text-[10px]"} font-bold uppercase tracking-[0.1em]`}>
+    <div className={`${compact ? "space-y-1 text-xs lg:space-y-0 lg:text-[0px]" : "space-y-2 text-sm"} font-medium text-[var(--color-text-secondary)]`}>
       <span className="block">{label}</span>
       <div className="flex gap-1">
         <Select value={value} onValueChange={(next) => onChange(next ?? "")}>
@@ -478,7 +478,7 @@ function LayoutSelect({
               <SelectItem key={layout.id} value={layout.activeRevisionId ?? layout.id}>
                 <span className="flex min-w-0 items-center gap-2">
                   <span className="truncate">{layout.friendlyName}</span>
-                  <span className="text-[9px] font-bold uppercase tracking-[0.08em] text-[var(--color-muted)]">
+                  <span className="text-xs font-medium text-[var(--color-text-faint)]">
                     {layoutCategoryLabel(layout.category)}
                   </span>
                 </span>

@@ -39,15 +39,15 @@ export default async function ClientsPage() {
     <main className="page-body">
       <section className="page-banner">
         <div>
-          <div className="eyebrow">{"// Saved Workspaces"}</div>
-          <h1 className="page-title">Clients.</h1>
+          <div className="eyebrow">Saved workspaces</div>
+          <h1 className="page-title">Clients</h1>
           <p className="page-copy">
             Reuse saved WordPress targets and brand kits without re-entering
             encrypted credentials.
           </p>
         </div>
         <Link href="/dashboard/new" className={buttonVariants()}>
-          New Build
+          New build
         </Link>
       </section>
 

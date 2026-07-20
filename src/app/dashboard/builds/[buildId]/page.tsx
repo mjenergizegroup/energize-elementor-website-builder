@@ -61,7 +61,8 @@ function formatTime(value: Date | string | null | undefined) {
 
 function statusVariant(status: string) {
   if (status === "success" || status === "pushed") return "default";
-  if (status === "partial" || status === "in_progress") return "secondary";
+  if (status === "partial") return "warning";
+  if (status === "in_progress") return "secondary";
   if (status === "failed") return "destructive";
   return "outline";
 }
@@ -124,15 +125,15 @@ export default async function BuildDetailPage({
         <div className="min-w-0">
           <Link
             href="/dashboard/builds"
-            className="mb-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--color-muted)] hover:text-[var(--color-red)]"
+            className="mb-4 inline-flex items-center gap-2 text-sm font-semibold leading-none text-[var(--color-text-secondary)] hover:text-[var(--color-primary-hover)]"
           >
             <ArrowLeft className="size-3" />
             All builds
           </Link>
-          <h1 className="truncate text-[28px] font-black leading-none tracking-[-0.035em]">
+          <h1 className="truncate text-3xl font-semibold leading-tight tracking-[-0.03em]">
             {build.client?.name ?? "Unknown client"}
           </h1>
-          <div className="mt-3 flex flex-wrap items-center gap-3 text-[12px] text-[var(--color-muted)]">
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-[12px] text-[var(--color-text-secondary)]">
             <Badge variant={statusVariant(build.status)}>{build.status}</Badge>
             <span>{buildTypeLabel(landingPageBuild)}</span>
             <span>{landingPageBuild ? "Google Ads" : "Atomic website drafts"}</span>
@@ -140,14 +141,14 @@ export default async function BuildDetailPage({
             <span>Build ID: {build.id}</span>
           </div>
         </div>
-        <div className="flex gap-0">
+        <div className="flex gap-2">
           <Link
             href={
               build.client
                 ? `/dashboard/new?type=${landingPageBuild ? "landing-page" : "new-website"}&clientId=${build.client.id}`
                 : "/dashboard/new"
             }
-            className={buttonVariants({ className: "-mr-0.5" })}
+            className={buttonVariants()}
           >
             <RotateCw data-icon="inline-start" />
             Rebuild
@@ -188,7 +189,7 @@ export default async function BuildDetailPage({
                       href={page.editUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="truncate text-[12px] font-medium text-[var(--color-red)] hover:underline"
+                      className="truncate text-[12px] font-medium text-[var(--color-primary)] hover:underline"
                     >
                       {page.editUrl}
                     </a>
@@ -233,7 +234,7 @@ export default async function BuildDetailPage({
                   .map((issue) => (
                     <div
                       key={issue.id}
-                      className="border border-[var(--line)] bg-[var(--paper-2)] p-3"
+                      className="rounded-md border border-[var(--line)] bg-[var(--paper-2)] p-4"
                     >
                       <div className="flex flex-wrap items-center gap-2">
                         <Badge

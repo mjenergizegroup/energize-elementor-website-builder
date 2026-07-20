@@ -44,7 +44,7 @@ export default async function TemplateSetupPage({
       <section className="page-banner">
         <div>
           <div className="eyebrow">Template setup</div>
-          <h1 className="page-title">{layout.friendlyName}.</h1>
+          <h1 className="page-title">{layout.friendlyName}</h1>
           <p className="page-copy">
             Technical checks are kept here so website builders only see layouts that are ready.
           </p>
@@ -55,21 +55,21 @@ export default async function TemplateSetupPage({
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-        <section className="border-2 border-[var(--color-black)] bg-white p-5">
+        <section className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-5 shadow-sm">
           <LayoutThumbnail data={thumbnail} className="aspect-[1.28/1]" />
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <Badge variant={layout.status === "ready" ? "default" : "destructive"}>
               {layout.status === "ready" ? "Ready" : "Needs setup"}
             </Badge>
-            <span className="text-xs text-[var(--color-muted)]">Revision {revision.version}</span>
+            <span className="text-xs text-[var(--color-text-secondary)]">Revision {revision.version}</span>
           </div>
-          <p className="mt-4 text-sm leading-6 text-[var(--color-muted)]">{layout.structuralSummary}</p>
+          <p className="mt-4 text-sm leading-6 text-[var(--color-text-secondary)]">{layout.structuralSummary}</p>
         </section>
 
-        <section className="overflow-hidden border-2 border-[var(--color-black)] bg-white">
-          <div className="flex items-center gap-3 bg-[var(--color-black)] p-4 text-white">
+        <section className="overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm">
+          <div className="flex items-center gap-3 border-b border-[var(--color-border-default)] bg-[var(--color-surface)] p-4 text-[var(--color-text-primary)]">
             {layout.status === "ready" ? <Check className="size-5" /> : <Settings2 className="size-5" />}
-            <h2 className="text-sm font-bold uppercase tracking-[0.12em] text-white">
+            <h2 className="text-base font-semibold text-[var(--color-text-primary)]">
               {layout.status === "ready" ? "Safe and ready" : "Setup required"}
             </h2>
           </div>
@@ -77,17 +77,17 @@ export default async function TemplateSetupPage({
           <div className="space-y-6 p-6">
             {report?.blockingReasons && report.blockingReasons.length > 0 ? (
               <div>
-                <h3 className="text-base font-black tracking-[-0.02em]">What needs attention</h3>
-                <ul className="mt-3 space-y-2 text-sm leading-6 text-[var(--color-muted)]">
+                <h3 className="text-base font-semibold tracking-[-0.01em]">What needs attention</h3>
+                <ul className="mt-3 space-y-2 text-sm leading-6 text-[var(--color-text-secondary)]">
                   {report.blockingReasons.map((reason) => (
-                    <li key={reason} className="border-l-2 border-[var(--color-red)] pl-3">{reason}</li>
+                    <li key={reason} className="rounded-md bg-[var(--color-danger-tint)] px-3 py-2 text-[var(--color-danger)]">{reason}</li>
                   ))}
                 </ul>
               </div>
             ) : (
               <div>
-                <h3 className="text-base font-black tracking-[-0.02em]">Sanitation passed</h3>
-                <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
+                <h3 className="text-base font-semibold tracking-[-0.01em]">Sanitation passed</h3>
+                <p className="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
                   Source content, links, media, IDs, globals, dynamic bindings, and custom code were removed before this layout was saved.
                 </p>
               </div>
@@ -103,17 +103,17 @@ export default async function TemplateSetupPage({
             </div>
 
             {report?.unsupportedWidgetsRemoved && report.unsupportedWidgetsRemoved.length > 0 && (
-              <details className="border-2 border-[var(--color-black)] p-4">
+              <details className="rounded-lg border border-[var(--color-border-default)] p-4">
                 <summary className="cursor-pointer text-sm font-bold">
                   Removed unsupported regions ({report.unsupportedWidgetsRemoved.length})
                 </summary>
-                <ul className="mt-3 space-y-1 font-mono text-xs text-[var(--color-muted)]">
+                <ul className="mt-3 space-y-1 font-mono text-xs text-[var(--color-text-secondary)]">
                   {report.unsupportedWidgetsRemoved.map((widget) => <li key={widget}>{widget}</li>)}
                 </ul>
               </details>
             )}
 
-            <details className="border-2 border-[var(--color-black)] p-4">
+            <details className="rounded-lg border border-[var(--color-border-default)] p-4">
               <summary className="cursor-pointer text-sm font-bold">Source audit details</summary>
               <dl className="mt-4 grid gap-3 text-xs sm:grid-cols-2">
                 <AuditValue label="Internal source file" value={revision.originalFilename} />
@@ -133,9 +133,9 @@ export default async function TemplateSetupPage({
 
 function TechnicalStat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="border border-[var(--color-hairline)] bg-[var(--color-panel)] p-4">
-      <div className="text-2xl font-black tracking-[-0.04em]">{value}</div>
-      <div className="mt-1 text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">{label}</div>
+    <div className="rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4">
+      <div className="text-2xl font-semibold tracking-[-0.03em]">{value}</div>
+      <div className="mt-1 text-xs font-medium text-[var(--color-text-faint)]">{label}</div>
     </div>
   );
 }
@@ -143,7 +143,7 @@ function TechnicalStat({ label, value }: { label: string; value: number }) {
 function AuditValue({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="font-bold uppercase tracking-[0.08em] text-[var(--color-muted)]">{label}</dt>
+      <dt className="font-semibold text-[var(--color-text-secondary)]">{label}</dt>
       <dd className="mt-1 break-all font-medium">{value}</dd>
     </div>
   );

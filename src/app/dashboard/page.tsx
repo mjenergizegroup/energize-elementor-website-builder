@@ -29,7 +29,8 @@ function formatDate(value: Date | string | null | undefined) {
 
 function statusVariant(status: string) {
   if (status === "success") return "default";
-  if (status === "partial" || status === "in_progress") return "secondary";
+  if (status === "partial") return "warning";
+  if (status === "in_progress") return "secondary";
   if (status === "failed") return "destructive";
   return "outline";
 }
@@ -94,15 +95,15 @@ export default async function DashboardPage() {
     <main className="page-body">
       <section className="page-banner">
         <div>
-          <div className="eyebrow">{"// Workspace"}</div>
-          <h1 className="page-title">Dashboard.</h1>
+          <div className="eyebrow">Workspace</div>
+          <h1 className="page-title">Dashboard</h1>
           <p className="page-copy">
             Track recent WordPress builds and restart saved client workflows.
           </p>
         </div>
         <Link href="/dashboard/new" className={buttonVariants({ size: "lg" })}>
           <Plus data-icon="inline-start" />
-          New Build
+          New build
         </Link>
       </section>
 
@@ -110,7 +111,7 @@ export default async function DashboardPage() {
         <div className="stat-cell">
           <div className="stat-label">Builds (30d)</div>
           <div className="stat-value">{buildCount30d}</div>
-          <div className="stat-delta">↑ Live from build history</div>
+          <div className="stat-delta">Live from build history</div>
         </div>
         <div className="stat-cell">
           <div className="stat-label">Success rate</div>
@@ -118,17 +119,17 @@ export default async function DashboardPage() {
             {successRate}
             <span>%</span>
           </div>
-          <div className="stat-delta">↑ Successful deploys</div>
+          <div className="stat-delta">Successful deploys</div>
         </div>
         <div className="stat-cell">
           <div className="stat-label">Saved clients</div>
           <div className="stat-value">{clients.length}</div>
-          <div className="stat-delta">↑ Ready for rebuild</div>
+          <div className="stat-delta">Ready for rebuild</div>
         </div>
         <div className="stat-cell">
           <div className="stat-label">Recent builds</div>
           <div className="stat-value">{builds.length}</div>
-          <div className="stat-delta">↑ Latest activity</div>
+          <div className="stat-delta">Latest activity</div>
         </div>
       </section>
 

@@ -84,7 +84,7 @@ export function MigrationContentWorkspace({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 border border-[var(--line)] bg-[var(--paper-2)] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--line)] bg-[var(--paper-2)] p-4">
         <div className="flex flex-wrap gap-2" aria-label="Content review summary">
           <Badge variant="secondary">{summary.included} included</Badge>
           <Badge variant="secondary">{summary.approved} approved</Badge>
@@ -103,7 +103,7 @@ export function MigrationContentWorkspace({
         </Button>
       </div>
 
-      <div className="grid min-h-[520px] border border-[var(--line)] bg-[var(--card)] lg:grid-cols-[280px_minmax(0,1fr)]">
+      <div className="grid min-h-[520px] overflow-hidden rounded-lg border border-[var(--line)] bg-[var(--card)] shadow-sm lg:grid-cols-[280px_minmax(0,1fr)]">
         <div className="border-b border-[var(--line)] bg-[var(--paper-2)] lg:border-r lg:border-b-0">
           <div className="border-b border-[var(--line)] p-4">
             <p className="text-sm font-semibold text-[var(--ink)]">Stored source pages</p>
@@ -118,7 +118,7 @@ export function MigrationContentWorkspace({
                 type="button"
                 onClick={() => setActivePageId(page.id)}
                 aria-current={page.id === activePage.id ? "page" : undefined}
-                className={`mb-1 w-full border p-3 text-left transition-colors ${
+                className={`mb-1 w-full rounded-md border p-3 text-left transition-colors ${
                   page.id === activePage.id
                     ? "border-[var(--primary)] bg-[var(--primary)]/10"
                     : "border-transparent hover:border-[var(--line)] hover:bg-[var(--card)]"
@@ -226,7 +226,7 @@ export function MigrationContentWorkspace({
           </div>
 
           <div className="grid gap-2 sm:grid-cols-2">
-            <details className="border border-[var(--line)] bg-[var(--paper-2)] p-3">
+            <details className="rounded-md border border-[var(--line)] bg-[var(--paper-2)] p-3">
               <summary className="cursor-pointer text-sm font-semibold text-[var(--ink)]">
                 View deterministic cleanup
               </summary>
@@ -234,7 +234,7 @@ export function MigrationContentWorkspace({
                 {activePage.cleanedMarkdown}
               </pre>
             </details>
-            <details className="border border-[var(--line)] bg-[var(--paper-2)] p-3">
+            <details className="rounded-md border border-[var(--line)] bg-[var(--paper-2)] p-3">
               <summary className="cursor-pointer text-sm font-semibold text-[var(--ink)]">
                 View immutable raw crawl
               </summary>

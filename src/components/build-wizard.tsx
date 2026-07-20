@@ -1219,7 +1219,7 @@ export function BuildWizard({
                 : "Atomic Foundation, page drafts, assets, and cache status."
             }
           />
-          <div className="space-y-6 bg-[var(--color-surface)] p-6 sm:p-8">
+          <div className="space-y-6 bg-[var(--color-surface-raised)] p-6 sm:p-8">
             <ul
               className="space-y-2 text-sm"
               aria-live="polite"
@@ -1229,16 +1229,16 @@ export function BuildWizard({
               {events.map((e) => (
                 <li
                   key={e.key}
-                  className="flex items-start gap-3 border-2 border-[var(--color-black)] bg-[var(--color-panel)] px-3 py-2.5"
+                  className="flex items-start gap-3 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface)] px-3 py-2.5"
                 >
                   <span
                     aria-hidden
-                    className={`mt-0.5 flex size-5 shrink-0 items-center justify-center border-2 border-[var(--color-black)] text-xs font-bold ${
+                    className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-pill border text-xs font-bold ${
                       e.status === "ok"
-                        ? "bg-[var(--color-black)] text-[var(--color-on-black)]"
+                        ? "border-[var(--color-success)] bg-[var(--color-success)] text-[var(--color-on-primary)]"
                         : e.status === "fail"
-                          ? "bg-[var(--color-red-light)] text-[var(--color-red)]"
-                          : "bg-[var(--color-surface)] text-[var(--color-muted)]"
+                          ? "border-[var(--color-danger)] bg-[var(--color-danger-tint)] text-[var(--color-danger)]"
+                          : "border-[var(--color-border-default)] bg-[var(--color-surface-raised)] text-[var(--color-text-faint)]"
                     }`}
                   >
                     {e.status === "ok" ? <Check className="size-3.5" /> : e.status === "fail" ? "x" : "..."}
@@ -1254,7 +1254,7 @@ export function BuildWizard({
                 </li>
               ))}
               {events.length === 0 && (
-                <li className="border-2 border-[var(--color-black)] bg-[var(--color-panel)] px-3 py-2.5 text-[var(--color-muted)]">
+                <li className="rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface)] px-3 py-2.5 text-[var(--color-text-secondary)]">
                   Starting...
                 </li>
               )}
@@ -1274,7 +1274,7 @@ export function BuildWizard({
                       href={l.editUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="border-2 border-[var(--color-black)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-red)]"
+                      className="rounded-md border border-[var(--color-border-default)] px-2.5 py-1 text-xs font-semibold text-[var(--color-primary-hover)]"
                     >
                       Edit in WordPress
                     </a>
@@ -1282,7 +1282,7 @@ export function BuildWizard({
                       href={l.viewUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="border-2 border-[var(--color-black)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-red)]"
+                      className="rounded-md border border-[var(--color-border-default)] px-2.5 py-1 text-xs font-semibold text-[var(--color-primary-hover)]"
                     >
                       Preview
                     </a>
@@ -1295,13 +1295,13 @@ export function BuildWizard({
             {buildType === "migrate" && buildPlan?.items.some((item) => item.status === "failed") && (
               <div className="space-y-3">
                 <SectionLabel>Drafts that need another try</SectionLabel>
-                <div className="border-2 border-[var(--color-red)] bg-[var(--color-red-light)]">
+                <div className="overflow-hidden rounded-lg border border-[var(--color-danger)] bg-[var(--color-danger-tint)]">
                   {buildPlan.items
                     .filter((item) => item.status === "failed")
                     .map((item) => (
-                      <div key={item.preparedDraftId} className="border-b border-[var(--color-red)] p-4 last:border-b-0">
-                        <p className="font-bold text-[var(--color-black)]">{item.title}</p>
-                        <p className="mt-1 text-xs text-[var(--color-muted)]">
+                      <div key={item.preparedDraftId} className="border-b border-[var(--color-primary)] p-4 last:border-b-0">
+                        <p className="font-bold text-[var(--color-text-primary)]">{item.title}</p>
+                        <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
                           {item.error ?? "WordPress could not create this draft."}
                         </p>
                       </div>
@@ -1313,7 +1313,7 @@ export function BuildWizard({
             {accessibilityReport && (
               <div className="space-y-3">
                 <SectionLabel>Accessibility QA</SectionLabel>
-                <div className="space-y-4 border-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4 text-sm">
+                <div className="space-y-4 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4 text-sm">
                   <div className="flex flex-wrap gap-2">
                     <Badge variant={accessibilityReport.launchReady ? "default" : "destructive"}>
                       {accessibilityReport.launchReady ? "No blocking issues" : "Launch blocked"}
@@ -1376,7 +1376,7 @@ export function BuildWizard({
             {(buildNotes.length > 0 || warnings.length > 0) && (
               <div className="space-y-3">
                 <SectionLabel>Build notes for David&apos;s team</SectionLabel>
-                <div className="space-y-2 border-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4 text-sm leading-6">
+                <div className="space-y-2 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4 text-sm leading-6">
               {buildNotes.map((n, i) => (
                 <p key={`note-${i}`}>{n}</p>
               ))}
@@ -1391,7 +1391,7 @@ export function BuildWizard({
 
           </div>
           {finished && (
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-[var(--color-black)] bg-[var(--color-panel)] p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-border-default)] bg-[var(--color-surface)] p-5">
               <Button variant="ghost" onClick={() => router.push("/dashboard")}>
                 <ArrowLeft data-icon="inline-start" />
                 Back to dashboard
@@ -1440,16 +1440,16 @@ export function BuildWizard({
         </Link>
       </PageHead>
 
-      <div className="grid gap-0 border-2 border-[var(--color-black)] bg-[var(--color-surface)] lg:grid-cols-[230px_minmax(0,1fr)]">
+      <div className="grid overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] shadow-sm lg:grid-cols-[248px_minmax(0,1fr)]">
         <StepperRail step={step} setStep={setStep} />
 
-        <section className="overflow-hidden bg-[var(--color-surface)]">
+        <section className="overflow-hidden bg-[var(--color-surface-raised)]">
           <PanelHead
             icon={STEP_DETAILS[step].icon}
             title={STEP_DETAILS[step].title}
             description={STEP_DETAILS[step].description}
           />
-          <div className="space-y-7 bg-[var(--color-surface)] p-6 sm:p-8">
+          <div className="space-y-7 bg-[var(--color-surface-raised)] p-6 sm:p-8">
           {step === 0 && (
             <div className="space-y-7">
               <SectionLabel>Website project</SectionLabel>
@@ -1469,18 +1469,18 @@ export function BuildWizard({
                 <button
                   type="button"
                   onClick={() => setSiteKind("existing")}
-                  className={`border-2 p-4 text-left ${siteKind === "existing" ? "border-[var(--color-red)] bg-[var(--color-red-light)]" : "border-[var(--color-black)] bg-white"}`}
+                  className={`rounded-lg border p-5 text-left shadow-xs transition-[border-color,background-color,box-shadow] ${siteKind === "existing" ? "border-[var(--color-primary)] bg-[var(--color-primary-tint)] ring-2 ring-[rgb(57_115_210_/_10%)]" : "border-[var(--color-border-default)] bg-[var(--color-surface)] hover:border-[var(--color-border-strong)]"}`}
                 >
                   <span className="block text-sm font-bold">Existing website</span>
-                  <span className="mt-1 block text-xs leading-5 text-[var(--color-muted)]">Import content after the Page Plan is ready.</span>
+                  <span className="mt-1 block text-xs leading-5 text-[var(--color-text-secondary)]">Import content after the Page Plan is ready.</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setSiteKind("new")}
-                  className={`border-2 p-4 text-left ${siteKind === "new" ? "border-[var(--color-red)] bg-[var(--color-red-light)]" : "border-[var(--color-black)] bg-white"}`}
+                  className={`rounded-lg border p-5 text-left shadow-xs transition-[border-color,background-color,box-shadow] ${siteKind === "new" ? "border-[var(--color-primary)] bg-[var(--color-primary-tint)] ring-2 ring-[rgb(57_115_210_/_10%)]" : "border-[var(--color-border-default)] bg-[var(--color-surface)] hover:border-[var(--color-border-strong)]"}`}
                 >
                   <span className="block text-sm font-bold">New website</span>
-                  <span className="mt-1 block text-xs leading-5 text-[var(--color-muted)]">Create empty drafts without importing another site.</span>
+                  <span className="mt-1 block text-xs leading-5 text-[var(--color-text-secondary)]">Create empty drafts without importing another site.</span>
                 </button>
               </div>
               {siteKind === "existing" && (
@@ -1512,9 +1512,9 @@ export function BuildWizard({
           {step === 2 && (
             <div className="space-y-6">
               {siteKind === "existing" && !sourceSaved && (
-                <div className="border-2 border-[var(--color-black)] bg-white p-6">
-                  <h3 className="text-xl font-black tracking-[-0.03em]">Import the current website</h3>
-                  <p className="mt-2 max-w-2xl text-xs leading-5 text-[var(--color-muted)]">
+                <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-6 shadow-xs">
+                  <h3 className="text-xl font-semibold tracking-[-0.02em]">Import the current website</h3>
+                  <p className="mt-2 max-w-2xl text-xs leading-5 text-[var(--color-text-secondary)]">
                     The builder will find useful pages, clean crawl noise, and match content to your Page Plan automatically.
                   </p>
                   <div className="mt-5 flex flex-wrap items-end gap-3">
@@ -1528,7 +1528,7 @@ export function BuildWizard({
                     </Button>
                   </div>
                   {(crawlStatus !== "idle" || savingCrawl) && (
-                    <div className="mt-5 border-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4" role="status">
+                    <div className="mt-5 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] p-4" role="status">
                       <p className="text-sm font-bold">
                         {savingCrawl
                           ? "Matching content to your Page Plan"
@@ -1538,7 +1538,7 @@ export function BuildWizard({
                               ? "Website import stopped"
                               : "Cleaning crawl noise"}
                       </p>
-                      {crawlError && <p className="mt-2 text-xs text-[var(--color-red)]">{crawlError}</p>}
+                      {crawlError && <p className="mt-2 text-xs text-[var(--color-primary)]">{crawlError}</p>}
                     </div>
                   )}
                 </div>
@@ -1547,14 +1547,14 @@ export function BuildWizard({
               {(siteKind === "new" || sourceSaved) && (
                 <>
                   {siteKind === "existing" && (
-                    <div className="flex flex-wrap items-center justify-between gap-4 border-2 border-[var(--color-black)] bg-white p-5" role="status">
+                    <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-success-tint)] p-5" role="status">
                       <div className="flex items-start gap-3">
-                        <span className="flex size-9 shrink-0 items-center justify-center bg-[var(--color-black)] text-white">
+                        <span className="flex size-9 shrink-0 items-center justify-center rounded-pill bg-[var(--color-success)] text-[var(--color-on-primary)]">
                           <Check className="size-4" />
                         </span>
                         <div>
-                          <p className="text-sm font-black">Website crawl complete</p>
-                          <p className="mt-1 text-xs leading-5 text-[var(--color-muted)]">
+                          <p className="text-sm font-semibold">Website crawl complete</p>
+                          <p className="mt-1 text-xs leading-5 text-[var(--color-text-secondary)]">
                             {migrationSourcePages.length} page{migrationSourcePages.length === 1 ? " was" : "s were"} crawled and cleaned before matching.
                           </p>
                         </div>
@@ -1625,10 +1625,10 @@ export function BuildWizard({
             <div className="space-y-4 text-sm">
               <SectionLabel>Automatic final check</SectionLabel>
               <div
-                className={`border-2 p-4 ${
+                className={`rounded-lg border p-5 ${
                   buildPlan?.status === "ready"
-                    ? "border-[var(--color-black)] bg-[var(--color-panel)]"
-                    : "border-[var(--color-red)] bg-[var(--color-red-light)]"
+                    ? "border-[var(--color-success-dot)] bg-[var(--color-success-tint)]"
+                    : "border-[var(--color-danger)] bg-[var(--color-danger-tint)]"
                 }`}
                 aria-live="polite"
               >
@@ -1641,7 +1641,7 @@ export function BuildWizard({
                           ? `Ready to create ${buildPlan.items.length} WordPress drafts`
                           : "Final check needs attention"}
                     </p>
-                    <p className="mt-1 text-xs text-[var(--color-muted)]">
+                    <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
                       {checkingBuild
                         ? "This check does not contact or change WordPress."
                         : buildPlan?.status === "ready"
@@ -1689,22 +1689,22 @@ export function BuildWizard({
                 onEdit={() => setStep(1)}
               />
               <SectionLabel>Draft readiness</SectionLabel>
-              <div className="border-2 border-[var(--color-black)]">
+              <div className="overflow-hidden rounded-lg border border-[var(--color-border-default)] shadow-xs">
                 {pagePlanItems.map((page) => {
                   const draft = preparedDrafts.find((item) => item.pagePlanItemId === page.id);
                   return (
-                    <div key={page.id} className="border-b border-[var(--color-hairline)] bg-white p-4 last:border-b-0">
+                    <div key={page.id} className="border-b border-[var(--color-border-default)] bg-[var(--color-surface-raised)] p-4 last:border-b-0">
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div>
                           <p className="font-bold">{page.pageName}</p>
-                          <p className="mt-1 text-xs text-[var(--color-muted)]">{pagePath(page.slug)}</p>
+                          <p className="mt-1 text-xs text-[var(--color-text-secondary)]">{pagePath(page.slug)}</p>
                         </div>
                         <Badge variant={draft?.status === "ready" ? "secondary" : "destructive"}>
                           {draft?.status === "ready" ? "Ready" : "Needs attention"}
                         </Badge>
                       </div>
                       {draft?.notes.length ? (
-                        <ul className="mt-3 space-y-1 text-xs text-[var(--color-muted)]">
+                        <ul className="mt-3 space-y-1 text-xs text-[var(--color-text-secondary)]">
                           {draft.notes.map((note) => <li key={note}>{note}</li>)}
                         </ul>
                       ) : null}
@@ -1716,7 +1716,7 @@ export function BuildWizard({
           )}
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t-2 border-[var(--color-black)] bg-[var(--color-panel)] p-5">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--color-border-default)] bg-[var(--color-surface)] p-5">
             <Button variant="ghost" onClick={back} disabled={step === 0}>
               <ArrowLeft data-icon="inline-start" />
               Back
@@ -1988,15 +1988,15 @@ function PageHead({
   return (
     <div className="page-banner">
       <div>
-        <div className="eyebrow">{"// Build Workspace"}</div>
-        <h1 className="page-title">{title}.</h1>
+        <div className="eyebrow">Build workspace</div>
+        <h1 className="page-title">{title}</h1>
         <p className="page-copy">{subline}</p>
       </div>
-      <div className="flex flex-wrap items-center gap-0">
-        <div className="border-2 border-[var(--color-black)] bg-[var(--color-red)] px-4 py-3 text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--color-on-red)]">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="rounded-pill bg-[var(--color-primary-tint)] px-3.5 py-2 text-xs font-semibold text-[var(--color-primary-hover)]">
           {buildTypeLabel}
         </div>
-        <div className="-ml-0.5 border-2 border-[var(--color-black)] bg-[var(--color-surface)] px-4 py-3 text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--color-black)]">
+        <div className="rounded-pill border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] px-3.5 py-2 text-xs font-semibold text-[var(--color-text-secondary)]">
           {clientName}
         </div>
         {children}
@@ -2016,11 +2016,11 @@ function StepperRail({
   const estimate = Math.max(1, (STEPS.length - step) * 2);
 
   return (
-    <aside className="border-r-2 border-[var(--color-black)] bg-[var(--color-surface)] lg:self-stretch">
-      <div className="bg-[var(--color-black)] px-4 py-3 text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--color-on-black)]">
-        {"// Build Steps"}
+    <aside className="border-r border-[var(--color-border-default)] bg-[var(--color-surface)] p-3 lg:self-stretch">
+      <div className="px-3 py-3 text-xs font-semibold uppercase leading-none tracking-[0.04em] text-[var(--color-text-faint)]">
+        Build steps
       </div>
-      <ol>
+      <ol className="space-y-1">
         {STEP_DETAILS.map((item, i) => {
           const done = i < step;
           const active = i === step;
@@ -2031,21 +2031,21 @@ function StepperRail({
                 disabled={i > step}
                 aria-current={active ? "step" : undefined}
                 onClick={() => i <= step && setStep(i)}
-                className={`relative flex w-full items-center gap-3 border-b border-[var(--color-black)] px-4 py-[14px] text-left transition-colors ${
+                className={`relative flex w-full items-center gap-3 rounded-md px-3 py-3 text-left transition-colors ${
                   active
-                    ? "border-l-[3px] border-l-[var(--color-red)] bg-[var(--color-red-light)] pl-[13px]"
+                    ? "border-l-[3px] border-l-[var(--color-primary)] bg-[var(--color-primary-tint)] pl-[10px]"
                     : done
-                      ? "bg-[var(--color-surface)] hover:bg-[var(--color-panel)]"
-                      : "cursor-default bg-[var(--color-surface)] opacity-60"
+                      ? "bg-transparent hover:bg-[var(--color-surface-raised)]"
+                      : "cursor-default bg-transparent opacity-60"
                 }`}
               >
                 <span
-                  className={`flex size-[26px] shrink-0 items-center justify-center border-2 text-[10px] font-bold leading-none tracking-[0.12em] ${
+                  className={`flex size-7 shrink-0 items-center justify-center rounded-pill border text-xs font-semibold leading-none ${
                     done
-                      ? "border-[var(--color-black)] bg-[var(--color-black)] text-[var(--color-on-black)]"
+                      ? "border-[var(--color-success)] bg-[var(--color-success)] text-[var(--color-on-primary)]"
                       : active
-                        ? "border-[var(--color-red)] bg-[var(--color-red)] text-[var(--color-on-red)]"
-                        : "border-[var(--color-black)] bg-[var(--color-surface)] text-[var(--color-muted)]"
+                        ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                        : "border-[var(--color-border-strong)] bg-[var(--color-surface-raised)] text-[var(--color-text-faint)]"
                   }`}
                 >
                   {done ? <Check className="size-3.5" /> : i + 1}
@@ -2053,12 +2053,12 @@ function StepperRail({
                 <span className="min-w-0">
                   <span
                     className={`block text-[13px] font-semibold leading-tight tracking-[-0.01em] ${
-                      active ? "text-[var(--color-black)]" : "text-[var(--color-black)]"
+                      active ? "text-[var(--color-primary-hover)]" : "text-[var(--color-text-primary)]"
                     }`}
                   >
                     {item.title}
                   </span>
-                  <span className="mt-1 block text-[10px] font-bold uppercase leading-none tracking-[0.06em] text-[var(--color-muted)]">
+                  <span className="mt-1 block text-xs font-medium leading-none text-[var(--color-text-faint)]">
                     {item.rail}
                   </span>
                 </span>
@@ -2067,19 +2067,19 @@ function StepperRail({
           );
         })}
       </ol>
-      <div className="space-y-2 border-t-2 border-[var(--color-black)] bg-[var(--color-panel)] p-4">
-        <div className="h-1 overflow-hidden bg-[#E0DDD6]">
+      <div className="mt-3 space-y-2 border-t border-[var(--color-border-default)] p-3 pt-4">
+        <div className="h-2 overflow-hidden rounded-pill bg-[var(--color-border-default)]">
           <div
             role="progressbar"
             aria-label="Build setup progress"
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={percent}
-            className="h-full bg-[var(--color-red)] transition-all duration-200"
+            className="h-full rounded-pill bg-[var(--color-primary)] transition-all duration-200"
             style={{ width: `${percent}%` }}
           />
         </div>
-        <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <div className="flex items-center justify-between text-xs font-medium text-[var(--color-text-faint)]">
           <span>{percent}% complete</span>
           <span>{estimate} min</span>
         </div>
@@ -2098,16 +2098,16 @@ function PanelHead({
   description: string;
 }) {
   return (
-    <div className="flex items-center gap-4 border-b-2 border-[var(--color-black)] bg-[var(--color-panel)] p-5 sm:p-6">
-      <div className="flex size-[42px] shrink-0 items-center justify-center border-2 border-[var(--color-black)] bg-[var(--color-surface)] text-[var(--color-red)]">
+    <div className="flex items-center gap-4 border-b border-[var(--color-border-default)] bg-[var(--color-surface)] p-5 sm:p-6">
+      <div className="flex size-11 shrink-0 items-center justify-center rounded-md bg-[var(--color-primary-tint)] text-[var(--color-primary-hover)]">
         <Icon className="size-5" />
       </div>
       <div>
-        <div className="eyebrow mb-2">{"// Step"}</div>
-        <h2 className="text-[32px] font-black leading-none tracking-[-0.04em] text-[var(--color-black)]">
+        <div className="eyebrow mb-2">Current step</div>
+        <h2 className="text-2xl font-semibold leading-tight tracking-[-0.025em] text-[var(--color-text-primary)]">
           {title}
         </h2>
-        <p className="mt-2 max-w-xl text-[13px] leading-6 text-[var(--color-muted)]">
+        <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--color-text-secondary)]">
           {description}
         </p>
       </div>
@@ -2118,10 +2118,10 @@ function PanelHead({
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="shrink-0 text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--color-red)]">
+      <span className="shrink-0 text-xs font-semibold uppercase leading-none tracking-[0.04em] text-[var(--color-text-faint)]">
         {children}
       </span>
-      <span className="h-px flex-1 bg-[var(--color-hairline)]" />
+      <span className="h-px flex-1 bg-[var(--color-border-default)]" />
     </div>
   );
 }

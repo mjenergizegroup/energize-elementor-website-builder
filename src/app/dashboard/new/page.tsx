@@ -121,21 +121,21 @@ export default async function NewBuildPage({
       <section className="modal-panel" aria-labelledby="new-build-title">
         <div className="modal-head">
           <div>
-            <div className="eyebrow">{"// New build"}</div>
-            <h1 id="new-build-title" className="text-[13px] font-bold tracking-[-0.01em] text-white">
+            <div className="eyebrow">New build</div>
+            <h1 id="new-build-title" className="mt-1 text-lg font-semibold tracking-[-0.01em] text-[var(--color-text-primary)]">
               Select build type
             </h1>
           </div>
           <Link
             href="/dashboard"
-            className="ml-auto flex size-7 items-center justify-center border border-[#444444] text-[#888888] hover:text-white"
+            className="ml-auto flex size-9 items-center justify-center rounded-md border border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]"
             aria-label="Close new build selector"
           >
             <X className="size-4" />
           </Link>
         </div>
         <div className="modal-body">
-          <p className="mb-6 max-w-[540px] text-[13px] leading-6 text-[var(--color-muted)]">
+          <p className="mb-6 max-w-[540px] text-[13px] leading-6 text-[var(--color-text-secondary)]">
             Choose what you are building. Each path walks you through the steps
             specific to that type.
           </p>
@@ -152,16 +152,16 @@ export default async function NewBuildPage({
                   href={`/dashboard/new?type=${item.key}`}
                   className={buttonVariants({ variant: "outline", size: "sm" })}
                 >
-                  Select →
+                  Select
                 </Link>
               </article>
             ))}
           </div>
-          <div className="mt-6 border-t-2 border-[var(--color-black)] pt-4 text-[12px] text-[var(--color-muted)]">
+          <div className="mt-6 border-t border-[var(--color-border-default)] pt-4 text-[12px] text-[var(--color-text-secondary)]">
             Setting up the WP Engine default site?{" "}
             <a
               href="/downloads/energize-atomic-foundation.zip"
-              className="font-bold text-[var(--color-black)] underline underline-offset-4"
+              className="font-semibold text-[var(--color-primary-hover)] underline underline-offset-4"
               download
             >
               Download the Energize Atomic Foundation
@@ -169,7 +169,7 @@ export default async function NewBuildPage({
             {" · "}
             <a
               href="/downloads/energize-atomic-style-guide.json"
-              className="font-bold text-[var(--color-black)] underline underline-offset-4"
+              className="font-semibold text-[var(--color-primary-hover)] underline underline-offset-4"
               download
             >
               Download the Atomic Style Guide
@@ -177,7 +177,7 @@ export default async function NewBuildPage({
             {" · "}
             <a
               href="/downloads/energize-build-tool-wpcode-snippet.txt"
-              className="font-bold text-[var(--color-black)] underline underline-offset-4"
+              className="font-semibold text-[var(--color-primary-hover)] underline underline-offset-4"
               download
             >
               Download the WPCode Bridge
